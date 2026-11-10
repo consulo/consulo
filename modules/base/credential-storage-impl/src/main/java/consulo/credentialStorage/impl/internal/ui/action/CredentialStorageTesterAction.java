@@ -121,11 +121,6 @@ public class CredentialStorageTesterAction extends DumbAwareAction {
         public AnAction[] createActions(boolean inverseOrder) {
             return AnAction.EMPTY_ARRAY;
         }
-
-        @Override
-        public boolean hasBorderAtButtonLayout() {
-            return false;
-        }
     }
 
     private final DialogService myDialogService;

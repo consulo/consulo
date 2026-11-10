@@ -19,13 +19,11 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.ModifiedInputDetails;
-import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.impl.internal.action.UnifiedCustomShortcutDispatcher;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import io.qt.core.QCoreApplication;
 import io.qt.core.QEvent;
 import io.qt.core.QObject;
@@ -45,7 +43,6 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -117,7 +114,7 @@ public final class DesktopQtCustomShortcutFilter {
                 event.accept();
 
                 if (type == QEvent.Type.KeyPress) {
-                    UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, DataManager.getInstance().getDataContext(components.get(0)));
+                    perform(widget, keyEvent, actions, components);
                 }
                 return true;
             }
@@ -132,13 +129,19 @@ public final class DesktopQtCustomShortcutFilter {
             return false;
         }
 
-        List<AnAction> actions = collectKeymapActions(keyStroke);
+        boolean modalContext = QApplication.activeModalWidget() != null;
+        List<AnAction> actions = UnifiedCustomShortcutDispatcher.collectKeymapActions(List.of(keyStroke), modalContext);
         if (actions.isEmpty()) {
             return false;
         }
 
         event.accept();
 
+        perform(widget, event, actions, components);
+        return true;
+    }
+
+    private static void perform(QWidget widget, QKeyEvent event, List<AnAction> actions, List<Component> components) {
         QKeyEvent copy = new QKeyEvent(
             event.type(),
             event.key(),
@@ -150,17 +153,18 @@ public final class DesktopQtCustomShortcutFilter {
             event.isAutoRepeat(),
             (short) event.count()
         );
-        DataContext context = DataManager.getInstance().getDataContext(components.get(0));
+        Component component = components.get(0);
+        DataContext context = DataManager.getInstance().getDataContext(component);
+        ComponentEvent<Component> uiEvent = new ComponentEvent<>(component, DesktopQtInputDetails.keyboard(widget, event));
         UIAccess uiAccess = UIAccess.current();
         ourStrokeQueue = ourStrokeQueue
             .exceptionally(throwable -> null)
-            .thenComposeAsync(ignored -> UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, context), uiAccess)
+            .thenComposeAsync(ignored -> UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, context, uiEvent), uiAccess)
             .whenCompleteAsync((performed, throwable) -> {
                 if (!Boolean.TRUE.equals(performed)) {
                     redeliver(widget, copy);
                 }
             }, uiAccess);
-        return true;
     }
 
     private static void redeliver(QWidget widget, QKeyEvent event) {
@@ -175,25 +179,6 @@ public final class DesktopQtCustomShortcutFilter {
         finally {
             ourRedelivering = false;
         }
-    }
-
-    private static List<AnAction> collectKeymapActions(KeyStroke keyStroke) {
-        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
-        if (keymap == null) {
-            return List.of();
-        }
-
-        boolean modalContext = QApplication.activeModalWidget() != null;
-        ActionManager actionManager = ActionManager.getInstance();
-        List<AnAction> actions = new ArrayList<>();
-        for (String actionId : keymap.getActionIds(keyStroke)) {
-            AnAction action = actionManager.getAction(actionId);
-            if (action != null && (!modalContext || action.isEnabledInModalContext())) {
-                actions.add(action);
-            }
-        }
-        actions.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
-        return actions;
     }
 
     private static boolean acceptsKeymap(QWidget widget, QKeyEvent event, KeyStroke keyStroke) {

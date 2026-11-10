@@ -15,57 +15,55 @@
  */
 package consulo.language.editor.refactoring.rename;
 
-import consulo.application.ui.NonFocusableSetting;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.List;
 
 /**
  * @author yole
  */
 public abstract class RenameWithOptionalReferencesDialog extends RenameDialog {
-  private CheckBox myCbSearchForReferences;
+    private @Nullable CheckBox myCbSearchForReferences;
 
-  public RenameWithOptionalReferencesDialog(Project project,
-                                            PsiElement psiElement,
-                                            @Nullable PsiElement nameSuggestionContext,
-                                            Editor editor) {
-    super(project, psiElement, nameSuggestionContext, editor);
-  }
+    @RequiredUIAccess
+    public RenameWithOptionalReferencesDialog(
+        Project project,
+        PsiElement psiElement,
+        @Nullable PsiElement nameSuggestionContext,
+        @Nullable Editor editor
+    ) {
+        super(project, psiElement, nameSuggestionContext, editor);
+    }
 
-  @Override
-  @RequiredUIAccess
-  protected void createCheckboxes(JPanel panel, GridBagConstraints gbConstraints) {
-    gbConstraints.insets = JBUI.insetsBottom(4);
-    gbConstraints.gridwidth = 1;
-    gbConstraints.gridx = 0;
-    gbConstraints.weighty = 0;
-    gbConstraints.weightx = 1;
-    gbConstraints.fill = GridBagConstraints.BOTH;
-    myCbSearchForReferences = CheckBox.create(RefactoringLocalize.searchForReferences());
-    NonFocusableSetting.initFocusability(myCbSearchForReferences);
-    myCbSearchForReferences.setValue(getSearchForReferences());
-    panel.add(TargetAWT.to(myCbSearchForReferences), gbConstraints);
+    @Override
+    @RequiredUIAccess
+    protected void createCheckboxes(List<Component> options) {
+        CheckBox searchForReferences = CheckBox.create(RefactoringLocalize.searchForReferences(), getSearchForReferences());
+        searchForReferences.setId("searchForReferences");
+        myCbSearchForReferences = searchForReferences;
+        options.add(searchForReferences);
 
-    super.createCheckboxes(panel, gbConstraints);
-  }
+        super.createCheckboxes(options);
+    }
 
-  @Override
-  protected void doAction() {
-    setSearchForReferences(myCbSearchForReferences.getValue());
-    super.doAction();
-  }
+    @Override
+    @RequiredUIAccess
+    protected void doAction() {
+        CheckBox searchForReferences = myCbSearchForReferences;
+        if (searchForReferences != null) {
+            setSearchForReferences(Boolean.TRUE.equals(searchForReferences.getValue()));
+        }
+        super.doAction();
+    }
 
-  protected abstract boolean getSearchForReferences();
+    protected abstract boolean getSearchForReferences();
 
-  protected abstract void setSearchForReferences(boolean value);
+    protected abstract void setSearchForReferences(boolean value);
 }

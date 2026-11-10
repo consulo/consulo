@@ -16,6 +16,7 @@
 package consulo.it.internal;
 
 import consulo.application.Application;
+import consulo.it.HeadlessAnswers;
 import consulo.logging.Logger;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.ui.clipboard.Clipboard;
@@ -23,9 +24,12 @@ import consulo.ui.impl.clipboard.MemoryClipboard;
 import consulo.ui.impl.BaseUIAccess;
 import consulo.ui.impl.SingleUIAccessScheduler;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -39,12 +43,28 @@ public final class HeadlessUIAccess extends BaseUIAccess {
 
     private volatile Thread myThread;
 
+    private final AtomicReference<@Nullable HeadlessAnswers> myAnswers = new AtomicReference<>();
+
     private final ExecutorService myExecutor = Executors.newSingleThreadExecutor(runnable -> {
         Thread thread = new Thread(runnable, "Headless UI Thread");
         thread.setDaemon(true);
         myThread = thread;
         return thread;
     });
+
+    public void installAnswers(HeadlessAnswers answers) {
+        if (!myAnswers.compareAndSet(null, answers)) {
+            throw new IllegalStateException("headless answers are already installed");
+        }
+    }
+
+    public void removeAnswers(HeadlessAnswers answers) {
+        myAnswers.compareAndSet(answers, null);
+    }
+
+    public @Nullable HeadlessAnswers getAnswers() {
+        return myAnswers.get();
+    }
 
     public boolean isUIThread() {
         return Thread.currentThread() == myThread;

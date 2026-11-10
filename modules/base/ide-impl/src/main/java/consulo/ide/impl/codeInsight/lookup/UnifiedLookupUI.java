@@ -86,6 +86,10 @@ public class UnifiedLookupUI extends LookupBase {
         });
 
         addEditorListeners();
+
+        if (myEditor instanceof CaretPixelLocationProvider provider) {
+            provider.addCaretPixelLocationListener(this::repositionUi, this);
+        }
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -271,12 +275,10 @@ public class UnifiedLookupUI extends LookupBase {
             PopupOptions.builder()
                 // the caret stays in the editor, which is what the lookup is driven from
                 .disableRequestFocus()
-                // escape is the popup's, the way it is on the desktop - the lookup is a hint there and the hint
-                // manager takes the key for it. a handler of the lookup's own would have to be registered against
-                // the editor action, which every frontend shares, and awt already answers escape for itself
-                // and so does dismissing it - a lookup goes away when the caret moves or the document changes, which
-                // it watches for itself. the popup never takes the focus, so every press reads as one from outside
-                // it and picking a row would close the lookup before the row could be taken
+                .disableCancelOnEscape()
+                // a lookup goes away when the caret moves or the document changes, which it watches for itself. the
+                // popup never takes the focus, so every press reads as one from outside it and picking a row would
+                // close the lookup before the row could be taken
                 .disableCancelOnClickOutside()
                 // a completion list is read at whatever width its items need, which only the user knows
                 .resizable()
@@ -291,20 +293,24 @@ public class UnifiedLookupUI extends LookupBase {
 
         myPopup = popup;
 
-        showAtCaret(popup);
+        showAtLookupStart(popup);
 
         return true;
     }
 
     /**
-     * Only the frontend knows where the caret ended up, so an editor which cannot say puts the popup at its top left
+     * Only the frontend knows where the text ended up, so an editor which cannot say puts the popup at its top left
      * rather than refusing to open.
      */
     @RequiredUIAccess
-    private void showAtCaret(LightPopup popup) {
-        CaretPixelLocation location = myEditor instanceof CaretPixelLocationProvider provider
-            ? provider.getCaretPixelLocation()
-            : null;
+    private void showAtLookupStart(LightPopup popup) {
+        CaretPixelLocation location = null;
+        if (myEditor instanceof CaretPixelLocationProvider provider) {
+            location = provider.getOffsetPixelLocation(getLookupStart());
+            if (location == null) {
+                location = provider.getCaretPixelLocation();
+            }
+        }
 
         if (location == null) {
             popup.showAt(myEditor.getContentUIComponent(), 0, 0, 0);
@@ -319,7 +325,7 @@ public class UnifiedLookupUI extends LookupBase {
     protected void hideUi() {
         LightPopup popup = myPopup;
         myPopup = null;
-        if (popup != null && popup.isVisible()) {
+        if (popup != null) {
             popup.close();
         }
     }
@@ -328,8 +334,8 @@ public class UnifiedLookupUI extends LookupBase {
     @RequiredUIAccess
     protected void repositionUi() {
         LightPopup popup = myPopup;
-        if (popup != null && popup.isVisible()) {
-            showAtCaret(popup);
+        if (popup != null && popup.isVisible() && !isLookupDisposed()) {
+            showAtLookupStart(popup);
         }
     }
 

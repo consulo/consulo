@@ -90,7 +90,7 @@ import java.util.stream.Stream;
 /**
  * @author max
  */
-public class UsageViewImpl implements UsageViewEx {
+public class UsageViewImpl implements UsageViewInternal {
     private static final Logger LOG = Logger.getInstance(UsageViewImpl.class);
     public static final String SHOW_RECENT_FIND_USAGES_ACTION_ID = "UsageView.ShowRecentFindUsages";
 
@@ -1023,6 +1023,7 @@ public class UsageViewImpl implements UsageViewEx {
     }
 
     @RequiredUIAccess
+    @Override
     public void expandRoot() {
         expandTree(1);
     }
@@ -1152,7 +1153,8 @@ public class UsageViewImpl implements UsageViewEx {
         }
     }
 
-    void drainQueuedUsageNodes() {
+    @Override
+    public void drainQueuedUsageNodes() {
         assert !myProject.getApplication().isDispatchThread() : Thread.currentThread();
         UIUtil.invokeAndWaitIfNeeded((Runnable) this::fireEvents);
     }
@@ -1325,6 +1327,27 @@ public class UsageViewImpl implements UsageViewEx {
     public void addExcludeListener(Disposable disposable, ExcludeListener listener) {
         myExcludeListeners.add(listener);
         Disposer.register(disposable, () -> myExcludeListeners.remove(listener));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Content addContent(UsageViewPresentation presentation) {
+        Content content = UsageViewContentManager.getInstance(myProject).addContent(
+            presentation.getTabText(),
+            presentation.getTabName(),
+            presentation.getToolwindowTitle(),
+            true,
+            getComponent(),
+            presentation.isOpenInNewTab(),
+            true
+        );
+        setContent(content);
+        return content;
+    }
+
+    @Override
+    public int getShownUsageCount() {
+        return getRoot().getRecursiveUsageCount();
     }
 
     void setContent(Content content) {

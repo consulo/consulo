@@ -28,10 +28,12 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.editor.ui.internal.HintManagerEx;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.ui.ToastStyle;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
@@ -87,6 +89,7 @@ public class HintManagerImpl implements HintManagerEx {
     private QuestionAction myQuestionAction;
 
     private final List<HintInfo> myHintsStack = new ArrayList<>();
+    private final List<UnifiedEditorHint> myUnifiedHints = new ArrayList<>();
     private Editor myLastEditor;
     private final Alarm myHideAlarm = new Alarm();
     private boolean myRequestFocusForNextHint;
@@ -529,6 +532,7 @@ public class HintManagerImpl implements HintManagerEx {
     @RequiredUIAccess
     public void hideAllHints() {
         UIAccess.assertIsUIThread();
+        hideUnifiedHints();
         for (HintInfo info : getHintsStackArray()) {
             if (!info.hint.vetoesHiding()) {
                 info.hint.hide();
@@ -801,6 +805,11 @@ public class HintManagerImpl implements HintManagerEx {
     @Override
     @RequiredUIAccess
     public void showErrorHint(Editor editor, String text, short position) {
+        if (UnifiedEditorHint.isUnifiedEditor(editor)) {
+            showUnifiedHint(editor, text, ToastStyle.ERROR);
+            return;
+        }
+
         JComponent label = HintUtil.createErrorLabel(text);
         LightweightHint hint = Application.get().getInstance(LightweightHintFactory.class).create(label);
         Point p = getHintPosition(hint, editor, position);
@@ -826,8 +835,35 @@ public class HintManagerImpl implements HintManagerEx {
         @Nullable HyperlinkListener listener,
         @PositionFlags short position
     ) {
+        if (UnifiedEditorHint.isUnifiedEditor(editor)) {
+            showUnifiedHint(editor, text, ToastStyle.INFO);
+            return;
+        }
+
         JComponent label = HintUtil.createInformationLabel(text, listener, null, null);
         showInformationHint(editor, label, position);
+    }
+
+    @RequiredUIAccess
+    private void showUnifiedHint(Editor editor, String text, ToastStyle style) {
+        hideUnifiedHints();
+
+        UnifiedEditorHint hint = new UnifiedEditorHint(editor, LocalizeValue.of(text), style, myUnifiedHints::remove);
+        myUnifiedHints.add(hint);
+        hint.show();
+    }
+
+    @RequiredUIAccess
+    private boolean hideUnifiedHints() {
+        if (myUnifiedHints.isEmpty()) {
+            return false;
+        }
+
+        for (UnifiedEditorHint hint : new ArrayList<>(myUnifiedHints)) {
+            hint.hide();
+        }
+        myUnifiedHints.clear();
+        return true;
     }
 
     @Override
@@ -1102,6 +1138,9 @@ public class HintManagerImpl implements HintManagerEx {
     @RequiredUIAccess
     boolean isEscapeHandlerEnabled() {
         UIAccess.assertIsUIThread();
+        if (!myUnifiedHints.isEmpty()) {
+            return true;
+        }
         for (int i = myHintsStack.size() - 1; i >= 0; i--) {
             HintInfo info = myHintsStack.get(i);
             if (!info.hint.isVisible()) {
@@ -1128,6 +1167,13 @@ public class HintManagerImpl implements HintManagerEx {
         UIAccess.assertIsUIThread();
         try {
             boolean done = false;
+
+            if ((mask & (HIDE_BY_ESCAPE | HIDE_BY_ANY_KEY | HIDE_BY_OTHER_HINT)) != 0 || editorChanged) {
+                done = hideUnifiedHints();
+                if (done && onlyOne) {
+                    return true;
+                }
+            }
 
             for (int i = myHintsStack.size() - 1; i >= 0; i--) {
                 HintInfo info = myHintsStack.get(i);

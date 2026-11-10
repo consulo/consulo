@@ -676,6 +676,28 @@
   border-radius: 0 4px 4px 0;
 }
 
+.arquill-range-frames
+{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.arquill-range-frame
+{
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid;
+}
+
+.arquill-range-frame-rounded
+{
+  border-radius: 2px;
+}
+
 .arquill-frame-resize,
 .arquill-frame-resize *,
 body.arquill-frame-resizing,

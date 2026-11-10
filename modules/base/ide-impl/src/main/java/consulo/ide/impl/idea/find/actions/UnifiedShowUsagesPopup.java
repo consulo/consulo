@@ -128,11 +128,6 @@ public final class UnifiedShowUsagesPopup {
     @RequiredUIAccess
     public static void show(Editor editor, Project project, PsiElement element, @Nullable RelativePoint2D point) {
         FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(project)).getFindUsagesManager();
-        FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
-        if (handler == null) {
-            return;
-        }
-
         RelativePoint2D position = point != null ? point : EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
 
         DataManager dataManager = DataManager.getInstance();
@@ -140,9 +135,11 @@ public final class UnifiedShowUsagesPopup {
 
         UIAccess uiAccess = UIAccess.current();
 
-        UnifiedShowUsagesPopup popup =
-            new UnifiedShowUsagesPopup(project, editor, findUsagesManager, handler, position, ShowUsagesAction.getUsagesPageSize());
-        popup.start(uiAccess, () -> ReadAction.compute(() -> handler.getFindUsagesOptions(dataContext)));
+        findUsagesManager.withFindUsagesHandler(element, handler -> {
+            UnifiedShowUsagesPopup popup =
+                new UnifiedShowUsagesPopup(project, editor, findUsagesManager, handler, position, ShowUsagesAction.getUsagesPageSize());
+            popup.start(uiAccess, () -> ReadAction.compute(() -> handler.getFindUsagesOptions(dataContext)));
+        });
     }
 
     private void start(UIAccess uiAccess, FindUsagesOptions options) {

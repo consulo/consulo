@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.find.findUsages;
 
 import consulo.find.FindManager;
 import consulo.find.FindSettings;
-import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesOptions;
 import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
@@ -51,15 +50,16 @@ public class PsiElement2UsageTargetComposite extends PsiElement2UsageTargetAdapt
             return;
         }
         FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(element.getProject())).getFindUsagesManager();
-        FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
-        boolean skipResultsWithOneUsage = FindSettings.getInstance().isSkipResultsWithOneUsage();
-        findUsagesManager.findUsages(
-            myDescriptor.getPrimaryElements(),
-            myDescriptor.getAdditionalElements(),
-            handler,
-            myOptions,
-            skipResultsWithOneUsage
-        );
+        findUsagesManager.withFindUsagesHandler(element, handler -> {
+            boolean skipResultsWithOneUsage = FindSettings.getInstance().isSkipResultsWithOneUsage();
+            findUsagesManager.findUsages(
+                myDescriptor.getPrimaryElements(),
+                myDescriptor.getAdditionalElements(),
+                handler,
+                myOptions,
+                skipResultsWithOneUsage
+            );
+        });
     }
 
     @Override

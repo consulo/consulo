@@ -43,6 +43,7 @@ import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.ex.dialog.DialogValue;
 import consulo.ui.ex.dialog.action.DialogCancelAction;
+import consulo.ui.ex.dialog.action.DialogEscapeAction;
 import consulo.ui.ex.impl.internal.action.UnifiedActionToolbarImpl;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.SplitLayoutPosition;
@@ -97,6 +98,7 @@ public class UnifiedDialogServiceImpl implements DialogService {
             }
 
             myWindow = Window.create(descriptor.getTitle().get(), options.build());
+            myWindow.putUserData(Dialog.KEY, this);
         }
 
         @Override
@@ -212,7 +214,7 @@ public class UnifiedDialogServiceImpl implements DialogService {
                 ? buildWholeLeft(wholeLeft, wholeLeft.createLeftComponent(myWindow), main)
                 : main;
 
-            installDefaultActionKey(root);
+            installDialogKeys(root);
 
             return root;
         }
@@ -249,12 +251,23 @@ public class UnifiedDialogServiceImpl implements DialogService {
         }
 
         @RequiredUIAccess
-        private void installDefaultActionKey(Component root) {
+        private void installDialogKeys(Component root) {
             UIAccess uiAccess = UIAccess.current();
             root.addKeyPressedListener(event -> {
-                if (!(event.getInputDetails() instanceof KeyboardInputDetails details)
-                    || details.getKeyCode() != KeyCode.ENTER
-                    || !details.getModifiers().isEmpty()) {
+                if (!(event.getInputDetails() instanceof KeyboardInputDetails details) || !details.getModifiers().isEmpty()) {
+                    return;
+                }
+
+                if (details.getKeyCode() == KeyCode.ESCAPE) {
+                    uiAccess.execute(() -> {
+                        if (!myResult.isDone()) {
+                            cancel(new DialogEscapeAction());
+                        }
+                    });
+                    return;
+                }
+
+                if (details.getKeyCode() != KeyCode.ENTER) {
                     return;
                 }
 
@@ -307,9 +320,6 @@ public class UnifiedDialogServiceImpl implements DialogService {
                 .rightSet(CONTENT_HORIZONTAL_PADDING)
                 .apply();
 
-            if (myDescriptor.hasBorderAtButtonLayout()) {
-                buttons.borderBuilder().topSet().apply();
-            }
             return buttons;
         }
 
@@ -323,7 +333,11 @@ public class UnifiedDialogServiceImpl implements DialogService {
 
         @RequiredUIAccess
         private void cancelByUser() {
-            DialogCancelAction action = new DialogCancelAction();
+            cancel(new DialogCancelAction());
+        }
+
+        @RequiredUIAccess
+        private void cancel(DialogCancelAction action) {
             if (myDescriptor.canHandle(action, null, myWindow)) {
                 myDescriptor.onHandleValue(action, null);
 

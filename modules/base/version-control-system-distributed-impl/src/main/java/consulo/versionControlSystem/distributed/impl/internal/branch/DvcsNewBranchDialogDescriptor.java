@@ -187,11 +187,6 @@ public class DvcsNewBranchDialogDescriptor<R extends Repository> extends DialogD
     }
 
     @Override
-    public boolean hasBorderAtButtonLayout() {
-        return false;
-    }
-
-    @Override
     protected DialogOkAction createOkAction() {
         return new DialogOkAction(myOkText);
     }

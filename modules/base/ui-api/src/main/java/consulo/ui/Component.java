@@ -36,6 +36,17 @@ public interface Component extends UserDataHolder {
     <T> void putUserData(Key<T> key, @Nullable T value);
 
     /**
+     * A stable name of this component within its window, for tools that look components up rather than users.
+     */
+    default void setId(@Nullable String id) {
+        putUserData(ComponentId.KEY, id);
+    }
+
+    default @Nullable String getId() {
+        return getUserData(ComponentId.KEY);
+    }
+
+    /**
      * Access to the ui this component is shown in. A desktop frontend has a single one and answers it whatever
      * the component is, the web frontend has one per browser session - which is why a component of it can only
      * answer while it is attached, and why an event arriving off the ui thread must ask the component it is

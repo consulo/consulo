@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import consulo.ui.impl.ScriptedMessageBoxBuilder;
-import consulo.ui.impl.ScriptedInputBoxBuilder;
 
 /**
  * @author VISTALL
@@ -295,26 +293,26 @@ public class LightUIInternal extends UIInternal implements UIInternalEx {
 
     @Override
     public <T> MessageBoxBuilder<T> _MessageBox_create() {
-        return new ScriptedMessageBoxBuilder<>();
+        return new LightMessageBoxBuilder<>();
     }
 
     @Override
     public InputBoxBuilder<String, TextBox> _InputBox_text() {
-        return new ScriptedInputBoxBuilder<>();
+        return new LightInputBoxBuilder<>();
     }
 
     @Override
     public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
-        return new ScriptedInputBoxBuilder<>();
+        return new LightInputBoxBuilder<>();
     }
 
     @Override
     public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
-        return new ScriptedInputBoxBuilder<>();
+        return new LightInputBoxBuilder<>();
     }
 
     @Override
     public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
-        return new ScriptedInputBoxBuilder<>();
+        return new LightInputBoxBuilder<>();
     }
 }

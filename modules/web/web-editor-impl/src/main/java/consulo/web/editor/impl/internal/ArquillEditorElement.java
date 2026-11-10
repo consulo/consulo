@@ -1274,6 +1274,13 @@ public class ArquillEditorElement extends Component implements HasSize {
         callApi("setLineNumbers($0)", numbersJson);
     }
 
+    public void setRangeFrames(String framesJson) {
+        if (isUnchanged("rangeFrames", framesJson)) {
+            return;
+        }
+        callApi("setRangeFrames($0)", framesJson);
+    }
+
     public void setLineFrames(String framesJson) {
         if (isUnchanged("lineFrames", framesJson)) {
             return;

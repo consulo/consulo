@@ -1039,7 +1039,7 @@ public class FindUtil {
                         }
                     });
                 }
-                UIUtil.invokeLaterIfNeeded(((UsageViewImpl)view)::expandAll);
+                view.expandAll();
             }
         });
         return view;

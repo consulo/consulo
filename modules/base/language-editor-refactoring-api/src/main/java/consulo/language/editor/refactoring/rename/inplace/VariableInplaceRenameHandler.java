@@ -122,11 +122,11 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     protected boolean checkAvailable(PsiElement elementToRename, Editor editor, DataContext dataContext) {
         if (!isAvailableOnDataContext(dataContext)) {
             LOG.error("Recursive invocation");
-            RenameHandlerRegistry.getInstance().getRenameHandler(dataContext).invoke(
-                elementToRename.getProject(),
-                editor,
-                elementToRename.getContainingFile(), dataContext
-            );
+            RenameHandlerRegistry.getInstance().getRenameHandlerAsync(dataContext).thenAccept(handler -> {
+                if (handler != null) {
+                    handler.invoke(elementToRename.getProject(), editor, elementToRename.getContainingFile(), dataContext);
+                }
+            });
             return false;
         }
         return true;
@@ -147,15 +147,20 @@ public class VariableInplaceRenameHandler implements RenameHandler {
     }
 
     protected static void performDialogRename(PsiElement elementToRename, Editor editor, DataContext dataContext, String initialName) {
+        String flag = initialName == null ? "" : initialName;
         try {
-            ourPreventInlineRenameFlag.set(initialName == null ? "" : initialName);
-            RenameHandler handler = RenameHandlerRegistry.getInstance().getRenameHandler(dataContext);
-            assert handler != null : elementToRename;
-            handler.invoke(
-                elementToRename.getProject(),
-                editor,
-                elementToRename.getContainingFile(), dataContext
-            );
+            ourPreventInlineRenameFlag.set(flag);
+            RenameHandlerRegistry.getInstance().getRenameHandlerAsync(dataContext).thenAccept(handler -> {
+                assert handler != null : elementToRename;
+                String previous = ourPreventInlineRenameFlag.get();
+                try {
+                    ourPreventInlineRenameFlag.set(flag);
+                    handler.invoke(elementToRename.getProject(), editor, elementToRename.getContainingFile(), dataContext);
+                }
+                finally {
+                    ourPreventInlineRenameFlag.set(previous);
+                }
+            });
         }
         finally {
             ourPreventInlineRenameFlag.set(null);

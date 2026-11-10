@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.refactoring;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
@@ -18,7 +19,7 @@ import consulo.language.editor.refactoring.event.RefactoringListenerManager;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.language.editor.refactoring.internal.RefactoringListenerManagerEx;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
-import consulo.language.editor.refactoring.ui.ConflictsDialog;
+import consulo.language.editor.refactoring.ui.ConflictsDialogDescriptor;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -34,14 +35,17 @@ import consulo.module.UnloadedModuleDescription;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.MessageBoxes;
 import consulo.undoRedo.*;
 import consulo.usage.*;
 import consulo.usage.internal.UsageViewEx;
 import consulo.usage.rule.PsiElementUsage;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.SimpleReference;
@@ -51,6 +55,10 @@ import org.jetbrains.annotations.TestOnly;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -65,6 +73,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     private RefactoringTransaction myTransaction;
     private boolean myIsPreviewUsages;
     protected Runnable myPrepareSuccessfulSwingThreadCallback;
+    private boolean myConflictsAccepted;
     private UsageView myUsageView = null;
 
     protected BaseRefactoringProcessor(Project project) {
@@ -111,6 +120,17 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     protected boolean preprocessUsages(SimpleReference<UsageInfo[]> refUsages) {
         prepareSuccessful();
         return true;
+    }
+
+    /**
+     * Asynchronous form of {@link #preprocessUsages(SimpleReference)}, for a processor which asks the user in dialogs
+     * that do not block. Completes with whether the refactoring is to go on.
+     *
+     * @param refUsages usages to be filtered
+     */
+    @RequiredUIAccess
+    protected CompletableFuture<Boolean> preprocessUsagesAsync(SimpleReference<UsageInfo[]> refUsages) {
+        return CompletableFuture.completedFuture(preprocessUsages(refUsages));
     }
 
     /**
@@ -162,7 +182,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
     @RequiredUIAccess
     protected void doRun() {
-        if (!PsiDocumentManager.getInstance(myProject).commitAllDocumentsUnderProgress()) {
+        if (!commitAllDocuments()) {
             return;
         }
         SimpleReference<UsageInfo[]> refUsages = new SimpleReference<>();
@@ -188,17 +208,37 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             }
         };
 
-        if (!ProgressManager.getInstance()
-            .runProcessWithProgressSynchronously(findUsagesRunnable, RefactoringLocalize.progressText(), true, myProject)) {
-            return;
-        }
+        whenDone(
+            CommonRefactoringUtil.runWithProgress(myProject, RefactoringLocalize.progressText(), findUsagesRunnable),
+            completed -> {
+                if (Boolean.TRUE.equals(completed)) {
+                    afterFindUsages(refUsages, refErrorLanguage, refProcessCanceled, anyException);
+                }
+            }
+        );
+    }
 
+    @RequiredUIAccess
+    private boolean commitAllDocuments() {
+        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
+        if (myProject.getApplication().isUnifiedApplication()) {
+            documentManager.commitAllDocuments();
+            return true;
+        }
+        return documentManager.commitAllDocumentsUnderProgress();
+    }
+
+    @RequiredUIAccess
+    private void afterFindUsages(
+        SimpleReference<UsageInfo[]> refUsages,
+        SimpleReference<Language> refErrorLanguage,
+        SimpleReference<Boolean> refProcessCanceled,
+        SimpleReference<Boolean> anyException
+    ) {
         if (!refErrorLanguage.isNull()) {
-            Messages.showErrorDialog(
-                myProject,
-                RefactoringLocalize.unsupportedRefsFound(refErrorLanguage.get().getDisplayName()).get(),
-                RefactoringLocalize.errorTitle().get()
-            );
+            MessageBoxes.okError(RefactoringLocalize.unsupportedRefsFound(refErrorLanguage.get().getDisplayName()))
+                .title(RefactoringLocalize.errorTitle())
+                .showAsync(myProject);
             return;
         }
         if (DumbService.isDumb(myProject)) {
@@ -206,11 +246,11 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             return;
         }
         if (!refProcessCanceled.isNull()) {
-            Messages.showErrorDialog(
-                myProject,
-                "Index corruption detected. Please retry the refactoring - indexes will be rebuilt automatically",
-                RefactoringLocalize.errorTitle().get()
-            );
+            MessageBoxes.okError(
+                    LocalizeValue.localizeTODO("Index corruption detected. Please retry the refactoring - indexes will be rebuilt automatically")
+                )
+                .title(RefactoringLocalize.errorTitle())
+                .showAsync(myProject);
             return;
         }
 
@@ -219,9 +259,71 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             return;
         }
         assert !refUsages.isNull() : "Null usages from processor " + this;
-        if (!preprocessUsages(refUsages)) {
+
+        whenDone(preprocessUsagesAsync(refUsages), proceed -> {
+            if (Boolean.TRUE.equals(proceed)) {
+                runPreprocessed(refUsages);
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private static <T> void whenDone(CompletableFuture<T> future, @RequiredUIAccess Consumer<@Nullable T> action) {
+        if (future.isDone()) {
+            if (!future.isCancelled()) {
+                action.accept(joinRethrowing(future));
+            }
             return;
         }
+
+        future.whenCompleteAsync((value, error) -> {
+            if (error != null) {
+                Throwable cause = unwrap(error);
+                if (!(cause instanceof CancellationException) && !(cause instanceof ProcessCanceledException)) {
+                    LOG.error(cause);
+                }
+                return;
+            }
+            try {
+                action.accept(value);
+            }
+            catch (ProcessCanceledException ignored) {
+            }
+            catch (Throwable e) {
+                LOG.error(e);
+            }
+        }, UIAccess.current());
+    }
+
+    protected static <T> @Nullable T joinRethrowing(CompletableFuture<T> future) {
+        try {
+            return future.join();
+        }
+        catch (CompletionException | CancellationException e) {
+            Throwable cause = unwrap(e);
+            if (cause instanceof CancellationException) {
+                return null;
+            }
+            if (cause instanceof RuntimeException runtimeException) {
+                throw runtimeException;
+            }
+            if (cause instanceof Error error) {
+                throw error;
+            }
+            throw e;
+        }
+    }
+
+    private static Throwable unwrap(Throwable error) {
+        Throwable cause = error;
+        while (cause instanceof CompletionException && cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
+
+    @RequiredUIAccess
+    private void runPreprocessed(SimpleReference<UsageInfo[]> refUsages) {
         UsageInfo[] usages = refUsages.get();
         assert usages != null;
         UsageViewDescriptor descriptor = createUsageViewDescriptor(usages);
@@ -401,6 +503,8 @@ public abstract class BaseRefactoringProcessor implements Runnable {
      * @param conflicts map with conflict messages and locations
      * @return true if refactoring could proceed or false if refactoring should be cancelled
      */
+    @Deprecated
+    @DeprecationInfo("Use processConflictsAsync")
     @RequiredUIAccess
     public static boolean processConflicts(Project project, MultiMap<PsiElement, LocalizeValue> conflicts) {
         if (conflicts.isEmpty()) {
@@ -414,35 +518,59 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
         }
 
-        ConflictsDialog conflictsDialog = new ConflictsDialog(project, conflicts);
-        return conflictsDialog.showAndGet();
+        return Boolean.TRUE.equals(new ConflictsDialogDescriptor(project, conflicts).showAsync().getNow(Boolean.FALSE));
     }
 
+    /**
+     * Asynchronous form of {@link #processConflicts(Project, MultiMap)}.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> processConflictsAsync(Project project, MultiMap<PsiElement, LocalizeValue> conflicts) {
+        if (conflicts.isEmpty()) {
+            return CompletableFuture.completedFuture(Boolean.TRUE);
+        }
+
+        if (project.getApplication().isUnitTestMode()) {
+            if (BaseRefactoringProcessor.ConflictsInTestsException.isTestIgnore()) {
+                return CompletableFuture.completedFuture(Boolean.TRUE);
+            }
+            throw new BaseRefactoringProcessor.ConflictsInTestsException(conflicts.values());
+        }
+
+        return new ConflictsDialogDescriptor(project, conflicts).showAsync();
+    }
+
+    @RequiredUIAccess
     private void showUsageView(
         UsageViewDescriptor viewDescriptor,
         Supplier<UsageSearcher> factory,
         UsageInfo[] usageInfos
     ) {
-        UsageViewManager viewManager = UsageViewManager.getInstance(myProject);
-
         PsiElement[] initialElements = viewDescriptor.getElements();
         UsageTarget[] targets = PsiElementUsageTargetFactory.getInstance().create(initialElements);
         SimpleReference<Usage[]> convertUsagesRef = new SimpleReference<>();
-        if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
-            () -> myProject.getApplication().runReadAction(() -> convertUsagesRef.set(UsageInfo2UsageAdapter.convert(usageInfos))),
-            LocalizeValue.localizeTODO("Preprocess Usages"),
-            true,
-            myProject
-        )) {
-            return;
-        }
+        Coroutine.first(UIAction.<@Nullable Object, Boolean>await(ignored -> CommonRefactoringUtil.runWithProgress(
+                myProject,
+                LocalizeValue.localizeTODO("Preprocess Usages"),
+                () -> myProject.getApplication().runReadAction(() -> convertUsagesRef.set(UsageInfo2UsageAdapter.convert(usageInfos)))
+            )))
+            .then(UIAction.apply(completed -> {
+                if (completed && !convertUsagesRef.isNull()) {
+                    showUsageView(viewDescriptor, factory, targets, convertUsagesRef.get());
+                }
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(myProject.coroutineContext()), null);
+    }
 
-        if (convertUsagesRef.isNull()) {
-            return;
-        }
-
-        Usage[] usages = convertUsagesRef.get();
-
+    @RequiredUIAccess
+    private void showUsageView(
+        UsageViewDescriptor viewDescriptor,
+        Supplier<UsageSearcher> factory,
+        UsageTarget[] targets,
+        Usage[] usages
+    ) {
+        UsageViewManager viewManager = UsageViewManager.getInstance(myProject);
         UsageViewPresentation presentation = createPresentation(viewDescriptor, usages);
         if (myUsageView == null) {
             myUsageView = viewManager.showUsages(targets, usages, presentation, factory);
@@ -519,12 +647,17 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                 preparedData.put(helper, operation);
             });
 
-            ProgressManager.getInstance().runProcessWithProgressSynchronously(
-                prepareHelpersRunnable,
-                LocalizeValue.localizeTODO("Prepare …"),
-                false,
-                myProject
-            );
+            if (app.isUnifiedApplication()) {
+                prepareHelpersRunnable.run();
+            }
+            else {
+                ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                    prepareHelpersRunnable,
+                    LocalizeValue.localizeTODO("Prepare …"),
+                    false,
+                    myProject
+                );
+            }
 
             Runnable performRefactoringRunnable = () -> {
                 String refactoringId = getRefactoringId();
@@ -552,7 +685,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                     }
                 }
             };
-            if (Registry.is("run.refactorings.under.progress")) {
+            if (!app.isUnifiedApplication() && Registry.is("run.refactorings.under.progress")) {
                 app.runWriteActionWithNonCancellableProgressInDispatchThread(
                     commandName,
                     myProject,
@@ -571,7 +704,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                 e.getKey().performOperation(myProject, e.getValue());
             }
             myTransaction.commit();
-            if (Registry.is("run.refactorings.under.progress")) {
+            if (!app.isUnifiedApplication() && Registry.is("run.refactorings.under.progress")) {
                 app.runWriteActionWithNonCancellableProgressInDispatchThread(
                     commandName,
                     myProject,
@@ -690,13 +823,43 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         return showConflicts(conflicts, null);
     }
 
+    /**
+     * Where the conflicts dialog does not block, its answer comes too late for the caller: the refactoring is dropped,
+     * and run again with the conflicts accepted once the user chooses to continue.
+     */
     @RequiredUIAccess
     protected boolean showConflicts(MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
+        if (myConflictsAccepted && !conflicts.isEmpty()) {
+            prepareSuccessful();
+            return true;
+        }
+
+        CompletableFuture<Boolean> result = showConflictsAsync(conflicts, usages);
+        if (result.isDone()) {
+            return Boolean.TRUE.equals(joinRethrowing(result));
+        }
+
+        result.whenCompleteAsync((proceed, error) -> {
+            if (error == null && Boolean.TRUE.equals(proceed)) {
+                myConflictsAccepted = true;
+                run();
+            }
+        }, UIAccess.current());
+        return false;
+    }
+
+    /**
+     * Asynchronous form of {@link #showConflicts(MultiMap, UsageInfo[])}, for {@link #preprocessUsagesAsync(SimpleReference)}.
+     *
+     * @return whether the refactoring is to go on
+     */
+    @RequiredUIAccess
+    protected CompletableFuture<Boolean> showConflictsAsync(MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
         if (!conflicts.isEmpty() && myProject.getApplication().isUnitTestMode()) {
             if (!ConflictsInTestsException.isTestIgnore()) {
                 throw new ConflictsInTestsException(conflicts.values());
             }
-            return true;
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
 
         if (myPrepareSuccessfulSwingThreadCallback != null && !conflicts.isEmpty()) {
@@ -706,22 +869,25 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                 conflictUsages.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts.values());
                 myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).conflictsDetected(refactoringId, conflictUsages);
             }
-            ConflictsDialog conflictsDialog = prepareConflictsDialog(conflicts, usages);
-            if (!conflictsDialog.showAndGet()) {
-                if (conflictsDialog.isShowConflicts()) {
-                    prepareSuccessful();
+            ConflictsDialogDescriptor conflictsDialog = prepareConflictsDialog(conflicts, usages);
+            return conflictsDialog.showAsync().thenApply(proceed -> {
+                if (!proceed) {
+                    if (conflictsDialog.isShowConflicts()) {
+                        prepareSuccessful();
+                    }
+                    return Boolean.FALSE;
                 }
-                return false;
-            }
+                prepareSuccessful();
+                return Boolean.TRUE;
+            });
         }
 
         prepareSuccessful();
-        return true;
+        return CompletableFuture.completedFuture(Boolean.TRUE);
     }
 
-    
-    protected ConflictsDialog prepareConflictsDialog(MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
-        ConflictsDialog conflictsDialog = createConflictsDialog(conflicts, usages);
+    protected ConflictsDialogDescriptor prepareConflictsDialog(MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
+        ConflictsDialogDescriptor conflictsDialog = createConflictsDialog(conflicts, usages);
         conflictsDialog.setCommandName(getCommandName());
         return conflictsDialog;
     }
@@ -739,8 +905,8 @@ public abstract class BaseRefactoringProcessor implements Runnable {
     }
 
     
-    protected ConflictsDialog createConflictsDialog(MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
-        return new ConflictsDialog(myProject, conflicts, usages == null ? null : () -> execute(usages), false, true);
+    protected ConflictsDialogDescriptor createConflictsDialog(MultiMap<PsiElement, LocalizeValue> conflicts, @Nullable UsageInfo[] usages) {
+        return new ConflictsDialogDescriptor(myProject, conflicts, usages == null ? null : () -> execute(usages), false, true);
     }
 
     

@@ -26,7 +26,7 @@ import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.util.ReadOnlyAttributeUtil;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
-import consulo.language.editor.refactoring.safeDelete.SafeDeleteDialog;
+import consulo.language.editor.refactoring.safeDelete.SafeDeleteDialogDescriptor;
 import consulo.language.editor.refactoring.safeDelete.SafeDeleteProcessor;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -40,15 +40,19 @@ import consulo.localHistory.LocalHistoryAction;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxes;
+import consulo.ui.MessageButtonRole;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.MessagesEx;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.SmartList;
-import consulo.util.lang.ref.Ref;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.Iteration;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
@@ -58,6 +62,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DeleteHandler {
     private DeleteHandler() {
@@ -105,26 +114,27 @@ public class DeleteHandler {
             }
             LocalHistoryAction a = LocalHistory.getInstance().startAction(IdeLocalize.progressDeleting());
             try {
-                deletePsiElement(elements, project);
+                deletePsiElement(elements, project).whenComplete((result, error) -> a.finish());
             }
-            finally {
+            catch (RuntimeException | Error e) {
                 a.finish();
+                throw e;
             }
         }
     }
 
     @RequiredUIAccess
-    public static void deletePsiElement(PsiElement[] elementsToDelete, Project project) {
-        deletePsiElement(elementsToDelete, project, true);
+    public static CompletableFuture<?> deletePsiElement(PsiElement[] elementsToDelete, Project project) {
+        return deletePsiElement(elementsToDelete, project, true);
     }
 
     @RequiredUIAccess
-    public static void deletePsiElement(PsiElement[] elementsToDelete, final Project project, boolean needConfirmation) {
+    public static CompletableFuture<?> deletePsiElement(PsiElement[] elementsToDelete, Project project, boolean needConfirmation) {
         if (elementsToDelete == null || elementsToDelete.length == 0) {
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
-        final PsiElement[] elements = PsiTreeUtil.filterAncestors(elementsToDelete);
+        PsiElement[] elements = PsiTreeUtil.filterAncestors(elementsToDelete);
 
         boolean safeDeleteApplicable = true;
         for (int i = 0; i < elements.length && safeDeleteApplicable; i++) {
@@ -133,45 +143,37 @@ public class DeleteHandler {
         }
 
         boolean dumb = DumbService.getInstance(project).isDumb();
-        if (safeDeleteApplicable && !dumb) {
-            final Ref<Boolean> exit = Ref.create(false);
-            SafeDeleteDialog dialog = new SafeDeleteDialog(
+        CompletableFuture<Boolean> confirmed;
+        if (!needConfirmation) {
+            confirmed = CompletableFuture.completedFuture(Boolean.TRUE);
+        }
+        else if (safeDeleteApplicable && !dumb) {
+            SafeDeleteDialogDescriptor dialog = new SafeDeleteDialogDescriptor(
                 project,
                 elements,
-                (SafeDeleteDialog.Callback)dialog1 -> {
+                true,
+                descriptor -> {
                     if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, Arrays.asList(elements), true)) {
                         return;
                     }
-
-                    SafeDeleteProcessor processor = SafeDeleteProcessor.createInstance(
-                        project,
-                        () -> {
-                            exit.set(true);
-                            dialog1.close(DialogWrapper.OK_EXIT_CODE);
-                        },
-                        elements,
-                        dialog1.isSearchInComments(),
-                        dialog1.isSearchForTextOccurences(),
-                        true
-                    );
-
-                    processor.run();
+                    Coroutine.first(UIAction.<Object, SafeDeleteProcessor>await(ignored -> SafeDeleteProcessor.createInstanceAsync(
+                            project,
+                            null,
+                            elements,
+                            descriptor.isSearchInComments(),
+                            descriptor.isSearchForTextOccurences(),
+                            true
+                        )))
+                        .then(UIAction.apply(processor -> {
+                            descriptor.invokeSafeDelete(processor, null);
+                            return null;
+                        }))
+                        .runAsync(CoroutineScope.of(project.coroutineContext()), null);
                 }
-            ) {
-                @Override
-                protected boolean isDelete() {
-                    return true;
-                }
-            };
-            if (needConfirmation) {
-                dialog.setTitle(RefactoringLocalize.deleteTitle());
-                if (!dialog.showAndGet() || exit.get()) {
-                    return;
-                }
-            }
+            );
+            confirmed = dialog.showAsync().handle((value, error) -> error == null && value != null && !dialog.isSafeDelete());
         }
         else {
-            @SuppressWarnings({"UnresolvedPropertyKey"})
             String warningMessage = DeleteUtil.generateWarningMessage(IdeLocalize::promptDeleteElements, elements).get();
 
             boolean anyDirectories = false;
@@ -199,21 +201,84 @@ public class DeleteHandler {
                         "  no usages will be checked.";
             }
 
-            if (needConfirmation) {
-                int result = Messages.showOkCancelDialog(
-                    project,
-                    warningMessage,
-                    IdeLocalize.titleDelete().get(),
-                    ApplicationLocalize.buttonDelete().get(),
-                    CommonLocalize.buttonCancel().get(),
-                    UIUtil.getQuestionIcon()
-                );
-                if (result != Messages.OK) {
-                    return;
-                }
-            }
+            confirmed = MessageBoxBuilder.<Boolean>create()
+                .asQuestion()
+                .title(IdeLocalize.titleDelete())
+                .text(LocalizeValue.of(warningMessage))
+                .button(MessageButtonRole.OK, ApplicationLocalize.buttonDelete(), Boolean.TRUE)
+                .asDefaultButton()
+                .button(MessageButtonRole.CANCEL, CommonLocalize.buttonCancel(), Boolean.FALSE)
+                .asExitButton()
+                .showAsync(project);
         }
 
+        Set<PsiElement> skipped = new HashSet<>();
+        AtomicBoolean delete = new AtomicBoolean();
+        return Coroutine.first(UIAction.<List<PsiElement>, List<PsiElement>>await(all -> confirmed.thenApply(answer -> {
+                delete.set(answer);
+                return answer ? all : List.of();
+            })))
+            .then(Iteration.<PsiElement, List<PsiElement>>forEach(
+                UIAction.<PsiElement, @Nullable Void>await(element -> confirmReadOnly(element, project, skipped))
+            ))
+            .then(UIAction.apply(ignored -> {
+                if (delete.get()) {
+                    deleteElements(elements, skipped, project);
+                }
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(project.coroutineContext()), Arrays.asList(elements))
+            .toFuture();
+    }
+
+    @RequiredUIAccess
+    private static CompletableFuture<@Nullable Void> confirmReadOnly(PsiElement element, Project project, Set<PsiElement> skipped) {
+        if (element instanceof PsiDirectory directory) {
+            VirtualFile virtualFile = directory.getVirtualFile();
+            if (!virtualFile.isInLocalFileSystem() || virtualFile.is(VFileProperty.SYMLINK)) {
+                return CompletableFuture.completedFuture(null);
+            }
+            List<VirtualFile> readOnlyFiles = new ArrayList<>();
+            CommonRefactoringUtil.collectReadOnlyFiles(virtualFile, readOnlyFiles);
+            if (readOnlyFiles.isEmpty()) {
+                return CompletableFuture.completedFuture(null);
+            }
+            return MessageBoxes.yesNo()
+                .title(IdeLocalize.titleDelete())
+                .text(IdeLocalize.promptDirectoryContainsReadOnlyFiles(virtualFile.getPresentableUrl()))
+                .showAsync(project)
+                .thenAccept(answer -> {
+                    if (!answer || !clearReadOnlyFlags(readOnlyFiles, project)) {
+                        skipped.add(element);
+                    }
+                });
+        }
+        if (element.isWritable() || element instanceof PsiFileSystemItem item && PsiUtilBase.isSymLink(item)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        PsiFile file = element.getContainingFile();
+        VirtualFile virtualFile = file == null ? null : file.getVirtualFile();
+        if (virtualFile == null || !virtualFile.isInLocalFileSystem()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return MessageBoxes.yesNo()
+            .asWarning()
+            .title(IdeLocalize.titleDelete())
+            .text(LocalizeValue.join(
+                " ",
+                UILocalize.fileIsReadOnlyMessageText(virtualFile.getPresentableUrl()),
+                IdeLocalize.promptDeleteItAnyway()
+            ))
+            .showAsync(project)
+            .thenAccept(answer -> {
+                if (!answer || !clearReadOnlyFlag(virtualFile, project)) {
+                    skipped.add(element);
+                }
+            });
+    }
+
+    @RequiredUIAccess
+    private static void deleteElements(PsiElement[] elements, Set<PsiElement> skipped, Project project) {
         CommandProcessor.getInstance().newCommand()
             .project(project)
             .name(RefactoringLocalize.safeDeleteCommand(RefactoringUIUtil.calculatePsiElementDescriptionList(elements)))
@@ -229,69 +294,20 @@ public class DeleteHandler {
                     return;
                 }
 
-                // deleted from project view or something like that.
                 if (!DataManager.getInstance().getDataContext().hasData(Editor.KEY)) {
                     CommandProcessor.getInstance().markCurrentCommandAsGlobal(project);
                 }
 
                 for (PsiElement elementToDelete : elements) {
-                    if (!elementToDelete.isValid()) {
-                        continue; //was already deleted
-                    }
-                    if (elementToDelete instanceof PsiDirectory directory) {
-                        VirtualFile virtualFile = directory.getVirtualFile();
-                        if (virtualFile.isInLocalFileSystem() && !virtualFile.is(VFileProperty.SYMLINK)) {
-                            ArrayList<VirtualFile> readOnlyFiles = new ArrayList<>();
-                            CommonRefactoringUtil.collectReadOnlyFiles(virtualFile, readOnlyFiles);
-
-                            if (!readOnlyFiles.isEmpty()) {
-                                LocalizeValue message = IdeLocalize.promptDirectoryContainsReadOnlyFiles(virtualFile.getPresentableUrl());
-                                int _result =
-                                    Messages.showYesNoDialog(project, message.get(), IdeLocalize.titleDelete().get(), UIUtil.getQuestionIcon());
-                                if (_result != Messages.YES) {
-                                    continue;
-                                }
-
-                                boolean success = true;
-                                for (VirtualFile file : readOnlyFiles) {
-                                    success = clearReadOnlyFlag(file, project);
-                                    if (!success) {
-                                        break;
-                                    }
-                                }
-                                if (!success) {
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-                    else if (!elementToDelete.isWritable()
-                        && !(elementToDelete instanceof PsiFileSystemItem psiFileSystemItem && PsiUtilBase.isSymLink(psiFileSystemItem))) {
-                        PsiFile file = elementToDelete.getContainingFile();
-                        if (file != null) {
-                            VirtualFile virtualFile = file.getVirtualFile();
-                            if (virtualFile.isInLocalFileSystem()) {
-                                int _result = MessagesEx.fileIsReadOnly(project, virtualFile)
-                                    .setTitle(IdeLocalize.titleDelete().get())
-                                    .appendMessage(" " + IdeLocalize.promptDeleteItAnyway().get())
-                                    .askYesNo();
-                                if (_result != Messages.YES) {
-                                    continue;
-                                }
-
-                                boolean success = clearReadOnlyFlag(virtualFile, project);
-                                if (!success) {
-                                    continue;
-                                }
-                            }
-                        }
+                    if (!elementToDelete.isValid() || skipped.contains(elementToDelete)) {
+                        continue;
                     }
 
                     try {
                         elementToDelete.checkDelete();
                     }
                     catch (IncorrectOperationException ex) {
-                        Messages.showMessageDialog(project, ex.getMessage(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
+                        showError(project, ex.getMessage());
                         continue;
                     }
 
@@ -300,12 +316,7 @@ public class DeleteHandler {
                             elementToDelete.delete();
                         }
                         catch (IncorrectOperationException ex) {
-                            project.getApplication().invokeLater(() -> Messages.showMessageDialog(
-                                project,
-                                ex.getMessage(),
-                                CommonLocalize.titleError().get(),
-                                UIUtil.getErrorIcon()
-                            ));
+                            project.getApplication().invokeLater(() -> showError(project, ex.getMessage()));
                         }
                     });
                 }
@@ -313,8 +324,19 @@ public class DeleteHandler {
     }
 
     @RequiredUIAccess
+    private static boolean clearReadOnlyFlags(List<VirtualFile> files, Project project) {
+        for (VirtualFile file : files) {
+            if (!clearReadOnlyFlag(file, project)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @RequiredUIAccess
     private static boolean clearReadOnlyFlag(VirtualFile virtualFile, Project project) {
-        return CommandProcessor.getInstance().<Boolean>newCommand()
+        SimpleReference<String> error = SimpleReference.create();
+        boolean cleared = CommandProcessor.getInstance().<Boolean>newCommand()
             .project(project)
             .inWriteAction()
             .compute(() -> {
@@ -322,11 +344,22 @@ public class DeleteHandler {
                     ReadOnlyAttributeUtil.setReadOnlyAttribute(virtualFile, false);
                     return true;
                 }
-                catch (IOException e1) {
-                    Messages.showMessageDialog(project, e1.getMessage(), CommonLocalize.titleError().get(), UIUtil.getErrorIcon());
+                catch (IOException e) {
+                    error.set(e.getMessage());
                     return false;
                 }
             });
+        if (!cleared) {
+            showError(project, error.get());
+        }
+        return cleared;
+    }
+
+    @RequiredUIAccess
+    private static void showError(Project project, @Nullable String message) {
+        MessageBoxes.okError(LocalizeValue.ofNullable(message))
+            .title(CommonLocalize.titleError())
+            .showAsync(project);
     }
 
     public static boolean shouldEnableDeleteAction(PsiElement[] elements) {

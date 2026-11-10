@@ -17,7 +17,12 @@ package consulo.language.editor.refactoring.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
+import consulo.application.HelpManager;
+import consulo.application.progress.ProgressBuilderFactory;
+import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.file.FileTypeManager;
@@ -27,13 +32,21 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxes;
+import consulo.ui.MessageButtonRole;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.util.TraverseUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -45,11 +58,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * @author ven
  */
 public class CommonRefactoringUtil {
+    private static final Logger LOG = Logger.getInstance(CommonRefactoringUtil.class);
+
     private CommonRefactoringUtil() {
     }
 
@@ -63,9 +81,12 @@ public class CommonRefactoringUtil {
         if (project.getApplication().isUnitTestMode()) {
             throw new RuntimeException(message.get());
         }
-        RefactoringMessageDialog dialog =
-            new RefactoringMessageDialog(title, message, helpId, UIUtil.getErrorIcon(), false, project);
-        dialog.show();
+
+        MessageBoxBuilder<@Nullable Object> messageBox = MessageBoxes.okError(message).title(title);
+        if (helpId != null) {
+            messageBox.help(() -> HelpManager.getInstance().invokeHelp(helpId));
+        }
+        messageBox.showAsync(project);
     }
 
     @Deprecated
@@ -122,7 +143,7 @@ public class CommonRefactoringUtil {
         }
 
         project.getApplication().invokeLater(() -> {
-            if (editor == null || editor.getComponent().getRootPane() == null) {
+            if (editor == null || TraverseUtil.getWindowAncestor(editor.getContentUIComponent()) == null) {
                 showErrorMessage(title, message, helpId, project);
             }
             else {
@@ -366,6 +387,47 @@ public class CommonRefactoringUtil {
         return false;
     }
 
+    /**
+     * Runs the task under a modal, cancelable progress. Where the progress cannot block the UI thread, the task runs
+     * in the background and the future completes later - always on the UI thread.
+     *
+     * @return whether the task ran to its end, {@code false} once the user cancelled it
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> runWithProgress(Project project, LocalizeValue title, Runnable task) {
+        Application application = project.getApplication();
+        if (!application.isUnifiedApplication()) {
+            return CompletableFuture.completedFuture(ProgressManager.getInstance().runProcessWithProgressSynchronously(task, title, true, project));
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        return application.getInstance(ProgressBuilderFactory.class)
+            .newProgressBuilder(project, title)
+            .cancelable()
+            .modal()
+            .execute(uiAccess, () -> Coroutine.first(CodeExecution.<Object, Boolean>supply(() -> {
+                ProgressManager progressManager = ProgressManager.getInstance();
+                progressManager.runProcess(task, progressManager.getProgressIndicator());
+                return Boolean.TRUE;
+            })))
+            .handleAsync((completed, error) -> {
+                if (error == null) {
+                    return Boolean.TRUE;
+                }
+                logFailure(error);
+                return Boolean.FALSE;
+            }, uiAccess);
+    }
+
+    private static void logFailure(Throwable error) {
+        Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+        if (!(cause instanceof ProcessCanceledException) && !(cause instanceof CancellationException)) {
+            LOG.error(cause);
+        }
+    }
+
+    @Deprecated
+    @DeprecationInfo("Use checkFileExistAsync")
     @RequiredUIAccess
     public static boolean checkFileExist(
         @Nullable PsiDirectory targetDirectory,
@@ -394,23 +456,76 @@ public class CommonRefactoringUtil {
                 selection = choice[0];
             }
 
-            if (choice != null && selection > 1) {
-                choice[0] = selection % 2;
-                selection = choice[0];
-            }
-
-            if (selection == 0 && file != existing) {
-                CommandProcessor.getInstance().newCommand()
-                    .project(targetDirectory.getProject())
-                    .name(title)
-                    .inWriteAction()
-                    .run(existing::delete);
-            }
-            else {
-                return true;
-            }
+            return applyFileExistSelection(selection, choice, file, existing, targetDirectory, title);
         }
 
         return false;
+    }
+
+    /**
+     * Asynchronous form of {@link #checkFileExist(PsiDirectory, int[], PsiFile, String, LocalizeValue)}.
+     *
+     * @return whether the file is to be skipped
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> checkFileExistAsync(
+        @Nullable PsiDirectory targetDirectory,
+        int @Nullable [] choice,
+        PsiFile file,
+        String name,
+        LocalizeValue title
+    ) {
+        if (targetDirectory == null) {
+            return CompletableFuture.completedFuture(Boolean.FALSE);
+        }
+        PsiFile existing = targetDirectory.findFile(name);
+        if (existing == null || existing.equals(file)) {
+            return CompletableFuture.completedFuture(Boolean.FALSE);
+        }
+        if (choice != null && choice[0] != -1) {
+            return CompletableFuture.completedFuture(applyFileExistSelection(choice[0], choice, file, existing, targetDirectory, title));
+        }
+
+        MessageBoxBuilder<Integer> builder = MessageBoxBuilder.<Integer>create()
+            .asQuestion()
+            .title(title)
+            .text(RefactoringLocalize.dialogMessageFileAlreadyExistsInDirectory(name, targetDirectory.getVirtualFile().getPresentableUrl()))
+            .button(MessageButtonRole.YES, RefactoringLocalize.copyOverwriteButton(), 0)
+            .asDefaultButton()
+            .button(MessageButtonRole.NO, RefactoringLocalize.copySkipButton(), 1);
+        if (choice != null) {
+            builder.button(MessageButtonRole.YES_TO_ALL, RefactoringLocalize.copyOverwriteForAllButton(), 2)
+                .button(MessageButtonRole.NO_TO_ALL, RefactoringLocalize.copySkipForAllButton(), 3);
+        }
+        builder.exitValue(-1);
+
+        return builder.showAsync(targetDirectory.getProject())
+            .thenApply(selection -> applyFileExistSelection(selection == null ? -1 : selection, choice, file, existing, targetDirectory, title));
+    }
+
+    @RequiredUIAccess
+    private static boolean applyFileExistSelection(
+        int selected,
+        int @Nullable [] choice,
+        PsiFile file,
+        PsiFile existing,
+        PsiDirectory targetDirectory,
+        LocalizeValue title
+    ) {
+        int selection = selected;
+        if (choice != null && selection > 1) {
+            choice[0] = selection % 2;
+            selection = choice[0];
+        }
+
+        if (selection == 0 && file != existing) {
+            CommandProcessor.getInstance().newCommand()
+                .project(targetDirectory.getProject())
+                .name(title)
+                .inWriteAction()
+                .run(existing::delete);
+            return false;
+        }
+        return true;
     }
 }

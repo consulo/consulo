@@ -31,6 +31,43 @@ final class WebPopupFocus {
         content.setAttribute(CONTENT_ATTRIBUTE, true);
     }
 
+    static void restoreOnClose(Element host) {
+        host.executeJs(
+            """
+            const deepActive = () => {
+                let active = document.activeElement;
+                while (active && active.shadowRoot && active.shadowRoot.activeElement) {
+                    active = active.shadowRoot.activeElement;
+                }
+                return active;
+            };
+
+            const owns = element => element && element !== document.body && !this.contains(element);
+
+            const initial = deepActive();
+            this.$consuloRestoreFocus = owns(initial) ? initial : null;
+
+            this.addEventListener('opened-changed', event => {
+                if (event.detail.value) {
+                    if (!this.$consuloRestoreFocus) {
+                        const active = deepActive();
+                        this.$consuloRestoreFocus = owns(active) ? active : null;
+                    }
+                    return;
+                }
+
+                const target = this.$consuloRestoreFocus;
+                this.$consuloRestoreFocus = null;
+
+                const active = deepActive();
+                if (target && target.isConnected && (!active || active === document.body || this.contains(active))) {
+                    target.focus();
+                }
+            });
+            """
+        );
+    }
+
     static void forwardToContent(Element host, String contentSelector) {
         host.executeJs(
             """

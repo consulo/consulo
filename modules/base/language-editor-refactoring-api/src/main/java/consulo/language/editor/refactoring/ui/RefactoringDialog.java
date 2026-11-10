@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.refactoring.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.configurable.ConfigurationException;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
@@ -32,6 +33,8 @@ import java.util.List;
 /**
  * @author msk
  */
+@Deprecated
+@DeprecationInfo("Use RefactoringDialogDescriptor")
 public abstract class RefactoringDialog extends DialogWrapper {
     private Action myRefactorAction;
     private Action myPreviewAction;

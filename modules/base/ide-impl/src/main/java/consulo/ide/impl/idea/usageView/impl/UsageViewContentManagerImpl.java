@@ -11,6 +11,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -33,6 +34,8 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -140,30 +143,54 @@ public class UsageViewContentManagerImpl extends UsageViewContentManager {
         boolean toOpenInNewTab,
         boolean isLockable
     ) {
+        Content content = ContentFactory.getInstance().createContent(component, contentName, isLockable);
+        return addContent(content, tabName, toolwindowTitle, reusable, toOpenInNewTab);
+    }
+
+    @Override
+    public Content addUIContent(
+        String contentName,
+        @Nullable String tabName,
+        @Nullable String toolwindowTitle,
+        boolean reusable,
+        Component component,
+        boolean toOpenInNewTab,
+        boolean isLockable
+    ) {
+        Content content = ContentFactory.getInstance().createUIContent(component, contentName, isLockable);
+        return addContent(content, tabName, toolwindowTitle, reusable, toOpenInNewTab);
+    }
+
+    private Content addContent(
+        Content content,
+        @Nullable String tabName,
+        @Nullable String toolwindowTitle,
+        boolean reusable,
+        boolean toOpenInNewTab
+    ) {
         Key<Boolean> contentKey = reusable ? REUSABLE_CONTENT_KEY : NOT_REUSABLE_CONTENT_KEY;
         Content selectedContent = getSelectedContent();
-        toOpenInNewTab |= selectedContent != null && selectedContent.isPinned();
+        boolean openInNewTab = toOpenInNewTab || selectedContent != null && selectedContent.isPinned();
 
         Content contentToDelete = null;
         int indexToAdd = -1;
-        if (!toOpenInNewTab && reusable) {
+        if (!openInNewTab && reusable) {
             List<Content> contents = ContainerUtil.newArrayList(myFindContentManager.getContents());
             if (selectedContent != null) {
                 contents.remove(selectedContent);
                 contents.add(selectedContent);// Selected content has to be the last (and the best) candidate to be deleted
             }
 
-            for (Content content : contents) {
-                if (!content.isPinned() && content.getUserData(contentKey) != null) {
-                    UsageView usageView = content.getUserData(NEW_USAGE_VIEW_KEY);
+            for (Content existing : contents) {
+                if (!existing.isPinned() && existing.getUserData(contentKey) != null) {
+                    UsageView usageView = existing.getUserData(NEW_USAGE_VIEW_KEY);
                     if (usageView == null || !usageView.isSearchInProgress()) {
-                        contentToDelete = content;
+                        contentToDelete = existing;
                         indexToAdd = myFindContentManager.getIndexOfContent(contentToDelete);
                     }
                 }
             }
         }
-        Content content = ContentFactory.getInstance().createContent(component, contentName, isLockable);
         content.setTabName(tabName);
         content.setToolwindowTitle(toolwindowTitle);
         content.putUserData(contentKey, Boolean.TRUE);

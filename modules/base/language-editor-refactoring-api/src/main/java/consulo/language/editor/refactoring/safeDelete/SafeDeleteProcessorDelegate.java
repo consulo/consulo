@@ -22,13 +22,15 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
+import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.UsageInfo;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -53,11 +55,40 @@ public interface SafeDeleteProcessorDelegate {
      */
     @Nullable Collection<? extends PsiElement> getElementsToSearch(PsiElement element, Collection<PsiElement> allElementsToDelete);
 
+    /**
+     * Asynchronous form of {@link #getElementsToSearch(PsiElement, Collection)}, for a delegate which asks the user in
+     * dialogs that do not block.
+     *
+     * @param module the module the deletion was invoked in, if any
+     * @return additional elements to search for usages, or null if the user has cancelled the refactoring.
+     */
+    @RequiredUIAccess
+    default CompletableFuture<@Nullable Collection<? extends PsiElement>> getElementsToSearchAsync(
+        PsiElement element,
+        @Nullable Module module,
+        Collection<PsiElement> allElementsToDelete
+    ) {
+        return CompletableFuture.completedFuture(getElementsToSearch(element, allElementsToDelete));
+    }
+
     @Nullable Collection<PsiElement> getAdditionalElementsToDelete(
         PsiElement element,
         Collection<PsiElement> allElementsToDelete,
         boolean askUser
     );
+
+    /**
+     * Asynchronous form of {@link #getAdditionalElementsToDelete(PsiElement, Collection, boolean)}, for a delegate which
+     * asks the user in dialogs that do not block.
+     */
+    @RequiredUIAccess
+    default CompletableFuture<@Nullable Collection<PsiElement>> getAdditionalElementsToDeleteAsync(
+        PsiElement element,
+        Collection<PsiElement> allElementsToDelete,
+        boolean askUser
+    ) {
+        return CompletableFuture.completedFuture(getAdditionalElementsToDelete(element, allElementsToDelete, askUser));
+    }
 
     @Nullable Collection<LocalizeValue> findConflicts(PsiElement element, PsiElement[] allElementsToDelete);
 
@@ -71,6 +102,17 @@ public interface SafeDeleteProcessorDelegate {
      * @return the filtered list of usages, or null if the user has cancelled the refactoring.
      */
     @Nullable UsageInfo[] preprocessUsages(Project project, UsageInfo[] usages);
+
+    /**
+     * Asynchronous form of {@link #preprocessUsages(Project, UsageInfo[])}, for a delegate which asks the user in
+     * dialogs that do not block.
+     *
+     * @return the filtered list of usages, or null if the user has cancelled the refactoring.
+     */
+    @RequiredUIAccess
+    default CompletableFuture<UsageInfo @Nullable []> preprocessUsagesAsync(Project project, UsageInfo[] usages) {
+        return CompletableFuture.completedFuture(preprocessUsages(project, usages));
+    }
 
     void prepareForDeletion(PsiElement element) throws IncorrectOperationException;
 

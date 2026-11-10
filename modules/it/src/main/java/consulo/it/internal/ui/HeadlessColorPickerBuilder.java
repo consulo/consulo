@@ -16,12 +16,13 @@
 package consulo.it.internal.ui;
 
 
+import consulo.it.HeadlessAnswers;
+import consulo.it.internal.HeadlessUIAccess;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ColorPickerBuilder;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.impl.ScriptedDialogs;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -39,6 +40,13 @@ public class HeadlessColorPickerBuilder implements ColorPickerBuilder {
     private boolean myRecentColors = true;
     private boolean myPipette = true;
     private @Nullable Consumer<ColorValue> myColorChangedConsumer;
+    private @Nullable String myId;
+
+    @Override
+    public ColorPickerBuilder id(String id) {
+        myId = id;
+        return this;
+    }
 
     @Override
     public ColorPickerBuilder withTitle(LocalizeValue title) {
@@ -86,34 +94,23 @@ public class HeadlessColorPickerBuilder implements ColorPickerBuilder {
     @Override
     @RequiredUIAccess
     public CompletableFuture<ColorValue> showAsync(@Nullable Window parent) {
-        ScriptedDialogs dialogs = ScriptedDialogs.installed();
-        if (dialogs == null) {
-            return failed("no dialog script is installed");
+        HeadlessAnswers answers = HeadlessUIAccess.INSTANCE.getAnswers();
+        HeadlessAnswers.ValueAnswer answer = answers == null ? null : answers.colorPickerAnswer(myId);
+        if (answer == null) {
+            return CompletableFuture.failedFuture(HeadlessAnswers.unexpected(answers, "color picker", myId, myTitle));
         }
-
-        dialogs.record(this);
-
-        Object answer = dialogs.nextAnswer();
-        if (answer instanceof ScriptedDialogs.InputAnswer input) {
-            Object value = input.value();
-            if (value == null) {
-                return CompletableFuture.completedFuture(null);
-            }
-            if (value instanceof ColorValue color) {
-                Consumer<ColorValue> consumer = myColorChangedConsumer;
-                if (consumer != null) {
-                    consumer.accept(color);
-                }
-                return CompletableFuture.completedFuture(color);
-            }
-            return failed("color picker answered with " + value);
-        }
-
-        if (dialogs.unexpected() == ScriptedDialogs.Unexpected.DISMISS) {
+        Object value = answer.value();
+        if (value == null) {
             return CompletableFuture.completedFuture(null);
         }
-
-        return failed("unexpected color picker: " + myTitle.get());
+        if (!(value instanceof ColorValue color)) {
+            return CompletableFuture.failedFuture(new IllegalStateException("color picker answered with " + value));
+        }
+        Consumer<ColorValue> consumer = myColorChangedConsumer;
+        if (consumer != null) {
+            consumer.accept(color);
+        }
+        return CompletableFuture.completedFuture(color);
     }
 
     public LocalizeValue getTitle() {
@@ -138,11 +135,5 @@ public class HeadlessColorPickerBuilder implements ColorPickerBuilder {
 
     public boolean isPipette() {
         return myPipette;
-    }
-
-    private static CompletableFuture<ColorValue> failed(String message) {
-        CompletableFuture<ColorValue> result = new CompletableFuture<>();
-        result.completeExceptionally(new IllegalStateException(message));
-        return result;
     }
 }

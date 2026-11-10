@@ -18,16 +18,21 @@ package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.application.HelpManager;
-import consulo.application.ui.NonFocusableSetting;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.document.util.TextRange;
+import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.VariableInplaceRenameHandler;
-import consulo.language.editor.refactoring.ui.NameSuggestionsField;
-import consulo.language.editor.refactoring.ui.RefactoringDialog;
+import consulo.language.editor.refactoring.ui.RefactoringDialogDescriptor;
 import consulo.language.editor.refactoring.util.TextOccurrencesUtil;
+import consulo.language.editor.ui.EditorBox;
+import consulo.language.editor.ui.EditorBoxBuilder;
+import consulo.language.editor.ui.EditorBoxBuilderFactory;
+import consulo.language.editor.ui.EditorComboBox;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.localize.LanguageLocalize;
 import consulo.language.plain.PlainTextFileType;
@@ -37,72 +42,76 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.StaticPosition;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.TableLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.usage.UsageViewUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class RenameDialog extends RefactoringDialog {
+public class RenameDialog extends RefactoringDialogDescriptor {
     private static final Logger LOG = Logger.getInstance(RenameDialog.class);
-    private SuggestedNameInfo mySuggestedNameInfo;
-
-    private JLabel myNameLabel;
-    private NameSuggestionsField myNameSuggestionsField;
-    private CheckBox myCbSearchInComments;
-    private CheckBox myCbSearchTextOccurences;
-    private final JLabel myNewNamePrefix = new JLabel("");
-    private final String myHelpID;
-    
-    private final PsiElement myPsiElement;
-    private final PsiElement myNameSuggestionContext;
-    private final Editor myEditor;
     private static final LocalizeValue REFACTORING_NAME = RefactoringLocalize.renameTitle();
-    private NameSuggestionsField.DataChanged myNameChangedListener;
-    private final Map<AutomaticRenamerFactory, CheckBox> myAutomaticRenamers = new HashMap<>();
-    private String myOldName;
+
+    private @Nullable SuggestedNameInfo mySuggestedNameInfo;
+
+    private final PsiElement myPsiElement;
+    private final @Nullable PsiElement myNameSuggestionContext;
+    private final @Nullable Editor myEditor;
+    private final @Nullable String myHelpID;
+    private final String myOldName;
+    private final String[] mySuggestedNames;
+    private final boolean myTextOccurrencesEnabled;
+    private final Map<AutomaticRenamerFactory, Boolean> myAutomaticRenamers = new LinkedHashMap<>();
+
+    private String myNewName;
+    private boolean mySearchInComments;
+    private boolean mySearchTextOccurrences;
+    private @Nullable TextRange myInitialSelection;
+    private boolean myInitialSelectionApplied;
+    private @Nullable EditorBox myNameBox;
+    private @Nullable CheckBox myCbSearchInComments;
 
     @RequiredUIAccess
     public RenameDialog(
         Project project,
         PsiElement psiElement,
         @Nullable PsiElement nameSuggestionContext,
-        Editor editor
+        @Nullable Editor editor
     ) {
-        super(project, true);
+        super(project, REFACTORING_NAME);
 
         assert psiElement.isValid();
 
         myPsiElement = psiElement;
         myNameSuggestionContext = nameSuggestionContext;
         myEditor = editor;
-        setTitle(REFACTORING_NAME);
+        myOldName = UsageViewUtil.getShortName(psiElement);
+        mySuggestedNames = getSuggestedNames();
+        myNewName = mySuggestedNames.length > 0 ? mySuggestedNames[0] : "";
+        myInitialSelection = computeInitialSelection(myNewName);
 
-        createNewNameComponent();
-        init();
+        mySearchInComments = isToSearchInCommentsForRename();
+        myTextOccurrencesEnabled = TextOccurrencesUtil.isSearchTextOccurencesEnabled(psiElement);
+        mySearchTextOccurrences = myTextOccurrencesEnabled && isToSearchForTextOccurencesForRename();
 
-        myNameLabel.setText(XmlStringUtil.wrapInHtml(XmlStringUtil.escapeText(getLabelText())));
-        boolean toSearchInComments = isToSearchInCommentsForRename();
-        myCbSearchInComments.setValue(toSearchInComments);
+        AutomaticRenamerFactory.EP_NAME.forEachExtensionSafe(factory -> {
+            if (factory.isApplicable(myPsiElement) && factory.getOptionName().isNotEmpty()) {
+                myAutomaticRenamers.put(factory, factory.isEnabled());
+            }
+        });
 
-        if (myCbSearchTextOccurences.isEnabled()) {
-            boolean toSearchForTextOccurences = isToSearchForTextOccurencesForRename();
-            myCbSearchTextOccurences.setValue(toSearchForTextOccurences);
-        }
-
-        if (!myProject.getApplication().isUnitTestMode()) {
-            validateButtons();
-        }
         myHelpID = RenamePsiElementProcessor.forElement(psiElement).getHelpID(psiElement);
     }
 
@@ -112,33 +121,29 @@ public class RenameDialog extends RefactoringDialog {
             String name = dataContext.getData(PsiElementRenameHandler.DEFAULT_NAME);
             //noinspection TestOnlyProblems
             dialog.performRename(name);
-            dialog.close(OK_EXIT_CODE);
         }
         else {
-            dialog.show();
+            dialog.showAsync();
         }
     }
 
-    
     @RequiredReadAction
     protected String getLabelText() {
         return RefactoringLocalize.rename0AndItsUsagesTo(getFullName()).get();
     }
 
-    
     public PsiElement getPsiElement() {
         return myPsiElement;
     }
 
     @Override
-    protected boolean hasPreviewButton() {
-        return RenamePsiElementProcessor.forElement(myPsiElement).showRenamePreviewButton(myPsiElement);
+    public @Nullable String getHelpId() {
+        return myHelpID;
     }
 
     @Override
-    protected void dispose() {
-        myNameSuggestionsField.removeDataChangedListener(myNameChangedListener);
-        super.dispose();
+    protected boolean hasPreviewButton() {
+        return RenamePsiElementProcessor.forElement(myPsiElement).showRenamePreviewButton(myPsiElement);
     }
 
     protected boolean isToSearchForTextOccurencesForRename() {
@@ -155,27 +160,15 @@ public class RenameDialog extends RefactoringDialog {
         return (UsageViewUtil.getType(myPsiElement) + " " + name).trim();
     }
 
-    protected void createNewNameComponent() {
-        String[] suggestedNames = getSuggestedNames();
-        myOldName = UsageViewUtil.getShortName(myPsiElement);
-        myNameSuggestionsField = new NameSuggestionsField(suggestedNames, myProject, PlainTextFileType.INSTANCE, myEditor) {
-            @Override
-            protected boolean shouldSelectAll() {
-                return myEditor == null || myEditor.getSettings().isPreselectRename();
-            }
-        };
-        if (myPsiElement instanceof PsiFile && myEditor == null) {
-            myNameSuggestionsField.selectNameWithoutExtension();
-        }
-        myNameChangedListener = this::processNewNameChanged;
-        myNameSuggestionsField.addDataChangedListener(myNameChangedListener);
-
+    protected boolean shouldSelectAll() {
+        return myEditor == null || myEditor.getSettings().isPreselectRename();
     }
 
     protected void preselectExtension(int start, int end) {
-        myNameSuggestionsField.select(start, end);
+        myInitialSelection = new TextRange(start, end);
     }
 
+    @RequiredUIAccess
     protected void processNewNameChanged() {
         validateButtons();
     }
@@ -200,128 +193,176 @@ public class RenameDialog extends RefactoringDialog {
     }
 
     public String getNewName() {
-        return myNameSuggestionsField.getEnteredName().trim();
+        return myNewName.trim();
     }
 
     public boolean isSearchInComments() {
-        return myCbSearchInComments.getValue();
+        return mySearchInComments;
     }
 
     public boolean isSearchInNonJavaFiles() {
-        return myCbSearchTextOccurences.getValue();
+        return mySearchTextOccurrences;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public @Nullable Component getPreferredFocusedComponent() {
+        EditorBox nameBox = myNameBox;
+        if (nameBox != null && !myInitialSelectionApplied) {
+            myInitialSelectionApplied = true;
+            applyInitialSelection(nameBox);
+        }
+        return nameBox;
+    }
+
+    @Override
+    @RequiredUIAccess
+    protected Component createContentComponent(Disposable uiDisposable) {
+        VerticalLayout layout = VerticalLayout.create();
+        layout.add(Label.create(LocalizeValue.of(getLabelText())));
+
+        EditorBox nameBox = createNameBox();
+        myNameBox = nameBox;
+        TableLayout nameRow = TableLayout.create(StaticPosition.TOP);
+        nameRow.add(nameBox, TableLayout.cell(0, 0).fill());
+        layout.add(nameRow);
+
+        List<Component> options = new ArrayList<>();
+        createCheckboxes(options);
+        if (!options.isEmpty()) {
+            TableLayout optionsLayout = TableLayout.create(StaticPosition.TOP);
+            for (int i = 0; i < options.size(); i++) {
+                optionsLayout.add(options.get(i), TableLayout.cell(i / 2, i % 2).fill());
+            }
+            layout.add(optionsLayout);
+        }
+        return layout;
     }
 
     @RequiredUIAccess
-    @Override
-    public JComponent getPreferredFocusedComponent() {
-        return myNameSuggestionsField.getFocusableComponent();
+    protected void createCheckboxes(List<Component> options) {
+        CheckBox searchInComments = CheckBox.create(RefactoringLocalize.searchInCommentsAndStrings(), mySearchInComments);
+        searchInComments.setId("searchInComments");
+        searchInComments.addValueListener(event -> mySearchInComments = Boolean.TRUE.equals(event.getValue()));
+        myCbSearchInComments = searchInComments;
+        options.add(searchInComments);
+
+        if (myTextOccurrencesEnabled) {
+            CheckBox searchTextOccurrences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences(), mySearchTextOccurrences);
+            searchTextOccurrences.setId("searchTextOccurrences");
+            searchTextOccurrences.addValueListener(event -> mySearchTextOccurrences = Boolean.TRUE.equals(event.getValue()));
+            options.add(searchTextOccurrences);
+        }
+
+        for (Map.Entry<AutomaticRenamerFactory, Boolean> entry : myAutomaticRenamers.entrySet()) {
+            CheckBox checkBox = CheckBox.create(entry.getKey().getOptionName(), entry.getValue());
+            checkBox.addValueListener(event -> entry.setValue(Boolean.TRUE.equals(event.getValue())));
+            options.add(checkBox);
+        }
     }
 
-    @Override
-    protected JComponent createCenterPanel() {
+    @RequiredUIAccess
+    private EditorBox createNameBox() {
+        EditorBoxBuilder builder = myProject.getApplication()
+            .getInstance(EditorBoxBuilderFactory.class)
+            .create(myProject)
+            .text(myNewName)
+            .fileType(PlainTextFileType.INSTANCE);
+
+        EditorBox nameBox;
+        if (mySuggestedNames.length > 1) {
+            EditorComboBox comboBox = builder.buildComboBox();
+            comboBox.setItems(List.of(mySuggestedNames));
+            nameBox = comboBox;
+        }
+        else {
+            nameBox = builder.build();
+        }
+
+        nameBox.setId("newName");
+        nameBox.addValueListener(event -> {
+            String value = event.getValue();
+            myNewName = value == null ? "" : value;
+            processNewNameChanged();
+        });
+        return nameBox;
+    }
+
+    private @Nullable TextRange computeInitialSelection(String name) {
+        if (myPsiElement instanceof PsiFile && myEditor == null) {
+            int pos = name.lastIndexOf('.');
+            return pos > 0 ? new TextRange(0, pos) : null;
+        }
+
+        Editor editor = myEditor;
+        if (editor == null) {
+            return new TextRange(0, name.length());
+        }
+
+        int offset = editor.getCaretModel().getOffset();
+        List<TextRange> ranges = new ArrayList<>();
+        SelectWordUtil.addWordSelection(editor.getSettings().isCamelWords(), editor.getDocument().getCharsSequence(), offset, ranges);
+        for (TextRange wordRange : ranges) {
+            if (!editor.getDocument().getText(wordRange).equals(name)) {
+                continue;
+            }
+
+            int wordStart = wordRange.getStartOffset();
+            SelectionModel selectionModel = editor.getSelectionModel();
+            TextRange selected = new TextRange(
+                Math.max(0, selectionModel.getSelectionStart() - wordStart),
+                Math.max(0, selectionModel.getSelectionEnd() - wordStart)
+            ).intersection(new TextRange(0, name.length()));
+            if (selectionModel.hasSelection() && selected != null && !selected.isEmpty()) {
+                return selected;
+            }
+            if (shouldSelectAll()) {
+                return new TextRange(0, name.length());
+            }
+            return TextRange.from(Math.min(offset - wordStart, name.length()), 0);
+        }
         return null;
     }
 
-    @Override
     @RequiredUIAccess
-    protected JComponent createNorthPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbConstraints = new GridBagConstraints();
-
-        gbConstraints.insets = JBUI.insetsBottom(4);
-        gbConstraints.weighty = 0;
-        gbConstraints.weightx = 1;
-        gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        gbConstraints.fill = GridBagConstraints.BOTH;
-        myNameLabel = new JLabel();
-        panel.add(myNameLabel, gbConstraints);
-
-        gbConstraints.insets = JBUI.insets(0, 0, 4, "".equals(myNewNamePrefix.getText()) ? 0 : 1);
-        gbConstraints.gridwidth = 1;
-        gbConstraints.fill = GridBagConstraints.NONE;
-        gbConstraints.weightx = 0;
-        gbConstraints.gridx = 0;
-        gbConstraints.anchor = GridBagConstraints.WEST;
-        panel.add(myNewNamePrefix, gbConstraints);
-
-        gbConstraints.insets = JBUI.insetsBottom(8);
-        gbConstraints.gridwidth = 2;
-        gbConstraints.fill = GridBagConstraints.BOTH;
-        gbConstraints.weightx = 1;
-        gbConstraints.gridx = 0;
-        gbConstraints.weighty = 1;
-        panel.add(myNameSuggestionsField.getComponent(), gbConstraints);
-
-        createCheckboxes(panel, gbConstraints);
-
-        return panel;
-    }
-
-    @RequiredUIAccess
-    protected void createCheckboxes(JPanel panel, GridBagConstraints gbConstraints) {
-        gbConstraints.insets = JBUI.insetsBottom(4);
-        gbConstraints.gridwidth = 1;
-        gbConstraints.gridx = 0;
-        gbConstraints.weighty = 0;
-        gbConstraints.weightx = 1;
-        gbConstraints.fill = GridBagConstraints.BOTH;
-        myCbSearchInComments = CheckBox.create(RefactoringLocalize.searchInCommentsAndStrings());
-        NonFocusableSetting.initFocusability(myCbSearchInComments);
-        myCbSearchInComments.setValue(true);
-        panel.add(TargetAWT.to(myCbSearchInComments), gbConstraints);
-
-        gbConstraints.insets = JBUI.insetsBottom(4);
-        gbConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        gbConstraints.gridx = 1;
-        gbConstraints.weightx = 1;
-        gbConstraints.fill = GridBagConstraints.BOTH;
-        myCbSearchTextOccurences = CheckBox.create(RefactoringLocalize.searchForTextOccurrences());
-        NonFocusableSetting.initFocusability(myCbSearchTextOccurences);
-        myCbSearchTextOccurences.setValue(true);
-        panel.add(TargetAWT.to(myCbSearchTextOccurences), gbConstraints);
-
-        if (!TextOccurrencesUtil.isSearchTextOccurencesEnabled(myPsiElement)) {
-            myCbSearchTextOccurences.setEnabled(false);
-            myCbSearchTextOccurences.setValue(false);
-            myCbSearchTextOccurences.setVisible(false);
+    private void applyInitialSelection(EditorBox nameBox) {
+        TextRange selection = myInitialSelection;
+        if (selection == null) {
+            return;
         }
 
-        AutomaticRenamerFactory.EP_NAME.forEachExtensionSafe(factory -> {
-            LocalizeValue optionName = factory.getOptionName();
-            if (factory.isApplicable(myPsiElement) && optionName.isNotEmpty()) {
-                gbConstraints.insets = JBUI.insetsBottom(4);
-                gbConstraints.gridwidth = myAutomaticRenamers.size() % 2 == 0 ? 1 : GridBagConstraints.REMAINDER;
-                gbConstraints.gridx = myAutomaticRenamers.size() % 2;
-                gbConstraints.weightx = 1;
-                gbConstraints.fill = GridBagConstraints.BOTH;
-
-                CheckBox checkBox = CheckBox.create(optionName);
-                NonFocusableSetting.initFocusability(checkBox);
-                checkBox.setValue(factory.isEnabled());
-                panel.add(TargetAWT.to(checkBox), gbConstraints);
-                myAutomaticRenamers.put(factory, checkBox);
+        Editor editor = nameBox.getEditor();
+        if (editor == null) {
+            if (selection.getStartOffset() == 0 && selection.getEndOffset() == myNewName.length()) {
+                nameBox.selectAll();
             }
-        });
+            return;
+        }
+
+        TextRange range = selection.intersection(new TextRange(0, editor.getDocument().getTextLength()));
+        if (range == null) {
+            return;
+        }
+        editor.getSelectionModel().removeSelection();
+        editor.getCaretModel().moveToOffset(range.getEndOffset());
+        if (!range.isEmpty()) {
+            editor.getSelectionModel().setSelection(range.getStartOffset(), range.getEndOffset());
+        }
     }
 
     @Override
     @RequiredUIAccess
-    protected void doHelpAction() {
-        HelpManager.getInstance().invokeHelp(myHelpID);
-    }
-
-    @Override
     protected void doAction() {
         LOG.assertTrue(myPsiElement.isValid());
 
-        String newName = getNewName();
-        performRename(newName);
+        performRename(getNewName());
     }
 
+    @RequiredUIAccess
     public void performRename(String newName) {
         RenamePsiElementProcessor elementProcessor = RenamePsiElementProcessor.forElement(myPsiElement);
         elementProcessor.setToSearchInComments(myPsiElement, isSearchInComments());
-        if (myCbSearchTextOccurences.isEnabled()) {
+        if (myTextOccurrencesEnabled) {
             elementProcessor.setToSearchForTextOccurrences(myPsiElement, isSearchInNonJavaFiles());
         }
         if (mySuggestedNameInfo != null) {
@@ -330,11 +371,11 @@ public class RenameDialog extends RefactoringDialog {
 
         RenameProcessor processor = createRenameProcessor(newName);
 
-        for (Map.Entry<AutomaticRenamerFactory, CheckBox> e : myAutomaticRenamers.entrySet()) {
-            e.getKey().setEnabled(e.getValue().getValue());
-
-            if (e.getValue().getValue()) {
-                processor.addRenamerFactory(e.getKey());
+        for (Map.Entry<AutomaticRenamerFactory, Boolean> entry : myAutomaticRenamers.entrySet()) {
+            boolean enabled = entry.getValue();
+            entry.getKey().setEnabled(enabled);
+            if (enabled) {
+                processor.addRenamerFactory(entry.getKey());
             }
         }
 
@@ -362,22 +403,24 @@ public class RenameDialog extends RefactoringDialog {
         }
         Function<String, String> inputValidator = RenameInputValidatorRegistry.getInputErrorValidator(myPsiElement);
         if (inputValidator != null) {
-            setErrorText(inputValidator.apply(getNewName()));
+            String errorText = inputValidator.apply(getNewName());
+            if (errorText != null) {
+                setErrorText(LocalizeValue.of(errorText));
+            }
         }
     }
 
     @Override
     @RequiredReadAction
     protected boolean areButtonsValid() {
-        String newName = getNewName();
-        return RenameUtil.isValidName(myProject, myPsiElement, newName);
+        return RenameUtil.isValidName(myProject, myPsiElement, getNewName());
     }
 
-    protected NameSuggestionsField getNameSuggestionsField() {
-        return myNameSuggestionsField;
+    protected @Nullable EditorBox getNameBox() {
+        return myNameBox;
     }
 
-    public CheckBox getCbSearchInComments() {
+    public @Nullable CheckBox getCbSearchInComments() {
         return myCbSearchInComments;
     }
 }

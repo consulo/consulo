@@ -34,11 +34,14 @@ import consulo.module.ModuleManager;
 import consulo.module.ModuleWithNameAlreadyExistsException;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.InputValidator;
+import consulo.ui.TextBox;
 import consulo.undoRedo.CommandProcessor;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author dsl
@@ -69,68 +72,53 @@ public class RenameModuleHandler implements RenameHandler, TitledHandler {
     public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         Module module = dataContext.getData(LangDataKeys.MODULE_CONTEXT);
         LOG.assertTrue(module != null);
-        Messages.showInputDialog(
-            project,
-            IdeLocalize.promptEnterNewModuleName().get(),
-            IdeLocalize.titleRenameModule().get(),
-            UIUtil.getQuestionIcon(),
-            module.getName(),
-            new MyInputValidator(project, module)
-        );
+        InputBoxBuilder.text()
+            .asQuestion()
+            .title(IdeLocalize.titleRenameModule())
+            .text(IdeLocalize.promptEnterNewModuleName())
+            .value(module.getName())
+            .setupComponent(TextBox::selectAll)
+            .validator(new ModuleNameValidator(project, module))
+            .showAsync(project);
     }
 
-    
     @Override
     public LocalizeValue getActionTitleValue() {
         return RefactoringLocalize.renameModuleTitle();
     }
 
-    private static class MyInputValidator implements InputValidator {
+    private static class ModuleNameValidator implements InputValidator<String> {
         private final Project myProject;
         private final Module myModule;
 
-        public MyInputValidator(Project project, Module module) {
+        public ModuleNameValidator(Project project, Module module) {
             myProject = project;
             myModule = module;
         }
 
         @Override
         @RequiredUIAccess
-        public boolean checkInput(String inputString) {
-            return inputString != null && inputString.length() > 0;
+        public @Nullable InputProblem validate(String inputString) {
+            return inputString.isEmpty() ? InputProblem.error(LocalizeValue.empty()) : null;
         }
 
         @Override
         @RequiredUIAccess
-        public boolean canClose(String inputString) {
+        public CompletableFuture<@Nullable InputProblem> confirm(String inputString) {
             String oldName = myModule.getName();
-            ModifiableModuleModel modifiableModel = renameModule(inputString);
-            if (modifiableModel == null) {
-                return false;
+            ModifiableModuleModel modifiableModel = ModuleManager.getInstance(myProject).getModifiableModel();
+            try {
+                modifiableModel.renameModule(myModule, inputString);
+            }
+            catch (ModuleWithNameAlreadyExistsException moduleWithNameAlreadyExists) {
+                return CompletableFuture.completedFuture(InputProblem.error(IdeLocalize.errorModuleAlreadyExists(inputString)));
             }
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .name(IdeLocalize.commandRenamingModule(oldName))
                 .inWriteAction()
                 .run(() -> modifiableModel.commit());
-            return true;
-        }
-
-        @RequiredUIAccess
-        private @Nullable ModifiableModuleModel renameModule(String inputString) {
-            ModifiableModuleModel modifiableModel = ModuleManager.getInstance(myProject).getModifiableModel();
-            try {
-                modifiableModel.renameModule(myModule, inputString);
-            }
-            catch (ModuleWithNameAlreadyExistsException moduleWithNameAlreadyExists) {
-                Messages.showErrorDialog(
-                    myProject,
-                    IdeLocalize.errorModuleAlreadyExists(inputString).get(),
-                    IdeLocalize.titleRenameModule().get()
-                );
-                return null;
-            }
-            return modifiableModel;
+            return CompletableFuture.completedFuture(null);
         }
     }
 }

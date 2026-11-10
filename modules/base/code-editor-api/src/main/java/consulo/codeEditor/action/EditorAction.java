@@ -22,6 +22,8 @@ import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.image.Image;
@@ -150,12 +152,16 @@ public abstract class EditorAction extends AnAction implements DumbAware, AnActi
         if (editor == null) {
             presentation.setEnabled(false);
         }
-        else if (e.getInputEvent() instanceof KeyEvent) {
+        else if (e.getInputEvent() instanceof KeyEvent || isKeyboardEvent(e.getUIEvent())) {
             updateForKeyboardAccess(editor, presentation, dataContext);
         }
         else {
             update(editor, presentation, dataContext);
         }
+    }
+
+    private static boolean isKeyboardEvent(@Nullable ComponentEvent<?> uiEvent) {
+        return uiEvent != null && uiEvent.getInputDetails() instanceof KeyboardInputDetails;
     }
 
     private static DataContext getProjectAwareDataContext(final Editor editor, final DataContext original) {

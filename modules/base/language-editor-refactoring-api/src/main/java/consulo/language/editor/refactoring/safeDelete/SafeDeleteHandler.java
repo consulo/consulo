@@ -19,7 +19,6 @@ package consulo.language.editor.refactoring.safeDelete;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.dataContext.DataContext;
-import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -30,12 +29,17 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.Iteration;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author dsl
@@ -96,73 +100,58 @@ public class SafeDeleteHandler implements RefactoringActionHandler {
         Set<PsiElement> elementsSet = new HashSet<>(Arrays.asList(tempToDelete));
         Set<PsiElement> fullElementsSet = new LinkedHashSet<>();
 
-        if (checkDelegates) {
-            for (PsiElement element : tempToDelete) {
-                Boolean found = project.getApplication().getExtensionPoint(SafeDeleteProcessorDelegate.class)
-                    .computeSafeIfAny(delegate -> {
-                        if (delegate.handlesElement(element)) {
-                            Collection<? extends PsiElement> addElements =
-                                delegate instanceof SafeDeleteProcessorDelegateBase safeDeleteProcessor
-                                    ? safeDeleteProcessor.getElementsToSearch(element, module, elementsSet)
-                                    : delegate.getElementsToSearch(element, elementsSet);
-                            if (addElements == null) {
-                                return Boolean.FALSE;
-                            }
-                            fullElementsSet.addAll(addElements);
-                            return Boolean.TRUE;
-                        }
-                        return null;
-                    });
-                if (found == null) {
+        List<SafeDeleteProcessorDelegate> delegates = checkDelegates
+            ? project.getApplication().getExtensionPoint(SafeDeleteProcessorDelegate.class).getExtensionList()
+            : List.of();
+        AtomicBoolean cancelled = new AtomicBoolean();
+
+        Coroutine.first(Iteration.<PsiElement, List<PsiElement>>forEach(UIAction.<PsiElement, @Nullable Void>await(element -> {
+                if (cancelled.get()) {
+                    return CompletableFuture.completedFuture(null);
+                }
+                SafeDeleteProcessorDelegate delegate = ContainerUtil.find(delegates, it -> it.handlesElement(element));
+                if (delegate == null) {
                     fullElementsSet.add(element);
+                    return CompletableFuture.completedFuture(null);
                 }
-                else if (found == Boolean.FALSE) {
-                    return;
-                }
-            }
-        }
-        else {
-            ContainerUtil.addAll(fullElementsSet, tempToDelete);
-        }
-
-        if (!CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, fullElementsSet, true)) {
-            return;
-        }
-
-        PsiElement[] elementsToDelete = PsiUtilCore.toPsiElementArray(fullElementsSet);
-
-        if (project.getApplication().isUnitTestMode()) {
-            RefactoringSettings settings = RefactoringSettings.getInstance();
-            SafeDeleteProcessor.createInstance(
-                project,
-                null,
-                elementsToDelete,
-                settings.SAFE_DELETE_SEARCH_IN_COMMENTS,
-                settings.SAFE_DELETE_SEARCH_IN_NON_JAVA,
-                true
-            ).run();
-            if (successRunnable != null) {
-                successRunnable.run();
-            }
-        }
-        else {
-            @RequiredUIAccess
-            SafeDeleteDialog.Callback callback = dialog -> SafeDeleteProcessor.createInstance(
-                project,
-                () -> {
-                    if (successRunnable != null) {
-                        successRunnable.run();
+                return delegate.getElementsToSearchAsync(element, module, elementsSet).thenAccept(addElements -> {
+                    if (addElements == null) {
+                        cancelled.set(true);
                     }
-                    dialog.close(DialogWrapper.CANCEL_EXIT_CODE);
-                },
-                elementsToDelete,
-                dialog.isSearchInComments(),
-                dialog.isSearchForTextOccurences(),
-                true
-            ).run();
+                    else {
+                        fullElementsSet.addAll(addElements);
+                    }
+                });
+            })))
+            .then(UIAction.apply(ignored -> {
+                if (!cancelled.get() && CommonRefactoringUtil.checkReadOnlyStatusRecursively(project, fullElementsSet, true)) {
+                    showDialog(project, PsiUtilCore.toPsiElementArray(fullElementsSet), successRunnable);
+                }
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(project.coroutineContext()), Arrays.asList(tempToDelete));
+    }
 
-            SafeDeleteDialog dialog = new SafeDeleteDialog(project, elementsToDelete, callback);
-            dialog.show();
-        }
+    @RequiredUIAccess
+    private static void showDialog(Project project, PsiElement[] elementsToDelete, @Nullable Runnable successRunnable) {
+        SafeDeleteDialogDescriptor dialog = new SafeDeleteDialogDescriptor(
+            project,
+            elementsToDelete,
+            false,
+            descriptor -> Coroutine.first(UIAction.<Object, SafeDeleteProcessor>await(ignored -> SafeDeleteProcessor.createInstanceAsync(
+                    project,
+                    null,
+                    elementsToDelete,
+                    descriptor.isSearchInComments(),
+                    descriptor.isSearchForTextOccurences(),
+                    true
+                )))
+                .then(UIAction.apply(processor -> {
+                    descriptor.invokeSafeDelete(processor, successRunnable);
+                    return null;
+                }))
+                .runAsync(CoroutineScope.of(project.coroutineContext()), null)
+        );
+        dialog.showAsync();
     }
 }

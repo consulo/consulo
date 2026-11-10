@@ -258,6 +258,14 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
         return item == null ? null : item.getDisplayName();
     }
 
+    /**
+     * Tells the group headers {@link #processScopes} reports apart from real scopes, without computing a scope - some
+     * descriptors ask the user for theirs.
+     */
+    public static boolean isSeparator(ScopeDescriptor descriptor) {
+        return descriptor instanceof ScopeSeparator;
+    }
+
     private static class ScopeSeparator extends ScopeDescriptor {
         String text;
 

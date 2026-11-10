@@ -46,6 +46,7 @@ import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.Space;
@@ -352,12 +353,21 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
      */
     @Override
     public @Nullable CaretPixelLocation getCaretPixelLocation() {
+        return getPixelLocation(getCaretModel().getVisualPosition());
+    }
+
+    @Override
+    public @Nullable CaretPixelLocation getOffsetPixelLocation(int offset) {
+        return getPixelLocation(offsetToVisualPosition(offset));
+    }
+
+    private @Nullable CaretPixelLocation getPixelLocation(VisualPosition position) {
         DesktopQtEditorWidget widget = getSurface();
         if (widget == null) {
             return null;
         }
 
-        Point point = visualPositionToXY(getCaretModel().getVisualPosition());
+        Point point = visualPositionToXY(position);
 
         int gutterWidth = widget.getGutter().width();
         int x = gutterWidth + point.x - widget.horizontalScrollBar().value();
@@ -725,6 +735,18 @@ public class DesktopQtEditorImpl extends CodeEditorBase implements RealEditor, C
         boolean fontStyleChanged,
         boolean foregroundColorChanged
     ) {
+        if (!UIAccess.isUIThread()) {
+            UIAccess uiAccess = getContentUIComponent().getUIAccess();
+            if (uiAccess != null) {
+                uiAccess.give(() -> {
+                    if (!isDisposed()) {
+                        onHighlighterChanged(highlighter, canImpactGutterSize, fontStyleChanged, foregroundColorChanged);
+                    }
+                });
+            }
+            return;
+        }
+
         Document document = getDocument();
         if (document.isInBulkUpdate()) {
             return;

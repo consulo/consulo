@@ -19,6 +19,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.CaretData;
 import consulo.codeEditor.impl.EditorLineMarkerPresentationContext;
 import consulo.codeEditor.impl.IterationState;
@@ -31,6 +32,8 @@ import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesEffectsBuilder;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.document.Document;
 import consulo.ui.color.ColorValue;
 import consulo.desktop.qt.editor.impl.internal.gutter.QtLineSeparatorBounds;
@@ -114,6 +117,8 @@ public class DesktopQtEditorPainter {
             for (int line = firstLine; line <= lastLine; line++) {
                 paintLineText(painter, lineCells.get(line - firstLine).cells(), rowLayout.visualLineToY(line) - scrollY, -scrollX);
             }
+
+            paintBorderEffects(painter, firstLine, lastLine, scrollX, scrollY);
         }
 
         paintLineFrames(painter, scrollX, scrollY);
@@ -303,7 +308,6 @@ public class DesktopQtEditorPainter {
             case STRIKEOUT -> fillLine(painter, xFrom, xTo, baseline - metrics.getAscent() / 3, 1, qColor);
             case BOLD_DOTTED_LINE -> paintDotted(painter, xFrom, xTo, baseline + 1, qColor);
             case WAVE_UNDERSCORE -> paintWave(painter, xFrom, xTo, baseline + 1, descent, qColor);
-            case BOXED, ROUNDED_BOX, SLIGHTLY_WIDER_BOX -> paintBox(painter, xFrom, xTo, baseline, qColor);
             default -> {
             }
         }
@@ -346,13 +350,109 @@ public class DesktopQtEditorPainter {
         painter.restore();
     }
 
-    private void paintBox(QPainter painter, double xFrom, double xTo, int baseline, QColor color) {
-        DesktopQtEditorFontMetrics metrics = myEditor.getFontMetrics();
+    /**
+     * The frames - a boxed effect belongs to the whole range it was given, not to the runs the line happens to be cut
+     * into, so it is drawn once per range after the text rather than run by run.
+     */
+    private void paintBorderEffects(QPainter painter, int firstLine, int lastLine, int scrollX, int scrollY) {
+        DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
+        int startOffset = visualLines.visualLineStartOffset(firstLine);
+        int endOffset = visualLines.visualLineEndOffset(lastLine);
+        EditorColorsScheme scheme = myEditor.getColorsScheme();
 
+        HighlighterIterator iterator = myEditor.getHighlighter().createIterator(startOffset);
+        while (!iterator.atEnd() && iterator.getStart() < endOffset) {
+            TextAttributesEffectsBuilder.EffectDescriptor border = getBorderDescriptor(iterator.getTextAttributes());
+            if (border != null) {
+                paintBorderEffect(painter, iterator.getStart(), iterator.getEnd(), border, scrollX, scrollY);
+            }
+            iterator.advance();
+        }
+
+        for (MarkupModelEx markupModel : List.of(myEditor.getFilteredDocumentMarkupModel(), myEditor.getMarkupModel())) {
+            markupModel.processRangeHighlightersOverlappingWith(startOffset, endOffset, highlighter -> {
+                TextAttributesEffectsBuilder.EffectDescriptor border = getBorderDescriptor(highlighter.getTextAttributes(scheme));
+                if (border != null) {
+                    paintBorderEffect(
+                        painter,
+                        highlighter.getAffectedAreaStartOffset(),
+                        highlighter.getAffectedAreaEndOffset(),
+                        border,
+                        scrollX,
+                        scrollY
+                    );
+                }
+                return true;
+            });
+        }
+    }
+
+    private static TextAttributesEffectsBuilder.@Nullable EffectDescriptor getBorderDescriptor(@Nullable TextAttributes attributes) {
+        return attributes == null || !attributes.hasEffects()
+            ? null
+            : TextAttributesEffectsBuilder.create(attributes).getEffectDescriptor(TextAttributesEffectsBuilder.EffectSlot.FRAME_SLOT);
+    }
+
+    private void paintBorderEffect(
+        QPainter painter,
+        int startOffset,
+        int endOffset,
+        TextAttributesEffectsBuilder.EffectDescriptor border,
+        int scrollX,
+        int scrollY
+    ) {
+        Document document = myEditor.getDocument();
+        int textLength = document.getTextLength();
+        int start = Math.max(0, Math.min(startOffset, textLength));
+        int end = Math.max(start, Math.min(endOffset, textLength));
+
+        FoldRegion foldRegion = myEditor.getFoldingModel().getCollapsedRegionAtOffset(start);
+        if (foldRegion != null && end <= foldRegion.getEndOffset()) {
+            return;
+        }
+
+        int startLine = document.getLineNumber(start);
+        int endLine = document.getLineNumber(end);
+        if (startLine + 1 == endLine && start == document.getLineStartOffset(startLine) && end == document.getLineStartOffset(endLine)) {
+            end = document.getLineEndOffset(startLine);
+        }
+
+        DesktopQtEditorVisualLines visualLines = myEditor.getVisualLines();
+        DesktopQtEditorRowLayout rowLayout = myEditor.getRowLayout();
+        VisualPosition startPosition = myEditor.offsetToVisualPosition(start);
+        VisualPosition endPosition = myEditor.offsetToVisualPosition(end);
+
+        boolean rounded = border.effectType == EffectType.ROUNDED_BOX;
+        int margin = border.effectType == EffectType.SLIGHTLY_WIDER_BOX ? 1 : 0;
+        QColor color = TargetQt.to(border.effectColor);
+        int lineHeight = myEditor.getLineHeight();
+
+        for (int line = startPosition.line; line <= endPosition.line; line++) {
+            VisualPosition from = line == startPosition.line ? startPosition : new VisualPosition(line, 0);
+            VisualPosition to = line == endPosition.line
+                ? endPosition
+                : myEditor.offsetToVisualPosition(visualLines.visualLineEndOffset(line));
+
+            double xFrom = myEditor.visualPositionToXY(from).x - scrollX - margin;
+            double xTo = myEditor.visualPositionToXY(to).x - scrollX + 1 + margin;
+            int y = rowLayout.visualLineToY(line) - scrollY;
+
+            paintBox(painter, xFrom, xTo, y, lineHeight, color, rounded);
+        }
+    }
+
+    private static void paintBox(QPainter painter, double xFrom, double xTo, int y, int height, QColor color, boolean rounded) {
         painter.save();
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, rounded);
         painter.setBrush(new QBrush(Qt.BrushStyle.NoBrush));
         painter.setPen(new QPen(color, 1.0));
-        painter.drawRect(new QRectF(xFrom, baseline - metrics.getAscent(), xTo - xFrom - 1, metrics.getLineHeight() - 1));
+        QRectF rect = new QRectF(xFrom, y, Math.max(0, xTo - xFrom - 1), height - 1);
+        if (rounded) {
+            painter.drawRoundedRect(rect, 2, 2);
+        }
+        else {
+            painter.drawRect(rect);
+        }
         painter.restore();
     }
 

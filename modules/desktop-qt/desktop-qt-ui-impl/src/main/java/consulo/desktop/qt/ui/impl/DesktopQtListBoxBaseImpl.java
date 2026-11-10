@@ -554,6 +554,10 @@ public abstract class DesktopQtListBoxBaseImpl<E> extends QtComponentDelegate<QL
             return component.fontMetrics().height() + 4;
         }
 
+        int padded = height + 2 * DesktopQtSpace.toPixels(Space.X_SMALL);
+        int iconRow = Image.DEFAULT_ICON_SIZE + 2 * DesktopQtSpace.toPixels(Space.SMALL);
+        height = Math.max(padded, iconRow);
+
         myPooledRowHeight = height;
         return height;
     }

@@ -18,6 +18,8 @@ package consulo.language.editor.refactoring.safeDelete;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.RefactoringSupportProvider;
@@ -41,12 +43,18 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.*;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.Iteration;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -199,7 +207,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
 
     @Override
     @RequiredUIAccess
-    protected boolean preprocessUsages(SimpleReference<UsageInfo[]> refUsages) {
+    protected CompletableFuture<Boolean> preprocessUsagesAsync(SimpleReference<UsageInfo[]> refUsages) {
         UsageInfo[] usages = refUsages.get();
         List<LocalizeValue> conflicts = new ArrayList<>();
 
@@ -222,45 +230,67 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
             }
         }
 
-        if (!conflicts.isEmpty()) {
-            RefactoringEventData conflictData = new RefactoringEventData();
-            conflictData.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts);
-            myProject.getMessageBus()
-                .syncPublisher(RefactoringEventListener.class)
-                .conflictsDetected("refactoring.safeDelete", conflictData);
-            if (app.isUnitTestMode()) {
-                if (!ConflictsInTestsException.isTestIgnore()) {
-                    throw new ConflictsInTestsException(conflicts);
-                }
-            }
-            else {
-                UnsafeUsagesDialog dialog = new UnsafeUsagesDialog(conflicts, myProject);
-                if (!dialog.showAndGet()) {
-                    int exitCode = dialog.getExitCode();
-                    prepareSuccessful(); // dialog is always dismissed;
-                    if (exitCode == UnsafeUsagesDialog.VIEW_USAGES_EXIT_CODE) {
-                        showUsages(usages);
-                    }
-                    return false;
-                }
-                else {
-                    myPreviewNonCodeUsages = false;
-                }
-            }
+        if (conflicts.isEmpty()) {
+            return preprocessByDelegatesAsync(refUsages);
         }
 
-        SimpleReference<UsageInfo[]> preprocessedUsages = SimpleReference.create(usages);
-        boolean hasUsages = safeDeleteDelegates.allMatchSafe(delegate -> {
-            preprocessedUsages.set(delegate.preprocessUsages(myProject, preprocessedUsages.get()));
-            return !preprocessedUsages.isNull();
-        });
-        if (!hasUsages) {
-            return false;
+        RefactoringEventData conflictData = new RefactoringEventData();
+        conflictData.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts);
+        myProject.getMessageBus()
+            .syncPublisher(RefactoringEventListener.class)
+            .conflictsDetected("refactoring.safeDelete", conflictData);
+        if (app.isUnitTestMode()) {
+            if (!ConflictsInTestsException.isTestIgnore()) {
+                throw new ConflictsInTestsException(conflicts);
+            }
+            return preprocessByDelegatesAsync(refUsages);
         }
-        UsageInfo[] filteredUsages = UsageViewUtil.removeDuplicatedUsages(preprocessedUsages.get());
-        prepareSuccessful(); // dialog is always dismissed
-        refUsages.set(filteredUsages);
-        return true;
+
+        UnsafeUsagesDialogDescriptor dialog = new UnsafeUsagesDialogDescriptor(myProject, conflicts, () -> ReadAction.run(() -> showUsages(usages)));
+        return dialog.showAsync().thenCompose(deleteAnyway -> {
+            if (!deleteAnyway) {
+                prepareSuccessful();
+                return CompletableFuture.completedFuture(Boolean.FALSE);
+            }
+            myPreviewNonCodeUsages = false;
+            return preprocessByDelegatesAsync(refUsages);
+        });
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Boolean> preprocessByDelegatesAsync(SimpleReference<UsageInfo[]> refUsages) {
+        List<SafeDeleteProcessorDelegate> delegates =
+            myProject.getApplication().getExtensionPoint(SafeDeleteProcessorDelegate.class).getExtensionList();
+        SimpleReference<UsageInfo @Nullable []> preprocessedUsages = SimpleReference.create(refUsages.get());
+        return Coroutine.first(Iteration.<SafeDeleteProcessorDelegate, List<SafeDeleteProcessorDelegate>>forEach(
+                UIAction.<SafeDeleteProcessorDelegate, @Nullable Void>await(delegate -> {
+                    UsageInfo[] usages = preprocessedUsages.get();
+                    if (usages == null) {
+                        return CompletableFuture.completedFuture(null);
+                    }
+                    try {
+                        return delegate.preprocessUsagesAsync(myProject, usages).thenAccept(preprocessedUsages::set);
+                    }
+                    catch (ProcessCanceledException | ConflictsInTestsException e) {
+                        throw e;
+                    }
+                    catch (Throwable e) {
+                        LOG.error(e);
+                        return CompletableFuture.completedFuture(null);
+                    }
+                })
+            ))
+            .then(UIAction.apply(ignored -> {
+                UsageInfo[] usages = preprocessedUsages.get();
+                if (usages == null) {
+                    return Boolean.FALSE;
+                }
+                prepareSuccessful();
+                refUsages.set(UsageViewUtil.removeDuplicatedUsages(usages));
+                return Boolean.TRUE;
+            }))
+            .runAsync(CoroutineScope.of(myProject.coroutineContext()), delegates)
+            .toFuture();
     }
 
     @RequiredReadAction
@@ -520,6 +550,46 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
         boolean isSearchNonJava
     ) {
         return new SafeDeleteProcessor(project, prepareSuccessfulCallback, elementsToDelete, isSearchInComments, isSearchNonJava);
+    }
+
+    /**
+     * Asynchronous form of {@link #createInstance(Project, Runnable, PsiElement[], boolean, boolean, boolean)}: the
+     * delegates may ask whether to delete additional elements in dialogs that do not block.
+     */
+    @RequiredUIAccess
+    public static CompletableFuture<SafeDeleteProcessor> createInstanceAsync(
+        Project project,
+        @Nullable Runnable prepareSuccessfulCallBack,
+        PsiElement[] elementsToDelete,
+        boolean isSearchInComments,
+        boolean isSearchNonJava,
+        boolean askForAccessors
+    ) {
+        List<PsiElement> elements = new ArrayList<>(Arrays.asList(elementsToDelete));
+        Set<PsiElement> elementsToDeleteSet = new HashSet<>(Arrays.asList(elementsToDelete));
+        List<SafeDeleteProcessorDelegate> delegates =
+            project.getApplication().getExtensionPoint(SafeDeleteProcessorDelegate.class).getExtensionList();
+
+        return Coroutine.first(Iteration.<PsiElement, List<PsiElement>>forEach(UIAction.<PsiElement, @Nullable Void>await(element -> {
+                SafeDeleteProcessorDelegate delegate = ContainerUtil.find(delegates, it -> it.handlesElement(element));
+                if (delegate == null) {
+                    return CompletableFuture.completedFuture(null);
+                }
+                return delegate.getAdditionalElementsToDeleteAsync(element, elementsToDeleteSet, askForAccessors).thenAccept(addedElements -> {
+                    if (addedElements != null) {
+                        elements.addAll(addedElements);
+                    }
+                });
+            })))
+            .then(UIAction.apply(ignored -> new SafeDeleteProcessor(
+                project,
+                prepareSuccessfulCallBack,
+                PsiUtilCore.toPsiElementArray(elements),
+                isSearchInComments,
+                isSearchNonJava
+            )))
+            .runAsync(CoroutineScope.of(project.coroutineContext()), Arrays.asList(elementsToDelete))
+            .toFuture();
     }
 
     public static SafeDeleteProcessor createInstance(

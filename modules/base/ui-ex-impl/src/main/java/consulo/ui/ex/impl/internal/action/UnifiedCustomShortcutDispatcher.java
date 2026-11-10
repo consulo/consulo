@@ -16,14 +16,20 @@
 package consulo.ui.ex.impl.internal.action;
 
 import consulo.dataContext.DataContext;
+import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.internal.ActionPromoterUtil;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -33,6 +39,8 @@ import java.util.function.Predicate;
  * @since 2026-10-02
  */
 public final class UnifiedCustomShortcutDispatcher {
+    private static final Logger LOG = Logger.getInstance(UnifiedCustomShortcutDispatcher.class);
+
     private UnifiedCustomShortcutDispatcher() {
     }
 
@@ -73,22 +81,72 @@ public final class UnifiedCustomShortcutDispatcher {
         return false;
     }
 
-    @RequiredUIAccess
-    public static CompletableFuture<Boolean> performFirstEnabled(List<AnAction> actions, DataContext context) {
-        return performFirstEnabled(ActionPromoterUtil.rearrangeByPromoters(actions, context), 0, context, UIAccess.current());
+    public static List<AnAction> collectKeymapActions(Iterable<KeyStroke> keyStrokes, boolean modalContext) {
+        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        if (keymap == null) {
+            return List.of();
+        }
+
+        ActionManager actionManager = ActionManager.getInstance();
+        List<AnAction> actions = new ArrayList<>();
+        for (KeyStroke keyStroke : keyStrokes) {
+            for (String actionId : keymap.getActionIds(keyStroke)) {
+                if (!hasSingleStrokeShortcut(keymap, actionId, keyStroke)) {
+                    continue;
+                }
+
+                AnAction action = actionManager.getAction(actionId);
+                if (action != null && !actions.contains(action) && (!modalContext || action.isEnabledInModalContext())) {
+                    actions.add(action);
+                }
+            }
+        }
+        return actions;
     }
 
-    private static CompletableFuture<Boolean> performFirstEnabled(List<AnAction> actions, int index, DataContext context, UIAccess uiAccess) {
+    private static boolean hasSingleStrokeShortcut(Keymap keymap, String actionId, KeyStroke keyStroke) {
+        for (Shortcut shortcut : keymap.getShortcuts(actionId)) {
+            if (shortcut instanceof KeyboardShortcut keyboardShortcut
+                && keyboardShortcut.getSecondKeyStroke() == null
+                && keyStroke.equals(keyboardShortcut.getFirstKeyStroke())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @RequiredUIAccess
+    public static CompletableFuture<Boolean> performFirstEnabled(
+        List<AnAction> actions,
+        DataContext context,
+        @Nullable ComponentEvent<?> uiEvent
+    ) {
+        List<AnAction> ordered = new ArrayList<>(ActionPromoterUtil.rearrangeByPromoters(actions, context));
+        ordered.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
+        return performFirstEnabled(ordered, 0, context, uiEvent, UIAccess.current());
+    }
+
+    private static CompletableFuture<Boolean> performFirstEnabled(
+        List<AnAction> actions,
+        int index,
+        DataContext context,
+        @Nullable ComponentEvent<?> uiEvent,
+        UIAccess uiAccess
+    ) {
         if (index >= actions.size()) {
             return CompletableFuture.completedFuture(Boolean.FALSE);
         }
 
         AnAction action = actions.get(index);
-        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.KEYBOARD_SHORTCUT, context);
+        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.KEYBOARD_SHORTCUT, context, uiEvent);
         return ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false)
             .handleAsync((enabled, throwable) -> {
+                if (throwable != null && !UnifiedActionMenuExpander.isProcessCanceled(throwable)) {
+                    LOG.warn("Action update failed: " + action.getClass().getName(), throwable);
+                }
+
                 if (throwable != null || !Boolean.TRUE.equals(enabled)) {
-                    return performFirstEnabled(actions, index + 1, context, uiAccess);
+                    return performFirstEnabled(actions, index + 1, context, uiEvent, uiAccess);
                 }
 
                 UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);

@@ -16,14 +16,17 @@
 package consulo.sandboxPlugin.lang.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
+import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceBase;
+import consulo.language.util.IncorrectOperationException;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -75,6 +78,17 @@ public class SandIncludeDirective extends ASTWrapperPsiElement {
                     return null;
                 }
                 return PsiManager.getInstance(getElement().getProject()).findFile(target);
+            }
+
+            @RequiredWriteAction
+            @Override
+            public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+                ASTNode node = getElement().getNode().findChildByType(SandTokens.STRING_LITERAL);
+                if (!(node instanceof LeafElement leaf)) {
+                    throw new IncorrectOperationException("no include literal");
+                }
+                leaf.replaceWithText("\"" + newElementName + "\"");
+                return getElement();
             }
         };
     }

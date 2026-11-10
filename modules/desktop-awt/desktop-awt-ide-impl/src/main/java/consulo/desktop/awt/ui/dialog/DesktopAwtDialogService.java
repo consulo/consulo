@@ -319,14 +319,7 @@ public class DesktopAwtDialogService implements DialogService {
 
             panel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
 
-            if (myDescriptor.hasBorderAtButtonLayout()) {
-                BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(panel);
-                borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
-                return borderLayoutPanel;
-            }
-            else {
-                return panel;
-            }
+            return panel;
         }
 
         @Override

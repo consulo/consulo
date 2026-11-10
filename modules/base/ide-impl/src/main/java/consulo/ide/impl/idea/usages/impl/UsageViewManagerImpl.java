@@ -50,6 +50,7 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,7 +73,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   public UsageView createUsageView(UsageTarget[] targets, Usage[] usages, UsageViewPresentation presentation, Supplier<UsageSearcher> usageSearcherFactory) {
-    UsageViewImpl usageView = new UsageViewImpl(myProject, presentation, targets, usageSearcherFactory);
+    UsageViewInternal usageView = newUsageView(presentation, targets, usageSearcherFactory);
     appendUsages(usages, usageView);
     usageView.setSearchInProgress(false);
     return usageView;
@@ -80,12 +81,12 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   public UsageView showUsages(UsageTarget[] searchedFor, Usage[] foundUsages, UsageViewPresentation presentation, Supplier<UsageSearcher> factory) {
-    UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
-    addContent((UsageViewImpl)usageView, presentation);
+    UsageViewInternal usageView = (UsageViewInternal)createUsageView(searchedFor, foundUsages, presentation, factory);
+    addContent(usageView, presentation);
     showToolWindow(true);
-    UIUtil.invokeLaterIfNeeded(() -> {
-      if (!((UsageViewImpl)usageView).isDisposed()) {
-        ((UsageViewImpl)usageView).expandRoot();
+    myProject.getUIAccess().give(() -> {
+      if (!usageView.isDisposed()) {
+        usageView.expandRoot();
       }
     });
     return usageView;
@@ -96,10 +97,13 @@ public class UsageViewManagerImpl extends UsageViewManager {
     return showUsages(searchedFor, foundUsages, presentation, null);
   }
 
-  void addContent(UsageViewImpl usageView, UsageViewPresentation presentation) {
-    Content content = UsageViewContentManager.getInstance(myProject)
-            .addContent(presentation.getTabText(), presentation.getTabName(), presentation.getToolwindowTitle(), true, usageView.getComponent(), presentation.isOpenInNewTab(), true);
-    usageView.setContent(content);
+  UsageViewInternal newUsageView(UsageViewPresentation presentation, UsageTarget[] targets, @Nullable Supplier<UsageSearcher> usageSearcherFactory) {
+    return myProject.getInstance(UsageViewFactory.class).createUsageView(presentation, targets, usageSearcherFactory);
+  }
+
+  @RequiredUIAccess
+  void addContent(UsageViewInternal usageView, UsageViewPresentation presentation) {
+    Content content = usageView.addContent(presentation);
     content.putUserData(USAGE_VIEW_KEY, usageView);
   }
 
@@ -123,7 +127,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                     final FindUsagesProcessPresentation processPresentation,
                                     final @Nullable UsageViewStateListener listener) {
     final SearchScope searchScopeToWarnOfFallingOutOf = getMaxSearchScopeToWarnOfFallingOutOf(searchFor);
-    final AtomicReference<UsageViewImpl> usageViewRef = new AtomicReference<>();
+    final AtomicReference<UsageViewInternal> usageViewRef = new AtomicReference<>();
     long start = System.currentTimeMillis();
     Task.Backgroundable task = new Task.Backgroundable(myProject, getProgressTitle(presentation), true, new SearchInBackgroundOption()) {
       @Override
@@ -134,7 +138,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
       @Override
       public NotificationInfo getNotificationInfo() {
-        UsageViewImpl usageView = usageViewRef.get();
+        UsageViewInternal usageView = usageViewRef.get();
         int count = usageView == null ? 0 : usageView.getUsagesCount();
         LOG.debug("Found ", count, " usages in ", System.currentTimeMillis() - start, " ms.");
         return new NotificationInfo(
@@ -194,7 +198,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
     }
   }
 
-  protected static void appendUsages(Usage[] foundUsages, UsageViewImpl usageView) {
+  protected static void appendUsages(Usage[] foundUsages, UsageViewInternal usageView) {
     Application.get().runReadAction(() -> {
       for (Usage foundUsage : foundUsages) {
         usageView.appendUsage(foundUsage);
@@ -207,10 +211,10 @@ public class UsageViewManagerImpl extends UsageViewManager {
                                                    ProgressIndicator indicator,
                                                    UsageViewPresentation presentation,
                                                    int usageCount,
-                                                   @Nullable UsageViewImpl usageView) {
+                                                   @Nullable UsageViewInternal usageView) {
     UIUtil.invokeLaterIfNeeded(() -> {
       if (usageView != null && usageView.searchHasBeenCancelled() || indicator.isCanceled()) return;
-      int shownUsageCount = usageView == null ? usageCount : usageView.getRoot().getRecursiveUsageCount();
+      int shownUsageCount = usageView == null ? usageCount : usageView.getShownUsageCount();
       LocalizeValue message = UsageLocalize.findExcessiveUsageCountPrompt(shownUsageCount);
       UsageLimitUtil.Result ret = UsageLimitUtil.showTooManyUsagesWarning(project, message.get(), presentation);
       if (ret == UsageLimitUtil.Result.ABORT) {

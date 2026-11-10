@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -95,6 +96,16 @@ public abstract class RenamePsiElementProcessor {
     }
 
     public void prepareRenaming(PsiElement element, String newName, Map<PsiElement, String> allRenames, SearchScope scope) {
+    }
+
+    /**
+     * Asynchronous form of {@link #prepareRenaming(PsiElement, String, Map)}, for a processor which asks the user before
+     * adding elements to rename. The future completes once {@code allRenames} holds them.
+     */
+    @RequiredUIAccess
+    public CompletableFuture<?> prepareRenamingAsync(PsiElement element, String newName, Map<PsiElement, String> allRenames) {
+        prepareRenaming(element, newName, allRenames);
+        return CompletableFuture.completedFuture(null);
     }
 
     public void findExistingNameConflicts(PsiElement element, String newName, MultiMap<PsiElement, LocalizeValue> conflicts) {

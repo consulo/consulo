@@ -47,6 +47,13 @@ public interface MessageBoxBuilder<V extends @Nullable Object> {
      */
     MessageBoxBuilder<V> title(LocalizeValue title);
 
+    /**
+     * A stable name of this question, for tools that answer it rather than users.
+     */
+    default MessageBoxBuilder<V> id(String id) {
+        return this;
+    }
+
     MessageBoxBuilder<V> text(LocalizeValue text);
 
     /**

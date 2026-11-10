@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.dialog;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
@@ -33,6 +34,7 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class DialogDescriptor {
     private final LocalizeValue myTitle;
+    private @Nullable String myId;
 
     private Runnable myOkButtonStateUpdater = () -> {
     };
@@ -41,6 +43,18 @@ public abstract class DialogDescriptor {
 
     public DialogDescriptor(LocalizeValue title) {
         myTitle = title;
+    }
+
+    /**
+     * A stable name of this dialog, for tools that answer it rather than users; the descriptor class by default.
+     */
+    public String getId() {
+        String id = myId;
+        return id != null ? id : getClass().getName();
+    }
+
+    public void setId(String id) {
+        myId = id;
     }
 
     public @Nullable String getHelpId() {
@@ -134,11 +148,12 @@ public abstract class DialogDescriptor {
         return true;
     }
 
+    @Deprecated
+    @DeprecationInfo("Unused, removed")
     public boolean hasBorderAtButtonLayout() {
         return true;
     }
 
-    
     public LocalizeValue getTitle() {
         return myTitle;
     }

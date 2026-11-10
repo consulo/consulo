@@ -62,6 +62,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -78,18 +79,23 @@ import consulo.ui.ex.keymap.util.KeymapUtil;
 import consulo.usage.*;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.Iteration;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -181,18 +187,10 @@ public class FindUsagesManager {
             return false;
         }
 
-        FindUsagesHandler handler = getFindUsagesHandler(primaryElements[0], false);
-        if (handler == null) {
-            return false;
-        }
-        findUsagesInEditor(
-            primaryElements,
-            secondaryElements,
-            handler,
-            psiFile,
-            direction,
-            myLastSearchInFileData.getOptions(),
-            textEditor
+        FindUsagesOptions options = myLastSearchInFileData.getOptions();
+        withFindUsagesHandler(
+            primaryElements[0],
+            handler -> findUsagesInEditor(primaryElements, secondaryElements, handler, psiFile, direction, options, textEditor)
         );
         return true;
     }
@@ -221,6 +219,35 @@ public class FindUsagesManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Looks the handler up for an interactive search, letting the factory ask the user first, and runs the action
+     * with it unless no factory handles the element or the user cancelled.
+     */
+    @RequiredUIAccess
+    public void withFindUsagesHandler(PsiElement element, @RequiredUIAccess Consumer<FindUsagesHandler> action) {
+        SimpleReference<FindUsagesHandler> found = SimpleReference.create();
+        Coroutine.first(Iteration.<FindUsagesHandlerFactory, List<FindUsagesHandlerFactory>>forEach(
+                UIAction.<FindUsagesHandlerFactory, @Nullable Void>await(factory -> {
+                    if (!found.isNull() || !factory.canFindUsages(element)) {
+                        return CompletableFuture.completedFuture(null);
+                    }
+                    return factory.createFindUsagesHandlerAsync(element, false).thenAccept(handler -> {
+                        if (handler != null) {
+                            found.set(handler);
+                        }
+                    });
+                })
+            ))
+            .then(UIAction.apply(ignored -> {
+                FindUsagesHandler handler = found.get();
+                if (handler != null && handler != FindUsagesHandler.NULL_HANDLER) {
+                    action.accept(handler);
+                }
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(myProject.coroutineContext()), FindUsagesHandlerFactory.EP_NAME.getExtensionList(myProject));
     }
 
     public @Nullable FindUsagesHandler getNewFindUsagesHandler(PsiElement element, boolean forHighlightUsages) {
@@ -255,17 +282,14 @@ public class FindUsagesManager {
         boolean showDialog,
         @Nullable SearchScope searchScope
     ) {
-        FindUsagesHandler handler = getFindUsagesHandler(psiElement, false);
-        if (handler == null) {
-            return;
-        }
-
-        if (handler.supportConsuloUI()) {
-            findUsagesAsyncNew(handler, scopeFile, editor, showDialog, searchScope);
-        }
-        else {
-            findUsagesAsyncOld(handler, scopeFile, editor, showDialog, searchScope);
-        }
+        withFindUsagesHandler(psiElement, handler -> {
+            if (handler.supportConsuloUI()) {
+                findUsagesAsyncNew(handler, scopeFile, editor, showDialog, searchScope);
+            }
+            else {
+                findUsagesAsyncOld(handler, scopeFile, editor, showDialog, searchScope);
+            }
+        });
     }
 
     @RequiredUIAccess
@@ -357,11 +381,7 @@ public class FindUsagesManager {
         PsiFile scopeFile,
         FileEditor editor
     ) {
-        FindUsagesHandler handler = getFindUsagesHandler(psiElement, false);
-        if (handler == null) {
-            return;
-        }
-        startFindUsages(findUsagesOptions, handler, scopeFile, editor);
+        withFindUsagesHandler(psiElement, handler -> startFindUsages(findUsagesOptions, handler, scopeFile, editor));
     }
 
     @RequiredUIAccess

@@ -200,6 +200,11 @@
         };
 
         const onKey = (event, pressed) => {
+            // a key the keymap already declined, handed on to whatever holds the component it was typed into
+            if (event.$consuloPassed) {
+                return;
+            }
+
             if (pressed && dispatchComponentShortcut(event)) {
                 return;
             }
@@ -249,6 +254,19 @@
                 event.preventDefault();
                 event.stopPropagation();
 
+                element.$consuloShortcutSource = {
+                    combo: comboOf(event),
+                    target: event.composedPath ? event.composedPath()[0] : event.target,
+                    init: {
+                        key: event.key,
+                        code: event.code,
+                        keyCode: event.keyCode,
+                        shiftKey: event.shiftKey,
+                        ctrlKey: event.ctrlKey,
+                        altKey: event.altKey,
+                        metaKey: event.metaKey
+                    }
+                };
                 element.dispatchEvent(new CustomEvent('consulo-shortcut', {detail: {combo: comboOf(event)}}));
                 return;
             }
@@ -323,5 +341,33 @@
         }, true);
     };
 
-    window.consuloShortcuts = { install: install, setShortcuts: setShortcuts, setClipboardShortcuts: setClipboardShortcuts };
+    /*
+     * The keymap took a stroke typed into a one-line editor, and no action of it was enabled. The editor has no use
+     * for the key either, so it goes on to the component holding the editor - the way a desktop widget passes an
+     * unconsumed key to its parent, which is how enter in the name field of a dialog presses its default button.
+     */
+    const passUnconsumed = (element, combo) => {
+        const source = element.$consuloShortcutSource;
+        element.$consuloShortcutSource = null;
+        if (!source || source.combo !== combo || !source.target || !source.target.closest) {
+            return;
+        }
+
+        const editor = source.target.closest('.arquill-editor-one-line');
+        const parent = editor ? editor.parentElement : null;
+        if (!parent) {
+            return;
+        }
+
+        const passed = new KeyboardEvent('keydown', Object.assign({bubbles: true, cancelable: true, composed: true}, source.init));
+        passed.$consuloPassed = true;
+        parent.dispatchEvent(passed);
+    };
+
+    window.consuloShortcuts = {
+        install: install,
+        setShortcuts: setShortcuts,
+        setClipboardShortcuts: setClipboardShortcuts,
+        passUnconsumed: passUnconsumed
+    };
 })();

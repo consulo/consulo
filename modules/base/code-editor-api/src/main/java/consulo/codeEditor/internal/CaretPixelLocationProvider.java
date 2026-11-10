@@ -49,6 +49,14 @@ public interface CaretPixelLocationProvider {
     CaretPixelLocation getCaretPixelLocation();
 
     /**
+     * Where the given document offset is on screen, in the same space as {@link #getCaretPixelLocation()}. A popup
+     * which belongs to a range rather than to the caret - the completion lookup lines up with the start of what it
+     * completes - opens against this.
+     */
+    @Nullable
+    CaretPixelLocation getOffsetPixelLocation(int offset);
+
+    /**
      * Called whenever the location {@link #getCaretPixelLocation()} answers with changes without the caret having
      * moved - an editor whose location arrives later than the caret move it belongs to reports it here.
      */

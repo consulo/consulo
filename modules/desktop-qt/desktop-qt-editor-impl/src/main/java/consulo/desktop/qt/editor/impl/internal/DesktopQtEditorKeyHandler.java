@@ -17,30 +17,27 @@ package consulo.desktop.qt.editor.impl.internal;
 
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.dataContext.DataContext;
-import consulo.ui.UIAccess;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
+import consulo.ui.Component;
+import consulo.ui.UIAccess;
+import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.ModifiedInputDetails.Modifier;
 import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.impl.internal.action.ActionRunnerAsync;
-import consulo.ui.ex.impl.internal.action.UnifiedActionMenuExpander;
+import consulo.ui.ex.impl.internal.action.UnifiedCustomShortcutDispatcher;
 import consulo.ui.ex.internal.ActionManagerEx;
-import consulo.ui.ex.internal.ActionPromoterUtil;
 import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import io.qt.core.QCoreApplication;
 import io.qt.gui.QKeyEvent;
+import io.qt.widgets.QApplication;
 import io.qt.widgets.QWidget;
 
 import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Turns qt key presses into platform actions and typed characters.
@@ -55,6 +52,7 @@ import java.util.List;
  * @since 2026-08-16
  */
 public class DesktopQtEditorKeyHandler {
+    private static CompletableFuture<?> ourStrokeQueue = CompletableFuture.completedFuture(null);
 
     private final DesktopQtEditorImpl myEditor;
 
@@ -77,59 +75,34 @@ public class DesktopQtEditorKeyHandler {
     }
 
     private boolean performKeymapAction(QKeyEvent keyEvent, KeyCode keyCode, EnumSet<Modifier> modifiers) {
-        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
-        if (keymap == null) {
-            return false;
-        }
-
-        ActionManager actionManager = ActionManager.getInstance();
-
-        List<AnAction> actions = new ArrayList<>();
-        for (String actionId : keymap.getActionIds(toKeyStroke(keyCode, modifiers))) {
-            AnAction action = actionManager.getAction(actionId);
-            if (action != null) {
-                actions.add(action);
-            }
-        }
-
+        boolean modalContext = QApplication.activeModalWidget() != null;
+        List<AnAction> actions =
+            UnifiedCustomShortcutDispatcher.collectKeymapActions(List.of(toKeyStroke(keyCode, modifiers)), modalContext);
         if (actions.isEmpty()) {
             return false;
         }
 
-        // the order the keymap answers in says nothing about which action the stroke belongs to - the weight does,
-        // the same way IdeKeyEventDispatcher sorts before offering the stroke to anything
-        actions.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
-
         // whether an action is enabled is only answerable asynchronously, but the key has to be claimed or dropped
         // now - so a stroke the keymap knows is claimed, and the search for a live action for it continues after
-        DataContext dataContext = myEditor.getDataContext();
-        performFirstEnabled(ActionPromoterUtil.rearrangeByPromoters(actions, dataContext), 0, keyCode, keyEvent.clone(), dataContext, UIAccess.current());
+        QKeyEvent copy = keyEvent.clone();
+        ComponentEvent<Component> uiEvent =
+            new ComponentEvent<>(myEditor.getContentUIComponent(), DesktopQtInputDetails.keyboard(myEditor.getSurface(), keyEvent));
+        UIAccess uiAccess = UIAccess.current();
+        ourStrokeQueue = ourStrokeQueue
+            .exceptionally(throwable -> null)
+            .thenComposeAsync(
+                ignored -> myEditor.isDisposed()
+                    ? CompletableFuture.completedFuture(Boolean.TRUE)
+                    : UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, myEditor.getDataContext(), uiEvent),
+                uiAccess
+            )
+            .whenCompleteAsync((performed, throwable) -> {
+                if (!Boolean.TRUE.equals(performed) && !myEditor.isDisposed()) {
+                    myEditor.fireKeyNotConsumed(keyCode);
+                    passToParent(copy);
+                }
+            }, uiAccess);
         return true;
-    }
-
-    private void performFirstEnabled(List<AnAction> actions,
-                                     int index,
-                                     KeyCode keyCode,
-                                     QKeyEvent keyEvent,
-                                     DataContext context,
-                                     UIAccess uiAccess) {
-        if (index >= actions.size()) {
-            myEditor.fireKeyNotConsumed(keyCode);
-            passToParent(keyEvent);
-            return;
-        }
-
-        AnAction action = actions.get(index);
-        AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.KEYBOARD_SHORTCUT, context);
-
-        ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false).whenCompleteAsync((enabled, throwable) -> {
-            if (throwable != null || !Boolean.TRUE.equals(enabled)) {
-                performFirstEnabled(actions, index + 1, keyCode, keyEvent, context, uiAccess);
-                return;
-            }
-
-            UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);
-        }, uiAccess);
     }
 
     private void passToParent(QKeyEvent keyEvent) {
@@ -159,11 +132,28 @@ public class DesktopQtEditorKeyHandler {
             return false;
         }
 
+        char ch = text.charAt(0);
+        if (ourStrokeQueue.isDone()) {
+            typeCharacter(ch);
+            return true;
+        }
+
+        UIAccess uiAccess = UIAccess.current();
+        ourStrokeQueue = ourStrokeQueue
+            .exceptionally(throwable -> null)
+            .thenRunAsync(() -> {
+                if (!myEditor.isDisposed()) {
+                    typeCharacter(ch);
+                }
+            }, uiAccess);
+        return true;
+    }
+
+    private void typeCharacter(char ch) {
         DataContext context = myEditor.getDataContext();
 
-        ((ActionManagerEx) ActionManager.getInstance()).fireBeforeEditorTyping(text.charAt(0), context);
-        EditorActionManager.getInstance().getTypedAction().actionPerformed(myEditor, text.charAt(0), context);
-        return true;
+        ((ActionManagerEx) ActionManager.getInstance()).fireBeforeEditorTyping(ch, context);
+        EditorActionManager.getInstance().getTypedAction().actionPerformed(myEditor, ch, context);
     }
 
     private static KeyStroke toKeyStroke(KeyCode keyCode, EnumSet<Modifier> modifiers) {

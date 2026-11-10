@@ -34,6 +34,7 @@ import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.ui.style.StandardColors;
 import consulo.util.collection.FList;
+import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -152,7 +153,8 @@ public class LookupItemRenderer {
     }
 
     private void renderName(TextItemPresentation target, LookupElement item, LookupElementPresentation presentation) {
-        target.withIcon(presentation.getIcon());
+        Image icon = presentation.getIcon();
+        target.withIcon(icon != null ? icon : Image.empty(Image.DEFAULT_ICON_SIZE));
 
         String text = StringUtil.notNullize(presentation.getItemText());
         int style = styleOf(presentation);

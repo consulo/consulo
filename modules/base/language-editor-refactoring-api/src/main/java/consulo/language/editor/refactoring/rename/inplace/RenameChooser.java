@@ -28,11 +28,12 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 
 import java.util.ArrayList;
@@ -58,44 +59,62 @@ abstract class RenameChooser {
 
   protected abstract void runRenameTemplate(Collection<Pair<PsiElement, TextRange>> stringUsages);
 
+  protected void chooserCanceled() {
+  }
+
   public void showChooser(Collection<PsiReference> refs, Collection<Pair<PsiElement, TextRange>> stringUsages) {
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runRenameTemplate(RefactoringSettings.getInstance().RENAME_SEARCH_IN_COMMENTS_FOR_FILE ? stringUsages : new ArrayList<Pair<PsiElement, TextRange>>());
       return;
     }
 
-    JBPopup popup = JBPopupFactory.getInstance().createPopupChooserBuilder(ContainerUtil.newArrayList(CODE_OCCURRENCES, ALL_OCCURRENCES)).setTitle("String occurrences found").setMovable(false)
-            .setResizable(false).setRequestFocus(true).setItemSelectedCallback(selectedValue -> {
-              dropHighlighters();
-              MarkupModel markupModel = myEditor.getMarkupModel();
+    BaseListPopupStep<String> step = new BaseListPopupStep<>("String occurrences found", CODE_OCCURRENCES, ALL_OCCURRENCES) {
+      @Override
+      public PopupStep onChosen(String selectedValue, boolean finalChoice) {
+        return doFinalStep(() -> runRenameTemplate(ALL_OCCURRENCES.equals(selectedValue) ? stringUsages : new ArrayList<>()));
+      }
 
-              if (ALL_OCCURRENCES.equals(selectedValue)) {
-                for (Pair<PsiElement, TextRange> pair : stringUsages) {
-                  TextRange textRange = pair.second.shiftRight(pair.first.getTextOffset());
-                  RangeHighlighter rangeHighlighter =
-                          markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
-                  myRangeHighlighters.add(rangeHighlighter);
-                }
-              }
+      @Override
+      public void canceled() {
+        chooserCanceled();
+      }
+    };
 
-              for (PsiReference reference : refs) {
-                PsiElement element = reference.getElement();
-                if (element == null) continue;
-                TextRange textRange = element.getTextRange();
-                RangeHighlighter rangeHighlighter =
-                        markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
-                myRangeHighlighters.add(rangeHighlighter);
-              }
+    highlightOccurrences(refs, stringUsages, false);
 
-              runRenameTemplate(ALL_OCCURRENCES.equals(selectedValue) ? stringUsages : new ArrayList<>());
-            }).addListener(new JBPopupAdapter() {
-              @Override
-              public void onClosed(LightweightWindowEvent event) {
-                dropHighlighters();
-              }
-            }).createPopup();
+    ListPopup popup = JBPopupFactory.getInstance().createListPopup(step);
+    popup.addSelectionListener(selectedValue -> highlightOccurrences(refs, stringUsages, ALL_OCCURRENCES.equals(selectedValue)));
+    popup.addListener(new JBPopupAdapter() {
+      @Override
+      public void onClosed(LightweightWindowEvent event) {
+        dropHighlighters();
+      }
+    });
 
     myEditor.showPopupInBestPositionFor(popup);
+  }
+
+  private void highlightOccurrences(Collection<PsiReference> refs, Collection<Pair<PsiElement, TextRange>> stringUsages, boolean all) {
+    dropHighlighters();
+    MarkupModel markupModel = myEditor.getMarkupModel();
+
+    if (all) {
+      for (Pair<PsiElement, TextRange> pair : stringUsages) {
+        TextRange textRange = pair.second.shiftRight(pair.first.getTextOffset());
+        RangeHighlighter rangeHighlighter =
+                markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
+        myRangeHighlighters.add(rangeHighlighter);
+      }
+    }
+
+    for (PsiReference reference : refs) {
+      PsiElement element = reference.getElement();
+      if (element == null) continue;
+      TextRange textRange = element.getTextRange();
+      RangeHighlighter rangeHighlighter =
+              markupModel.addRangeHighlighter(textRange.getStartOffset(), textRange.getEndOffset(), HighlighterLayer.SELECTION - 1, myAttributes, HighlighterTargetArea.EXACT_RANGE);
+      myRangeHighlighters.add(rangeHighlighter);
+    }
   }
 
   private void dropHighlighters() {

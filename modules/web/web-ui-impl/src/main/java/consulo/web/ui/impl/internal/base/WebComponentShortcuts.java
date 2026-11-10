@@ -94,6 +94,6 @@ public final class WebComponentShortcuts {
             return;
         }
 
-        UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, WebFocusTracker.createDataContext(component));
+        UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, WebFocusTracker.createDataContext(component), null);
     }
 }

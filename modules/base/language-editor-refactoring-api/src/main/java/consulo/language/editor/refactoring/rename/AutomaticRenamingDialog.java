@@ -16,344 +16,365 @@
 
 package consulo.language.editor.refactoring.rename;
 
-import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
-import consulo.language.editor.refactoring.ui.EnableDisableAction;
 import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
-import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
-import consulo.logging.Logger;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.ex.awt.BooleanTableCellRenderer;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.Button;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.ComponentItemRenderer;
+import consulo.ui.Label;
+import consulo.ui.Space;
+import consulo.ui.Table;
+import consulo.ui.TableItemEditor;
+import consulo.ui.TextAttribute;
+import consulo.ui.TextBox;
+import consulo.ui.Toast;
+import consulo.ui.ToastStyle;
+import consulo.ui.ValueComponent;
+import consulo.ui.WidthAndHeight;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
+import consulo.ui.ex.dialog.DialogValue;
+import consulo.ui.ex.dialog.action.DialogOkAction;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.ScrollableLayout;
+import consulo.ui.layout.SplitLayoutPosition;
+import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.model.FlatDataModel;
+import consulo.ui.model.MutableFlatDataModel;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsagePreviewPanel;
 import consulo.usage.UsagePreviewPanelFactory;
 import consulo.usage.UsageViewPresentation;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author dsl
  */
-public class AutomaticRenamingDialog extends DialogWrapper {
-  private static final Logger LOG = Logger.getInstance(AutomaticRenamingDialog.class);
-  private static final int CHECK_COLUMN = 0;
-  private static final int OLD_NAME_COLUMN = 1;
-  private static final int NEW_NAME_COLUMN = 2;
-  private final AutomaticRenamer myRenamer;
-  private boolean[] myShouldRename;
-  private String[] myNewNames;
-  private PsiNamedElement[] myRenames;
-  private MyTableModel myTableModel;
-  private JBTable myTable;
-  private JPanel myPanelForPreview;
-  private JButton mySelectAllButton;
-  private JButton myUnselectAllButton;
-  private JPanel myPanel;
-  private JSplitPane mySplitPane;
-  private final Project myProject;
-  private final UsagePreviewPanel myUsagePreviewPanel;
-  private final JLabel myUsageFileLabel;
-  private ListSelectionListener myListSelectionListener;
-                                                                                           
-  public AutomaticRenamingDialog(Project project, AutomaticRenamer renamer) {
-    super(project, true);
-    myProject = project;
-    myRenamer = renamer;
-    myUsagePreviewPanel = UsagePreviewPanelFactory.getInstance().createPreviewPanel(myProject, new UsageViewPresentation());
-    myUsageFileLabel = new JLabel();
-    populateData();
-    setTitle(myRenamer.getDialogTitle());
-    init();
-  }
+public class AutomaticRenamingDialog extends DialogDescriptor {
+    private static final int CHECK_COLUMN_WIDTH = 30;
 
-  private void populateData() {
-    Map<PsiNamedElement, String> renames = myRenamer.getRenames();
+    private final Project myProject;
+    private final AutomaticRenamer myRenamer;
+    private final List<RenameRow> myRows = new ArrayList<>();
 
-    List<PsiNamedElement> temp = new ArrayList<PsiNamedElement>();
-    for (PsiNamedElement namedElement : renames.keySet()) {
-      String newName = renames.get(namedElement);
-      if (newName != null) temp.add(namedElement);
+    private @Nullable MutableFlatDataModel<RenameRow> myModel;
+    private @Nullable Table<RenameRow> myTable;
+    private @Nullable Toast myErrorToast;
+    private @Nullable Label myUsageFileLabel;
+    private @Nullable UsagePreviewPanel myUsagePreviewPanel;
+    private boolean myValid = true;
+    private boolean myErrorShown;
+
+    public AutomaticRenamingDialog(Project project, AutomaticRenamer renamer) {
+        super(LocalizeValue.of(renamer.getDialogTitle()));
+        myProject = project;
+        myRenamer = renamer;
+        populateData();
     }
 
-    myRenames = temp.toArray(new PsiNamedElement[temp.size()]);
-    Arrays.sort(myRenames, new Comparator<PsiNamedElement>() {
-      @Override
-      public int compare(PsiNamedElement e1, PsiNamedElement e2) {
-        return Comparing.compare(e1.getName(), e2.getName());
-      }
-    });
-
-    myNewNames = new String[myRenames.length];
-    for (int i = 0; i < myNewNames.length; i++) {
-      myNewNames[i] = renames.get(myRenames[i]);
-    }
-
-    myShouldRename = new boolean[myRenames.length];
-    if (myRenamer.isSelectedByDefault()) {
-      for (int i = 0; i < myShouldRename.length; i++) {
-        myShouldRename [i] = true;
-      }
-    }
-  }
-
-  @Override
-  protected String getDimensionServiceKey() {
-    return "#consulo.ide.impl.idea.refactoring.rename.AutomaticRenamingDialog";
-  }
-
-  @Override
-  protected JComponent createNorthPanel() {
-    Box box = Box.createHorizontalBox();
-    box.add(new JLabel(myRenamer.getDialogDescription()));
-    box.add(Box.createHorizontalGlue());
-    return box;
-  }
-
-  @Override
-  public void show() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
-    super.show();
-  }
-
-  protected void handleChanges() {
-    int selectedRow = myTable.getSelectedRow();
-    if (selectedRow > -1) {
-      boolean validName = RenameUtil.isValidName(myProject, myRenames[selectedRow], myNewNames[selectedRow]);
-      getOKAction().setEnabled(validName);
-      setErrorText(validName ? null : "Identifier \'" + myNewNames[selectedRow] + "\' is invalid");
-    }
-  }
-
-  @Override
-  protected JComponent createCenterPanel() {
-    myTableModel = new MyTableModel();
-    myTable.setModel(myTableModel);
-    myTableModel.getSpaceAction().register();
-    myTableModel.addTableModelListener(new TableModelListener() {
-      @Override
-      public void tableChanged(TableModelEvent e) {
-        handleChanges();
-      }
-    });
-
-    TableColumnModel columnModel = myTable.getColumnModel();
-    columnModel.getColumn(CHECK_COLUMN).setCellRenderer(new BooleanTableCellRenderer());
-    TableUtil.setupCheckboxColumn(myTable, CHECK_COLUMN);
-
-    columnModel.getColumn(NEW_NAME_COLUMN).setCellEditor(new StringTableCellEditor(myProject));
-    mySelectAllButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < myShouldRename.length; i++) {
-          myShouldRename[i] = true;
-        }
-        fireDataChanged();
-      }
-    });
-
-    myUnselectAllButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < myShouldRename.length; i++) {
-          myShouldRename[i] = false;
-        }
-        fireDataChanged();
-      }
-    });
-    myListSelectionListener = new ListSelectionListener() {
-      @Override
-      public void valueChanged(ListSelectionEvent e) {
-        myUsageFileLabel.setText("");
-        int index = myTable.getSelectionModel().getLeadSelectionIndex();
-        if (index != -1) {
-          PsiNamedElement element = myRenames[index];
-          UsageInfo usageInfo = new UsageInfo(element);
-          myUsagePreviewPanel.updateLayout(Collections.singletonList(usageInfo));
-          PsiFile containingFile = element.getContainingFile();
-          if (containingFile != null) {
-            VirtualFile virtualFile = containingFile.getVirtualFile();
-            if (virtualFile != null) {
-              myUsageFileLabel.setText(virtualFile.getName());
+    private void populateData() {
+        Map<PsiNamedElement, String> renames = myRenamer.getRenames();
+        boolean selected = myRenamer.isSelectedByDefault();
+        for (Map.Entry<PsiNamedElement, String> entry : renames.entrySet()) {
+            if (entry.getValue() != null) {
+                myRows.add(new RenameRow(entry.getKey(), entry.getValue(), selected));
             }
-          }
+        }
+        myRows.sort((r1, r2) -> Comparing.compare(r1.myElement.getName(), r2.myElement.getName()));
+    }
+
+    /**
+     * @return whether the user chose to rename, the renamer holding the chosen renames
+     */
+    @RequiredUIAccess
+    public CompletableFuture<Boolean> showAsync() {
+        if (myProject.getApplication().isUnitTestMode()) {
+            return CompletableFuture.completedFuture(Boolean.FALSE);
+        }
+        return myProject.getApplication()
+            .getInstance(DialogService.class)
+            .build(myProject, this)
+            .showAsync()
+            .handle((value, error) -> error == null && value != null);
+    }
+
+    @Override
+    public @Nullable WidthAndHeight getInitialSize() {
+        return WidthAndHeight.ofPixel(700, 640);
+    }
+
+    @Override
+    public @Nullable String getDimensionServiceKey() {
+        return "#consulo.ide.impl.idea.refactoring.rename.AutomaticRenamingDialog";
+    }
+
+    @Override
+    @RequiredUIAccess
+    public Component createCenterComponent(Disposable uiDisposable) {
+        MutableFlatDataModel<RenameRow> model = FlatDataModel.of(myRows);
+        myModel = model;
+
+        Table<RenameRow> table = Table.create(model);
+        table.setAllowMultipleSelect(true);
+        table.setSpeedSearchConverter(row -> row.myNewName);
+        myTable = table;
+
+        table.addColumn(LocalizeValue.empty(), row -> row.myShouldRename)
+            .setWidth(CHECK_COLUMN_WIDTH)
+            .setResizable(false)
+            .setRenderer(ComponentItemRenderer.reusable(
+                () -> CheckBox.create(LocalizeValue.empty()),
+                (checkBox, item) -> checkBox.setValue(Boolean.TRUE.equals(item.getValue()), false)
+            ))
+            .setEditor(new TableItemEditor<>() {
+                @Override
+                @RequiredUIAccess
+                public ValueComponent<Boolean> createComponent(RenameRow row) {
+                    return CheckBox.create(LocalizeValue.empty(), row.myShouldRename);
+                }
+
+                @Override
+                @RequiredUIAccess
+                public void commit(RenameRow row, @Nullable Boolean value) {
+                    row.myShouldRename = Boolean.TRUE.equals(value);
+                    model.update(row);
+                    handleChanges(row);
+                }
+            });
+
+        table.addColumn(RefactoringLocalize.automaticRenamerEnityNameColumn(myRenamer.entityName()), row -> row)
+            .setRenderer((presentation, item) -> {
+                RenameRow row = item.getValue();
+                if (row == null) {
+                    return;
+                }
+                for (int i = 0; i < row.myDescription.size(); i++) {
+                    String run = row.myDescription.get(i);
+                    if (!run.isEmpty()) {
+                        presentation.append(run, i % 2 == 0 ? TextAttribute.REGULAR : TextAttribute.REGULAR_BOLD);
+                    }
+                }
+            });
+
+        table.addColumn(RefactoringLocalize.automaticRenamerRenameToColumn(), row -> row.myNewName)
+            .setRenderer((presentation, item) -> {
+                String newName = item.getValue();
+                if (newName != null) {
+                    presentation.append(newName);
+                }
+            })
+            .setEditor(new TableItemEditor<>() {
+                @Override
+                @RequiredUIAccess
+                public ValueComponent<String> createComponent(RenameRow row) {
+                    return TextBox.create(row.myNewName);
+                }
+
+                @Override
+                @RequiredUIAccess
+                public void commit(RenameRow row, @Nullable String value) {
+                    row.myNewName = value == null ? "" : value;
+                    model.update(row);
+                    handleChanges(row);
+                }
+            });
+
+        table.addSelectListener(event -> selectionChanged(table.getSelectedItem()));
+
+        Button selectAll = Button.create(RefactoringLocalize.selectAllButton(), event -> setAllSelected(true));
+        Button unselectAll = Button.create(RefactoringLocalize.unselectAllButton(), event -> setAllSelected(false));
+        HorizontalLayout buttons = HorizontalLayout.create();
+        buttons.add(selectAll);
+        buttons.add(unselectAll);
+
+        DockLayout tablePanel = DockLayout.create(Space.SMALL);
+        tablePanel.center(ScrollableLayout.create(table));
+        tablePanel.bottom(DockLayout.create().right(buttons));
+
+        Label usageFileLabel = Label.create(LocalizeValue.empty());
+        myUsageFileLabel = usageFileLabel;
+
+        Component content;
+        if (myProject.getApplication().isUnifiedApplication()) {
+            DockLayout layout = DockLayout.create(Space.SMALL);
+            layout.center(tablePanel);
+            layout.bottom(usageFileLabel);
+            content = layout;
         }
         else {
-          myUsagePreviewPanel.updateLayout(null);
+            UsagePreviewPanel previewPanel = UsagePreviewPanelFactory.getInstance().createPreviewPanel(myProject, new UsageViewPresentation());
+            Disposer.register(uiDisposable, previewPanel);
+            previewPanel.updateLayout(null);
+            myUsagePreviewPanel = previewPanel;
+
+            DockLayout previewLayout = DockLayout.create();
+            previewLayout.top(usageFileLabel);
+            previewLayout.center(TargetAWT.wrap(previewPanel.createComponent()));
+
+            TwoComponentSplitLayout splitLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
+            splitLayout.setFirstComponent(tablePanel);
+            splitLayout.setSecondComponent(previewLayout);
+            splitLayout.setProportion(50);
+            content = splitLayout;
         }
-      }
-    };
-    myTable.getSelectionModel().addListSelectionListener(myListSelectionListener);
 
-    myPanelForPreview.add(myUsagePreviewPanel.createComponent(), BorderLayout.CENTER);
-    myUsagePreviewPanel.updateLayout(null);
-    myPanelForPreview.add(myUsageFileLabel, BorderLayout.NORTH);
-    mySplitPane.setDividerLocation(0.5);
+        Toast errorToast = Toast.create();
+        errorToast.addStyle(ToastStyle.ERROR);
+        errorToast.setVisible(false);
+        myErrorToast = errorToast;
 
-    GuiUtils.replaceJSplitPaneWithIDEASplitter(myPanel);
+        DockLayout root = DockLayout.create(Space.SMALL);
+        root.top(Label.create(LocalizeValue.of(myRenamer.getDialogDescription())));
+        root.center(content);
+        root.bottom(errorToast);
 
-    if (myTableModel.getRowCount() != 0) {
-      myTable.getSelectionModel().addSelectionInterval(0,0);
-    }
-    return myPanel;
-  }
-
-  private void fireDataChanged() {
-    int[] selectedRows = myTable.getSelectedRows();
-    myTable.getSelectionModel().removeListSelectionListener(myListSelectionListener);
-
-    myTableModel.fireTableDataChanged();
-    for (int selectedRow : selectedRows) {
-      myTable.addRowSelectionInterval(selectedRow, selectedRow);
-    }
-    myTable.getSelectionModel().addListSelectionListener(myListSelectionListener);
-  }
-
-  @Override
-  public JComponent getPreferredFocusedComponent() {
-    return myTable;
-  }
-
-  @Override
-  protected void doOKAction() {
-    TableUtil.stopEditing(myTable);
-    updateRenamer();
-    super.doOKAction();
-  }
-
-  @Override
-  protected void dispose() {
-    Disposer.dispose(myUsagePreviewPanel);
-    super.dispose();
-  }
-
-  private void updateRenamer() {
-    for (int i = 0; i < myRenames.length; i++) {
-      PsiNamedElement element = myRenames[i];
-      if (myShouldRename[i]) {
-        myRenamer.setRename(element, myNewNames[i]);
-      }
-      else {
-        myRenamer.doNotRename(element);
-      }
-    }
-  }
-
-  private void createUIComponents() {
-    myTable = new JBTable();
-    myTable.setRowHeight(myTable.getFontMetrics(UIManager.getFont("Table.font").deriveFont(Font.BOLD)).getHeight() + 4);
-  }
-
-  private class MyTableModel extends AbstractTableModel {
-    @Override
-    public int getColumnCount() {
-      return 3;
+        if (!myRows.isEmpty()) {
+            table.select(myRows.get(0));
+        }
+        return root;
     }
 
     @Override
-    public int getRowCount() {
-      return myShouldRename.length;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-      switch(columnIndex) {
-        case CHECK_COLUMN:
-          return myShouldRename[rowIndex];
-        case OLD_NAME_COLUMN:
-          return "<html>" + RefactoringUIUtil.getDescription(myRenames[rowIndex], true).get() + "</html>";
-        case NEW_NAME_COLUMN:
-          return myNewNames[rowIndex];
-        default:
-          LOG.assertTrue(false);
-          return null;
-      }
-    }
-
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-      switch(columnIndex) {
-        case CHECK_COLUMN:
-          myShouldRename[rowIndex] = ((Boolean)aValue).booleanValue();
-          break;
-        case NEW_NAME_COLUMN:
-          myNewNames[rowIndex] = (String) aValue;
-          break;
-        default:
-          LOG.assertTrue(false);
-      }
-      handleChanges();
-    }
-
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-      return columnIndex != OLD_NAME_COLUMN;
-    }
-
-    @Override
-    public Class getColumnClass(int columnIndex) {
-      switch(columnIndex) {
-        case CHECK_COLUMN: return Boolean.class;
-        case OLD_NAME_COLUMN: return String.class;
-        case NEW_NAME_COLUMN: return String.class;
-        default: return null;
-      }
-    }
-
-    @Override
-    public String getColumnName(int column) {
-      switch(column) {
-        case OLD_NAME_COLUMN:
-          return RefactoringLocalize.automaticRenamerEnityNameColumn(myRenamer.entityName()).get();
-        case NEW_NAME_COLUMN:
-          return RefactoringLocalize.automaticRenamerRenameToColumn().get();
-        default:
-          return " ";
-      }
-    }
-
-    private MyEnableDisable getSpaceAction() {
-      return this.new MyEnableDisable();
-    }
-
-    private class MyEnableDisable extends EnableDisableAction {
-      @Override
-      protected JTable getTable() {
+    @RequiredUIAccess
+    public @Nullable Component getPreferredFocusedComponent() {
         return myTable;
-      }
-
-      @Override
-      protected boolean isRowChecked(int row) {
-        return myShouldRename[row];
-      }
-
-      @Override
-      protected void applyValue(int[] rows, boolean valueToBeSet) {
-        for (int row : rows) {
-          myShouldRename[row] = valueToBeSet;
-        }
-        fireDataChanged();
-      }
     }
-  }
 
+    @Override
+    public boolean doUpdateOkButtonState() {
+        return myValid;
+    }
+
+    @Override
+    @RequiredUIAccess
+    public boolean canHandle(AnAction action, @Nullable DialogValue value) {
+        if (action instanceof DialogOkAction) {
+            updateRenamer();
+        }
+        return true;
+    }
+
+    @RequiredUIAccess
+    private void setAllSelected(boolean selected) {
+        MutableFlatDataModel<RenameRow> model = myModel;
+        for (RenameRow row : myRows) {
+            row.myShouldRename = selected;
+            if (model != null) {
+                model.update(row);
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    private void handleChanges(RenameRow row) {
+        boolean validName = RenameUtil.isValidName(myProject, row.myElement, row.myNewName);
+        myValid = validName;
+        setErrorText(validName ? LocalizeValue.empty() : LocalizeValue.localizeTODO("Identifier '" + row.myNewName + "' is invalid"));
+        updateOkButtonState();
+    }
+
+    @RequiredUIAccess
+    private void setErrorText(LocalizeValue errorText) {
+        Toast errorToast = myErrorToast;
+        if (errorToast == null) {
+            return;
+        }
+        boolean shown = errorText.isNotEmpty();
+        errorToast.setText(errorText);
+        errorToast.setVisible(shown);
+        if (shown != myErrorShown) {
+            myErrorShown = shown;
+            updateSize();
+        }
+    }
+
+    @RequiredUIAccess
+    private void selectionChanged(@Nullable RenameRow row) {
+        Label usageFileLabel = myUsageFileLabel;
+        UsagePreviewPanel previewPanel = myUsagePreviewPanel;
+        if (row == null) {
+            if (usageFileLabel != null) {
+                usageFileLabel.setText(LocalizeValue.empty());
+            }
+            if (previewPanel != null) {
+                previewPanel.updateLayout(null);
+            }
+            return;
+        }
+
+        if (usageFileLabel != null) {
+            usageFileLabel.setText(LocalizeValue.of(row.myFileName));
+        }
+        if (previewPanel != null) {
+            previewPanel.updateLayout(List.of(new UsageInfo(row.myElement)));
+        }
+    }
+
+    private void updateRenamer() {
+        for (RenameRow row : myRows) {
+            if (row.myShouldRename) {
+                myRenamer.setRename(row.myElement, row.myNewName);
+            }
+            else {
+                myRenamer.doNotRename(row.myElement);
+            }
+        }
+    }
+
+    private static final class RenameRow {
+        private final PsiNamedElement myElement;
+        private final List<String> myDescription;
+        private final String myFileName;
+        private String myNewName;
+        private boolean myShouldRename;
+
+        private RenameRow(PsiNamedElement element, String newName, boolean shouldRename) {
+            myElement = element;
+            myDescription = splitBold(RefactoringUIUtil.getDescription(element, true).get());
+            myFileName = fileNameOf(element);
+            myNewName = newName;
+            myShouldRename = shouldRename;
+        }
+
+        private static List<String> splitBold(String html) {
+            List<String> runs = new ArrayList<>();
+            String rest = html;
+            boolean bold = false;
+            while (true) {
+                int tag = rest.indexOf(bold ? "</b>" : "<b>");
+                if (tag < 0) {
+                    runs.add(StringUtil.stripHtml(rest, false));
+                    return runs;
+                }
+                runs.add(StringUtil.stripHtml(rest.substring(0, tag), false));
+                rest = rest.substring(tag + (bold ? 4 : 3));
+                bold = !bold;
+            }
+        }
+
+        private static String fileNameOf(PsiNamedElement element) {
+            PsiFile containingFile = element.getContainingFile();
+            VirtualFile virtualFile = containingFile == null ? null : containingFile.getVirtualFile();
+            return virtualFile == null ? "" : virtualFile.getName();
+        }
+    }
 }

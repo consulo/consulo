@@ -16,7 +16,6 @@
 package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.RealEditor;
 import consulo.codeEditor.SelectionModel;
@@ -34,6 +33,7 @@ import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
@@ -42,8 +42,10 @@ import consulo.undoRedo.internal.StartMarkAction;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.Pair;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author ven
@@ -128,6 +130,11 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
                 @RequiredUIAccess
                 protected void runRenameTemplate(Collection<Pair<PsiElement, TextRange>> stringUsages) {
                     VariableInplaceRenamer.super.buildTemplateAndStart(refs, stringUsages, scope, containingFile);
+                }
+
+                @Override
+                protected void chooserCanceled() {
+                    releaseRenamer();
                 }
             };
             renameChooser.showChooser(refs, stringUsages);
@@ -214,82 +221,120 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
 
     @RequiredUIAccess
     protected void performRefactoringRename(String newName, StartMarkAction markAction) {
+        CompletableFuture<?> renamed;
         try {
-            if (!isIdentifier(newName, myLanguage)) {
-                return;
-            }
-            PsiNamedElement elementToRename = getVariable();
-            if (elementToRename != null) {
-                CommandProcessor.getInstance().newCommand()
-                    .project(myProject)
-                    .name(LocalizeValue.ofNullable(getCommandName()))
-                    .inWriteAction()
-                    .run(() -> renameSynthetic(newName));
-            }
-            for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
-                if (factory.isApplicable(elementToRename)) {
-                    List<UsageInfo> usages = new ArrayList<>();
-                    AutomaticRenamer renamer = factory.createRenamer(elementToRename, newName, new ArrayList<>());
-                    if (renamer.hasAnythingToRename()) {
-                        if (!myProject.getApplication().isUnitTestMode()) {
-                            AutomaticRenamingDialog renamingDialog = new AutomaticRenamingDialog(myProject, renamer);
-                            renamingDialog.show();
-                            if (!renamingDialog.isOK()) {
-                                return;
-                            }
-                        }
+            renamed = performRefactoringRenameAsync(newName);
+        }
+        catch (RuntimeException | Error e) {
+            finishRefactoringRename(markAction);
+            throw e;
+        }
 
-                        Runnable runnable = () -> myProject.getApplication()
-                            .runReadAction(() -> renamer.findUsages(usages, false, false));
+        if (renamed.isDone()) {
+            finishRefactoringRename(markAction);
+        }
+        else {
+            renamed.whenCompleteAsync((result, error) -> finishRefactoringRename(markAction), UIAccess.current());
+        }
+    }
 
-                        if (!ProgressManager.getInstance().runProcessWithProgressSynchronously(
-                            runnable,
-                            RefactoringLocalize.searchingForVariables(),
-                            true,
-                            myProject
-                        )) {
-                            return;
-                        }
-
-                        if (!CommonRefactoringUtil.checkReadOnlyStatus(myProject, PsiUtilCore.toPsiElementArray(renamer.getElements()))) {
-                            return;
-                        }
-                        Runnable performAutomaticRename = () -> {
-                            CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
-                            UsageInfo[] usageInfos = usages.toArray(new UsageInfo[usages.size()]);
-                            MultiMap<PsiElement, UsageInfo> classified = RenameProcessor.classifyUsages(renamer.getElements(), usageInfos);
-                            for (PsiNamedElement element : renamer.getElements()) {
-                                String newElementName = renamer.getNewName(element);
-                                if (newElementName != null) {
-                                    Collection<UsageInfo> infos = classified.get(element);
-                                    RenameUtil.doRename(
-                                        element,
-                                        newElementName,
-                                        infos.toArray(new UsageInfo[infos.size()]),
-                                        myProject,
-                                        RefactoringElementListener.DEAF
-                                    );
-                                }
-                            }
-                        };
-                        CommandProcessor.getInstance().newCommand()
-                            .project(myProject)
-                            .name(LocalizeValue.ofNullable(getCommandName()))
-                            .inLaterIf(!myProject.getApplication().isUnitTestMode())
-                            .inWriteAction()
-                            .run(performAutomaticRename::run);
-                    }
-                }
-            }
+    @RequiredUIAccess
+    private void finishRefactoringRename(StartMarkAction markAction) {
+        try {
+            ((RealEditor)EditorWindow.getTopLevelEditor(myEditor)).stopDumbLater();
         }
         finally {
-            try {
-                ((RealEditor)EditorWindow.getTopLevelEditor(myEditor)).stopDumbLater();
-            }
-            finally {
-                FinishMarkAction.finish(myProject, myEditor.getDocument(), markAction);
-            }
+            FinishMarkAction.finish(myProject, myEditor.getDocument(), markAction);
         }
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> performRefactoringRenameAsync(String newName) {
+        if (!isIdentifier(newName, myLanguage)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        PsiNamedElement elementToRename = getVariable();
+        if (elementToRename != null) {
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(LocalizeValue.ofNullable(getCommandName()))
+                .inWriteAction()
+                .run(() -> renameSynthetic(newName));
+        }
+        return renameAutomatically(AutomaticRenamerFactory.EP_NAME.getExtensionList().iterator(), elementToRename, newName);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> renameAutomatically(
+        Iterator<AutomaticRenamerFactory> factories,
+        @Nullable PsiNamedElement elementToRename,
+        String newName
+    ) {
+        while (factories.hasNext()) {
+            AutomaticRenamerFactory factory = factories.next();
+            if (!factory.isApplicable(elementToRename)) {
+                continue;
+            }
+            AutomaticRenamer renamer = factory.createRenamer(elementToRename, newName, new ArrayList<>());
+            if (!renamer.hasAnythingToRename()) {
+                continue;
+            }
+
+            CompletableFuture<Boolean> accepted = myProject.getApplication().isUnitTestMode()
+                ? CompletableFuture.completedFuture(Boolean.TRUE)
+                : new AutomaticRenamingDialog(myProject, renamer).showAsync();
+            return accepted
+                .thenCompose(ok -> ok ? performAutomaticRename(renamer) : CompletableFuture.completedFuture(Boolean.FALSE))
+                .thenCompose(renamed -> {
+                    if (!renamed) {
+                        return CompletableFuture.completedFuture(null);
+                    }
+                    return renameAutomatically(factories, elementToRename, newName);
+                });
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Boolean> performAutomaticRename(AutomaticRenamer renamer) {
+        List<UsageInfo> usages = new ArrayList<>();
+        Runnable runnable = () -> myProject.getApplication()
+            .runReadAction(() -> renamer.findUsages(usages, false, false));
+
+        return CommonRefactoringUtil.runWithProgress(myProject, RefactoringLocalize.searchingForVariables(), runnable)
+            .thenApply(found -> found && renameAutomatically(renamer, usages));
+    }
+
+    @RequiredUIAccess
+    private boolean renameAutomatically(AutomaticRenamer renamer, List<UsageInfo> usages) {
+        if (!CommonRefactoringUtil.checkReadOnlyStatus(myProject, PsiUtilCore.toPsiElementArray(renamer.getElements()))) {
+            return false;
+        }
+        Runnable performAutomaticRename = () -> {
+            CommandProcessor.getInstance().markCurrentCommandAsGlobal(myProject);
+            UsageInfo[] usageInfos = usages.toArray(new UsageInfo[usages.size()]);
+            MultiMap<PsiElement, UsageInfo> classified = RenameProcessor.classifyUsages(renamer.getElements(), usageInfos);
+            for (PsiNamedElement element : renamer.getElements()) {
+                String newElementName = renamer.getNewName(element);
+                if (newElementName != null) {
+                    Collection<UsageInfo> infos = classified.get(element);
+                    RenameUtil.doRename(
+                        element,
+                        newElementName,
+                        infos.toArray(new UsageInfo[infos.size()]),
+                        myProject,
+                        RefactoringElementListener.DEAF
+                    );
+                }
+            }
+        };
+        CommandProcessor.getInstance().newCommand()
+            .project(myProject)
+            .name(LocalizeValue.ofNullable(getCommandName()))
+            .inLaterIf(!myProject.getApplication().isUnitTestMode())
+            .inWriteAction()
+            .run(performAutomaticRename::run);
+        return true;
     }
 
     @Override

@@ -75,6 +75,7 @@ public class WebLabeledLayoutImpl extends VaadinComponentDelegate<WebLabeledLayo
                 }
 
                 add(content);
+                setHorizontalComponentAlignment(Alignment.STRETCH, content);
             }
         }
 

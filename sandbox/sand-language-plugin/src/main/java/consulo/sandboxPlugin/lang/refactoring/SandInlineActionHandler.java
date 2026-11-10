@@ -22,6 +22,7 @@ import consulo.language.editor.refactoring.inline.InlineActionHandler;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.sandboxPlugin.lang.SandLanguage;
+import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
@@ -37,7 +38,7 @@ public class SandInlineActionHandler extends InlineActionHandler {
 
     @Override
     public boolean canInlineElement(PsiElement element) {
-        return true;
+        return element.getLanguage() == SandLanguage.INSTANCE && !(element instanceof SandClass);
     }
 
     @Override

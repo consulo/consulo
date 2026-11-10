@@ -15,9 +15,13 @@
  */
 package consulo.it.internal.ui;
 
+import consulo.it.HeadlessAnswers;
+import consulo.it.internal.HeadlessUIAccess;
 import consulo.ui.Component;
 import consulo.ui.MenuBar;
+import consulo.ui.UIAccess;
 import consulo.ui.Window;
+import consulo.ui.ex.dialog.Dialog;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -29,6 +33,7 @@ import java.util.function.Consumer;
  */
 public class HeadlessWindow extends HeadlessComponentBase implements Window {
     private String myTitle;
+    private @Nullable Component myContent;
 
     public HeadlessWindow(String title) {
         myTitle = title;
@@ -46,6 +51,11 @@ public class HeadlessWindow extends HeadlessComponentBase implements Window {
 
     @Override
     public void setContent(Component content) {
+        myContent = content;
+    }
+
+    public @Nullable Component getContent() {
+        return myContent;
     }
 
     @Override
@@ -54,6 +64,17 @@ public class HeadlessWindow extends HeadlessComponentBase implements Window {
 
     @Override
     public void show() {
+        Dialog dialog = getUserData(Dialog.KEY);
+        if (dialog == null) {
+            return;
+        }
+        HeadlessAnswers answers = HeadlessUIAccess.INSTANCE.getAnswers();
+        if (answers != null) {
+            UIAccess.current().give(() -> answers.dialogShown(dialog));
+        }
+        else {
+            UIAccess.current().give(() -> HeadlessAnswers.dialogWithoutAnswers(dialog));
+        }
     }
 
     @Override

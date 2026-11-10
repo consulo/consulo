@@ -27,8 +27,13 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SyntheticElement;
 
+import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @ActionImpl(id = "RenameElement")
 public class RenameElementAction extends BaseRefactoringAction {
@@ -53,9 +58,16 @@ public class RenameElementAction extends BaseRefactoringAction {
     }
 
     @Override
+    @RequiredReadAction
+    public @Nullable RefactoringActionHandler getHandler(DataContext dataContext) {
+        Map<LocalizeValue, RenameHandler> handlers = RenameHandlerRegistry.getInstance().getRenameHandlers(dataContext);
+        return handlers.size() == 1 ? handlers.values().iterator().next() : null;
+    }
+
+    @Override
     @RequiredUIAccess
-    public RefactoringActionHandler getHandler(DataContext dataContext) {
-        return RenameHandlerRegistry.getInstance().getRenameHandler(dataContext);
+    protected CompletableFuture<@Nullable RefactoringActionHandler> getHandlerAsync(DataContext dataContext) {
+        return RenameHandlerRegistry.getInstance().getRenameHandlerAsync(dataContext).thenApply(handler -> handler);
     }
 
     @Override

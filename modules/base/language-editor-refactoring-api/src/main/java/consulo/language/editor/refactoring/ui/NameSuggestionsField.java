@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.event.DocumentEvent;
@@ -42,6 +43,8 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
+@Deprecated
+@DeprecationInfo("Use EditorBox/EditorComboBox from EditorBoxBuilderFactory")
 public class NameSuggestionsField extends JPanel {
   private final JComponent myComponent;
   private final EventListenerList myListenerList = new EventListenerList();

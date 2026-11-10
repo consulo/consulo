@@ -91,6 +91,7 @@ import consulo.web.ui.impl.internal.base.TargetVaadin;
 import consulo.web.ui.impl.internal.vaadin.WebLength;
 import consulo.web.ui.impl.internal.base.VaadinComponentDelegate;
 import consulo.web.ui.impl.internal.base.WebAwtBridgeComponent;
+import consulo.web.ui.impl.internal.base.WebShortcutDispatcher;
 import consulo.web.ui.impl.internal.image.WebImageElement;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jspecify.annotations.Nullable;
@@ -189,6 +190,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * popup above all - is placed by this, because only the browser can measure where a character ended up.
      */
     private volatile @Nullable CaretPixelLocation myCaretLocation;
+    private volatile @Nullable VisualPosition myCaretLocationPosition;
     private final List<Runnable> myCaretLocationListeners = new CopyOnWriteArrayList<>();
     private final List<EditorSelectionGestureListener> mySelectionGestureListeners = new CopyOnWriteArrayList<>();
 
@@ -408,6 +410,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.addCaretListener(event -> {
             myCaretLocation =
                 new CaretPixelLocation(event.getCaretX(), event.getCaretY(), event.getCaretHeight(), event.getTextX());
+            myCaretLocationPosition = offsetToVisualPosition(Math.max(0, Math.min(event.getOffset(), myDocument.getTextLength())));
 
             for (Runnable listener : myCaretLocationListeners) {
                 listener.run();
@@ -681,7 +684,12 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // the caret over there has not moved and reports the same offset for every character of a run - putting each of
         // them back at it would type the run out backwards. the caret on this side advances with each insert and is
         // pushed back to the browser by the caret listener, which is what keeps the two together
-        EditorActionManager.getInstance().getTypedAction().actionPerformed(this, text.charAt(0), getDataContext());
+        char typed = text.charAt(0);
+        WebShortcutDispatcher.runAfterPendingStrokes(UI.getCurrent(), () -> {
+            if (!isReleased) {
+                EditorActionManager.getInstance().getTypedAction().actionPerformed(this, typed, getDataContext());
+            }
+        });
     }
 
     /**
@@ -697,6 +705,20 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     @Override
     public @Nullable CaretPixelLocation getCaretPixelLocation() {
         return myCaretLocation;
+    }
+
+    @Override
+    public @Nullable CaretPixelLocation getOffsetPixelLocation(int offset) {
+        CaretPixelLocation reference = myCaretLocation;
+        VisualPosition referencePosition = myCaretLocationPosition;
+        if (reference == null || referencePosition == null) {
+            return null;
+        }
+
+        VisualPosition position = offsetToVisualPosition(Math.max(0, Math.min(offset, myDocument.getTextLength())));
+        int x = reference.x() + (position.column - referencePosition.column) * myCharWidth;
+        int y = reference.y() + visualLineToY(position.line) - visualLineToY(referencePosition.line);
+        return new CaretPixelLocation(x, y, reference.height(), reference.textX());
     }
 
     @Override
@@ -1911,9 +1933,52 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         vaadin.setSchemeStyles(buildSchemeCss(schemeKeys));
         vaadin.setStyleRanges(ranges.toString());
 
+        updateRangeFrames();
+
         updateTooltipRanges();
 
         return true;
+    }
+
+    /**
+     * The boxed effects. They frame the whole range they were given, which css on the runs cannot do - a run ends
+     * wherever the line is cut, and an empty range has no run at all - so they are drawn over the text instead.
+     */
+    @RequiredReadAction
+    private void updateRangeFrames() {
+        EditorColorsScheme scheme = getColorsScheme();
+        StringBuilder frames = new StringBuilder("[");
+
+        for (MarkupModelEx markupModel : List.of(getFilteredDocumentMarkupModel(), getMarkupModel())) {
+            markupModel.processRangeHighlightersOverlappingWith(myStyleWindowStart, myStyleWindowEnd, highlighter -> {
+                TextAttributesEffectsBuilder.EffectDescriptor border = getBorderDescriptor(highlighter.getTextAttributes(scheme));
+                String color = border == null ? null : WebColors.toCssColor(border.effectColor);
+                if (color == null) {
+                    return true;
+                }
+
+                if (frames.length() > 1) {
+                    frames.append(',');
+                }
+                frames.append("{\"start\":").append(highlighter.getAffectedAreaStartOffset())
+                    .append(",\"end\":").append(highlighter.getAffectedAreaEndOffset())
+                    .append(",\"color\":\"").append(escapeJson(color)).append('"')
+                    .append(",\"rounded\":").append(border.effectType == EffectType.ROUNDED_BOX)
+                    .append(",\"wider\":").append(border.effectType == EffectType.SLIGHTLY_WIDER_BOX)
+                    .append('}');
+                return true;
+            });
+        }
+
+        frames.append(']');
+
+        myEditorComponent.toVaadinComponent().setRangeFrames(frames.toString());
+    }
+
+    private static TextAttributesEffectsBuilder.@Nullable EffectDescriptor getBorderDescriptor(@Nullable TextAttributes attributes) {
+        return attributes == null || !attributes.hasEffects()
+            ? null
+            : TextAttributesEffectsBuilder.create(attributes).getEffectDescriptor(TextAttributesEffectsBuilder.EffectSlot.FRAME_SLOT);
     }
 
     @RequiredReadAction

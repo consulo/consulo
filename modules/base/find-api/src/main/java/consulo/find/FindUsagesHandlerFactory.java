@@ -19,7 +19,10 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -31,4 +34,16 @@ public abstract class FindUsagesHandlerFactory {
     public abstract boolean canFindUsages(PsiElement element);
 
     public abstract @Nullable FindUsagesHandler createFindUsagesHandler(PsiElement element, boolean forHighlightUsages);
+
+    /**
+     * Creates the handler for an interactive search. Unlike {@link #createFindUsagesHandler(PsiElement, boolean)}, it may
+     * ask the user first, for example whether to search for the usages of a base method instead.
+     *
+     * @return the handler, {@code null} when this factory does not handle the element, or
+     * {@link FindUsagesHandler#NULL_HANDLER} when the user cancelled the search
+     */
+    @RequiredUIAccess
+    public CompletableFuture<@Nullable FindUsagesHandler> createFindUsagesHandlerAsync(PsiElement element, boolean forHighlightUsages) {
+        return CompletableFuture.completedFuture(createFindUsagesHandler(element, forHighlightUsages));
+    }
 }

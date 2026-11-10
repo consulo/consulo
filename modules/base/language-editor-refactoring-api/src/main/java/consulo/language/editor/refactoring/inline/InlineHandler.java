@@ -29,12 +29,14 @@ import consulo.language.extension.LanguageOneToMany;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface that should be implemented by the language in order to provide inline functionality and possibly
@@ -73,6 +75,21 @@ public interface InlineHandler extends LanguageExtension {
      * @return <code>Settings</code> object in case refactoring should be performed or null otherwise
      */
     @Nullable Settings prepareInlineElement(PsiElement element, @Nullable Editor editor, boolean invokedOnReference);
+
+    /**
+     * Asynchronous form of {@link #prepareInlineElement(PsiElement, Editor, boolean)}, for a handler which asks the user
+     * for its settings.
+     *
+     * @return completes with the settings, or with null when this handler does not inline the element
+     */
+    @RequiredUIAccess
+    default CompletableFuture<@Nullable Settings> prepareInlineElementAsync(
+        PsiElement element,
+        @Nullable Editor editor,
+        boolean invokedOnReference
+    ) {
+        return CompletableFuture.completedFuture(prepareInlineElement(element, editor, invokedOnReference));
+    }
 
     /**
      * @param element inlined element

@@ -580,6 +580,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
     }
 
     @Override
+    protected boolean focusNextPrevChild(boolean next) {
+        return false;
+    }
+
+    @Override
     protected void keyPressEvent(QKeyEvent event) {
         if (ourKeyPressDepth > 0) {
             QCoreApplication.postEvent(this, event.clone());

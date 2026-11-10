@@ -86,9 +86,4 @@ public class SetMainPasswordDialogDescriptor extends DialogDescriptor {
     public Component getPreferredFocusedComponent() {
         return myPasswordBox;
     }
-
-    @Override
-    public boolean hasBorderAtButtonLayout() {
-        return false;
-    }
 }

@@ -15,27 +15,27 @@
  */
 package consulo.web.ui.impl.internal.base;
 
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
-import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.event.ComponentEvent;
+import consulo.ui.event.details.KeyCode;
+import consulo.ui.event.details.KeyboardInputDetails;
+import consulo.ui.event.details.ModifiedInputDetails;
+import consulo.ui.ex.impl.internal.action.UnifiedCustomShortcutDispatcher;
+import consulo.ui.Point2D;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
-import consulo.ui.ex.internal.ActionPromoterUtil;
 import consulo.web.ui.impl.internal.clipboard.WebClipboardImpl;
-import consulo.ui.ex.impl.internal.action.MenuItemPresentationFactory;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.web.ui.impl.internal.WebLightPopupImpl;
-import consulo.web.ui.impl.internal.action.WebActionMenuExpander;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.KeyStroke;
@@ -44,7 +44,7 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -62,12 +62,12 @@ import java.util.Set;
  * @since 2026-08-02
  */
 public final class WebShortcutDispatcher {
-    private static final Logger LOG = Logger.getInstance(WebShortcutDispatcher.class);
-
     /**
      * The shape {@link #toCombo} builds for escape with nothing held down.
      */
     private static final String ESCAPE_COMBO = String.valueOf(KeyEvent.VK_ESCAPE);
+
+    private static final String STROKE_QUEUE = "consulo.web.strokeQueue";
 
     private WebShortcutDispatcher() {
     }
@@ -77,7 +77,7 @@ public final class WebShortcutDispatcher {
             return;
         }
 
-        Map<String, List<String>> shortcuts = collectShortcuts();
+        Map<String, List<KeyStroke>> shortcuts = collectShortcuts();
 
         Element element = wrapper.toVaadinComponent().getElement();
 
@@ -92,12 +92,6 @@ public final class WebShortcutDispatcher {
         });
         pushShortcuts(element, combos);
         pushClipboardShortcuts(element, clipboardCombos);
-
-        // one stroke finishes before the next is offered. each perform is asynchronous, and two keys arriving
-        // back to back would otherwise run their actions concurrently and complete in either order - a paste
-        // overtaken by the caret move pressed before it pastes into the old selection. the awt frontend gets
-        // this ordering for free from the single event queue
-        AtomicReference<CompletableFuture<?>> strokeQueue = new AtomicReference<>(CompletableFuture.completedFuture(null));
 
         element.addEventListener("consulo-shortcut", event -> {
             String combo = event.getEventData().path("event.detail.combo").asString("");
@@ -116,11 +110,21 @@ public final class WebShortcutDispatcher {
                 event.getEventData().path("event.detail.pasteHtml").asString("")
             );
 
-            List<String> actionIds = shortcuts.getOrDefault(combo, List.of());
-            boolean modalContext = wrapper.toVaadinComponent().getUI().map(UI::hasModalComponent).orElse(false);
-            strokeQueue.updateAndGet(previous -> previous
-                .exceptionally(throwable -> null)
-                .thenCompose(ignored -> perform(actionIds, root, modalContext)));
+            List<KeyStroke> keyStrokes = shortcuts.getOrDefault(combo, List.of());
+            UI ui = wrapper.toVaadinComponent().getUI().orElse(null);
+            boolean modalContext = ui != null && ui.hasModalComponent();
+            UIAccess uiAccess = UIAccess.current();
+            if (ui == null) {
+                passUnconsumed(element, combo, perform(keyStrokes, root, modalContext), uiAccess);
+                return;
+            }
+
+            strokeQueue(ui).updateAndGet(previous -> passUnconsumed(
+                element,
+                combo,
+                previous.exceptionally(throwable -> null).thenCompose(ignored -> perform(keyStrokes, root, modalContext)),
+                uiAccess
+            ));
         })
             .allowInert()
             .addEventData("event.detail.combo")
@@ -128,69 +132,77 @@ public final class WebShortcutDispatcher {
             .addEventData("event.detail.pasteHtml");
     }
 
-    private static CompletableFuture<Void> perform(List<String> actionIds, Component root, boolean modalContext) {
-        ActionManager actionManager = ActionManager.getInstance();
-
-        List<AnAction> actions = new ArrayList<>();
-        for (String actionId : actionIds) {
-            AnAction action = actionManager.getAction(actionId);
-            if (action != null && (!modalContext || action.isEnabledInModalContext())) {
-                actions.add(action);
-            }
+    /**
+     * One stroke finishes before the next is offered. Each perform is asynchronous, and two keys arriving back to back
+     * would otherwise run their actions concurrently and complete in either order - a paste overtaken by the caret
+     * move pressed before it pastes into the old selection. A typed character waits its turn the same way.
+     */
+    @SuppressWarnings("unchecked")
+    private static AtomicReference<CompletableFuture<?>> strokeQueue(UI ui) {
+        Object queue = ComponentUtil.getData(ui, STROKE_QUEUE);
+        if (queue == null) {
+            queue = new AtomicReference<CompletableFuture<?>>(CompletableFuture.completedFuture(null));
+            ComponentUtil.setData(ui, STROKE_QUEUE, queue);
         }
-
-        // the order the keymap happens to answer in says nothing about which action a stroke belongs to - the weight
-        // does, the same way IdeKeyEventDispatcher sorts before it offers the stroke to anything
-        actions.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
-
-        List<AnAction> rearranged = ActionPromoterUtil.rearrangeByPromoters(actions, WebFocusTracker.createDataContext(root));
-        return performFirstEnabled(rearranged, 0, root, new MenuItemPresentationFactory());
+        return (AtomicReference<CompletableFuture<?>>) queue;
     }
 
-    /**
-     * Offers the stroke to each action bound to it until one takes it, which is what
-     * {@code IdeKeyEventDispatcher#performFirstEnabledAsync} does on the desktop.
-     * <p/>
-     * A shortcut belongs to more than one action - ctrl space is code completion in an editor and a changes view
-     * action elsewhere - and which one the user meant is decided by which of them is enabled where they are. Running
-     * the first action which merely exists gives the stroke to whichever the keymap listed first, and the one the
-     * user wanted never sees it.
-     */
     @RequiredUIAccess
-    private static CompletableFuture<Void> performFirstEnabled(
-        List<AnAction> actions,
-        int index,
-        Component root,
-        MenuItemPresentationFactory presentationFactory
-    ) {
-        if (index >= actions.size()) {
-            return CompletableFuture.completedFuture(null);
+    public static void runAfterPendingStrokes(@Nullable UI ui, Runnable runnable) {
+        AtomicReference<CompletableFuture<?>> queue = ui == null ? null : strokeQueue(ui);
+        if (queue == null || queue.get().isDone()) {
+            runnable.run();
+            return;
         }
 
-        AnAction action = actions.get(index);
+        UIAccess uiAccess = UIAccess.current();
+        queue.updateAndGet(previous -> previous
+            .exceptionally(throwable -> null)
+            .thenRunAsync(runnable, uiAccess));
+    }
 
-        return WebActionMenuExpander.performActionAsync(
-                action,
-                WebFocusTracker.createDataContext(root),
-                ActionPlaces.MAIN_MENU,
-                presentationFactory,
-                null
-            )
-            .handle((performed, throwable) -> {
-                // an action which threw is not an action which said no. passing the stroke on as if it had
-                // declined loses the failure and leaves the key looking dead - the arrow keys moved no caret for
-                // exactly this reason, the thread assert inside the caret model arriving here as a throwable
-                if (throwable != null) {
-                    LOG.error("Shortcut action " + ActionManager.getInstance().getId(action) + " failed", throwable);
-                    return CompletableFuture.<Void>completedFuture(null);
-                }
+    private static CompletableFuture<Boolean> passUnconsumed(
+        Element element,
+        String combo,
+        CompletableFuture<Boolean> performed,
+        UIAccess uiAccess
+    ) {
+        return performed.whenCompleteAsync((result, error) -> {
+            if (error == null && !Boolean.TRUE.equals(result)) {
+                element.executeJs("window.consuloShortcuts.passUnconsumed(this, $0)", combo);
+            }
+        }, uiAccess);
+    }
 
-                if (!Boolean.TRUE.equals(performed)) {
-                    return performFirstEnabled(actions, index + 1, root, presentationFactory);
-                }
-                return CompletableFuture.<Void>completedFuture(null);
-            })
-            .thenCompose(next -> next);
+    @RequiredUIAccess
+    private static CompletableFuture<Boolean> perform(List<KeyStroke> keyStrokes, Component root, boolean modalContext) {
+        List<AnAction> actions = UnifiedCustomShortcutDispatcher.collectKeymapActions(keyStrokes, modalContext);
+        if (actions.isEmpty()) {
+            return CompletableFuture.completedFuture(Boolean.FALSE);
+        }
+
+        ComponentEvent<Component> uiEvent = new ComponentEvent<>(root, toInputDetails(keyStrokes.get(0)));
+        return UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, WebFocusTracker.createDataContext(root), uiEvent);
+    }
+
+    private static KeyboardInputDetails toInputDetails(KeyStroke keyStroke) {
+        int modifiers = keyStroke.getModifiers();
+
+        EnumSet<ModifiedInputDetails.Modifier> result = EnumSet.noneOf(ModifiedInputDetails.Modifier.class);
+        if (isSet(modifiers, InputEvent.ALT_DOWN_MASK, InputEvent.ALT_MASK)) {
+            result.add(ModifiedInputDetails.Modifier.ALT);
+        }
+        if (isSet(modifiers, InputEvent.CTRL_DOWN_MASK, InputEvent.CTRL_MASK)) {
+            result.add(ModifiedInputDetails.Modifier.CTRL);
+        }
+        if (isSet(modifiers, InputEvent.META_DOWN_MASK, InputEvent.META_MASK)) {
+            result.add(ModifiedInputDetails.Modifier.META);
+        }
+        if (isSet(modifiers, InputEvent.SHIFT_DOWN_MASK, InputEvent.SHIFT_MASK)) {
+            result.add(ModifiedInputDetails.Modifier.SHIFT);
+        }
+
+        return new KeyboardInputDetails(new Point2D(0, 0), new Point2D(0, 0), result, KeyCode.of(keyStroke.getKeyCode()));
     }
 
     private static void pushShortcuts(Element element, String combos) {
@@ -205,10 +217,20 @@ public final class WebShortcutDispatcher {
      * The strokes whose default action in the browser is what hands the page the system clipboard. Only paste for
      * now - copy and cut need the payload to be on the client before the gesture, which is a separate piece.
      */
-    private static String clipboardCombos(Map<String, List<String>> shortcuts) {
+    private static String clipboardCombos(Map<String, List<KeyStroke>> shortcuts) {
+        Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
+        if (keymap == null) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<String, List<String>> entry : shortcuts.entrySet()) {
-            if (entry.getValue().contains(IdeActions.ACTION_PASTE)) {
+        for (Map.Entry<String, List<KeyStroke>> entry : shortcuts.entrySet()) {
+            boolean paste = false;
+            for (KeyStroke keyStroke : entry.getValue()) {
+                paste |= List.of(keymap.getActionIds(keyStroke)).contains(IdeActions.ACTION_PASTE);
+            }
+
+            if (paste) {
                 if (!result.isEmpty()) {
                     result.append('\n');
                 }
@@ -233,8 +255,8 @@ public final class WebShortcutDispatcher {
         }
     }
 
-    private static Map<String, List<String>> collectShortcuts() {
-        Map<String, List<String>> result = new LinkedHashMap<>();
+    private static Map<String, List<KeyStroke>> collectShortcuts() {
+        Map<String, List<KeyStroke>> result = new LinkedHashMap<>();
 
         Keymap keymap = KeymapManager.getInstance().getActiveKeymap();
         if (keymap == null) {
@@ -253,9 +275,13 @@ public final class WebShortcutDispatcher {
             // resolves the binding for a bound action, so a borrowed shortcut arrives here as its own
             for (Shortcut shortcut : keymap.getShortcuts(actionId)) {
                 if (shortcut instanceof KeyboardShortcut keyboardShortcut && keyboardShortcut.getSecondKeyStroke() == null) {
-                    String combo = toCombo(keyboardShortcut.getFirstKeyStroke());
+                    KeyStroke keyStroke = keyboardShortcut.getFirstKeyStroke();
+                    String combo = toCombo(keyStroke);
                     if (combo != null) {
-                        result.computeIfAbsent(combo, key -> new ArrayList<>()).add(actionId);
+                        List<KeyStroke> keyStrokes = result.computeIfAbsent(combo, key -> new ArrayList<>());
+                        if (!keyStrokes.contains(keyStroke)) {
+                            keyStrokes.add(keyStroke);
+                        }
                     }
                 }
             }

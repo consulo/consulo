@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
+@DeprecationInfo("Use MessageBoxes")
 public class RefactoringMessageDialog extends DialogWrapper {
     
     private final LocalizeValue myMessage;

@@ -17,13 +17,16 @@ package consulo.language.editor.refactoring.safeDelete;
 
 import consulo.language.psi.PsiElement;
 import consulo.module.Module;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewManager;
 import consulo.usage.UsageViewPresentation;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author anna
@@ -34,6 +37,16 @@ public abstract class SafeDeleteProcessorDelegateBase implements SafeDeleteProce
   @Override
   public Collection<? extends PsiElement> getElementsToSearch(PsiElement element, Collection<PsiElement> allElementsToDelete) {
     return getElementsToSearch(element, null, allElementsToDelete);
+  }
+
+  @Override
+  @RequiredUIAccess
+  public CompletableFuture<@Nullable Collection<? extends PsiElement>> getElementsToSearchAsync(
+    PsiElement element,
+    @Nullable Module module,
+    Collection<PsiElement> allElementsToDelete
+  ) {
+    return CompletableFuture.completedFuture(getElementsToSearch(element, module, allElementsToDelete));
   }
 
   public @Nullable UsageView showUsages(UsageInfo[] usages, UsageViewPresentation presentation, UsageViewManager manager, PsiElement[] elements) {

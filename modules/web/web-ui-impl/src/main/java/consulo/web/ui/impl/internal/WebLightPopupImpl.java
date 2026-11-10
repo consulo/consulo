@@ -140,6 +140,7 @@ public class WebLightPopupImpl extends VaadinComponentDelegate<WebLightPopupImpl
 
         if (options.isRequestFocus()) {
             WebPopupFocus.forwardToContent(popover.getElement(), ":scope > [" + WebPopupFocus.CONTENT_ATTRIBUTE + "]");
+            WebPopupFocus.restoreOnClose(popover.getElement());
         }
 
         // a popover has no grip of its own, so the browser's is used. the box it draws is in the shadow root of the

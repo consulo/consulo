@@ -472,6 +472,11 @@ public class DesktopQtTerminalWidget extends QWidget {
     }
 
     @Override
+    protected boolean focusNextPrevChild(boolean next) {
+        return false;
+    }
+
+    @Override
     protected void keyPressEvent(QKeyEvent event) {
         if (handleClipboardKey(event)) {
             event.accept();

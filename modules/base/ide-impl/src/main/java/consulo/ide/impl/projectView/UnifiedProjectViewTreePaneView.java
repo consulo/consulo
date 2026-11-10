@@ -21,6 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPSIPane;
 import consulo.ide.impl.idea.ide.projectView.impl.GroupByTypeComparator;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
+import consulo.ide.impl.idea.ide.util.DeleteHandler;
 import consulo.language.content.ProjectRootsUtil;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
@@ -49,6 +50,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.tree.ApplicationTreeExecutorFactory;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -211,6 +213,7 @@ public class UnifiedProjectViewTreePaneView implements UnifiedProjectViewPaneVie
         sink.set(PsiElement.KEY, selectedElement);
         if (selectedElement != null) {
             sink.set(PsiElement.KEY_OF_ARRAY, new PsiElement[]{selectedElement});
+            sink.set(DeleteProvider.KEY, DeleteHandler.DefaultDeleteProvider.INSTANCE);
         }
 
         sink.set(PlatformDataKeys.PROJECT_CONTEXT, selected instanceof Project project ? project : null);

@@ -1187,7 +1187,15 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
     @Override
     public @Nullable CaretPixelLocation getCaretPixelLocation() {
-        VisualPosition position = getCaretModel().getVisualPosition();
+        return getPixelLocation(getCaretModel().getVisualPosition());
+    }
+
+    @Override
+    public @Nullable CaretPixelLocation getOffsetPixelLocation(int offset) {
+        return getPixelLocation(offsetToVisualPosition(offset));
+    }
+
+    private CaretPixelLocation getPixelLocation(VisualPosition position) {
         Point point = visualPositionToXY(position);
         Point lineStart = visualPositionToXY(new VisualPosition(position.line, 0));
         return new CaretPixelLocation(point.x, point.y, getLineHeight(), lineStart.x);

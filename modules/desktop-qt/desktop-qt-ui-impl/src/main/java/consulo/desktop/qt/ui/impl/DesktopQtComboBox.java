@@ -15,8 +15,11 @@
  */
 package consulo.desktop.qt.ui.impl;
 
+import io.qt.core.QEvent;
+import io.qt.core.QObject;
 import io.qt.core.QRect;
 import io.qt.core.QSize;
+import io.qt.core.QTimer;
 import io.qt.core.Qt;
 import io.qt.gui.QFontMetrics;
 import io.qt.gui.QPaintEvent;
@@ -46,6 +49,28 @@ public class DesktopQtComboBox extends QComboBox {
 
     public void setSuffixWidget(@Nullable QWidget suffix) {
         mySuffix = suffix;
+        if (suffix != null && !suffix.isDisposed()) {
+            observeSuffix(suffix);
+        }
+        relayoutSuffix();
+    }
+
+    private void observeSuffix(QWidget suffix) {
+        suffix.installEventFilter(new QObject(suffix) {
+            @Override
+            public boolean eventFilter(QObject watched, QEvent event) {
+                if (event.type() == QEvent.Type.LayoutRequest && mySuffix == suffix && !suffix.sizeHint().equals(suffix.size())) {
+                    QTimer.singleShot(0, DesktopQtComboBox.this::relayoutSuffix);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void relayoutSuffix() {
+        if (isDisposed()) {
+            return;
+        }
         layoutSuffix();
         updateGeometry();
         update();

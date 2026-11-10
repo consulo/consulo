@@ -16,29 +16,20 @@
 
 package consulo.language.editor.refactoring.rename;
 
-import consulo.ui.RadioGroup;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler;
 import consulo.localize.LocalizeValue;
-import consulo.project.Project;
-import consulo.ui.RadioButton;
-import consulo.ui.ValueComponent;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.event.ComponentEventListener;
-import consulo.ui.event.ValueComponentEvent;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.layout.LabeledLayout;
-import consulo.ui.layout.VerticalLayout;
-import consulo.ui.util.RadioUpDownListener;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author dsl
@@ -73,8 +64,12 @@ public class RenameHandlerRegistry {
         return myDefaultElementRenameHandler.isAvailableOnDataContext(dataContext);
     }
 
-    @RequiredUIAccess
-    public @Nullable RenameHandler getRenameHandler(DataContext dataContext) {
+    /**
+     * The handlers which can rename what the context points at, keyed by their titles. A member in-place handler is left
+     * out when something else can rename the element too.
+     */
+    @RequiredReadAction
+    public Map<LocalizeValue, RenameHandler> getRenameHandlers(DataContext dataContext) {
         Map<LocalizeValue, RenameHandler> availableHandlers = new TreeMap<>();
         RenameHandler.EP_NAME.forEachExtensionSafe(renameHandler -> {
             if (renameHandler.isRenaming(dataContext)) {
@@ -88,32 +83,48 @@ public class RenameHandlerRegistry {
             }
         }
 
-        if (availableHandlers.size() == 1) {
-            return availableHandlers.values().iterator().next();
-        }
-
-        for (Iterator<Map.Entry<LocalizeValue, RenameHandler>> iterator = availableHandlers.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<LocalizeValue, RenameHandler> entry = iterator.next();
-            if (entry.getValue() instanceof MemberInplaceRenameHandler) {
-                iterator.remove();
-                break;
-            }
-        }
-
-        if (availableHandlers.size() == 1) {
-            return availableHandlers.values().iterator().next();
-        }
-
         if (availableHandlers.size() > 1) {
-            LocalizeValue[] variants = availableHandlers.keySet().toArray(LocalizeValue[]::new);
-            HandlersChooser chooser = new HandlersChooser(dataContext.getData(Project.KEY), variants);
-            chooser.show();
-            if (chooser.isOK()) {
-                return availableHandlers.get(chooser.getSelection());
-            }
-            throw new ProcessCanceledException();
+            availableHandlers.values().removeIf(handler -> handler instanceof MemberInplaceRenameHandler);
         }
-        return myDefaultElementRenameHandler.isRenaming(dataContext) ? myDefaultElementRenameHandler : null;
+
+        if (availableHandlers.isEmpty() && myDefaultElementRenameHandler.isRenaming(dataContext)) {
+            availableHandlers.put(getHandlerTitle(myDefaultElementRenameHandler), myDefaultElementRenameHandler);
+        }
+        return availableHandlers;
+    }
+
+    /**
+     * The handler to rename with. When more than one can, the user picks one and the future completes once they did;
+     * dismissing the choice cancels it.
+     */
+    @RequiredUIAccess
+    public CompletableFuture<@Nullable RenameHandler> getRenameHandlerAsync(DataContext dataContext) {
+        Map<LocalizeValue, RenameHandler> availableHandlers = getRenameHandlers(dataContext);
+        if (availableHandlers.size() <= 1) {
+            return CompletableFuture.completedFuture(availableHandlers.isEmpty() ? null : availableHandlers.values().iterator().next());
+        }
+
+        CompletableFuture<@Nullable RenameHandler> result = new CompletableFuture<>();
+        List<LocalizeValue> titles = new ArrayList<>(availableHandlers.keySet());
+        BaseListPopupStep<LocalizeValue> step = new BaseListPopupStep<>(RefactoringLocalize.whatWouldYouLikeToDo().get(), titles) {
+            @Override
+            public String getTextFor(LocalizeValue value) {
+                return value.get();
+            }
+
+            @Override
+            public PopupStep onChosen(LocalizeValue selectedValue, boolean finalChoice) {
+                return doFinalStep(() -> result.complete(availableHandlers.get(selectedValue)));
+            }
+
+            @Override
+            public void canceled() {
+                result.cancel(false);
+            }
+        };
+
+        JBPopupFactory.getInstance().createListPopup(step).showInBestPositionFor(dataContext);
+        return result;
     }
 
     
@@ -127,57 +138,5 @@ public class RenameHandlerRegistry {
      */
     public void registerHandler(RenameHandler handler) {
         myHandlers.add(handler);
-    }
-
-    private static class HandlersChooser extends DialogWrapper {
-        private final LocalizeValue[] myRenamers;
-        private LocalizeValue mySelection;
-        private final RadioButton[] myRButtons;
-
-        protected HandlersChooser(Project project, LocalizeValue[] renamers) {
-            super(project);
-            myRenamers = renamers;
-            myRButtons = new RadioButton[myRenamers.length];
-            mySelection = renamers[0];
-            setTitle(RefactoringLocalize.selectRefactoringTitle());
-            init();
-        }
-
-        @Override
-        @RequiredUIAccess
-        protected JComponent createNorthPanel() {
-            VerticalLayout radioPanel = VerticalLayout.create();
-
-            RadioGroup<LocalizeValue> group = RadioGroup.create();
-            group.addValueListener(renamer -> mySelection = renamer);
-
-            int rIdx = 0;
-            for (LocalizeValue renamer : myRenamers) {
-                RadioButton rb = group.newButton(renamer, renamer);
-                myRButtons[rIdx++] = rb;
-                radioPanel.add(rb);
-            }
-
-            group.setValue(myRenamers[0]);
-
-            RadioUpDownListener.registerListener(myRButtons);
-
-            return (JComponent)TargetAWT.to(LabeledLayout.create(RefactoringLocalize.whatWouldYouLikeToDo(), radioPanel));
-        }
-
-        @Override
-        @RequiredUIAccess
-        public JComponent getPreferredFocusedComponent() {
-            return (JComponent)TargetAWT.to(myRButtons[0]);
-        }
-
-        public LocalizeValue getSelection() {
-            return mySelection;
-        }
-
-        @Override
-        protected JComponent createCenterPanel() {
-            return null;
-        }
     }
 }

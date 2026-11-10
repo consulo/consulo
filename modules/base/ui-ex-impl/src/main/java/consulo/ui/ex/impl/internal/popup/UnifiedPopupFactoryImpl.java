@@ -21,6 +21,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
+import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
@@ -33,6 +34,7 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.lang.EmptyRunnable;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
@@ -77,12 +79,12 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
 
     @Override
     public ListPopup createConfirmation(String title, Runnable onYes, int defaultOptionIndex) {
-        throw new UnsupportedOperationException();
+        return createConfirmation(title, CommonLocalize.buttonYes().get(), CommonLocalize.buttonNo().get(), onYes, defaultOptionIndex);
     }
 
     @Override
     public ListPopup createConfirmation(String title, String yesText, String noText, Runnable onYes, int defaultOptionIndex) {
-        throw new UnsupportedOperationException();
+        return createConfirmation(title, yesText, noText, onYes, EmptyRunnable.getInstance(), defaultOptionIndex);
     }
 
     @Override
@@ -94,7 +96,25 @@ public class UnifiedPopupFactoryImpl extends JBPopupFactory {
         Runnable onNo,
         int defaultOptionIndex
     ) {
-        throw new UnsupportedOperationException();
+        BaseListPopupStep<String> step = new BaseListPopupStep<>(title, yesText, noText) {
+            @Override
+            public PopupStep onChosen(String selectedValue, boolean finalChoice) {
+                return doFinalStep(selectedValue.equals(yesText) ? onYes : onNo);
+            }
+
+            @Override
+            public void canceled() {
+                onNo.run();
+            }
+
+            @Override
+            public boolean isMnemonicsNavigationEnabled() {
+                return true;
+            }
+        };
+        step.setDefaultOptionIndex(defaultOptionIndex);
+
+        return createListPopup(step);
     }
 
     @Override

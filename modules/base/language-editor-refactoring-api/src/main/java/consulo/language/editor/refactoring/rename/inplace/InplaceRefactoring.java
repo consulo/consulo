@@ -60,6 +60,9 @@ import consulo.module.content.ProjectRootManager;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageButtonRole;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.PositionTracker;
@@ -67,8 +70,6 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.DottedBorder;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -167,15 +168,21 @@ public abstract class InplaceRefactoring {
         LocalizeValue message = ApplicationLocalize.dialogMessageCommandNotFinishedYet(startMarkAction.getCommandName());
         Document oldDocument = startMarkAction.getDocument();
         if (editor == null || oldDocument != editor.getDocument()) {
-            int exitCode = Messages.showYesNoDialog(
-                project,
-                message.get(),
-                RefactoringLocalize.cannotPerformRefactoring().get(),
-                RefactoringLocalize.inplaceRefactoringContinueStarted().get(),
-                RefactoringLocalize.inplaceRefactoringAbandonStarted().get(),
-                UIUtil.getErrorIcon()
-            );
-            navigateToStarted(oldDocument, project, exitCode);
+            MessageBoxBuilder.<Integer>create()
+                .asError()
+                .title(RefactoringLocalize.cannotPerformRefactoring())
+                .text(message)
+                .button(MessageButtonRole.YES, RefactoringLocalize.inplaceRefactoringContinueStarted(), DialogWrapper.OK_EXIT_CODE)
+                .asDefaultButton()
+                .button(MessageButtonRole.NO, RefactoringLocalize.inplaceRefactoringAbandonStarted(), DialogWrapper.CANCEL_EXIT_CODE)
+                .button(MessageButtonRole.CLOSE, -1)
+                .asExitButton()
+                .showAsync(project)
+                .thenAcceptAsync(exitCode -> {
+                    if (exitCode != null) {
+                        navigateToStarted(oldDocument, project, exitCode);
+                    }
+                }, UIAccess.current());
         }
         else {
             CommonRefactoringUtil.showErrorHint(project, editor, message, RefactoringLocalize.cannotPerformRefactoring(), null);
@@ -228,9 +235,24 @@ public abstract class InplaceRefactoring {
         myEditor.putUserData(INPLACE_RENAMER, this);
         ourRenamersStack.push(this);
 
-        List<Pair<PsiElement, TextRange>> stringUsages = new ArrayList<>();
-        collectAdditionalElementsToRename(stringUsages);
-        return buildTemplateAndStart(refs, stringUsages, scope, containingFile);
+        try {
+            List<Pair<PsiElement, TextRange>> stringUsages = new ArrayList<>();
+            collectAdditionalElementsToRename(stringUsages);
+            return buildTemplateAndStart(refs, stringUsages, scope, containingFile);
+        }
+        catch (RuntimeException | Error e) {
+            releaseRenamer();
+            throw e;
+        }
+    }
+
+    protected void releaseRenamer() {
+        if (!ourRenamersStack.isEmpty() && ourRenamersStack.peek() == this) {
+            ourRenamersStack.pop();
+        }
+        if (myEditor.getUserData(INPLACE_RENAMER) == this) {
+            myEditor.putUserData(INPLACE_RENAMER, null);
+        }
     }
 
     protected boolean notSameFile(@Nullable VirtualFile file, PsiFile containingFile) {
@@ -342,19 +364,21 @@ public abstract class InplaceRefactoring {
         catch (StartMarkAction.AlreadyStartedException e) {
             Document oldDocument = e.getDocument();
             if (oldDocument != myEditor.getDocument()) {
-                int exitCode = Messages.showYesNoCancelDialog(
-                    myProject,
-                    e.getMessage(),
-                    getCommandName(),
-                    RefactoringLocalize.inplaceRefactoringNavigateToStarted().get(),
-                    RefactoringLocalize.inplaceRefactoringAbandonStarted().get(),
-                    RefactoringLocalize.inplaceRefactoringCancelCurrent().get(),
-                    UIUtil.getErrorIcon()
-                );
-                if (exitCode == Messages.CANCEL) {
-                    return true;
-                }
-                navigateToAlreadyStarted(oldDocument, exitCode);
+                MessageBoxBuilder.<Integer>create()
+                    .asError()
+                    .title(LocalizeValue.ofNullable(getCommandName()))
+                    .text(LocalizeValue.ofNullable(e.getMessage()))
+                    .button(MessageButtonRole.YES, RefactoringLocalize.inplaceRefactoringNavigateToStarted(), DialogWrapper.OK_EXIT_CODE)
+                    .asDefaultButton()
+                    .button(MessageButtonRole.NO, RefactoringLocalize.inplaceRefactoringAbandonStarted(), DialogWrapper.CANCEL_EXIT_CODE)
+                    .button(MessageButtonRole.CANCEL, RefactoringLocalize.inplaceRefactoringCancelCurrent(), -1)
+                    .asExitButton()
+                    .showAsync(myProject)
+                    .thenAcceptAsync(exitCode -> {
+                        if (exitCode != null && exitCode >= 0) {
+                            navigateToAlreadyStarted(oldDocument, exitCode);
+                        }
+                    }, UIAccess.current());
                 return true;
             }
             else {

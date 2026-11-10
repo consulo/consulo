@@ -4,7 +4,9 @@ package consulo.usage;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.ex.content.Content;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -33,6 +35,20 @@ public abstract class UsageViewContentManager {
         String toolwindowTitle,
         boolean reusable,
         JComponent component,
+        boolean toOpenInNewTab,
+        boolean isLockable
+    );
+
+    /**
+     * Same as {@link #addContent(String, String, String, boolean, JComponent, boolean, boolean)} for a view built from
+     * unified components.
+     */
+    public abstract Content addUIContent(
+        String contentName,
+        @Nullable String tabName,
+        @Nullable String toolwindowTitle,
+        boolean reusable,
+        Component component,
         boolean toOpenInNewTab,
         boolean isLockable
     );

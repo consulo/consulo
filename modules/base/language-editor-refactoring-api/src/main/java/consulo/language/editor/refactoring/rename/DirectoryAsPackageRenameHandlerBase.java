@@ -29,15 +29,19 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageBoxes;
+import consulo.ui.MessageButtonRole;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.ThreeState;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author yole
@@ -153,30 +157,30 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
                         "\' contains directories in libraries which cannot be renamed. Do you want to rename " +
                         (moduleDirs == null ? "current directory" : "current module directories");
                     if (projectDirectories.length > 0) {
-                        int ret = Messages.showYesNoCancelDialog(
+                        PsiDirectory[] currentDirs = moduleDirs == null ? new PsiDirectory[]{psiDirectory} : moduleDirs;
+                        askThreeWay(
                             project,
-                            promptMessage + " or all directories in project?",
-                            RefactoringLocalize.warningTitle().get(),
-                            RefactoringLocalize.renameCurrentDirectory().get(),
-                            RefactoringLocalize.renameDirectories().get(),
-                            CommonLocalize.buttonCancel().get(),
-                            UIUtil.getWarningIcon()
-                        );
-                        if (ret == 2) {
-                            return;
-                        }
-                        renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage,
-                            ret == 0 ? (moduleDirs == null ? new PsiDirectory[]{psiDirectory} : moduleDirs) : projectDirectories);
+                            LocalizeValue.of(promptMessage + " or all directories in project?"),
+                            RefactoringLocalize.renameCurrentDirectory(),
+                            RefactoringLocalize.renameDirectories()
+                        ).thenAcceptAsync(answer -> {
+                            if (answer != ThreeState.UNSURE) {
+                                renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage,
+                                    answer == ThreeState.YES ? currentDirs : projectDirectories);
+                            }
+                        }, UIAccess.current());
                     }
                     else {
-                        if (Messages.showOkCancelDialog(
-                            project,
-                            promptMessage + "?",
-                            RefactoringLocalize.warningTitle().get(),
-                            UIUtil.getWarningIcon()
-                        ) == DialogWrapper.OK_EXIT_CODE) {
-                            renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage, psiDirectory);
-                        }
+                        MessageBoxes.okCancel()
+                            .asWarning()
+                            .title(RefactoringLocalize.warningTitle())
+                            .text(LocalizeValue.of(promptMessage + "?"))
+                            .showAsync(project)
+                            .thenAcceptAsync(ok -> {
+                                if (Boolean.TRUE.equals(ok)) {
+                                    renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage, psiDirectory);
+                                }
+                            }, UIAccess.current());
                     }
                 }
                 else {
@@ -186,26 +190,44 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
                     message.append(
                         RefactoringLocalize.directoriesAndAllReferencesToPackageWillBeRenamed(psiDirectory.getVirtualFile().getPresentableUrl()).get()
                     );
-                    int ret = Messages.showYesNoCancelDialog(
+                    askThreeWay(
                         project,
-                        message.toString(),
-                        RefactoringLocalize.warningTitle().get(),
-                        RefactoringLocalize.renamePackageButtonText().get(),
-                        RefactoringLocalize.renameDirectoryButtonText().get(),
-                        CommonLocalize.buttonCancel().get(),
-                        UIUtil.getWarningIcon()
-                    );
-                    if (ret == 0) {
-                        PsiElementRenameHandler.rename(aPackage, project, nameSuggestionContext, editor);
-                    }
-                    else if (ret == 1) {
-                        renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage, psiDirectory);
-                    }
+                        LocalizeValue.of(message.toString()),
+                        RefactoringLocalize.renamePackageButtonText(),
+                        RefactoringLocalize.renameDirectoryButtonText()
+                    ).thenAcceptAsync(answer -> {
+                        if (answer == ThreeState.YES) {
+                            PsiElementRenameHandler.rename(aPackage, project, nameSuggestionContext, editor);
+                        }
+                        else if (answer == ThreeState.NO) {
+                            renameDirs(project, nameSuggestionContext, editor, psiDirectory, aPackage, psiDirectory);
+                        }
+                    }, UIAccess.current());
                 }
             }
         }
     }
 
+    @RequiredUIAccess
+    private static CompletableFuture<ThreeState> askThreeWay(
+        Project project,
+        LocalizeValue text,
+        LocalizeValue yesText,
+        LocalizeValue noText
+    ) {
+        return MessageBoxBuilder.<ThreeState>create()
+            .asWarning()
+            .title(RefactoringLocalize.warningTitle())
+            .text(text)
+            .button(MessageButtonRole.YES, yesText, ThreeState.YES)
+            .asDefaultButton()
+            .button(MessageButtonRole.NO, noText, ThreeState.NO)
+            .button(MessageButtonRole.CANCEL, ThreeState.UNSURE)
+            .asExitButton()
+            .showAsync(project);
+    }
+
+    @RequiredUIAccess
     private void renameDirs(
         final Project project,
         final PsiElement nameSuggestionContext,
@@ -216,6 +238,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
     ) {
         RenameDialog dialog = new RenameDialog(project, contextDirectory, nameSuggestionContext, editor) {
             @Override
+            @RequiredUIAccess
             protected void doAction() {
                 String newQName = StringUtil.getQualifiedName(StringUtil.getPackageName(getQualifiedName(aPackage)), getNewName());
                 BaseRefactoringProcessor moveProcessor = createProcessor(newQName, project, dirsToRename, isSearchInComments(),
@@ -223,7 +246,7 @@ public abstract class DirectoryAsPackageRenameHandlerBase<T extends PsiDirectory
                 invokeRefactoring(moveProcessor);
             }
         };
-        dialog.show();
+        dialog.showAsync();
     }
 
     public static void buildMultipleDirectoriesInPackageMessage(

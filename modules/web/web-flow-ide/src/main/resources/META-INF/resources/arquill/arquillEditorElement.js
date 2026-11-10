@@ -2695,6 +2695,65 @@
             }
         };
 
+        const renderRangeFrames = () => {
+            let layer = element.$arquillRangeFrameLayer;
+            const frames = element.$arquillRangeFrames || [];
+            if (!layer) {
+                if (frames.length === 0) {
+                    return;
+                }
+                layer = document.createElement('div');
+                layer.className = 'arquill-range-frames';
+                element.appendChild(layer);
+                element.$arquillRangeFrameLayer = layer;
+            }
+            layer.replaceChildren();
+
+            if (frames.length === 0) {
+                return;
+            }
+
+            const host = element.getBoundingClientRect();
+            const area = textView.getClientArea();
+            const textLeft = textView.convert({ x: area.x, y: 0 }, 'document', 'page').x - host.left;
+            const lineHeight = textView.getLineHeight();
+            layer.style.left = Math.round(textLeft) + 'px';
+            layer.style.width = Math.round(area.width) + 'px';
+
+            const pageX = viewOffset => textView.convert({ x: textView.getLocationAtOffset(viewOffset).x, y: 0 }, 'document', 'page').x;
+
+            for (const frame of frames) {
+                const viewStart = toViewOffset(frame.start);
+                const viewEnd = toViewOffset(frame.end);
+                if (viewStart < 0 || viewEnd < 0) {
+                    continue;
+                }
+
+                const startLine = viewModel.getLineAtOffset(viewStart);
+                const endLine = viewModel.getLineAtOffset(viewEnd);
+                for (let line = startLine; line <= endLine; line++) {
+                    const top = Math.round(pageY(line) - host.top);
+                    if (top < -lineHeight || top > element.clientHeight + lineHeight) {
+                        continue;
+                    }
+
+                    const from = line === startLine ? viewStart : viewModel.getLineStart(line);
+                    const to = line === endLine ? viewEnd : viewModel.getLineEnd(line);
+                    const left = pageX(from) - host.left - textLeft;
+                    const right = pageX(to) - host.left - textLeft;
+
+                    const div = document.createElement('div');
+                    div.className = 'arquill-range-frame' + (frame.rounded ? ' arquill-range-frame-rounded' : '');
+                    div.style.left = Math.round(left - (frame.wider ? 1 : 0)) + 'px';
+                    div.style.width = Math.max(1, Math.round(right - left) + 1 + (frame.wider ? 2 : 0)) + 'px';
+                    div.style.top = top + 'px';
+                    div.style.height = Math.round(lineHeight) + 'px';
+                    div.style.borderColor = frame.color;
+                    layer.appendChild(div);
+                }
+            }
+        };
+
         const FRAME_EDGE_OUTSIDE = 3;
         const FRAME_EDGE_LINE_FRACTION = 0.3;
 
@@ -2824,6 +2883,7 @@
                 renderComponentInlays();
                 renderLineSeparators();
                 renderLineFrames();
+                renderRangeFrames();
             });
         };
 
@@ -3374,6 +3434,15 @@
                     element.$arquillLastRectOffset = -1;
                     caretRevealPending = !isHostLaidOut() || metricsPending;
                     placeCaret();
+
+                    const rangeDetail = Object.assign(caretDetail(end, textView.getCaretOffset()), {
+                        rectOnly: true,
+                        selectionStart: element.$arquillSelectionStart,
+                        selectionEnd: element.$arquillSelectionEnd
+                    });
+                    if (rangeDetail.caretHeight > 0) {
+                        fireCaret(rangeDetail);
+                    }
                     return;
                 }
 
@@ -3614,6 +3683,11 @@
 
             setLineFrames: framesJson => {
                 element.$arquillLineFrames = JSON.parse(framesJson);
+                scheduleOverlayRender();
+            },
+
+            setRangeFrames: framesJson => {
+                element.$arquillRangeFrames = JSON.parse(framesJson);
                 scheduleOverlayRender();
             },
 

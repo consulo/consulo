@@ -28,12 +28,15 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.InputValidator;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.InputValidator;
+import consulo.ui.TextBox;
 import consulo.undoRedo.*;
-import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Konstantin Bulenkov
@@ -64,46 +67,44 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
     public void invoke(Project project, PsiElement[] elements, DataContext dataContext) {
         Library library = dataContext.getData(Library.KEY);
         LOG.assertTrue(library != null);
-        Messages.showInputDialog(
-            project,
-            IdeLocalize.promptEnterNewLibraryName().get(),
-            IdeLocalize.titleRenameLibrary().get(),
-            UIUtil.getQuestionIcon(),
-            library.getName(),
-            new MyInputValidator(project, library)
-        );
+        InputBoxBuilder.text()
+            .asQuestion()
+            .title(IdeLocalize.titleRenameLibrary())
+            .text(IdeLocalize.promptEnterNewLibraryName())
+            .value(StringUtil.notNullize(library.getName()))
+            .setupComponent(TextBox::selectAll)
+            .validator(new LibraryNameValidator(project, library))
+            .showAsync(project);
     }
 
-   
     @Override
     public LocalizeValue getActionTitleValue() {
         return IdeLocalize.titleRenameLibrary();
     }
 
-    private static class MyInputValidator implements InputValidator {
+    private static class LibraryNameValidator implements InputValidator<String> {
         private final Project myProject;
         private final Library myLibrary;
 
-        public MyInputValidator(Project project, Library library) {
+        public LibraryNameValidator(Project project, Library library) {
             myProject = project;
             myLibrary = library;
         }
 
         @Override
         @RequiredUIAccess
-        public boolean checkInput(String inputString) {
-            return inputString != null && !inputString.isEmpty() && myLibrary.getTable().getLibraryByName(inputString) == null;
+        public @Nullable InputProblem validate(String inputString) {
+            if (inputString.isEmpty() || myLibrary.getTable().getLibraryByName(inputString) != null) {
+                return InputProblem.error(LocalizeValue.empty());
+            }
+            return null;
         }
 
         @Override
         @RequiredUIAccess
-        public boolean canClose(final String inputString) {
-            final String oldName = myLibrary.getName();
+        public CompletableFuture<@Nullable InputProblem> confirm(String inputString) {
+            String oldName = myLibrary.getName();
             Library.ModifiableModel modifiableModel = renameLibrary(inputString);
-            if (modifiableModel == null) {
-                return false;
-            }
-            SimpleReference<Boolean> success = SimpleReference.create(Boolean.TRUE);
             CommandProcessor.getInstance().newCommand()
                 .project(myProject)
                 .name(IdeLocalize.commandRenamingModule(oldName))
@@ -111,27 +112,21 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
                     UndoableAction action = new BasicUndoableAction() {
                         @Override
                         public void undo() throws UnexpectedUndoException {
-                            Library.ModifiableModel modifiableModel1 = renameLibrary(oldName);
-                            if (modifiableModel1 != null) {
-                                modifiableModel1.commit();
-                            }
+                            renameLibrary(oldName).commit();
                         }
 
                         @Override
                         public void redo() throws UnexpectedUndoException {
-                            Library.ModifiableModel modifiableModel1 = renameLibrary(inputString);
-                            if (modifiableModel1 != null) {
-                                modifiableModel1.commit();
-                            }
+                            renameLibrary(inputString).commit();
                         }
                     };
                     ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
                     myProject.getApplication().runWriteAction(() -> modifiableModel.commit());
                 });
-            return success.get();
+            return CompletableFuture.completedFuture(null);
         }
 
-        private Library.@Nullable ModifiableModel renameLibrary(String inputString) {
+        private Library.ModifiableModel renameLibrary(String inputString) {
             Library.ModifiableModel modifiableModel = myLibrary.getModifiableModel();
             modifiableModel.setName(inputString);
             return modifiableModel;

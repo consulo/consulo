@@ -39,30 +39,42 @@ import java.util.function.Function;
  */
 public class UIAction<I, O> extends CoroutineStep<I, O> {
     public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess Function<I, O> function) {
-        return new UIAction<>((i, c) -> function.apply(i));
+        return new UIAction<>((i, c) -> CompletableFuture.completedFuture(function.apply(i)));
     }
 
     public static <I, O> CoroutineStep<I, O> apply(@RequiredUIAccess BiFunction<I, Continuation<?>, O> function) {
-        return new UIAction<>(function);
+        return new UIAction<>((i, c) -> CompletableFuture.completedFuture(function.apply(i, c)));
     }
 
-    private final BiFunction<I, Continuation<?>, O> myFunction;
+    /**
+     * Runs the function on the UI thread and continues once the future it returns completes - for a step that asks
+     * the user, such as showing a dialog and waiting for its answer.
+     */
+    public static <I, O> CoroutineStep<I, O> await(@RequiredUIAccess Function<I, CompletableFuture<O>> function) {
+        return new UIAction<>((i, c) -> function.apply(i));
+    }
 
-    private UIAction(BiFunction<I, Continuation<?>, O> function) {
+    private final BiFunction<I, Continuation<?>, CompletableFuture<O>> myFunction;
+
+    private UIAction(BiFunction<I, Continuation<?>, CompletableFuture<O>> function) {
         myFunction = function;
     }
 
     @Override
     public void runAsync(CompletableFuture<I> previousExecution, @Nullable CoroutineStep<O, ?> nextStep, Continuation<?> continuation) {
         UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
-        continuation.continueCompose(previousExecution, input -> uiAccess.giveAsync(() -> myFunction.apply(input, continuation)), nextStep);
+        continuation.continueCompose(
+            previousExecution,
+            input -> uiAccess.giveAsync(() -> myFunction.apply(input, continuation)).thenCompose(Function.identity()),
+            nextStep
+        );
     }
 
     @Override
     protected @Nullable O execute(@Nullable I input, Continuation<?> continuation) {
         UIAccess uiAccess = Objects.requireNonNull(continuation.getConfiguration(UIAccess.KEY), "UIAccess required");
-        SimpleReference<O> ref = new SimpleReference<>();
+        SimpleReference<CompletableFuture<O>> ref = new SimpleReference<>();
         uiAccess.giveAndWaitIfNeed(() -> ref.set(myFunction.apply(input, continuation)));
-        return ref.get();
+        return Objects.requireNonNull(ref.get()).join();
     }
 }

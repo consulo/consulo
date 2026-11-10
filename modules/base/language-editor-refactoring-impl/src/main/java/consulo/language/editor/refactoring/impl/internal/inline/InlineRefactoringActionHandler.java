@@ -31,10 +31,17 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.Iteration;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Jeka
@@ -52,15 +59,19 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
             dataContext = DataManager.getInstance().getDataContext();
         }
         Editor editor = dataContext.getData(Editor.KEY);
+        SimpleReference<Boolean> inlined = SimpleReference.create(Boolean.FALSE);
         project.getApplication().getExtensionPoint(InlineActionHandler.class).forEachBreakable(handler -> {
             if (handler.canInlineElement(elements[0])) {
                 handler.inlineElement(project, editor, elements[0]);
+                inlined.set(Boolean.TRUE);
                 return ExtensionPoint.Flow.BREAK;
             }
             return ExtensionPoint.Flow.CONTINUE;
         });
 
-        invokeInliner(editor, elements[0]);
+        if (!inlined.get()) {
+            invokeInliner(editor, elements[0]);
+        }
     }
 
     @Override
@@ -76,31 +87,52 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
             return;
         }
         PsiElement finalElement = element;
+        SimpleReference<Boolean> inlined = SimpleReference.create(Boolean.FALSE);
         project.getApplication().getExtensionPoint(InlineActionHandler.class).forEachBreakable(handler -> {
             if (handler.canInlineElementInEditor(finalElement, editor)) {
                 handler.inlineElement(project, editor, finalElement);
-                return ExtensionPoint.Flow.CONTINUE;
+                inlined.set(Boolean.TRUE);
+                return ExtensionPoint.Flow.BREAK;
             }
             return ExtensionPoint.Flow.CONTINUE;
         });
 
-        if (invokeInliner(editor, element)) {
+        if (inlined.get()) {
             return;
         }
 
-        LocalizeValue message =
-            RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName());
-        CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
+        Coroutine.first(UIAction.<@Nullable Object, Boolean>await(ignored -> invokeInliner(editor, finalElement)))
+            .then(UIAction.apply(handled -> {
+                if (!handled) {
+                    LocalizeValue message =
+                        RefactoringLocalize.cannotPerformRefactoringWithReason(RefactoringLocalize.errorWrongCaretPositionMethodOrLocalName());
+                    CommonRefactoringUtil.showErrorHint(project, editor, message, REFACTORING_NAME, null);
+                }
+                return null;
+            }))
+            .runAsync(CoroutineScope.of(project.coroutineContext()), null);
     }
 
+    /**
+     * Offers the element to the inline handlers of its language one after another, until one takes it.
+     *
+     * @return completes with whether a handler took the element
+     */
     @RequiredUIAccess
-    public static boolean invokeInliner(@Nullable Editor editor, PsiElement element) {
-        List<InlineHandler> handlers = InlineHandler.forLanguage(element.getLanguage());
-        for (InlineHandler handler : handlers) {
-            if (GenericInlineHandlerImpl.invoke(element, editor, handler)) {
-                return true;
-            }
-        }
-        return false;
+    public static CompletableFuture<Boolean> invokeInliner(@Nullable Editor editor, PsiElement element) {
+        AtomicBoolean handled = new AtomicBoolean();
+        return Coroutine.first(Iteration.<InlineHandler, List<InlineHandler>>forEach(UIAction.<InlineHandler, @Nullable Void>await(handler -> {
+                if (handled.get()) {
+                    return CompletableFuture.completedFuture(null);
+                }
+                return GenericInlineHandlerImpl.invoke(element, editor, handler).thenAccept(taken -> {
+                    if (taken) {
+                        handled.set(true);
+                    }
+                });
+            })))
+            .then(UIAction.apply(ignored -> handled.get()))
+            .runAsync(CoroutineScope.of(element.getProject().coroutineContext()), InlineHandler.forLanguage(element.getLanguage()))
+            .toFuture();
     }
 }

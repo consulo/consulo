@@ -15,26 +15,16 @@
  */
 package consulo.language.editor.refactoring.ui;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.Application;
-import consulo.component.extension.ExtensionPoint;
-import consulo.fileEditor.FileEditorLocation;
-import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.util.TextAttributesUtil;
-import consulo.ui.image.Image;
-import consulo.usage.*;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
-import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -44,12 +34,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  * @author Jeka
  * @since 2001-09-12
  */
+@Deprecated
+@DeprecationInfo("Use ConflictsDialogDescriptor")
 public class ConflictsDialog extends DialogWrapper {
     private static final int SHOW_CONFLICTS_EXIT_CODE = 4;
 
@@ -179,170 +170,14 @@ public class ConflictsDialog extends DialogWrapper {
 
     private class MyShowConflictsInUsageViewAction extends AbstractAction {
         public MyShowConflictsInUsageViewAction() {
-            super("Show conflicts in view");
+            super(RefactoringLocalize.showConflictsInViewButton().get());
         }
 
         @Override
         @RequiredReadAction
         public void actionPerformed(ActionEvent e) {
-            UsageViewPresentation presentation = new UsageViewPresentation();
-            String codeUsagesString = "Conflicts";
-            presentation.setCodeUsagesString(codeUsagesString);
-            presentation.setTabName(codeUsagesString);
-            presentation.setTabText(codeUsagesString);
-            presentation.setShowCancelButton(true);
-
-            Usage[] usages = new Usage[myElementConflictDescription.size()];
-            int i = 0;
-            ExtensionPoint<ReadWriteAccessDetector> rwDetectors = Application.get().getExtensionPoint(ReadWriteAccessDetector.class);
-            for (PsiElement element : myElementConflictDescription.keySet()) {
-                if (element == null) {
-                    usages[i++] = new DescriptionOnlyUsage();
-                    continue;
-                }
-                ReadWriteAccessDetector.Access access = rwDetectors.computeSafeIfAny(
-                    detector -> detector.isReadWriteAccessible(element) ? detector.getExpressionAccess(element) : null
-                );
-                boolean isRead = false;
-                boolean isWrite = false;
-                if (access != null) {
-                    isRead = access != ReadWriteAccessDetector.Access.Write;
-                    isWrite = access != ReadWriteAccessDetector.Access.Read;
-                }
-
-                usages[i++] = isRead || isWrite
-                    ? new ReadWriteAccessUsageInfo2UsageAdapter(new UsageInfo(element), isRead, isWrite) {
-
-                    @Override
-                    public UsagePresentation getPresentation() {
-                        UsagePresentation usagePresentation = super.getPresentation();
-                        return MyShowConflictsInUsageViewAction.this.getPresentation(usagePresentation, element);
-                    }
-                }
-                    : new UsageInfo2UsageAdapter(new UsageInfo(element)) {
-
-                    @Override
-                    public UsagePresentation getPresentation() {
-                        UsagePresentation usagePresentation = super.getPresentation();
-                        return MyShowConflictsInUsageViewAction.this.getPresentation(usagePresentation, element);
-                    }
-                };
-            }
-            UsageView usageView = UsageViewManager.getInstance(myProject).showUsages(UsageTarget.EMPTY_ARRAY, usages, presentation);
-            if (myDoRefactoringRunnable != null) {
-                usageView.addPerformOperationAction(
-                    myDoRefactoringRunnable,
-                    myCommandName.orIfEmpty(RefactoringLocalize.retryCommand()),
-                    LocalizeValue.localizeTODO("Unable to perform refactoring. There were changes in code after the usages have been found."),
-                    RefactoringLocalize.usageviewDoaction()
-                );
-            }
+            ConflictsUsageView.show(myProject, myElementConflictDescription, myDoRefactoringRunnable, myCommandName);
             close(SHOW_CONFLICTS_EXIT_CODE);
-        }
-
-        private UsagePresentation getPresentation(UsagePresentation usagePresentation, PsiElement element) {
-            Collection<LocalizeValue> elementConflicts = new LinkedHashSet<>(myElementConflictDescription.get(element));
-            String conflictDescription =
-                " (" + Pattern.compile("<[^<>]*>").matcher(StringUtil.join(elementConflicts, "\n")).replaceAll("") + ")";
-            return new UsagePresentation() {
-                @Override
-                public TextChunk[] getText() {
-                    TextChunk[] chunks = usagePresentation.getText();
-                    return ArrayUtil.append(
-                        chunks,
-                        new TextChunk(
-                            TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAY_ITALIC_ATTRIBUTES),
-                            conflictDescription
-                        )
-                    );
-                }
-
-                @Override
-                public String getPlainText() {
-                    return usagePresentation.getPlainText() + conflictDescription;
-                }
-
-                @Override
-                public Image getIcon() {
-                    return usagePresentation.getIcon();
-                }
-
-                @Override
-                public String getTooltipText() {
-                    return usagePresentation.getTooltipText();
-                }
-            };
-        }
-
-        private class DescriptionOnlyUsage implements Usage {
-            private final String myConflictDescription = Pattern.compile("<[^<>]*>")
-                .matcher(StringUtil.join(new LinkedHashSet<>(myElementConflictDescription.get(null)), "\n"))
-                .replaceAll("");
-
-            @Override
-            public UsagePresentation getPresentation() {
-                return new UsagePresentation() {
-                    @Override
-                    public TextChunk[] getText() {
-                        return new TextChunk[0];
-                    }
-
-                    @Override
-                    public @Nullable Image getIcon() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getTooltipText() {
-                        return myConflictDescription;
-                    }
-
-                    @Override
-                    public String getPlainText() {
-                        return myConflictDescription;
-                    }
-                };
-            }
-
-            @Override
-            @RequiredReadAction
-            public boolean canNavigateToSource() {
-                return false;
-            }
-
-            @Override
-            @RequiredReadAction
-            public boolean canNavigate() {
-                return false;
-            }
-
-            @Override
-            @RequiredUIAccess
-            public void navigate(boolean requestFocus) {
-            }
-
-            @Override
-            public FileEditorLocation getLocation() {
-                return null;
-            }
-
-            @Override
-            public boolean isReadOnly() {
-                return false;
-            }
-
-            @Override
-            public boolean isValid() {
-                return true;
-            }
-
-            @Override
-            public void selectInEditor() {
-            }
-
-            @Override
-            public void highlightInEditor() {
-            }
         }
     }
 }

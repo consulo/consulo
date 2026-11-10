@@ -1475,6 +1475,8 @@ setter.method.found.for.the.field.0:
     text: "Setter method found for the field {0}. \n{1} the setter as well?"
 setup.method.radio:
     text: '&setUp method'
+show.conflicts.in.view.button:
+    text: Show Conflicts in View
 signature.preview.border.title:
     text: Signature Preview
 source.and.destination.classes.should.be.different:

@@ -16,7 +16,10 @@
 package consulo.it.ui;
 
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.it.HeadlessAnswers;
 import consulo.it.HeadlessApplicationExtension;
+import consulo.it.internal.HeadlessLoggerFactory;
 import consulo.localize.LocalizeValue;
 import consulo.ui.InputBoxBuilder;
 import consulo.ui.InputValidators;
@@ -25,14 +28,12 @@ import consulo.ui.MessageBoxRemember;
 import consulo.ui.MessageBoxes;
 import consulo.ui.MessageButtonRole;
 import consulo.ui.RememberScope;
-import consulo.ui.impl.ScriptedDialogs;
 import consulo.util.lang.ThreeState;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -53,12 +54,13 @@ public class MessageBoxSeamTest {
     public void yesNoAnswersTheValueItsButtonCarries() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expect(MessageButtonRole.YES);
+            HeadlessAnswers answers = HeadlessAnswers.of(scope).messageBox("seam.go", MessageButtonRole.YES);
 
-            assertTrue(MessageBoxes.yesNo().text(LocalizeValue.of("go?")).showAsync().get());
+            assertTrue(MessageBoxes.yesNo().id("seam.go").text(LocalizeValue.of("go?")).showAsync().get());
+            answers.assertAllAnswered();
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -66,12 +68,13 @@ public class MessageBoxSeamTest {
     public void yesNoCancelAnswersThreeState() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expect(MessageButtonRole.CANCEL);
+            HeadlessAnswers answers = HeadlessAnswers.of(scope).messageBox("seam.go", MessageButtonRole.CANCEL);
 
-            assertEquals(ThreeState.UNSURE, MessageBoxes.yesNoCancel().text(LocalizeValue.of("go?")).showAsync().get());
+            assertEquals(ThreeState.UNSURE, MessageBoxes.yesNoCancel().id("seam.go").text(LocalizeValue.of("go?")).showAsync().get());
+            answers.assertAllAnswered();
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -79,9 +82,10 @@ public class MessageBoxSeamTest {
     public void aButtonMayAnswerNullWithoutThatReadingAsDismissal() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expect(MessageButtonRole.YES);
+            HeadlessAnswers.of(scope).messageBox("seam.pick", MessageButtonRole.YES);
 
             MessageBoxBuilder<@Nullable String> box = MessageBoxBuilder.create();
+            box.id("seam.pick");
             box.text(LocalizeValue.of("pick"));
             box.button(MessageButtonRole.YES, (String)null);
             box.button(MessageButtonRole.NO, "dismissed");
@@ -91,7 +95,7 @@ public class MessageBoxSeamTest {
             assertNull(box.showAsync().get());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -99,15 +103,17 @@ public class MessageBoxSeamTest {
     public void anUnscriptedBoxFailsRatherThanHanging() {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL);
+            HeadlessAnswers answers = HeadlessAnswers.of(scope);
 
-            CompletableFuture<Boolean> result = MessageBoxes.yesNo().text(LocalizeValue.of("go?")).showAsync();
+            CompletableFuture<Boolean> result = MessageBoxes.yesNo().id("seam.unanswered").text(LocalizeValue.of("go?")).showAsync();
 
             assertTrue(result.isDone());
             assertThrows(ExecutionException.class, result::get);
+            assertThrows(AssertionError.class, answers::assertAllAnswered);
+            assertUnexpectedLogged("unexpected message box: seam.unanswered");
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -115,9 +121,10 @@ public class MessageBoxSeamTest {
     public void aRememberedAnswerNeverOpensABox() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs dialogs = ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL);
+            HeadlessAnswers answers = HeadlessAnswers.of(scope);
 
             MessageBoxBuilder<Boolean> box = MessageBoxBuilder.create();
+            box.id("seam.remembered");
             box.text(LocalizeValue.of("go?"));
             box.button(MessageButtonRole.YES, Boolean.TRUE);
             box.button(MessageButtonRole.NO, Boolean.FALSE);
@@ -125,10 +132,10 @@ public class MessageBoxSeamTest {
             box.remember(new StoredRemember(Boolean.TRUE));
 
             assertTrue(box.showAsync().get());
-            assertTrue(dialogs.seen().isEmpty());
+            assertTrue(answers.shown().isEmpty());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -136,11 +143,12 @@ public class MessageBoxSeamTest {
     public void onAcceptDoesNotRememberARejectingAnswer() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expect(MessageButtonRole.NO);
+            HeadlessAnswers.of(scope).messageBox("seam.go", MessageButtonRole.NO);
 
             StoredRemember remember = new StoredRemember(null, RememberScope.ON_ACCEPT);
 
             MessageBoxBuilder<Boolean> box = MessageBoxBuilder.create();
+            box.id("seam.go");
             box.text(LocalizeValue.of("go?"));
             box.button(MessageButtonRole.YES, Boolean.TRUE);
             box.button(MessageButtonRole.NO, Boolean.FALSE);
@@ -151,7 +159,7 @@ public class MessageBoxSeamTest {
             assertNull(remember.getValue());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -159,11 +167,12 @@ public class MessageBoxSeamTest {
     public void onAnswerRemembersEitherButton() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expect(MessageButtonRole.NO);
+            HeadlessAnswers.of(scope).messageBox("seam.go", MessageButtonRole.NO);
 
             StoredRemember remember = new StoredRemember(null, RememberScope.ON_ANSWER);
 
             MessageBoxBuilder<Boolean> box = MessageBoxBuilder.create();
+            box.id("seam.go");
             box.text(LocalizeValue.of("go?"));
             box.button(MessageButtonRole.YES, Boolean.TRUE);
             box.button(MessageButtonRole.NO, Boolean.FALSE);
@@ -174,7 +183,7 @@ public class MessageBoxSeamTest {
             assertEquals(Boolean.FALSE, remember.getValue());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -182,12 +191,12 @@ public class MessageBoxSeamTest {
     public void anInputAnswerIsTrimmed() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expectInput("  spaced  ");
+            HeadlessAnswers.of(scope).inputBox("seam.name", "  spaced  ");
 
-            assertEquals("spaced", InputBoxBuilder.text().text(LocalizeValue.of("name?")).showAsync().get());
+            assertEquals("spaced", InputBoxBuilder.text().id("seam.name").text(LocalizeValue.of("name?")).showAsync().get());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -195,15 +204,15 @@ public class MessageBoxSeamTest {
     public void aDismissedInputFailsWithItsOwnType() {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expectInput(null);
+            HeadlessAnswers.of(scope).inputBox("seam.name", null);
 
-            CompletableFuture<String> result = InputBoxBuilder.text().text(LocalizeValue.of("name?")).showAsync();
+            CompletableFuture<String> result = InputBoxBuilder.text().id("seam.name").text(LocalizeValue.of("name?")).showAsync();
 
             ExecutionException thrown = assertThrows(ExecutionException.class, result::get);
             assertInstanceOf(DialogCancelledException.class, thrown.getCause());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -211,16 +220,18 @@ public class MessageBoxSeamTest {
     public void anInputThatCannotBeShownFailsRatherThanReadingAsCancelled() {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL);
+            HeadlessAnswers answers = HeadlessAnswers.of(scope);
 
-            CompletableFuture<String> result = InputBoxBuilder.text().text(LocalizeValue.of("name?")).showAsync();
+            CompletableFuture<String> result = InputBoxBuilder.text().id("seam.unanswered").text(LocalizeValue.of("name?")).showAsync();
 
             // the two outcomes stay apart by type: this one is not a dismissal
             ExecutionException thrown = assertThrows(ExecutionException.class, result::get);
             assertFalse(thrown.getCause() instanceof DialogCancelledException);
+            assertThrows(AssertionError.class, answers::assertAllAnswered);
+            assertUnexpectedLogged("unexpected input box: seam.unanswered");
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -228,13 +239,13 @@ public class MessageBoxSeamTest {
     public void anEmptyConfirmedValueIsNotACancel() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expectInput("");
+            HeadlessAnswers.of(scope).inputBox("seam.name", "");
 
             // "" is a confirmed empty string, and a confirmed value is never a dismissal
-            assertEquals("", InputBoxBuilder.text().text(LocalizeValue.of("name?")).showAsync().get());
+            assertEquals("", InputBoxBuilder.text().id("seam.name").text(LocalizeValue.of("name?")).showAsync().get());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -248,12 +259,12 @@ public class MessageBoxSeamTest {
     public void anIntegerInputAnswersAnInteger() throws Exception {
         Disposable scope = Disposable.newDisposable();
         try {
-            ScriptedDialogs.install(scope, ScriptedDialogs.Unexpected.FAIL).expectInput(7);
+            HeadlessAnswers.of(scope).inputBox("seam.count", 7);
 
-            assertEquals(7, InputBoxBuilder.integer().text(LocalizeValue.of("how many?")).showAsync().get());
+            assertEquals(7, InputBoxBuilder.integer().id("seam.count").text(LocalizeValue.of("how many?")).showAsync().get());
         }
         finally {
-            scope.dispose();
+            Disposer.dispose(scope);
         }
     }
 
@@ -272,6 +283,10 @@ public class MessageBoxSeamTest {
     public void aSetTitleIsKept() {
         LocalizeValue own = LocalizeValue.of("Open Project");
         assertEquals(own, MessagePresentation.title(own));
+    }
+
+    private static void assertUnexpectedLogged(String message) {
+        assertTrue(HeadlessLoggerFactory.takeLoggedErrors().stream().anyMatch(error -> error.getMessage().contains(message)));
     }
 
     private static class StoredRemember implements MessageBoxRemember<Boolean> {

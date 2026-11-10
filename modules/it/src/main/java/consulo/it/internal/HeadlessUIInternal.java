@@ -70,8 +70,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import consulo.ui.impl.ScriptedMessageBoxBuilder;
-import consulo.ui.impl.ScriptedInputBoxBuilder;
 import consulo.ui.layout.Layout;
 
 /**
@@ -626,26 +624,26 @@ public class HeadlessUIInternal extends UIInternal implements UIInternalEx {
 
     @Override
     public <T> MessageBoxBuilder<T> _MessageBox_create() {
-        return new ScriptedMessageBoxBuilder<>();
+        return new HeadlessMessageBoxBuilder<>();
     }
 
     @Override
     public InputBoxBuilder<String, TextBox> _InputBox_text() {
-        return new ScriptedInputBoxBuilder<>();
+        return new HeadlessInputBoxBuilder<>();
     }
 
     @Override
     public InputBoxBuilder<Integer, IntBox> _InputBox_integer() {
-        return new ScriptedInputBoxBuilder<>();
+        return new HeadlessInputBoxBuilder<>();
     }
 
     @Override
     public <V> InputBoxBuilder<V, ComboBox<V>> _InputBox_items(Collection<? extends V> items) {
-        return new ScriptedInputBoxBuilder<>();
+        return new HeadlessInputBoxBuilder<>();
     }
 
     @Override
     public InputBoxBuilder<String, PasswordBox> _InputBox_password() {
-        return new ScriptedInputBoxBuilder<>();
+        return new HeadlessInputBoxBuilder<>();
     }
 }

@@ -192,7 +192,7 @@ class UnifiedFindPopupScopeUI {
             SimpleDataContext.getProjectContext(myProject),
             ScopeChooserCombo.OPT_FROM_SELECTION | ScopeChooserCombo.OPT_USAGE_VIEW,
             descriptor -> {
-                if (descriptor.getScope() == null) {
+                if (ScopeChooserCombo.isSeparator(descriptor)) {
                     return true;
                 }
 

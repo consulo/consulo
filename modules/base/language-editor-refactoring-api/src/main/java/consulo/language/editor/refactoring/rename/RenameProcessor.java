@@ -19,14 +19,13 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.progress.ProgressManager;
 import consulo.component.extension.ExtensionPoint;
 import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import consulo.language.editor.refactoring.event.RefactoringEventData;
 import consulo.language.editor.refactoring.event.RefactoringEventListener;
 import consulo.language.editor.refactoring.localize.RefactoringLocalize;
-import consulo.language.editor.refactoring.ui.ConflictsDialog;
+import consulo.language.editor.refactoring.ui.ConflictsDialogDescriptor;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.editor.refactoring.util.RelatedUsageInfo;
 import consulo.language.findUsage.DescriptiveNameUtil;
@@ -40,10 +39,11 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEventListener;
 import consulo.ui.event.HyperlinkEvent;
-import consulo.ui.ex.awt.Messages;
+import consulo.ui.MessageBoxes;
 import consulo.usage.*;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.StringUtil;
@@ -51,6 +51,7 @@ import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class RenameProcessor extends BaseRefactoringProcessor {
     private static final Logger LOG = Logger.getInstance(RenameProcessor.class);
@@ -117,9 +118,18 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         if (!myPrimaryElement.isValid()) {
             return;
         }
-        prepareRenaming(myPrimaryElement, myNewName, myAllRenames);
+        CompletableFuture<?> prepared = prepareRenamingAsync(myPrimaryElement, myNewName, myAllRenames);
+        if (prepared.isDone()) {
+            joinRethrowing(prepared);
+            super.doRun();
+            return;
+        }
 
-        super.doRun();
+        prepared.whenCompleteAsync((result, error) -> {
+            if (error == null && myPrimaryElement.isValid()) {
+                super.doRun();
+            }
+        }, UIAccess.current());
     }
 
     public void prepareRenaming(
@@ -137,6 +147,45 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         }
     }
 
+    /**
+     * Asynchronous form of {@link #prepareRenaming(PsiElement, String, Map)}: the processors which ask the user are
+     * answered one after another.
+     */
+    @RequiredUIAccess
+    public CompletableFuture<?> prepareRenamingAsync(
+        PsiElement element,
+        String newName,
+        Map<PsiElement, String> allRenames
+    ) {
+        myForceShowPreview = false;
+        return prepareRenamingAsync(RenamePsiElementProcessor.allForElement(element).iterator(), element, newName, allRenames);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> prepareRenamingAsync(
+        Iterator<RenamePsiElementProcessor> processors,
+        PsiElement element,
+        String newName,
+        Map<PsiElement, String> allRenames
+    ) {
+        while (processors.hasNext()) {
+            RenamePsiElementProcessor processor = processors.next();
+            if (!processor.canProcessElement(element)) {
+                continue;
+            }
+            CompletableFuture<?> prepared = processor.prepareRenamingAsync(element, newName, allRenames);
+            if (!prepared.isDone()) {
+                return prepared.thenCompose(result -> {
+                    myForceShowPreview |= processor.forcesShowPreview();
+                    return prepareRenamingAsync(processors, element, newName, allRenames);
+                });
+            }
+            joinRethrowing(prepared);
+            myForceShowPreview |= processor.forcesShowPreview();
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
     private @Nullable String getHelpID() {
         return RenamePsiElementProcessor.forElement(myPrimaryElement).getHelpID(myPrimaryElement);
     }
@@ -144,14 +193,22 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     @Override
     @RequiredUIAccess
     public boolean preprocessUsages(SimpleReference<UsageInfo[]> refUsages) {
+        CompletableFuture<Boolean> result = preprocessUsagesAsync(refUsages);
+        return result.isDone() && Boolean.TRUE.equals(joinRethrowing(result));
+    }
+
+    @Override
+    @RequiredUIAccess
+    public CompletableFuture<Boolean> preprocessUsagesAsync(SimpleReference<UsageInfo[]> refUsages) {
         UsageInfo[] usagesIn = refUsages.get();
         MultiMap<PsiElement, LocalizeValue> conflicts = new MultiMap<>();
 
         RenameUtil.addConflictDescriptions(usagesIn, conflicts);
         RenamePsiElementProcessor.forElement(myPrimaryElement)
             .findExistingNameConflicts(myPrimaryElement, myNewName, conflicts, myAllRenames);
-        if (!conflicts.isEmpty()) {
 
+        CompletableFuture<Boolean> conflictsResolved = CompletableFuture.completedFuture(Boolean.TRUE);
+        if (!conflicts.isEmpty()) {
             RefactoringEventData conflictData = new RefactoringEventData();
             conflictData.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts.values());
             myProject.getMessageBus().syncPublisher(RefactoringEventListener.class)
@@ -160,81 +217,140 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             if (myProject.getApplication().isUnitTestMode()) {
                 throw new ConflictsInTestsException(conflicts.values());
             }
-            ConflictsDialog conflictsDialog = prepareConflictsDialog(conflicts, refUsages.get());
-            if (!conflictsDialog.showAndGet()) {
-                if (conflictsDialog.isShowConflicts()) {
+            ConflictsDialogDescriptor conflictsDialog = prepareConflictsDialog(conflicts, refUsages.get());
+            conflictsResolved = conflictsDialog.showAsync().thenApply(proceed -> {
+                if (!proceed && conflictsDialog.isShowConflicts()) {
                     prepareSuccessful();
                 }
-                return false;
-            }
+                return proceed;
+            });
         }
 
+        return conflictsResolved.thenCompose(proceed -> {
+            if (!proceed) {
+                return CompletableFuture.completedFuture(Boolean.FALSE);
+            }
+            return preprocessRenames(refUsages, usagesIn);
+        });
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Boolean> preprocessRenames(SimpleReference<UsageInfo[]> refUsages, UsageInfo[] usagesIn) {
         List<UsageInfo> variableUsages = new ArrayList<>();
+
+        CompletableFuture<Boolean> variablesFound = CompletableFuture.completedFuture(Boolean.TRUE);
         if (!myRenamers.isEmpty()) {
-            if (!findRenamedVariables(variableUsages)) {
-                return false;
-            }
-            Map<PsiElement, String> renames = new LinkedHashMap<>();
-            for (AutomaticRenamer renamer : myRenamers) {
-                List<? extends PsiNamedElement> variables = renamer.getElements();
-                for (PsiNamedElement variable : variables) {
-                    String newName = renamer.getNewName(variable);
-                    if (newName != null) {
-                        addElement(variable, newName);
-                        prepareRenaming(variable, newName, renames);
-                    }
+            variablesFound = findRenamedVariables(variableUsages).thenCompose(
+                found -> found ? addRenamedVariables(variableUsages) : CompletableFuture.completedFuture(Boolean.FALSE)
+            );
+        }
+
+        return variablesFound
+            .thenCompose(found -> {
+                if (!found) {
+                    return CompletableFuture.completedFuture(Boolean.FALSE);
                 }
-            }
-            if (!renames.isEmpty()) {
-                for (PsiElement element : renames.keySet()) {
-                    assertNonCompileElement(element);
-                }
-                myAllRenames.putAll(renames);
-                Runnable runnable = () -> {
-                    for (Map.Entry<PsiElement, String> entry : renames.entrySet()) {
-                        UsageInfo[] usages = ReadAction.compute(() -> RenameUtil.findUsages(
-                            entry.getKey(),
-                            entry.getValue(),
-                            mySearchInComments,
-                            mySearchTextOccurrences,
-                            myAllRenames
-                        ));
-                        Collections.addAll(variableUsages, usages);
-                    }
-                };
-                if (!ProgressManager.getInstance()
-                    .runProcessWithProgressSynchronously(runnable, RefactoringLocalize.searchingForVariables(), true, myProject)) {
-                    return false;
+                int[] choice = myAllRenames.size() > 1 ? new int[]{-1} : null;
+                return checkRenames(myAllRenames.entrySet().iterator(), choice);
+            })
+            .thenApply(checked -> checked && finishPreprocess(refUsages, usagesIn, variableUsages));
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Boolean> addRenamedVariables(List<UsageInfo> variableUsages) {
+        Map<PsiElement, String> renames = new LinkedHashMap<>();
+        List<Map.Entry<PsiNamedElement, String>> variables = new ArrayList<>();
+        for (AutomaticRenamer renamer : myRenamers) {
+            for (PsiNamedElement variable : renamer.getElements()) {
+                String newName = renamer.getNewName(variable);
+                if (newName != null) {
+                    variables.add(Map.entry(variable, newName));
                 }
             }
         }
 
-        int[] choice = myAllRenames.size() > 1 ? new int[]{-1} : null;
-        try {
-            for (Iterator<Map.Entry<PsiElement, String>> iterator = myAllRenames.entrySet().iterator(); iterator.hasNext(); ) {
-                Map.Entry<PsiElement, String> entry = iterator.next();
-                if (entry.getKey() instanceof PsiFile file) {
-                    PsiDirectory containingDirectory = file.getContainingDirectory();
-                    if (CommonRefactoringUtil.checkFileExist(
-                        containingDirectory,
-                        choice,
-                        file,
-                        entry.getValue(),
-                        RefactoringLocalize.commandNameRename()
-                    )) {
-                        iterator.remove();
-                        continue;
-                    }
-                }
-                RenameUtil.checkRename(entry.getKey(), entry.getValue());
+        return prepareVariables(variables.iterator(), renames).thenCompose(prepared -> {
+            if (renames.isEmpty()) {
+                return CompletableFuture.completedFuture(Boolean.TRUE);
             }
+
+            for (PsiElement element : renames.keySet()) {
+                assertNonCompileElement(element);
+            }
+            myAllRenames.putAll(renames);
+            Runnable runnable = () -> {
+                for (Map.Entry<PsiElement, String> entry : renames.entrySet()) {
+                    UsageInfo[] usages = ReadAction.compute(() -> RenameUtil.findUsages(
+                        entry.getKey(),
+                        entry.getValue(),
+                        mySearchInComments,
+                        mySearchTextOccurrences,
+                        myAllRenames
+                    ));
+                    Collections.addAll(variableUsages, usages);
+                }
+            };
+            return CommonRefactoringUtil.runWithProgress(myProject, RefactoringLocalize.searchingForVariables(), runnable);
+        });
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<?> prepareVariables(Iterator<Map.Entry<PsiNamedElement, String>> variables, Map<PsiElement, String> renames) {
+        while (variables.hasNext()) {
+            Map.Entry<PsiNamedElement, String> variable = variables.next();
+            addElement(variable.getKey(), variable.getValue());
+            CompletableFuture<?> prepared = prepareRenamingAsync(variable.getKey(), variable.getValue(), renames);
+            if (!prepared.isDone()) {
+                return prepared.thenCompose(result -> prepareVariables(variables, renames));
+            }
+            joinRethrowing(prepared);
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Boolean> checkRenames(Iterator<Map.Entry<PsiElement, String>> iterator, int @Nullable [] choice) {
+        while (iterator.hasNext()) {
+            Map.Entry<PsiElement, String> entry = iterator.next();
+            if (entry.getKey() instanceof PsiFile file) {
+                return CommonRefactoringUtil.checkFileExistAsync(
+                    file.getContainingDirectory(),
+                    choice,
+                    file,
+                    entry.getValue(),
+                    RefactoringLocalize.commandNameRename()
+                ).thenCompose(skip -> {
+                    if (skip) {
+                        iterator.remove();
+                    }
+                    else if (!checkRename(entry)) {
+                        return CompletableFuture.completedFuture(Boolean.FALSE);
+                    }
+                    return checkRenames(iterator, choice);
+                });
+            }
+            if (!checkRename(entry)) {
+                return CompletableFuture.completedFuture(Boolean.FALSE);
+            }
+        }
+        return CompletableFuture.completedFuture(Boolean.TRUE);
+    }
+
+    @RequiredUIAccess
+    private boolean checkRename(Map.Entry<PsiElement, String> entry) {
+        try {
+            RenameUtil.checkRename(entry.getKey(), entry.getValue());
+            return true;
         }
         catch (IncorrectOperationException e) {
             LOG.warn("Rename failed", e);
             CommonRefactoringUtil.showErrorMessage(RefactoringLocalize.renameTitle(), LocalizeValue.of(e), getHelpID(), myProject);
             return false;
         }
+    }
 
+    @RequiredUIAccess
+    private boolean finishPreprocess(SimpleReference<UsageInfo[]> refUsages, UsageInfo[] usagesIn, List<UsageInfo> variableUsages) {
         Set<UsageInfo> usagesSet = new LinkedHashSet<>(Arrays.asList(usagesIn));
         usagesSet.addAll(variableUsages);
         List<UnresolvableCollisionUsageInfo> conflictUsages = RenameUtil.removeConflictUsages(usagesSet);
@@ -257,37 +373,44 @@ public class RenameProcessor extends BaseRefactoringProcessor {
     }
 
     @RequiredUIAccess
-    private boolean findRenamedVariables(List<UsageInfo> variableUsages) {
-        for (Iterator<AutomaticRenamer> iterator = myRenamers.iterator(); iterator.hasNext(); ) {
+    private CompletableFuture<Boolean> findRenamedVariables(List<UsageInfo> variableUsages) {
+        return askAutomaticRenamers(myRenamers.iterator()).thenCompose(asked -> {
+            Runnable runnable = () -> myProject.getApplication().runReadAction(() -> {
+                for (AutomaticRenamer renamer : myRenamers) {
+                    renamer.findUsages(variableUsages, mySearchInComments, mySearchTextOccurrences, mySkippedUsages, myAllRenames);
+                }
+            });
+
+            return CommonRefactoringUtil.runWithProgress(myProject, RefactoringLocalize.searchingForVariables(), runnable);
+        });
+    }
+
+    @RequiredUIAccess
+    private CompletableFuture<Boolean> askAutomaticRenamers(Iterator<AutomaticRenamer> iterator) {
+        while (iterator.hasNext()) {
             AutomaticRenamer automaticVariableRenamer = iterator.next();
             if (!automaticVariableRenamer.hasAnythingToRename()) {
                 continue;
             }
-            if (!showAutomaticRenamingDialog(automaticVariableRenamer)) {
-                iterator.remove();
-            }
+            return showAutomaticRenamingDialog(automaticVariableRenamer).thenCompose(accepted -> {
+                if (!accepted) {
+                    iterator.remove();
+                }
+                return askAutomaticRenamers(iterator);
+            });
         }
-
-        Runnable runnable = () -> myProject.getApplication().runReadAction(() -> {
-            for (AutomaticRenamer renamer : myRenamers) {
-                renamer.findUsages(variableUsages, mySearchInComments, mySearchTextOccurrences, mySkippedUsages, myAllRenames);
-            }
-        });
-
-        return ProgressManager.getInstance()
-            .runProcessWithProgressSynchronously(runnable, RefactoringLocalize.searchingForVariables(), true, myProject);
+        return CompletableFuture.completedFuture(Boolean.TRUE);
     }
 
     @RequiredUIAccess
-    protected boolean showAutomaticRenamingDialog(AutomaticRenamer automaticVariableRenamer) {
+    protected CompletableFuture<Boolean> showAutomaticRenamingDialog(AutomaticRenamer automaticVariableRenamer) {
         if (myProject.getApplication().isUnitTestMode()) {
             for (PsiNamedElement element : automaticVariableRenamer.getElements()) {
                 automaticVariableRenamer.setRename(element, automaticVariableRenamer.getNewName(element));
             }
-            return true;
+            return CompletableFuture.completedFuture(Boolean.TRUE);
         }
-        AutomaticRenamingDialog dialog = new AutomaticRenamingDialog(myProject, automaticVariableRenamer);
-        return dialog.showAndGet();
+        return new AutomaticRenamingDialog(myProject, automaticVariableRenamer).showAsync();
     }
 
     public void addElement(PsiElement element, String newName) {
@@ -438,19 +561,16 @@ public class RenameProcessor extends BaseRefactoringProcessor {
                         if (ideFrame != null) {
                             StatusBar statusBar = ideFrame.getStatusBar();
                             @RequiredUIAccess
-                            ComponentEventListener<Component, HyperlinkEvent> listener = e -> {
-                                Messages.showMessageDialog(
-                                    "<html>Following usages were safely skipped:<br>" +
-                                        StringUtil.join(
-                                            mySkippedUsages,
-                                            unresolvableCollisionUsageInfo -> unresolvableCollisionUsageInfo.getDescription().get(),
-                                            "<br>"
-                                        ) +
-                                        "</html>",
-                                    LocalizeValue.localizeTODO("Not All Usages Were Renamed").get(),
-                                    null
-                                );
-                            };
+                            ComponentEventListener<Component, HyperlinkEvent> listener = e -> MessageBoxes.okInfo(
+                                    LocalizeValue.localizeTODO("Following usages were safely skipped:")
+                                )
+                                .title(LocalizeValue.localizeTODO("Not All Usages Were Renamed"))
+                                .detail(LocalizeValue.of(StringUtil.join(
+                                    mySkippedUsages,
+                                    unresolvableCollisionUsageInfo -> unresolvableCollisionUsageInfo.getDescription().get(),
+                                    "\n"
+                                )))
+                                .showAsync(myProject);
                             statusBar.notifyByBalloon(
                                 StatusBar.PROGRESS_WIDGET_ID,
                                 NotificationType.WARNING,

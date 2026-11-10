@@ -67,6 +67,13 @@ public interface InputBoxBuilder<V, C extends Component> {
     }
 
     /**
+     * A stable name of this question, for tools that answer it rather than users.
+     */
+    default InputBoxBuilder<V, C> id(String id) {
+        return this;
+    }
+
+    /**
      * Configures the editor through its own API, before the box opens.
      * <p>
      * The instance is not guaranteed to be a live component: a frontend which renders this box

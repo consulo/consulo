@@ -80,7 +80,7 @@ class SearchForUsagesRunnable implements Runnable {
     private final AtomicReference<Usage> myFirstUsage = new AtomicReference<>();
    
     private final Project myProject;
-    private final AtomicReference<UsageViewImpl> myUsageViewRef;
+    private final AtomicReference<UsageViewInternal> myUsageViewRef;
     private final UsageViewPresentation myPresentation;
     private final UsageTarget[] mySearchFor;
     private final Supplier<UsageSearcher> mySearcherFactory;
@@ -94,7 +94,7 @@ class SearchForUsagesRunnable implements Runnable {
     SearchForUsagesRunnable(
         UsageViewManagerImpl usageViewManager,
         Project project,
-        AtomicReference<UsageViewImpl> usageViewRef,
+        AtomicReference<UsageViewInternal> usageViewRef,
         UsageViewPresentation presentation,
         UsageTarget[] searchFor,
         Supplier<UsageSearcher> searcherFactory,
@@ -250,35 +250,35 @@ class SearchForUsagesRunnable implements Runnable {
         rangeBlinker.startBlinking();
     }
 
-    private UsageViewImpl getUsageView(ProgressIndicator indicator) {
-        UsageViewImpl usageView = myUsageViewRef.get();
+    private UsageViewInternal getUsageView(ProgressIndicator indicator) {
+        UsageViewInternal usageView = myUsageViewRef.get();
         if (usageView != null) {
             return usageView;
         }
         int usageCount = myUsageCountWithoutDefinition.get();
         if (usageCount >= 2 || usageCount == 1 && myProcessPresentation.isShowPanelIfOnlyOneUsage()) {
-            usageView = new UsageViewImpl(myProject, myPresentation, mySearchFor, mySearcherFactory);
+            usageView = myUsageViewManager.newUsageView(myPresentation, mySearchFor, mySearcherFactory);
             usageView.associateProgress(indicator);
             if (myUsageViewRef.compareAndSet(null, usageView)) {
                 openView(usageView);
                 Usage firstUsage = myFirstUsage.get();
                 if (firstUsage != null) {
-                    UsageViewImpl finalUsageView = usageView;
+                    UsageViewInternal finalUsageView = usageView;
                     myProject.getApplication().runReadAction(() -> finalUsageView.appendUsage(firstUsage));
                 }
             }
             else {
-                UsageViewImpl finalUsageView = usageView;
+                UsageViewInternal finalUsageView = usageView;
                 // later because dispose does some sort of swing magic e.g. AnAction.unregisterCustomShortcutSet()
-                UIUtil.invokeLaterIfNeeded(() -> Disposer.dispose(finalUsageView));
+                myProject.getUIAccess().give(() -> Disposer.dispose(finalUsageView));
             }
             return myUsageViewRef.get();
         }
         return null;
     }
 
-    private void openView(UsageViewImpl usageView) {
-        SwingUtilities.invokeLater(() -> {
+    private void openView(UsageViewInternal usageView) {
+        myProject.getUIAccess().give(() -> {
             if (myProject.isDisposed()) {
                 return;
             }
@@ -339,7 +339,7 @@ class SearchForUsagesRunnable implements Runnable {
                     myFirstUsage.compareAndSet(null, usage);
                 }
 
-                UsageViewImpl usageView = getUsageView(indicator1);
+                UsageViewInternal usageView = getUsageView(indicator1);
 
                 TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.getFrom(indicator1);
                 if (usageCount > UsageLimitUtil.USAGES_LIMIT && tooManyUsagesStatus.switchTooManyUsagesStatus()) {
@@ -470,7 +470,7 @@ class SearchForUsagesRunnable implements Runnable {
             );
         }
         else {
-            UsageViewImpl usageView = myUsageViewRef.get();
+            UsageViewInternal usageView = myUsageViewRef.get();
             if (usageView != null) {
                 usageView.drainQueuedUsageNodes();
                 usageView.setSearchInProgress(false);

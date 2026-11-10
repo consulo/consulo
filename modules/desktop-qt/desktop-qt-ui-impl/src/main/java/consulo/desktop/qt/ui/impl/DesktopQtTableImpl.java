@@ -422,12 +422,19 @@ public class DesktopQtTableImpl<Item> extends QtComponentDelegate<QTableView>
 
         Item item = myOrder.get(row);
         DesktopQtTextItemPresentation presentation = new DesktopQtTextItemPresentation();
-        column.getRenderer().render(presentation, RenderItem.of(column.getValueProvider().apply(item), isSelected(row)), item);
+        if (!hasCellWidget(item, column)) {
+            column.getRenderer().render(presentation, RenderItem.of(column.getValueProvider().apply(item), isSelected(row)), item);
+        }
 
         myCachedRow = row;
         myCachedColumn = column.getIndex();
         myCachedPresentation = presentation;
         return presentation;
+    }
+
+    private <Value> boolean hasCellWidget(Item item, TableColumnImpl<Item, Value> column) {
+        TableItemEditor<Item, Value> editor = column.getEditor();
+        return column.getComponentRenderer() != null || editor != null && editor.isEditable(item);
     }
 
     private @Nullable QFont columnFont(TableColumnImpl<Item, ?> column) {

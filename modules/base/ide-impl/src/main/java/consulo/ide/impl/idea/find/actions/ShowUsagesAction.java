@@ -265,19 +265,16 @@ public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
     public void startFindUsages(PsiElement element, RelativePoint2D position, Editor editor, int maxUsages) {
         Project project = element.getProject();
         FindUsagesManager findUsagesManager = ((FindManagerImpl) FindManager.getInstance(project)).getFindUsagesManager();
-        FindUsagesHandler handler = findUsagesManager.getFindUsagesHandler(element, false);
-        if (handler == null) {
-            return;
-        }
+        findUsagesManager.withFindUsagesHandler(element, handler -> {
+            RelativePoint popupPosition = RelativePoint.from(position);
 
-        RelativePoint popupPosition = RelativePoint.from(position);
-
-        DataContext context = DataManager.getInstance().getDataContext();
-        if (myShowSettingsDialogBefore) {
-            showDialogAndFindUsagesAsync(context, handler, popupPosition, editor, maxUsages);
-            return;
-        }
-        showElementUsages(editor, popupPosition, handler, maxUsages, handler.getFindUsagesOptions(context));
+            DataContext context = DataManager.getInstance().getDataContext();
+            if (myShowSettingsDialogBefore) {
+                showDialogAndFindUsagesAsync(context, handler, popupPosition, editor, maxUsages);
+                return;
+            }
+            showElementUsages(editor, popupPosition, handler, maxUsages, handler.getFindUsagesOptions(context));
+        });
     }
 
     @RequiredUIAccess

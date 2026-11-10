@@ -34,6 +34,13 @@ public interface ColorPickerBuilder {
         return UIInternal.get()._ColorPicker_create();
     }
 
+    /**
+     * A stable name of this question, for tools that answer it rather than users.
+     */
+    default ColorPickerBuilder id(String id) {
+        return this;
+    }
+
     ColorPickerBuilder withTitle(LocalizeValue title);
 
     ColorPickerBuilder withColor(@Nullable ColorValue color);

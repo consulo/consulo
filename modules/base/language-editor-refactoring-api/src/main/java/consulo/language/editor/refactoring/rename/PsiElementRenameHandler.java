@@ -33,10 +33,9 @@ import consulo.language.psi.meta.PsiWritableMetaData;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.MessageBoxes;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.usage.UsageViewUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -110,13 +109,24 @@ public class PsiElementRenameHandler implements RenameHandler {
             if (project.getApplication().isUnitTestMode()) {
                 throw new CommonRefactoringUtil.RefactoringErrorHintException(message);
             }
-            int buttonPressed =
-                Messages.showYesNoDialog(project, message.get(), RefactoringLocalize.cannotPerformRefactoring().get(), UIUtil.getWarningIcon());
-            if (buttonPressed != Messages.YES) {
-                return;
-            }
+            MessageBoxes.yesNo()
+                .asWarning()
+                .title(RefactoringLocalize.cannotPerformRefactoring())
+                .text(message)
+                .showAsync(project)
+                .thenAcceptAsync(proceed -> {
+                    if (Boolean.TRUE.equals(proceed)) {
+                        startRename(element, project, nameSuggestionContext, editor);
+                    }
+                }, UIAccess.current());
+            return;
         }
 
+        startRename(element, project, nameSuggestionContext, editor);
+    }
+
+    @RequiredUIAccess
+    private static void startRename(PsiElement element, Project project, PsiElement nameSuggestionContext, @Nullable Editor editor) {
         FeatureUsageTracker.getInstance().triggerFeatureUsed("refactoring.rename");
 
         rename(element, project, nameSuggestionContext, editor);
@@ -183,34 +193,41 @@ public class PsiElementRenameHandler implements RenameHandler {
         String defaultName
     ) {
         RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
-        PsiElement substituted = processor.substituteElementToRename(element, editor);
-        if (substituted == null || !canRename(project, editor, substituted)) {
-            return;
-        }
+        processor.substituteElementToRename(
+            element,
+            editor,
+            substituted -> showRenameDialog(processor, substituted, project, nameSuggestionContext, editor, defaultName)
+        );
+    }
 
+    @RequiredUIAccess
+    private static void showRenameDialog(
+        RenamePsiElementProcessor processor,
+        PsiElement substituted,
+        Project project,
+        PsiElement nameSuggestionContext,
+        Editor editor,
+        @Nullable String defaultName
+    ) {
         RenameDialog dialog = processor.createRenameDialog(project, substituted, nameSuggestionContext, editor);
 
-        if (defaultName == null && project.getApplication().isUnitTestMode()) {
+        String newName = defaultName;
+        if (newName == null && project.getApplication().isUnitTestMode()) {
             String[] strings = dialog.getSuggestedNames();
             if (strings != null && strings.length > 0) {
                 Arrays.sort(strings);
-                defaultName = strings[0];
+                newName = strings[0];
             }
             else {
-                defaultName = "undefined"; // need to avoid show dialog in test
+                newName = "undefined"; // need to avoid show dialog in test
             }
         }
 
-        if (defaultName != null) {
-            try {
-                dialog.performRename(defaultName);
-            }
-            finally {
-                dialog.close(DialogWrapper.CANCEL_EXIT_CODE); // to avoid dialog leak
-            }
+        if (newName != null) {
+            dialog.performRename(newName);
         }
         else {
-            dialog.show();
+            dialog.showAsync();
         }
     }
 

@@ -36,6 +36,7 @@ import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.psi.*;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
@@ -49,6 +50,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 public abstract class BaseRefactoringAction extends AnAction implements AnActionWithAsyncUpdate {
@@ -91,6 +94,20 @@ public abstract class BaseRefactoringAction extends AnAction implements AnAction
 
     protected abstract @Nullable RefactoringActionHandler getHandler(DataContext dataContext);
 
+    /**
+     * The handler {@link #actionPerformed} runs. A refactoring which has to ask the user which handler they mean answers
+     * once they did; a cancelled future cancels the action.
+     */
+    @RequiredUIAccess
+    protected CompletableFuture<@Nullable RefactoringActionHandler> getHandlerAsync(DataContext dataContext) {
+        try {
+            return CompletableFuture.completedFuture(getHandler(dataContext));
+        }
+        catch (ProcessCanceledException e) {
+            return CompletableFuture.failedFuture(new CancellationException());
+        }
+    }
+
     @Override
     @RequiredUIAccess
     public final void actionPerformed(AnActionEvent e) {
@@ -100,13 +117,29 @@ public abstract class BaseRefactoringAction extends AnAction implements AnAction
         Editor editor = e.getData(Editor.KEY);
         PsiElement[] elements = getPsiElementArray(dataContext);
 
-        RefactoringActionHandler handler;
-        try {
-            handler = getHandler(dataContext);
-        }
-        catch (ProcessCanceledException ignored) {
+        CompletableFuture<@Nullable RefactoringActionHandler> handlerFuture = getHandlerAsync(dataContext);
+        if (handlerFuture.isDone()) {
+            if (!handlerFuture.isCompletedExceptionally()) {
+                performWithHandler(project, editor, elements, dataContext, handlerFuture.join());
+            }
             return;
         }
+
+        handlerFuture.whenCompleteAsync((handler, error) -> {
+            if (error == null) {
+                performWithHandler(project, editor, elements, dataContext, handler);
+            }
+        }, UIAccess.current());
+    }
+
+    @RequiredUIAccess
+    private void performWithHandler(
+        Project project,
+        @Nullable Editor editor,
+        PsiElement[] elements,
+        DataContext dataContext,
+        @Nullable RefactoringActionHandler handler
+    ) {
         if (handler == null) {
             CommonRefactoringUtil.showErrorHint(
                 project,
