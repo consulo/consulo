@@ -21,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.util.List;
 
+@Deprecated
 public abstract class BaseConfigurableWithChangeSupport extends BaseConfigurable {
   private final List<ChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
