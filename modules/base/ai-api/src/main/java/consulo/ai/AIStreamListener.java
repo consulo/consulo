@@ -41,6 +41,12 @@ public interface AIStreamListener {
     }
 
     /**
+     * The provider named the conversation - a title it generated. The title of a chat the user named stays.
+     */
+    default void onTitle(String title) {
+    }
+
+    /**
      * A complete tool request. Not streamed piecewise, since partial arguments are not parseable.
      */
     default void onToolUse(AIContent.ToolUse toolUse) {

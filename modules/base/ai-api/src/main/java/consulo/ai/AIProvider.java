@@ -15,6 +15,10 @@
  */
 package consulo.ai;
 
+import consulo.accountManagement.Account;
+import consulo.accountManagement.AccountConnection;
+import consulo.accountManagement.AccountManager;
+import consulo.application.Application;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -30,6 +34,12 @@ import java.util.concurrent.CompletableFuture;
  * @since 2026-08-04
  */
 public final class AIProvider {
+    /**
+     * The option holding the id of the {@linkplain consulo.accountManagement.Account account} an instance signs in
+     * with, for a type which {@linkplain AIProviderType#getAccountTypeId() signs in through accounts}.
+     */
+    public static final String ACCOUNT_OPTION = "account";
+
     private final String myName;
     private final AIProviderType myType;
     private final Map<String, String> myOptions;
@@ -68,6 +78,38 @@ public final class AIProvider {
 
     public List<AIModel> getModels() {
         return myType.getModels();
+    }
+
+    public CompletableFuture<List<AIModel>> loadModels() {
+        return myType.loadModels();
+    }
+
+    /**
+     * The id of the account the instance signs in with, null when none is chosen.
+     */
+    public @Nullable String getAccountId() {
+        String id = myOptions.get(ACCOUNT_OPTION);
+        return id == null || id.isEmpty() ? null : id;
+    }
+
+    public @Nullable Account findAccount() {
+        String id = getAccountId();
+        return id == null ? null : accountManager().findAccount(id, null);
+    }
+
+    /**
+     * Connects with the account of the instance - its credentials, to decorate a request with.
+     */
+    public CompletableFuture<AccountConnection> connectAccount() {
+        Account account = findAccount();
+        if (account == null) {
+            return CompletableFuture.failedFuture(new IllegalStateException("The AI account " + myName + " has no account to sign in with"));
+        }
+        return accountManager().connect(account);
+    }
+
+    private static AccountManager accountManager() {
+        return Application.get().getInstance(AccountManager.class);
     }
 
     public CompletableFuture<@Nullable String> getApiKey() {

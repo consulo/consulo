@@ -73,6 +73,15 @@ public interface MessageList extends HasComponentStyle<MessageListStyle> {
     boolean isShowOwnAvatar();
 
     /**
+     * Whether the messages show the pictures of their authors at all - off for a chat with an assistant, whose name
+     * tells the messages apart well enough. On by default.
+     */
+    @RequiredUIAccess
+    void setShowAvatars(boolean showAvatars);
+
+    boolean isShowAvatars();
+
+    /**
      * Loads the images the markdown of the messages shows. Without one an image is read from its address as it is.
      * Images wider than the message are scaled down to its width.
      */

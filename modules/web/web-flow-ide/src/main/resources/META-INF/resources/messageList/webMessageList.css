@@ -47,6 +47,7 @@ vaadin-message[theme~="consulo-system"] > :is(span, vaadin-markdown) {
 }
 
 .consulo-message-list:not(.consulo-show-own-avatar) vaadin-message[theme~="consulo-own"] > [slot="avatar"],
+.consulo-message-list.consulo-hide-avatars vaadin-message > [slot="avatar"],
 vaadin-message[theme~="consulo-system"] > [slot="avatar"] {
     display: none;
 }
@@ -69,4 +70,17 @@ vaadin-message[theme~="consulo-anonymous"]::part(name) {
     --vaadin-avatar-size: 24px;
     width: 24px;
     height: 24px;
+}
+
+/* a message still being written: an animated svg of three dots, the status after them */
+.consulo-message-list vaadin-message > .consulo-message-writing {
+    display: flex;
+    align-items: center;
+    gap: var(--vaadin-gap-s, 0.5em);
+    color: var(--consulo-message-system-foreground);
+    font-size: var(--vaadin-font-size-s, 0.875em);
+}
+
+.consulo-message-list .consulo-message-writing-dots {
+    display: inline-flex;
 }

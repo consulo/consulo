@@ -43,7 +43,10 @@ public final class MessageListPresentation {
     private MessageListPresentation() {
     }
 
-    public static boolean showsAvatar(MessageListItemStyle style, boolean showOwnAvatar) {
+    public static boolean showsAvatar(MessageListItemStyle style, boolean showOwnAvatar, boolean showAvatars) {
+        if (!showAvatars) {
+            return false;
+        }
         return switch (style) {
             case OTHER, ERROR -> true;
             case OWN -> showOwnAvatar;

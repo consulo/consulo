@@ -55,6 +55,14 @@ public interface Logger {
 
     public abstract boolean isDebugEnabled();
 
+    default boolean isInfoEnabled() {
+        return true;
+    }
+
+    default boolean isWarnEnabled() {
+        return true;
+    }
+
     public abstract void debug(String message);
 
     public abstract void debug(Throwable t);

@@ -15,6 +15,10 @@
  */
 package consulo.ai.impl.internal.setting;
 
+import consulo.accountManagement.AccountManager;
+import consulo.accountManagement.AccountType;
+import consulo.accountManagement.ui.AccountChooser;
+import consulo.accountManagement.ui.AccountComponentFactory;
 import consulo.ai.AIModel;
 import consulo.ai.AIProvider;
 import consulo.ai.AIProviderTable;
@@ -47,6 +51,8 @@ import java.util.Objects;
  */
 class AIProviderDetailsConfigurable implements MasterDetailsConfigurable<AIProviderDraft> {
     private final AIProviderDraft myDraft;
+    private final AccountManager myAccountManager;
+    private final AccountComponentFactory myAccountComponentFactory;
     private final AIProviderTable myProviderTable;
     private final Runnable myUpdateTree;
 
@@ -55,9 +61,15 @@ class AIProviderDetailsConfigurable implements MasterDetailsConfigurable<AIProvi
     private @Nullable CheckBox myDefaultBox;
     private @Nullable ComboBox<AIModel> myModelBox;
 
-    AIProviderDetailsConfigurable(AIProviderDraft draft, AIProviderTable providerTable, Runnable updateTree) {
+    AIProviderDetailsConfigurable(AIProviderDraft draft,
+                                  AIProviderTable providerTable,
+                                  AccountManager accountManager,
+                                  AccountComponentFactory accountComponentFactory,
+                                  Runnable updateTree) {
         myDraft = draft;
         myProviderTable = providerTable;
+        myAccountManager = accountManager;
+        myAccountComponentFactory = accountComponentFactory;
         myUpdateTree = updateTree;
     }
 
@@ -106,7 +118,11 @@ class AIProviderDetailsConfigurable implements MasterDetailsConfigurable<AIProvi
         builder.addLabeled(AILocalize.labelName(), nameBox);
         builder.addLabeled(AILocalize.labelType(), Label.create(myDraft.type.getDisplayName()));
 
-        if (myDraft.type.acceptsApiKey()) {
+        String accountTypeId = myDraft.type.getAccountTypeId();
+        if (accountTypeId != null) {
+            builder.addLabeled(AILocalize.labelAccount(), createAccountChooser(accountTypeId, parentDisposable));
+        }
+        else if (myDraft.type.acceptsApiKey()) {
             PasswordBox apiKeyBox = PasswordBox.create();
             LocalizeValue label = myDraft.type.getApiKeyLabel();
             builder.addLabeled(label == LocalizeValue.empty() ? AILocalize.labelApiKey() : label, apiKeyBox);
@@ -221,6 +237,29 @@ class AIProviderDetailsConfigurable implements MasterDetailsConfigurable<AIProvi
             myDraft.apiKey = StringUtil.notNullize(key);
             apiKeyBox.setValue(myDraft.apiKey);
         }, UIAccess.current());
+    }
+
+    /**
+     * The account the instance signs in with, kept in its options - an account is added and signed in from the chooser.
+     */
+    @RequiredUIAccess
+    private Component createAccountChooser(String accountTypeId, Disposable parentDisposable) {
+        AccountType<?> accountType = myAccountManager.findAccountType(accountTypeId);
+        if (accountType == null) {
+            return Label.create(AILocalize.labelAccountTypeMissing(accountTypeId));
+        }
+        AccountChooser chooser = myAccountComponentFactory.createChooser(accountType, null, parentDisposable);
+        String accountId = myDraft.options.get(AIProvider.ACCOUNT_OPTION);
+        chooser.setValue(accountId == null ? null : myAccountManager.findAccount(accountId, null));
+        chooser.addValueListener(account -> {
+            if (account == null) {
+                myDraft.options.remove(AIProvider.ACCOUNT_OPTION);
+            }
+            else {
+                myDraft.options.put(AIProvider.ACCOUNT_OPTION, account.getId());
+            }
+        });
+        return chooser.getComponent();
     }
 
     private static @Nullable String modelId(@Nullable AIModel model) {

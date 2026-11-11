@@ -56,6 +56,9 @@
         <appender-ref ref="FILE"/>
     </appender>
 
+    <!-- jStyleParser (Cobra css) logs every parsed rule -->
+    <logger name="cz.vutbr.web" level="warn"/>
+
     <root level="info">
         <appender-ref ref="ASYNC_CONSOLE_WARN"/>
         <appender-ref ref="ASYNC_DIALOG"/>

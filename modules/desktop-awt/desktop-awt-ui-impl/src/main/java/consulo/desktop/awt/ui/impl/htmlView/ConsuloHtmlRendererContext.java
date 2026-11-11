@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
-class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
+public class ConsuloHtmlRendererContext extends AbstractHtmlRendererContext {
     private final HtmlPanel myHtmlPanel;
 
     private final UserAgentContext myUserAgentContext;

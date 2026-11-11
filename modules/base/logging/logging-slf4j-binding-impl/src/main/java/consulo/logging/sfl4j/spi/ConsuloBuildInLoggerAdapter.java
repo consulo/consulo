@@ -76,6 +76,9 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void debug(String format, Object arg) {
+    if (!isDebugEnabled()) {
+      return;
+    }
     try {
       myLogger.debug(buildMessage(format, arg));
     }
@@ -86,12 +89,16 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void debug(String format, Object arg1, Object arg2) {
-    debug(buildMessage(format, arg1, arg2));
+    if (isDebugEnabled()) {
+      debug(buildMessage(format, arg1, arg2));
+    }
   }
 
   @Override
   public void debug(String format, Object... arguments) {
-    debug(buildMessage(format, arguments));
+    if (isDebugEnabled()) {
+      debug(buildMessage(format, arguments));
+    }
   }
 
   @Override
@@ -101,7 +108,7 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public boolean isInfoEnabled() {
-    return true;
+    return myLogger.isInfoEnabled();
   }
 
   @Override
@@ -111,17 +118,23 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void info(String format, Object arg) {
-    info(buildMessage(format, arg));
+    if (isInfoEnabled()) {
+      info(buildMessage(format, arg));
+    }
   }
 
   @Override
   public void info(String format, Object arg1, Object arg2) {
-    info(buildMessage(format, arg1, arg2));
+    if (isInfoEnabled()) {
+      info(buildMessage(format, arg1, arg2));
+    }
   }
 
   @Override
   public void info(String format, Object... arguments) {
-    info(buildMessage(format, arguments));
+    if (isInfoEnabled()) {
+      info(buildMessage(format, arguments));
+    }
   }
 
   @Override
@@ -131,7 +144,7 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public boolean isWarnEnabled() {
-    return true;
+    return myLogger.isWarnEnabled();
   }
 
   @Override
@@ -141,17 +154,23 @@ public class ConsuloBuildInLoggerAdapter extends MarkerIgnoringBase implements o
 
   @Override
   public void warn(String format, Object arg) {
-    warn(buildMessage(format, arg));
+    if (isWarnEnabled()) {
+      warn(buildMessage(format, arg));
+    }
   }
 
   @Override
   public void warn(String format, Object... arguments) {
-    warn(buildMessage(format, arguments));
+    if (isWarnEnabled()) {
+      warn(buildMessage(format, arguments));
+    }
   }
 
   @Override
   public void warn(String format, Object arg1, Object arg2) {
-    warn(buildMessage(format, arg1, arg2));
+    if (isWarnEnabled()) {
+      warn(buildMessage(format, arg1, arg2));
+    }
   }
 
   private String buildMessage(String format, Object... args) {

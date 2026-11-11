@@ -181,6 +181,7 @@
                 <include>consulo:consulo-builtin-web-server-impl</include>
                 <include>consulo:consulo-ai-api</include>
                 <include>consulo:consulo-ai-impl</include>
+                <include>consulo:consulo-ai-acp-api</include>
                 <include>consulo:consulo-mcp-api</include>
                 <include>consulo:consulo-mcp-server-api</include>
                 <include>consulo:consulo-mcp-server-impl</include>

@@ -103,6 +103,16 @@ public class LogbackLogger implements Logger {
     }
 
     @Override
+    public boolean isInfoEnabled() {
+        return logger().isInfoEnabled();
+    }
+
+    @Override
+    public boolean isWarnEnabled() {
+        return logger().isWarnEnabled();
+    }
+
+    @Override
     public void debug(String message) {
         logger().debug(message);
     }

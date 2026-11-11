@@ -215,6 +215,11 @@ public abstract class UnifiedMasterDetailsComponent implements Configurable, Ful
         showEmpty();
 
         loadTree();
+
+        // the tree is built from the values loaded now - and opened, which a tree built lazily never is by itself
+        if (myTree != null) {
+            refreshTree(null);
+        }
     }
 
     @RequiredUIAccess

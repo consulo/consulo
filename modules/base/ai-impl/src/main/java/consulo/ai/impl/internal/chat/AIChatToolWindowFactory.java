@@ -17,6 +17,7 @@ package consulo.ai.impl.internal.chat;
 
 import consulo.ai.AIProviderTable;
 import consulo.ai.icon.AIIconGroup;
+import consulo.configurable.internal.ShowConfigurableService;
 import consulo.ai.localize.AILocalize;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
@@ -26,6 +27,8 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
@@ -48,28 +51,30 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
         return !AIProviderTable.getInstance().getProviders().isEmpty();
     }
 
-    @Override
-    public boolean canCloseContents() {
-        return true;
-    }
-
     @RequiredUIAccess
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-        AIChatView chatView = project.getInstance(AIChatView.class);
-        chatView.init(toolWindow);
+        AIChatTreePanel panel = new AIChatTreePanel(
+            project,
+            project.getInstance(AIChatView.class),
+            AIProviderTable.getInstance(),
+            project.getApplication().getInstance(ShowConfigurableService.class)
+        );
+        Content content = ContentFactory.getInstance().createUIContent(panel.getComponent(), "", false);
+        content.setDisposer(panel);
+        toolWindow.getContentManager().addContent(content);
 
-        // like the terminal: showing the window again after its last chat was closed starts a new one
-        project.getMessageBus().connect(project).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
+        // chats a provider keeps on its side may have come from outside the IDE - a terminal - since it was last shown
+        project.getMessageBus().connect(panel).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
+            private boolean myVisible;
+
             @Override
             public void stateChanged(ToolWindowManager manager) {
-                if (!toolWindow.isVisible()) {
-                    return;
+                boolean visible = toolWindow.isVisible();
+                if (visible && !myVisible) {
+                    panel.refresh();
                 }
-                toolWindow.setIcon(getIcon());
-                if (toolWindow.getContentManager().getContentCount() == 0) {
-                    chatView.addDefaultChat(toolWindow);
-                }
+                myVisible = visible;
             }
         });
     }

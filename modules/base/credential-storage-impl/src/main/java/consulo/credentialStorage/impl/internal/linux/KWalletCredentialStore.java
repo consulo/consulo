@@ -10,7 +10,6 @@ import consulo.credentialStorage.impl.internal.CredentialStoreUtil;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import org.freedesktop.dbus.connections.impl.DBusConnection;
-import org.freedesktop.dbus.connections.impl.DBusConnectionBuilder;
 import org.freedesktop.dbus.errors.NoReply;
 import org.freedesktop.dbus.errors.ServiceUnknown;
 import org.freedesktop.dbus.exceptions.DBusException;
@@ -46,7 +45,7 @@ public class KWalletCredentialStore implements CredentialStore, Closeable {
 
     public static KWalletCredentialStore create() {
         try {
-            DBusConnection connection = DBusConnectionBuilder.forSessionBus().build();
+            DBusConnection connection = DBusSessionBus.connect();
             try {
                 KWallet wallet = connection.getRemoteObject("org.kde.kwalletd5", "/modules/kwalletd5", KWallet.class, true);
                 // Ping the wallet
@@ -61,7 +60,8 @@ public class KWalletCredentialStore implements CredentialStore, Closeable {
             }
             connection.close();
         }
-        catch (Exception e) {
+        catch (Exception | LinkageError e) {
+            // dbus-java which failed to find its transport once stays broken - it must not break the settings
             LOG.warn("Failed to connect to D-Bus", e);
         }
         return null;

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.messageList;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
 import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.localize.LocalizeValue;
@@ -120,11 +121,9 @@ public class DesktopMessageInputImpl extends SwingComponentDelegate<JPanel> impl
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        mySendButton.setBorderPainted(false);
-        mySendButton.setContentAreaFilled(false);
+        // a button of a toolbar - with its hover and press, as the other buttons beside an input
+        mySendButton.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TOOLBAR_BUTTON);
         mySendButton.setFocusable(false);
-        mySendButton.setForeground(TargetAWT.to(ComponentColors.LINK_FOREGROUND));
-        mySendButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         mySendButton.addActionListener(e -> submit());
         mySendButton.setEnabled(false);
 

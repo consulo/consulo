@@ -15,11 +15,15 @@
  */
 package consulo.ai.impl.internal.setting;
 
+import consulo.accountManagement.AccountManager;
+import consulo.accountManagement.ui.AccountComponentFactory;
 import consulo.ai.AIModel;
 import consulo.ai.AIProvider;
 import consulo.ai.AIProviderTable;
 import consulo.ai.AIProviderType;
 import consulo.ai.localize.AILocalize;
+import consulo.ai.impl.internal.setting.state.AISettingsState;
+import consulo.ai.impl.internal.setting.state.ProviderEntry;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
@@ -70,15 +74,25 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
     implements ApplicationConfigurable, Configurable.NoMargin, Configurable.NoScroll {
 
     private final Provider<AIProviderTable> myProviderTable;
+    private final Provider<AccountManager> myAccountManager;
+    private final Provider<ProjectManager> myProjectManager;
+    private final Provider<AccountComponentFactory> myAccountComponentFactory;
     private final Provider<AISettings> mySettings;
 
     private final List<AIProviderDraft> myDrafts = new ArrayList<>();
     private final Set<String> myRemovedNames = new HashSet<>();
 
     @Inject
-    public AIProviderConfigurable(Provider<AIProviderTable> providerTable, Provider<AISettings> settings) {
+    public AIProviderConfigurable(Provider<AIProviderTable> providerTable,
+                                  Provider<AISettings> settings,
+                                  Provider<AccountManager> accountManager,
+                                  Provider<AccountComponentFactory> accountComponentFactory,
+                                  Provider<ProjectManager> projectManager) {
         myProviderTable = providerTable;
+        myProjectManager = projectManager;
         mySettings = settings;
+        myAccountManager = accountManager;
+        myAccountComponentFactory = accountComponentFactory;
     }
 
     @Override
@@ -148,7 +162,7 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
         myDrafts.clear();
         myRemovedNames.clear();
 
-        AISettings settings = mySettings.get();
+        AISettingsState settings = mySettings.get().getState();
         for (AIProvider provider : myProviderTable.get().getProviders()) {
             AIProviderDraft draft = new AIProviderDraft(provider.getName(), provider.getName(), provider.getType());
             draft.options.putAll(provider.getOptions());
@@ -172,7 +186,13 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
     @Override
     protected @Nullable MasterDetailsConfigurable<?> createConfigurable(Object value) {
         if (value instanceof AIProviderDraft draft) {
-            return new AIProviderDetailsConfigurable(draft, myProviderTable.get(), () -> refreshValue(draft));
+            return new AIProviderDetailsConfigurable(
+                draft,
+                myProviderTable.get(),
+                myAccountManager.get(),
+                myAccountComponentFactory.get(),
+                () -> refreshValue(draft)
+            );
         }
         return null;
     }
@@ -188,7 +208,7 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
         if (super.isModified() || !myRemovedNames.isEmpty()) {
             return true;
         }
-        AISettings settings = mySettings.get();
+        AISettingsState settings = mySettings.get().getState();
         for (AIProviderDraft draft : myDrafts) {
             if (draft.originalName == null
                 || !draft.originalName.equals(draft.name)
@@ -230,10 +250,16 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
 
         AIProviderDraft defaultDraft = null;
         for (AIProviderDraft draft : myDrafts) {
+            // an instance the user changed is theirs - it no longer goes away with its account
+            boolean edited = draft.originalName != null
+                && (!draft.originalName.equals(draft.name) || draft.apiKeyChanged || !draft.options.equals(draft.originalOptions));
             applyDraft(table, draft);
-            for (AISettings.ProviderEntry entry : mySettings.get().PROVIDERS) {
+            for (ProviderEntry entry : mySettings.get().getState().PROVIDERS) {
                 if (entry.NAME.equals(draft.name)) {
                     entry.OPTIONS = new LinkedHashMap<>(draft.options);
+                    if (edited) {
+                        entry.GENERATED = false;
+                    }
                 }
             }
             draft.originalOptions.clear();
@@ -244,8 +270,8 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
         }
 
         if (defaultDraft == null) {
-            mySettings.get().DEFAULT_PROVIDER_NAME = "";
-            mySettings.get().DEFAULT_MODEL_ID = "";
+            mySettings.get().getState().DEFAULT_PROVIDER_NAME = "";
+            mySettings.get().getState().DEFAULT_MODEL_ID = "";
         }
         else {
             AIProvider provider = table.findProvider(defaultDraft.name);
@@ -258,7 +284,7 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
             table.setDefault(provider, model);
         }
 
-        for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+        for (Project project : myProjectManager.get().getOpenProjects()) {
             UIAccess uiAccess = project.getUIAccess();
 
             if (uiAccess.isValid()) {

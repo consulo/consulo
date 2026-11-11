@@ -40,7 +40,7 @@ import io.qt.gui.QPen;
 import io.qt.widgets.QFrame;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QPlainTextEdit;
-import io.qt.widgets.QPushButton;
+import io.qt.widgets.QToolButton;
 import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
@@ -131,7 +131,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
 
     private @Nullable QPlainTextEdit myEdit;
     private final StringBuilder myPendingText = new StringBuilder();
-    private @Nullable QPushButton mySendButton;
+    private @Nullable QToolButton mySendButton;
 
     @Override
     protected QFrame createQt(QWidget parent) {
@@ -150,13 +150,11 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
         edit.viewport().setAutoFillBackground(false);
         layout.addWidget(edit, 1);
 
-        QPushButton send = new QPushButton(frame);
-        send.setFlat(true);
+        // a button of a toolbar - raised, with its hover and press, as the other buttons beside an input
+        QToolButton send = new QToolButton(frame);
+        send.setAutoRaise(true);
         send.setFocusPolicy(Qt.FocusPolicy.NoFocus);
-        send.setCursor(Qt.CursorShape.PointingHandCursor);
-        QColor link = DesktopQtStyleApplier.themeColor(ComponentColors.LINK_FOREGROUND, send.palette().color(QPalette.ColorRole.Link));
-        send.setStyleSheet("QPushButton { color: " + link.name() + "; border: none; padding: 2px 6px; }"
-            + " QPushButton:disabled { color: palette(placeholder-text); }");
+        send.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
         send.clicked.connect(this::submit);
         layout.addWidget(send, 0, Qt.AlignmentFlag.AlignVCenter);
 
@@ -185,7 +183,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
 
     private void onTextChanged() {
         QPlainTextEdit edit = myEdit;
-        QPushButton send = mySendButton;
+        QToolButton send = mySendButton;
         if (edit == null || send == null) {
             return;
         }
@@ -202,7 +200,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
 
     private void applyTexts() {
         QPlainTextEdit edit = myEdit;
-        QPushButton send = mySendButton;
+        QToolButton send = mySendButton;
         if (edit != null) {
             edit.setPlaceholderText(myPlaceholder.get());
         }
@@ -210,11 +208,13 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
             String text = mySendText == LocalizeValue.empty() ? "" : mySendText.get();
             Image icon = mySendIcon;
             if (icon != null) {
+                send.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly);
                 send.setIcon(DesktopQtImage.toQIcon(icon));
                 send.setText("");
                 send.setToolTip(text);
             }
             else {
+                send.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly);
                 send.setIcon(DesktopQtImage.toQIcon(null));
                 send.setText(text.isEmpty() ? DEFAULT_SEND_TEXT : text);
                 send.setToolTip("");
@@ -305,7 +305,7 @@ public class DesktopQtMessageInputImpl extends QtComponentDelegate<QFrame> imple
 
     private void attachSuffix(QFrame frame) {
         QHBoxLayout layout = myLayout;
-        QPushButton send = mySendButton;
+        QToolButton send = mySendButton;
         if (!(mySuffixComponent instanceof QtComponentDelegate<?> delegate) || layout == null || send == null) {
             return;
         }

@@ -15,6 +15,7 @@
  */
 package consulo.ai;
 
+import consulo.accountManagement.Account;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.disposer.Disposable;
@@ -57,6 +58,27 @@ public interface AIProviderType {
     List<AIModel> getModels();
 
     /**
+     * The models once the vendor told them - {@link #getModels()} gives the ones known so far, a type which asks the
+     * vendor completes this when it answered.
+     */
+    default CompletableFuture<List<AIModel>> loadModels() {
+        return CompletableFuture.completedFuture(getModels());
+    }
+
+    /**
+     * The model of the known ones a kept {@linkplain AIModel#getId() id} stands for - the one with that id, unless the
+     * type knows the id under another name, as an alias of the vendor.
+     */
+    default @Nullable AIModel resolveModel(List<AIModel> models, String id) {
+        for (AIModel model : models) {
+            if (model.getId().equals(id)) {
+                return model;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Sends a request using the given instance's credentials.
      * <p>
      * When {@code listener} is given and the model reports {@link AIModelCapability#STREAMING},
@@ -64,6 +86,26 @@ public interface AIProviderType {
      * answer, so callers never reassemble it themselves. Cancelling the future should abort the request.
      */
     CompletableFuture<AIResponse> chat(AIProvider provider, AIRequest request, @Nullable AIStreamListener listener);
+
+    /**
+     * The {@linkplain consulo.accountManagement.AccountType account type} an instance signs in with - the settings then
+     * choose an account of it instead of asking for an API key, and {@link AIProvider#connectAccount()} gives its
+     * credentials. Null for a type which keeps an API key of its own.
+     */
+    default @Nullable String getAccountTypeId() {
+        return null;
+    }
+
+    /**
+     * Moves an instance which signed in before accounts existed to an account - called once for an instance of a type
+     * with an {@linkplain #getAccountTypeId() account type} which has none chosen yet.
+     *
+     * @param legacySecret the API key the instance kept in the password safe, if any
+     * @return the id of the account the instance signs in with now, null when there is nothing to move
+     */
+    default CompletableFuture<@Nullable String> migrateToAccount(AIProvider provider, @Nullable String legacySecret) {
+        return CompletableFuture.completedFuture(null);
+    }
 
     /**
      * Whether an instance is configured with an API key the settings ask for. A type which signs in some other way
@@ -103,6 +145,10 @@ public interface AIProviderType {
      * command line tool with a login of its own - answers for itself.
      */
     default CompletableFuture<Boolean> isConfigured(AIProvider provider) {
+        if (getAccountTypeId() != null) {
+            Account account = provider.findAccount();
+            return CompletableFuture.completedFuture(account != null && !account.isAuthFailed());
+        }
         return provider.getApiKey().thenApply(apiKey -> apiKey != null);
     }
 

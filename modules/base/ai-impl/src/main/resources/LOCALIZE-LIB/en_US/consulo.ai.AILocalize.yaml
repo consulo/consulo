@@ -92,3 +92,93 @@ dialog.working.directory.title:
     text: Working Directory of the Chat
 label.working.directory:
     text: 'Working directory: {0}'
+file.type.chat:
+    text: AI Chat
+action.open.chat:
+    text: Open
+action.new.group:
+    text: New Group...
+action.rename.ellipsis:
+    text: Rename...
+action.move.to.group.ellipsis:
+    text: Move to Group...
+action.delete:
+    text: Delete
+action.refresh.chats:
+    text: Refresh
+dialog.new.group.title:
+    text: New Group
+dialog.rename.group.title:
+    text: Rename Group
+dialog.group.name.prompt:
+    text: 'Name:'
+dialog.delete.chat.title:
+    text: Delete Chat
+dialog.delete.chat.message:
+    text: Delete the chat ''{0}'' with its history?
+dialog.delete.group.title:
+    text: Delete Group
+dialog.delete.group.message:
+    text: Delete the group ''{0}''? Its chats and groups move up into its parent.
+label.top.level:
+    text: Top Level
+label.account.not.configured:
+    text: '{0} (not configured)'
+label.chat.loading:
+    text: Loading the chat...
+label.chat.removed:
+    text: The chat was deleted.
+label.chat.account.missing:
+    text: The account {0} of this chat is not configured any more.
+acp.provider.name:
+    text: Generic (ACP)
+acp.label.command:
+    text: 'Command:'
+acp.label.arguments:
+    text: 'Arguments:'
+acp.label.environment:
+    text: 'Environment:'
+acp.placeholder.command:
+    text: An agent of the Agent Client Protocol, for example gemini
+acp.placeholder.arguments:
+    text: For example --acp
+acp.placeholder.environment:
+    text: NAME=value, one a line
+acp.button.check:
+    text: Check
+acp.button.sign.in:
+    text: Sign In with {0}
+acp.status.no.command:
+    text: The command was not found
+acp.status.starting:
+    text: Starting the agent...
+acp.status.failed:
+    text: 'Failed: {0}'
+acp.status.connected:
+    text: Connected to {0} {1}
+acp.status.signing.in:
+    text: Signing in with {0}...
+acp.status.signed.in:
+    text: Signed in with {0}
+label.account:
+    text: 'Account:'
+label.account.type.missing:
+    text: No account type {0} is installed
+label.writing.thinking:
+    text: Thinking...
+label.writing.tool:
+    text: Running {0}...
+dialog.delete.items.title:
+    text: Delete Chats and Groups
+dialog.delete.items.message:
+    text: Delete {0} selected chats and groups? Chats go with their history, the chats and groups of a group move up into its parent.
+provider.auto.name:
+    text: '{0} ({1})'
+label.history.hidden:
+    text: '{0} earlier messages of this chat are not shown'
+label.effort.default:
+    text: Default
+label.model:
+    text: Model
+label.effort:
+    text: Effort

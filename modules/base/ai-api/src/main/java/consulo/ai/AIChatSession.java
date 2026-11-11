@@ -44,16 +44,27 @@ public final class AIChatSession {
     private final AIProvider myProvider;
     private final AIModel myModel;
     private final List<AIMessage> myMessages = new ArrayList<>();
-    private final String myId = UUID.randomUUID().toString();
+    private final String myId;
 
     private @Nullable String mySystemPrompt;
     private boolean myToolsEnabled = true;
     private @Nullable Path myWorkingDirectory;
+    private @Nullable String myEffort;
 
     public AIChatSession(Project project, AIProvider provider, AIModel model) {
+        this(project, provider, model, UUID.randomUUID().toString(), List.of());
+    }
+
+    /**
+     * Continues a conversation: the provider sees the {@code id} it saw before, and a provider which keeps no state of
+     * its own gets the {@code history} sent along.
+     */
+    public AIChatSession(Project project, AIProvider provider, AIModel model, String id, List<AIMessage> history) {
         myProject = project;
         myProvider = provider;
         myModel = model;
+        myId = id;
+        myMessages.addAll(history);
         String basePath = project.getBasePath();
         myWorkingDirectory = basePath == null ? null : Path.of(basePath);
     }
@@ -68,6 +79,18 @@ public final class AIChatSession {
 
     public @Nullable Path getWorkingDirectory() {
         return myWorkingDirectory;
+    }
+
+    /**
+     * The {@linkplain AIEffortLevel#id() effort} of the model - null for the provider's own default.
+     */
+    public AIChatSession effort(@Nullable String effort) {
+        myEffort = effort;
+        return this;
+    }
+
+    public @Nullable String getEffort() {
+        return myEffort;
     }
 
     public AIChatSession systemPrompt(@Nullable String systemPrompt) {
@@ -133,6 +156,7 @@ public final class AIChatSession {
             .tools(tools)
             .sessionId(myId)
             .workingDirectory(myWorkingDirectory)
+            .effort(myEffort)
             .build();
 
         return myProvider.chat(request, listener).thenCompose(response -> {

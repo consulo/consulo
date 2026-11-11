@@ -40,6 +40,7 @@ public final class AIRequest {
         private double myTemperature = -1;
         private @Nullable String mySessionId;
         private @Nullable Path myWorkingDirectory;
+        private @Nullable String myEffort;
 
         private Builder(AIModel model) {
             myModel = model;
@@ -102,8 +103,26 @@ public final class AIRequest {
             return this;
         }
 
+        /**
+         * The {@linkplain AIEffortLevel#id() effort} the model is asked for - null leaves the provider's own default.
+         */
+        public Builder effort(@Nullable String effort) {
+            myEffort = effort;
+            return this;
+        }
+
         public AIRequest build() {
-            return new AIRequest(myModel, mySystemPrompt, myMessages, myTools, myMaxTokens, myTemperature, mySessionId, myWorkingDirectory);
+            return new AIRequest(
+                myModel,
+                mySystemPrompt,
+                myMessages,
+                myTools,
+                myMaxTokens,
+                myTemperature,
+                mySessionId,
+                myWorkingDirectory,
+                myEffort
+            );
         }
     }
 
@@ -115,6 +134,7 @@ public final class AIRequest {
     private final double myTemperature;
     private final @Nullable String mySessionId;
     private final @Nullable Path myWorkingDirectory;
+    private final @Nullable String myEffort;
 
     private AIRequest(AIModel model,
                       @Nullable String systemPrompt,
@@ -123,7 +143,8 @@ public final class AIRequest {
                       int maxTokens,
                       double temperature,
                       @Nullable String sessionId,
-                      @Nullable Path workingDirectory) {
+                      @Nullable Path workingDirectory,
+                      @Nullable String effort) {
         myModel = model;
         mySystemPrompt = systemPrompt;
         myMessages = List.copyOf(messages);
@@ -132,6 +153,7 @@ public final class AIRequest {
         myTemperature = temperature;
         mySessionId = sessionId;
         myWorkingDirectory = workingDirectory;
+        myEffort = effort;
     }
 
     public AIModel getModel() {
@@ -164,5 +186,12 @@ public final class AIRequest {
 
     public @Nullable Path getWorkingDirectory() {
         return myWorkingDirectory;
+    }
+
+    /**
+     * The {@linkplain AIEffortLevel#id() effort} asked for, null for the provider's own default.
+     */
+    public @Nullable String getEffort() {
+        return myEffort;
     }
 }

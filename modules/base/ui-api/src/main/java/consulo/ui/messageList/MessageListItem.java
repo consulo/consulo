@@ -74,6 +74,27 @@ public interface MessageListItem {
     @RequiredUIAccess
     void setStyle(MessageListItemStyle style);
 
+    /**
+     * Whether the author is still writing the message - an answer while it streams in.
+     */
+    boolean isWriting();
+
+    /**
+     * While writing, the list shows that the message is not finished yet - each frontend the way it shows work in
+     * progress, together with the {@link #setWritingStatus status}.
+     */
+    @RequiredUIAccess
+    void setWriting(boolean writing);
+
+    /**
+     * What the author is busy with while writing - "Thinking", "Running a command" - empty for no more than that it
+     * writes.
+     */
+    LocalizeValue getWritingStatus();
+
+    @RequiredUIAccess
+    void setWritingStatus(LocalizeValue status);
+
     @Nullable Component getActionsComponent();
 
     /**

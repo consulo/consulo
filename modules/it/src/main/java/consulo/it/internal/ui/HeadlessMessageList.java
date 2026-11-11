@@ -17,6 +17,7 @@ package consulo.it.internal.ui;
 
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.messageList.AsyncHtmlImageLoader;
 import consulo.ui.messageList.MessageList;
@@ -44,10 +45,34 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
         private @Nullable Image myAuthorImage;
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
         private @Nullable Component myActionsComponent;
+        private boolean myWriting;
+        private LocalizeValue myWritingStatus = LocalizeValue.empty();
 
         Item(LocalizeValue author, String text) {
             myAuthor = author;
             myText = text;
+        }
+
+        @Override
+        public boolean isWriting() {
+            return myWriting;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setWriting(boolean writing) {
+            myWriting = writing;
+        }
+
+        @Override
+        public LocalizeValue getWritingStatus() {
+            return myWritingStatus;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setWritingStatus(LocalizeValue status) {
+            myWritingStatus = status;
         }
 
         @Override
@@ -125,6 +150,7 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     private final List<MessageListItem> myItems = new ArrayList<>();
     private boolean myMarkdown;
     private boolean myShowOwnAvatar;
+    private boolean myShowAvatars = true;
     private @Nullable AsyncHtmlImageLoader myImageLoader;
 
     @Override
@@ -167,6 +193,16 @@ public class HeadlessMessageList extends HeadlessComponentBase implements Messag
     @Override
     public boolean isShowOwnAvatar() {
         return myShowOwnAvatar;
+    }
+
+    @Override
+    public void setShowAvatars(boolean showAvatars) {
+        myShowAvatars = showAvatars;
+    }
+
+    @Override
+    public boolean isShowAvatars() {
+        return myShowAvatars;
     }
 
     @Override

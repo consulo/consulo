@@ -15,6 +15,7 @@
  */
 package consulo.web.ui.impl.internal;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.dom.DomEvent;
@@ -65,6 +66,7 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         public @Nullable Component toUIComponent() {
             return WebMessageListImpl.this;
         }
+
     }
 
     private class Item implements MessageListItem {
@@ -78,6 +80,14 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         private MessageListItemStyle myStyle = MessageListItemStyle.OTHER;
         private @Nullable Component myActionsComponent;
         private @Nullable Element myActionsElement;
+        private boolean myWriting;
+        private LocalizeValue myWritingStatus = LocalizeValue.empty();
+        private @Nullable Element myWritingElement;
+        private @Nullable Element myWritingStatusElement;
+        /**
+         * Whether the message is in the page - only the newest ones are, and the earlier ones once scrolled to.
+         */
+        private boolean myAttached;
 
         Item(LocalizeValue author, String text) {
             myAuthor = author;
@@ -125,6 +135,68 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
 
             for (Element element : myContent) {
                 myMessage.appendChild(element);
+            }
+
+            // the indicator stays after the text the message grows by
+            Element writing = myWritingElement;
+            if (writing != null) {
+                writing.removeFromParent();
+                myMessage.appendChild(writing);
+            }
+        }
+
+        @Override
+        public boolean isWriting() {
+            return myWriting;
+        }
+
+        /**
+         * Three dots pulse one after another while the message is written - an animated svg of its own, in the colour of
+         * the text around it.
+         */
+        @RequiredUIAccess
+        @Override
+        public void setWriting(boolean writing) {
+            if (myWriting == writing) {
+                return;
+            }
+            myWriting = writing;
+            if (!writing) {
+                Element element = myWritingElement;
+                myWritingElement = null;
+                myWritingStatusElement = null;
+                if (element != null) {
+                    element.removeFromParent();
+                }
+                return;
+            }
+            Element element = new Element("div");
+            element.getClassList().add("consulo-message-writing");
+            Element dots = new Element("span");
+            dots.getClassList().add("consulo-message-writing-dots");
+            dots.setProperty("innerHTML", WRITING_SVG);
+            element.appendChild(dots);
+            Element status = new Element("span");
+            status.getClassList().add("consulo-message-writing-status");
+            status.setText(myWritingStatus.get());
+            element.appendChild(status);
+            myWritingElement = element;
+            myWritingStatusElement = status;
+            myMessage.appendChild(element);
+        }
+
+        @Override
+        public LocalizeValue getWritingStatus() {
+            return myWritingStatus;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setWritingStatus(LocalizeValue status) {
+            myWritingStatus = status;
+            Element element = myWritingStatusElement;
+            if (element != null) {
+                element.setText(status.get());
             }
         }
 
@@ -277,12 +349,34 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         }
     }
 
+    /**
+     * Three dots fading in one after another, animated by the svg itself.
+     */
+    private static final String WRITING_SVG = writingSvg();
+
+    private static String writingSvg() {
+        StringBuilder svg = new StringBuilder("<svg xmlns='http://www.w3.org/2000/svg' width='24' height='8' viewBox='0 0 24 8' fill='currentColor'>");
+        for (int i = 0; i < 3; i++) {
+            svg.append("<circle cx='").append(4 + i * 8).append("' cy='4' r='3' opacity='0.25'>")
+                .append("<animate attributeName='opacity' values='0.25;1;0.25' dur='1.2s' begin='")
+                .append(i * 0.2).append("s' repeatCount='indefinite'/></circle>");
+        }
+        return svg.append("</svg>").toString();
+    }
+
     private final List<Item> myItems = new ArrayList<>();
     private final com.vaadin.flow.component.messages.MessageList myMarkdownLoader = new com.vaadin.flow.component.messages.MessageList();
     private static final String LINK = "event.composedPath().find(node => node.tagName === 'A' && node.hasAttribute('href'))";
     private static final String LINK_HREF = LINK + ".getAttribute('href')";
 
+    /**
+     * How many messages go into the page at a time.
+     */
+    private static final int PAGE_SIZE = 40;
+    private static final String LOAD_EARLIER_EVENT = "consulo-load-earlier";
+
     private boolean myMarkdown;
+    private boolean myFlushPending;
     private @Nullable AsyncHtmlImageLoader myImageLoader;
     private final Map<String, Image> myImages = new HashMap<>();
 
@@ -295,6 +389,27 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
 
         myMarkdownLoader.getStyle().set("display", "none");
         vaadin.add(myMarkdownLoader);
+
+        // near the top the earlier messages are asked for, and what was shown stays in place when they come in front
+        // of it; a list at its end stays there while its messages grow - markdown renders after they arrive
+        vaadin.getElement().addEventListener(LOAD_EARLIER_EVENT, event -> loadEarlier());
+        vaadin.getElement().executeJs(
+            "const list = this; let loading = false; list.__pinned = true;"
+                + " const resize = new ResizeObserver(() => { if (list.__pinned) { list.scrollTop = list.scrollHeight; } });"
+                + " for (const child of list.children) { resize.observe(child); }"
+                + " new MutationObserver(records => { for (const record of records) { for (const node of record.addedNodes) {"
+                + " if (node.nodeType === 1) { resize.observe(node); } } } }).observe(list, { childList: true });"
+                + " list.addEventListener('scroll', () => {"
+                + " list.__pinned = list.scrollHeight - list.clientHeight - list.scrollTop < 48;"
+                + " if (loading || list.scrollTop > list.clientHeight / 2) { return; }"
+                + " loading = true; const height = list.scrollHeight; const top = list.scrollTop;"
+                + " const added = new MutationObserver(() => { added.disconnect(); requestAnimationFrame(() => {"
+                + " if (list.scrollTop === top) { list.scrollTop = top + list.scrollHeight - height; } loading = false; }); });"
+                + " added.observe(list, { childList: true });"
+                + " setTimeout(() => { if (loading) { added.disconnect(); loading = false; } }, 3000);"
+                + " list.dispatchEvent(new CustomEvent('" + LOAD_EARLIER_EVENT + "'));"
+                + " });"
+        );
 
         WebInputDetails.addClickEventListener(vaadin.getElement(), "click", this::onLink)
             .setFilter(LINK + " != null")
@@ -340,9 +455,84 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
         Item item = new Item(author, text);
         item.setStyle(MessageListItemStyle.OTHER);
         myItems.add(item);
-        toVaadinComponent().getElement().appendChild(item.myMessage);
-        toVaadinComponent().getElement().executeJs("const list = this; requestAnimationFrame(() => list.scrollTop = list.scrollHeight)");
+        scheduleFlush();
         return item;
+    }
+
+    /**
+     * The messages added during a request go into the page once, before the response - a history of thousands sends
+     * only its newest {@value #PAGE_SIZE}.
+     */
+    private void scheduleFlush() {
+        if (myFlushPending) {
+            return;
+        }
+        Vaadin vaadin = toVaadinComponent();
+        UI ui = vaadin.getUI().orElse(UI.getCurrent());
+        if (ui == null) {
+            flush();
+            return;
+        }
+        myFlushPending = true;
+        ui.beforeClientResponse(vaadin, context -> {
+            myFlushPending = false;
+            flush();
+        });
+    }
+
+    private void flush() {
+        int lastAttached = -1;
+        for (int i = myItems.size() - 1; i >= 0; i--) {
+            if (myItems.get(i).myAttached) {
+                lastAttached = i;
+                break;
+            }
+        }
+        int firstNew = lastAttached + 1;
+        if (firstNew >= myItems.size()) {
+            return;
+        }
+        Element list = toVaadinComponent().getElement();
+        if (myItems.size() - firstNew > PAGE_SIZE) {
+            // more came than a page - the page starts again with the newest ones
+            for (Item item : myItems) {
+                if (item.myAttached) {
+                    item.myMessage.removeFromParent();
+                    item.myAttached = false;
+                }
+            }
+            firstNew = myItems.size() - PAGE_SIZE;
+        }
+        for (int i = firstNew; i < myItems.size(); i++) {
+            Item item = myItems.get(i);
+            list.appendChild(item.myMessage);
+            item.myAttached = true;
+        }
+        list.executeJs("const list = this; list.__pinned = true; requestAnimationFrame(() => list.scrollTop = list.scrollHeight)");
+    }
+
+    /**
+     * Puts the {@value #PAGE_SIZE} messages before the first one in the page in front of it.
+     */
+    private void loadEarlier() {
+        int firstAttached = -1;
+        for (int i = 0; i < myItems.size(); i++) {
+            if (myItems.get(i).myAttached) {
+                firstAttached = i;
+                break;
+            }
+        }
+        if (firstAttached <= 0) {
+            return;
+        }
+        Element list = toVaadinComponent().getElement();
+        // the markdown loader stands first in the list
+        int index = list.indexOfChild(myItems.get(firstAttached).myMessage);
+        for (int i = Math.max(0, firstAttached - PAGE_SIZE); i < firstAttached; i++) {
+            Item item = myItems.get(i);
+            list.insertChild(index++, item.myMessage);
+            item.myAttached = true;
+        }
     }
 
     @RequiredUIAccess
@@ -350,6 +540,7 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     public void remove(MessageListItem item) {
         if (item instanceof Item own && myItems.remove(own)) {
             own.myMessage.removeFromParent();
+            own.myAttached = false;
         }
     }
 
@@ -358,6 +549,7 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     public void clear() {
         for (Item item : myItems) {
             item.myMessage.removeFromParent();
+            item.myAttached = false;
         }
         myItems.clear();
     }
@@ -394,6 +586,17 @@ public class WebMessageListImpl extends VaadinComponentDelegate<WebMessageListIm
     @Override
     public boolean isShowOwnAvatar() {
         return toVaadinComponent().hasClassName("consulo-show-own-avatar");
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setShowAvatars(boolean showAvatars) {
+        toVaadinComponent().setClassName("consulo-hide-avatars", !showAvatars);
+    }
+
+    @Override
+    public boolean isShowAvatars() {
+        return !toVaadinComponent().hasClassName("consulo-hide-avatars");
     }
 
     @RequiredUIAccess

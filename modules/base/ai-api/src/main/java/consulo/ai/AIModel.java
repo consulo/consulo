@@ -17,6 +17,7 @@ package consulo.ai;
 
 import consulo.localize.LocalizeValue;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,6 +39,13 @@ public interface AIModel {
     LocalizeValue getDisplayName();
 
     /**
+     * What the model is good for, shown next to its name where models are chosen - empty when there is nothing to say.
+     */
+    default LocalizeValue getDescription() {
+        return LocalizeValue.empty();
+    }
+
+    /**
      * Total context window in tokens, or {@code -1} when the vendor does not publish one.
      */
     int getContextWindow();
@@ -46,5 +54,12 @@ public interface AIModel {
 
     default boolean hasCapability(AIModelCapability capability) {
         return getCapabilities().contains(capability);
+    }
+
+    /**
+     * The efforts a request may ask the model for, from the least - empty when the model has no choice of it.
+     */
+    default List<AIEffortLevel> getEffortLevels() {
+        return List.of();
     }
 }
