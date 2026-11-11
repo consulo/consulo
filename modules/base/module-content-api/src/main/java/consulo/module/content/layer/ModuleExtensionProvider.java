@@ -20,6 +20,7 @@ import consulo.annotation.component.ExtensionAPI;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
@@ -34,7 +35,7 @@ import java.util.Map;
  * @since 2022-06-24
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
+public interface ModuleExtensionProvider<T extends ModuleExtension<T>> extends TypeExtension {
     ExtensionPointCacheKey<ModuleExtensionProvider, Map<String, ModuleExtensionProvider>> BY_ID =
         ExtensionPointCacheKey.groupBy("ByKeyModuleExtensionProvider", ModuleExtensionProvider::getId);
 
@@ -44,7 +45,7 @@ public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
         return map.get(id);
     }
 
-    
+    @Override
     String getId();
 
     default @Nullable String getParentId() {
@@ -59,10 +60,14 @@ public interface ModuleExtensionProvider<T extends ModuleExtension<T>> {
         return false;
     }
 
-    
     LocalizeValue getName();
 
-    
+    @Override
+    default LocalizeValue getDisplayName() {
+        return getName();
+    }
+
+    @Override
     Image getIcon();
 
     

@@ -23,6 +23,7 @@ import consulo.compiler.artifact.element.*;
 import consulo.compiler.artifact.ui.ArtifactProblemsHolder;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.ui.image.Image;
@@ -36,7 +37,7 @@ import java.util.Map;
  * @author nik
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class ArtifactType {
+public abstract class ArtifactType implements TypeExtension {
     private static final ExtensionPointCacheKey<ArtifactType, Map<String, ArtifactType>> GROUP =
         ExtensionPointCacheKey.groupBy("GroupArtifactType", ArtifactType::getId);
 
@@ -61,6 +62,7 @@ public abstract class ArtifactType {
         myTitle = LocalizeValue.ofNullable(title);
     }
 
+    @Override
     public final String getId() {
         return myId;
     }
@@ -70,7 +72,12 @@ public abstract class ArtifactType {
         return myTitle;
     }
 
-    
+    @Override
+    public LocalizeValue getDisplayName() {
+        return getPresentableName();
+    }
+
+    @Override
     public abstract Image getIcon();
 
     public @Nullable String getDefaultPathFor(PackagingSourceItem sourceItem) {

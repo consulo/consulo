@@ -17,20 +17,27 @@ package consulo.versionControlSystem;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
-
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
  * @since 10-Jul-22
  */
 @ExtensionAPI(ComponentScope.PROJECT)
-public interface VcsFactory {
-  
+public interface VcsFactory extends TypeExtension {
+  @Override
   String getId();
 
-  
+  @Override
   LocalizeValue getDisplayName();
+
+  @Override
+  default @Nullable Image getIcon() {
+    return null;
+  }
 
   
   String getAdministrativeAreaName();

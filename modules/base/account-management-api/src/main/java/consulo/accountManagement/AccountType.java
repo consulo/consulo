@@ -17,6 +17,7 @@ package consulo.accountManagement;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -31,11 +32,18 @@ import java.util.concurrent.CompletableFuture;
  * @since 2026-10-20
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface AccountType<S extends AccountScope> {
+public interface AccountType<S extends AccountScope> extends TypeExtension {
+    @Override
     String getId();
 
     LocalizeValue getName();
 
+    @Override
+    default LocalizeValue getDisplayName() {
+        return getName();
+    }
+
+    @Override
     Image getIcon();
 
     Class<S> getScopeClass();

@@ -18,6 +18,7 @@ package consulo.task;
 import consulo.accountManagement.Account;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.ui.BaseRepositoryEditor;
@@ -36,11 +37,18 @@ import java.util.function.Consumer;
  * @author Dmitry Avdeev
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class TaskRepositoryType<O extends TaskRepositoryOptions> {
+public abstract class TaskRepositoryType<O extends TaskRepositoryOptions> implements TypeExtension {
+    @Override
     public abstract String getId();
 
     public abstract LocalizeValue getPresentableName();
 
+    @Override
+    public LocalizeValue getDisplayName() {
+        return getPresentableName();
+    }
+
+    @Override
     public abstract Image getIcon();
 
     /**

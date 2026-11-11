@@ -17,11 +17,13 @@ package consulo.content.library;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.TypeExtension;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.Component;
@@ -38,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
  * @see ModuleAwareLibraryType
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P> {
+public abstract class LibraryType<P extends LibraryProperties> implements LibraryPresentation<P>, TypeExtension {
     private static final Set<String> ourDefaultRootTypes = Set.of(BinariesOrderRootType.ID);
 
     public static Set<String> getDefaultExternalRootTypes() {
@@ -60,6 +62,17 @@ public abstract class LibraryType<P extends LibraryProperties> implements Librar
      * @return text to show in 'New Library' popup. Return {@code null} if the type should not be shown in the 'New Library' popup
      */
     public abstract @Nullable String getCreateActionName();
+
+    @Override
+    public String getId() {
+        return myKind.getKindId();
+    }
+
+    @Override
+    public LocalizeValue getDisplayName() {
+        String name = getCreateActionName();
+        return name == null ? LocalizeValue.of(getId()) : LocalizeValue.of(name);
+    }
 
     /**
      * Called when a new library of this type is created in Project Structure dialog

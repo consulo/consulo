@@ -4,6 +4,7 @@ package consulo.remoteServer;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.remoteServer.configuration.RemoteServer;
@@ -22,7 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class ServerType<C extends ServerConfiguration> {
+public abstract class ServerType<C extends ServerConfiguration> implements TypeExtension {
     public static final ExtensionPointName<ServerType> EP_NAME = ExtensionPointName.create(ServerType.class);
 
     private final String myId;
@@ -39,12 +40,18 @@ public abstract class ServerType<C extends ServerConfiguration> {
     }
 
     
+    @Override
     public final String getId() {
         return myId;
     }
 
     public final LocalizeValue getPresentableName() {
         return myPresentableName;
+    }
+
+    @Override
+    public LocalizeValue getDisplayName() {
+        return getPresentableName();
     }
 
     /**
@@ -59,7 +66,7 @@ public abstract class ServerType<C extends ServerConfiguration> {
         return "reference.settings.clouds";
     }
 
-    
+    @Override
     public final Image getIcon() {
         return myIcon;
     }

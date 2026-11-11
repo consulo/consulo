@@ -18,6 +18,7 @@ package consulo.execution.configuration;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.application.dumb.PossiblyDumbAware;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
@@ -30,7 +31,7 @@ import java.util.Comparator;
  * @see ConfigurationTypeBase
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface ConfigurationType extends PossiblyDumbAware {
+public interface ConfigurationType extends PossiblyDumbAware, TypeExtension {
     Comparator<ConfigurationType> DISPLAY_NAME_COMPARATOR =
         Comparator.comparing(ConfigurationType::getDisplayName, LocalizeValue.comparator());
 
@@ -40,6 +41,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the display name of the configuration type.
      */
+    @Override
     LocalizeValue getDisplayName();
 
     /**
@@ -56,6 +58,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the icon
      */
+    @Override
     @Nullable Image getIcon();
 
     /**
@@ -64,6 +67,7 @@ public interface ConfigurationType extends PossiblyDumbAware {
      *
      * @return the configuration type ID.
      */
+    @Override
     String getId();
 
     /**

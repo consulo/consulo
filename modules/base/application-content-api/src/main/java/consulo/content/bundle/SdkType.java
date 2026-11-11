@@ -17,6 +17,7 @@ package consulo.content.bundle;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.TypeExtension;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class SdkType implements SdkTypeId {
+public abstract class SdkType implements SdkTypeId, TypeExtension {
     private final String myId;
     
     private final LocalizeValue myDisplayName;
@@ -127,10 +128,12 @@ public abstract class SdkType implements SdkTypeId {
         return myId;
     }
 
+    @Override
     public final LocalizeValue getDisplayName() {
         return myDisplayName;
     }
 
+    @Override
     public final Image getIcon() {
         return myIcon;
     }

@@ -17,6 +17,7 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayFactory;
@@ -26,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 import java.nio.charset.Charset;
 import java.util.Comparator;
 
-public interface FileType {
+public interface FileType extends TypeExtension {
     Comparator<FileType> DISPLAY_NAME_COMPARATOR = Comparator.comparing(FileType::getDisplayName, LocalizeValue.comparator());
 
     FileType[] EMPTY_ARRAY = new FileType[0];
@@ -38,8 +39,10 @@ public interface FileType {
      *
      * @return The file type id.
      */
+    @Override
     String getId();
-    
+
+    @Override
     default LocalizeValue getDisplayName() {
         return LocalizeValue.of(getId());
     }
@@ -67,6 +70,7 @@ public interface FileType {
      *
      * @return The icon instance, or null if no icon should be shown.
      */
+    @Override
     Image getIcon();
 
     /**

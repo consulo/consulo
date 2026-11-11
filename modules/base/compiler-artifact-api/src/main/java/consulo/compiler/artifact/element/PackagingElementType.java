@@ -21,6 +21,7 @@ import consulo.application.Application;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
+import consulo.component.extension.TypeExtension;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -34,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
  * @author nik
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public abstract class PackagingElementType<E extends PackagingElement<?>> {
+public abstract class PackagingElementType<E extends PackagingElement<?>> implements TypeExtension {
     private final String myId;
     private final LocalizeValue myPresentableName;
 
@@ -43,6 +44,7 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
         myPresentableName = presentableName;
     }
 
+    @Override
     public final String getId() {
         return myId;
     }
@@ -51,6 +53,12 @@ public abstract class PackagingElementType<E extends PackagingElement<?>> {
         return myPresentableName;
     }
 
+    @Override
+    public LocalizeValue getDisplayName() {
+        return getPresentableName();
+    }
+
+    @Override
     public abstract Image getIcon();
 
     public boolean isAvailableForAdd(ArtifactEditorContext context, Artifact artifact) {

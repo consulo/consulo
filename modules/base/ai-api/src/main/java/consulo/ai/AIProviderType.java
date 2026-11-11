@@ -18,6 +18,7 @@ package consulo.ai;
 import consulo.accountManagement.Account;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.TypeExtension;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;
@@ -40,15 +41,18 @@ import java.util.concurrent.CompletableFuture;
  * @since 2026-08-04
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
-public interface AIProviderType {
+public interface AIProviderType extends TypeExtension {
     /**
      * Stable identifier, for example {@code anthropic}. Persisted against every configured instance,
      * so it must not change between releases.
      */
+    @Override
     String getId();
 
+    @Override
     LocalizeValue getDisplayName();
 
+    @Override
     Image getIcon();
 
     /**
