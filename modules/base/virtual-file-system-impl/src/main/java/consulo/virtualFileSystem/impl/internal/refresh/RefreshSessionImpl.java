@@ -10,6 +10,7 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -31,6 +33,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class RefreshSessionImpl extends RefreshSession {
   private static final Logger LOG = Logger.getInstance(RefreshSession.class);
+
+  private static final int RETRY_LIMIT = SystemProperties.getIntProperty("refresh.session.retry.limit", 3);
 
   private static final AtomicLong ID_COUNTER = new AtomicLong(0);
 
@@ -120,54 +124,68 @@ public class RefreshSessionImpl extends RefreshSession {
   void scan() {
     List<VirtualFile> workQueue = myWorkQueue;
     myWorkQueue = new ArrayList<>();
-    boolean forceRefresh = !myIsRecursive && !myIsAsync;  // shallow sync refresh (e.g. project config files on open)
+    if (workQueue.isEmpty()) {
+      return;
+    }
+    boolean forceRefresh = !myIsRecursive && !myIsAsync;  // shallow sync refresh (e.g., project config files on open)
 
-    if (!workQueue.isEmpty()) {
-      LocalFileSystem fs = LocalFileSystem.getInstance();
-      if (!forceRefresh && fs instanceof LocalFileSystemImpl) {
-        ((LocalFileSystemImpl)fs).markSuspiciousFilesDirty(workQueue);
-      }
-
-      long t = 0;
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("scanning " + workQueue);
-        t = System.currentTimeMillis();
-      }
-
-      int count = 0;
-      refresh:
-      do {
-        if (LOG.isTraceEnabled()) LOG.trace("try=" + count);
-
-        for (VirtualFile file : workQueue) {
-          if (myCancelled) break refresh;
-
-          NewVirtualFile nvf = (NewVirtualFile)file;
-          if (forceRefresh) {
-            nvf.markDirty();
-          }
-          else if (!nvf.isDirty()) {
-            continue;
-          }
-
-          RefreshWorker worker = new RefreshWorker(nvf, myIsRecursive);
-          myWorker = worker;
-          worker.scan();
-          myEvents.addAll(worker.getEvents());
-        }
-
-        count++;
-        if (LOG.isTraceEnabled()) LOG.trace("events=" + myEvents.size());
-      }
-      while (!myCancelled && myIsRecursive && count < 3 && ContainerUtil.exists(workQueue, f -> ((NewVirtualFile)f).isDirty()));
-
-      if (t != 0) {
-        t = System.currentTimeMillis() - t;
-        LOG.trace((myCancelled ? "cancelled, " : "done, ") + t + " ms, events " + myEvents);
-      }
+    LocalFileSystem fs = LocalFileSystem.getInstance();
+    if (!forceRefresh && fs instanceof LocalFileSystemImpl localFileSystem) {
+      localFileSystem.markSuspiciousFilesDirty(workQueue);
     }
 
-    myWorker = null;
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("scanning " + workQueue);
+    }
+
+    long t = System.nanoTime();
+
+    List<NewVirtualFile> refreshRoots = new ArrayList<>(workQueue.size());
+    for (VirtualFile file : workQueue) {
+      if (myCancelled) {
+        break;
+      }
+
+      NewVirtualFile nvf = (NewVirtualFile)file;
+      if (forceRefresh) {
+        nvf.markDirty();
+      }
+      if (!nvf.isDirty()) {
+        continue;
+      }
+      refreshRoots.add(nvf);
+    }
+
+    int count = 0;
+    List<VFileEvent> events = new ArrayList<>();
+    do {
+      if (myCancelled) {
+        break;
+      }
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("try=" + count);
+      }
+
+      RefreshWorker worker = new RefreshWorker(refreshRoots, myIsRecursive);
+      myWorker = worker;
+      if (!refreshRoots.isEmpty()) {
+        events.addAll(worker.scan());
+      }
+      myWorker = null;
+
+      count++;
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("events=" + events.size());
+      }
+    }
+    while (myIsRecursive && count < RETRY_LIMIT && ContainerUtil.exists(workQueue, f -> ((NewVirtualFile)f).isDirty()));
+
+    t = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace((myCancelled ? "cancelled" : "done") + ", " + t + " ms, tries " + count + ", events " + events);
+    }
+
+    myEvents.addAll(new LinkedHashSet<>(events));
   }
 
   void cancel() {

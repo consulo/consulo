@@ -67,6 +67,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         private IntBox myRecentProjectsLimit;
 
         private CheckBox myChkSyncOnFrameActivation;
+        private CheckBox myChkSyncInBackground;
         private CheckBox myChkSaveOnFrameDeactivation;
         private CheckBox myChkAutoSaveIfInactive;
         private TextBox myTfInactiveTimeout;
@@ -122,6 +123,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
 
             VerticalLayout syncLayout = VerticalLayout.create();
             syncLayout.add(myChkSyncOnFrameActivation = CheckBox.create(IdeLocalize.checkboxSynchronizeFilesOnFrameActivation()));
+            syncLayout.add(myChkSyncInBackground = CheckBox.create(IdeLocalize.checkboxSynchronizeFilesInBackground()));
             syncLayout.add(
                 myChkSaveOnFrameDeactivation = CheckBox.create(IdeLocalize.checkboxSaveFilesOnFrameDeactivation())
             );
@@ -248,6 +250,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         isModified |= generalSettings.isConfirmExit() != component.myConfirmExit.getValue();
         isModified |= generalSettings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
         isModified |= generalSettings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
+        isModified |= generalSettings.isBackgroundSync() != component.myChkSyncInBackground.getValue();
         isModified |= generalSettings.isSaveOnFrameDeactivation() != component.myChkSaveOnFrameDeactivation.getValue();
         isModified |= generalSettings.isAutoSaveIfInactive() != component.myChkAutoSaveIfInactive.getValue();
         isModified |= generalSettings.getProcessCloseConfirmation() != getProcessCloseConfirmation(component);
@@ -305,6 +308,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         generalSettings.setReopenLastProject(component.myChkReopenLastProject.getValue());
         generalSettings.setSupportScreenReaders(component.myChkSupportScreenReaders.getValue());
         generalSettings.setSyncOnFrameActivation(component.myChkSyncOnFrameActivation.getValue());
+        generalSettings.setBackgroundSync(component.myChkSyncInBackground.getValue());
         generalSettings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
         generalSettings.setConfirmExit(component.myConfirmExit.getValue());
         generalSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
@@ -371,6 +375,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         component.myChkSupportScreenReaders.setValue(settings.isSupportScreenReaders());
         component.myChkReopenLastProject.setValue(settings.isReopenLastProject());
         component.myChkSyncOnFrameActivation.setValue(settings.isSyncOnFrameActivation());
+        component.myChkSyncInBackground.setValue(settings.isBackgroundSync());
         component.myChkSaveOnFrameDeactivation.setValue(settings.isSaveOnFrameDeactivation());
         component.myChkAutoSaveIfInactive.setValue(settings.isAutoSaveIfInactive());
         component.myTfInactiveTimeout.setValue(Integer.toString(settings.getInactiveTimeout()));

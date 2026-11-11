@@ -53,6 +53,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ServiceImpl(profiles = ComponentProfiles.AWT)
 public class DesktopSaveAndSyncHandlerImpl extends BaseSaveAndSyncHandler {
     private final Runnable myIdleListener;
+    private final Runnable myBackgroundRefreshIdleListener;
     private final PropertyChangeListener myGeneralSettingsListener;
 
     @Inject
@@ -64,6 +65,10 @@ public class DesktopSaveAndSyncHandlerImpl extends BaseSaveAndSyncHandler {
 
         myIdleListener = this::saveAllDocumentsIfInactive;
         IdeEventQueue.getInstance().addIdleListener(myIdleListener, mySettings.getInactiveTimeout() * 1000);
+
+        myBackgroundRefreshIdleListener = this::onUserInactive;
+        IdeEventQueue.getInstance().addIdleListener(myBackgroundRefreshIdleListener, getBackgroundRefreshIntervalSeconds() * 1000);
+        IdeEventQueue.getInstance().addActivityListener(this::onUserActivity, this);
 
         myGeneralSettingsListener = new PropertyChangeListener() {
             @Override
@@ -84,5 +89,6 @@ public class DesktopSaveAndSyncHandlerImpl extends BaseSaveAndSyncHandler {
         super.dispose();
         mySettings.removePropertyChangeListener(myGeneralSettingsListener);
         IdeEventQueue.getInstance().removeIdleListener(myIdleListener);
+        IdeEventQueue.getInstance().removeIdleListener(myBackgroundRefreshIdleListener);
     }
 }

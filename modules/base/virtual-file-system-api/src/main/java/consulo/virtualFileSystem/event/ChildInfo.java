@@ -25,5 +25,8 @@ public interface ChildInfo {
    */
   @Nullable ChildInfo[] getChildren();
 
+  /** @return {@code true} if {@link #getChildren()} contains all children of this file. */
+  boolean isAllChildren();
+
   FileAttributes getFileAttributes();
 }

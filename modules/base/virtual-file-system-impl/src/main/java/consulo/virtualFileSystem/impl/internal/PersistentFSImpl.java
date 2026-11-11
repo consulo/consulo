@@ -1135,7 +1135,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
                     return null;
                 }
                 childId = makeChildRecord(parentId, name, childData, delegate);
-                return new ChildInfoImpl(childId, name, childData.first, createEvent.getChildren(), createEvent.getSymlinkTarget());
+                return new ChildInfoImpl(childId, name, childData.first, createEvent.getChildren(), createEvent.getSymlinkTarget(), createEvent.isAllChildren());
             }
         );
         FSRecords.updateList(parentId, parentChildrenIds.toArray());
@@ -1154,57 +1154,68 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             // todo avoid expensive findFile
             VirtualFile createdDir = createEvent.getFile();
             if (createdDir instanceof VirtualDirectoryImpl virtualDirectory) {
-                Queue<Pair<VirtualDirectoryImpl, ChildInfo[]>> queue = new ArrayDeque<>();
-                queue.add(Pair.create(virtualDirectory, children));
-                while (!queue.isEmpty()) {
-                    Pair<VirtualDirectoryImpl, ChildInfo[]> queued = queue.remove();
-                    VirtualDirectoryImpl directory = queued.first;
-                    IntSet childIds = IntSets.newHashSet();
-                    List<ChildInfo> scannedChildren = Arrays.asList(queued.second);
-                    List<ChildInfo> added = getOrCreateChildInfos(
-                        directory,
-                        scannedChildren,
-                        ChildInfo::getName,
-                        childIds,
-                        delegate,
-                        (childInfo, childId) -> {
-                            // passed children have no ChildInfo.id, have to create new ones
-                            if (childId < 0) {
-                                String childName = childInfo.getName().toString();
-                                Pair<FileAttributes, String> childData = getChildData(
-                                    delegate,
-                                    directory,
-                                    childName,
-                                    childInfo.getFileAttributes(),
-                                    childInfo.getSymLinkTarget()
-                                );
-                                if (childData == null) {
-                                    return null;
-                                }
-                                childId = makeChildRecord(directory.getId(), childName, childData, delegate);
-                            }
-                            return new ChildInfoImpl(
-                                childId,
-                                childInfo.getNameId(),
-                                childInfo.getFileAttributes(),
-                                childInfo.getChildren(),
-                                childInfo.getSymLinkTarget()
-                            );
-                        }
-                    );
-
-                    FSRecords.updateList(directory.getId(), childIds.toArray());
-                    setChildrenCached(directory.getId());
-                    // set "all children loaded" because the first "fileCreated" listener (looking at you, local history)
-                    // will call getChildren() anyway, beyond a shadow of a doubt
-                    directory.createAndAddChildren(added, true, (childCreated, childInfo) -> {
-                        // enqueue recursive children
-                        if (childCreated instanceof VirtualDirectoryImpl childVDir && childInfo.getChildren() != null) {
-                            queue.add(Pair.create(childVDir, childInfo.getChildren()));
-                        }
-                    });
-                }
+                saveScannedChildrenRecursively(virtualDirectory, children, createEvent.isAllChildren(), delegate);
             }
+        }
+    }
+
+    private static void saveScannedChildrenRecursively(VirtualDirectoryImpl createdDirectory,
+                                                       ChildInfo[] children,
+                                                       boolean allChildren,
+                                                       NewVirtualFileSystem delegate) {
+        record ScannedChildren(VirtualDirectoryImpl directory, ChildInfo[] children, boolean allChildren) {
+        }
+        Queue<ScannedChildren> queue = new ArrayDeque<>();
+        queue.add(new ScannedChildren(createdDirectory, children, allChildren));
+        while (!queue.isEmpty()) {
+            ScannedChildren queued = queue.remove();
+            VirtualDirectoryImpl directory = queued.directory();
+            IntSet childIds = IntSets.newHashSet();
+            List<ChildInfo> scannedChildren = Arrays.asList(queued.children());
+            List<ChildInfo> added = getOrCreateChildInfos(
+                directory,
+                scannedChildren,
+                ChildInfo::getName,
+                childIds,
+                delegate,
+                (childInfo, childId) -> {
+                    // passed children have no ChildInfo.id, have to create new ones
+                    if (childId < 0) {
+                        String childName = childInfo.getName().toString();
+                        Pair<FileAttributes, String> childData = getChildData(
+                            delegate,
+                            directory,
+                            childName,
+                            childInfo.getFileAttributes(),
+                            childInfo.getSymLinkTarget()
+                        );
+                        if (childData == null) {
+                            return null;
+                        }
+                        childId = makeChildRecord(directory.getId(), childName, childData, delegate);
+                    }
+                    return new ChildInfoImpl(
+                        childId,
+                        childInfo.getNameId(),
+                        childInfo.getFileAttributes(),
+                        childInfo.getChildren(),
+                        childInfo.getSymLinkTarget(),
+                        childInfo.isAllChildren()
+                    );
+                }
+            );
+
+            FSRecords.updateList(directory.getId(), childIds.toArray());
+            // set "all children cached" only when the scanned list is complete; partial lists must stay partial
+            if (queued.allChildren()) {
+                setChildrenCached(directory.getId());
+            }
+            directory.createAndAddChildren(added, queued.allChildren(), (childCreated, childInfo) -> {
+                // enqueue recursive children
+                if (childCreated instanceof VirtualDirectoryImpl childVDir && childInfo.getChildren() != null) {
+                    queue.add(new ScannedChildren(childVDir, childInfo.getChildren(), childInfo.isAllChildren()));
+                }
+            });
         }
     }
 

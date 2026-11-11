@@ -72,6 +72,12 @@ public class FSRecords {
     private static final boolean useSmallAttrTable = SystemProperties.getBooleanProperty("idea.use.small.attr.table.for.vfs", true);
     private static final boolean ourStoreRootsSeparately = SystemProperties.getBooleanProperty("idea.store.roots.separately", false);
 
+    /**
+     * Reuse fileIds deleted in a previous session.
+     * It is a quite natural thing to do, but that reuse regularly presents itself in edge-case bugs, so we consider getting rid of it
+     */
+    public static final boolean REUSE_DELETED_FILE_IDS = SystemProperties.getBooleanProperty("vfs.reuse-deleted-file-ids", false);
+
     private static final int VERSION = 55 +
         (WE_HAVE_CONTENT_HASHES ? 0x10 : 0) +
         (IOUtil.BYTE_BUFFERS_USE_NATIVE_BYTE_ORDER ? 0x37 : 0) +
@@ -335,7 +341,9 @@ public class FSRecords {
                 if (initial) {
                     markDirty();
                 }
-                scanFreeRecords();
+                if (REUSE_DELETED_FILE_IDS) {
+                    scanFreeRecords();
+                }
                 getAttributeId(ourChildrenAttr.getId()); // trigger writing / loading of vfs attribute ids in top level write action
                 return null;
             }
@@ -623,14 +631,13 @@ public class FSRecords {
         return writeAndHandleErrors(() -> {
             DbConnection.markDirty();
 
+            if (!REUSE_DELETED_FILE_IDS) {
+                return allocateRecord();
+            }
+
             int free = DbConnection.getFreeRecord();
             if (free == 0) {
-                int fileLength = length();
-                LOG.assertTrue(fileLength % RECORD_SIZE == 0);
-                int newRecord = fileLength / RECORD_SIZE;
-                DbConnection.cleanRecord(newRecord);
-                assert fileLength + RECORD_SIZE == length();
-                return newRecord;
+                return allocateRecord();
             }
             else {
                 if (lazyVfsDataCleaning) {
@@ -643,6 +650,15 @@ public class FSRecords {
                 return free;
             }
         });
+    }
+
+    private static int allocateRecord() {
+        int fileLength = length();
+        LOG.assertTrue(fileLength % RECORD_SIZE == 0);
+        int newRecord = fileLength / RECORD_SIZE;
+        DbConnection.cleanRecord(newRecord);
+        assert fileLength + RECORD_SIZE == length();
+        return newRecord;
     }
 
     private static int length() {
@@ -1879,7 +1895,7 @@ public class FSRecords {
             int currentId = id;
             boolean isFreeRecord = readAndHandleErrors(() -> DbConnection.myFreeRecords.contains(currentId));
             if (BitUtil.isSet(flags, FREE_RECORD_FLAG)) {
-                LOG.assertTrue(isFreeRecord, "Record, marked free, not in free list: " + id);
+                LOG.assertTrue(!REUSE_DELETED_FILE_IDS || isFreeRecord, "Record, marked free, not in free list: " + id);
             }
             else {
                 LOG.assertTrue(!isFreeRecord, "Record, not marked free, in free list: " + id);

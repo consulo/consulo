@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.registry.Registry;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.document.FileDocumentManager;
@@ -29,6 +30,7 @@ import consulo.project.ProjectManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.*;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -60,6 +63,10 @@ public abstract class BaseSaveAndSyncHandler implements SaveAndSyncHandler, Disp
     private volatile long myRefreshSessionId;
     private Future<?> myRefreshDelayAlarm = CompletableFuture.completedFuture(null);
 
+    private final Object myBackgroundRefreshLock = new Object();
+    private Future<?> myBackgroundRefresh = CompletableFuture.completedFuture(null);
+    private final AtomicBoolean myBackgroundRefreshRunning = new AtomicBoolean();
+
     private UIAccess myStableUIAccess;
 
     protected BaseSaveAndSyncHandler(
@@ -77,10 +84,15 @@ public abstract class BaseSaveAndSyncHandler implements SaveAndSyncHandler, Disp
 
     @Override
     public void dispose() {
+        cancelBackgroundRefresh();
         RefreshQueue.getInstance().cancelSession(myRefreshSessionId);
     }
 
     public void onFrameActivated() {
+        if (!isIdleBackgroundRefresh()) {
+            cancelBackgroundRefresh();
+        }
+
         if (!myApplication.isDisposed() && mySettings.isSyncOnFrameActivation()) {
             scheduleRefresh();
         }
@@ -95,6 +107,81 @@ public abstract class BaseSaveAndSyncHandler implements SaveAndSyncHandler, Disp
             saveProjectsAndDocuments(uiAccess);
         }
         LOG.debug("save(): exit");
+
+        if (!isIdleBackgroundRefresh()) {
+            startBackgroundRefresh(true);
+        }
+    }
+
+    /**
+     * {@code true} - the VFS is refreshed in the background while there is no user activity in the IDE,
+     * {@code false} - while the IDE frame is not focused
+     */
+    protected static boolean isIdleBackgroundRefresh() {
+        return Registry.is("vfs.background.refresh.on.idle", true);
+    }
+
+    /**
+     * Called by the frontend when the user has been inactive for {@link #getBackgroundRefreshIntervalSeconds()}
+     */
+    protected void onUserInactive() {
+        if (isIdleBackgroundRefresh()) {
+            startBackgroundRefresh(false);
+        }
+    }
+
+    /**
+     * Called by the frontend on any user activity
+     */
+    protected void onUserActivity() {
+        if (isIdleBackgroundRefresh()) {
+            cancelBackgroundRefresh();
+        }
+    }
+
+    protected static int getBackgroundRefreshIntervalSeconds() {
+        return Math.max(1, Registry.intValue("vfs.background.refresh.interval", 15));
+    }
+
+    private void startBackgroundRefresh(boolean delayFirst) {
+        synchronized (myBackgroundRefreshLock) {
+            myBackgroundRefresh.cancel(false);
+            myBackgroundRefreshRunning.set(false);
+            if (!mySettings.isBackgroundSync()) {
+                return;
+            }
+            long interval = getBackgroundRefreshIntervalSeconds();
+            myBackgroundRefresh = AppExecutorUtil.getAppScheduledExecutorService()
+                .scheduleWithFixedDelay(this::refreshAllLocalRootsInBackground, delayFirst ? interval : 0, interval, TimeUnit.SECONDS);
+        }
+    }
+
+    private void cancelBackgroundRefresh() {
+        synchronized (myBackgroundRefreshLock) {
+            if (myBackgroundRefresh.isDone()) {
+                return;
+            }
+            myBackgroundRefresh.cancel(false);
+            myBackgroundRefresh = CompletableFuture.completedFuture(null);
+        }
+    }
+
+    private void refreshAllLocalRootsInBackground() {
+        if (myApplication.isDisposed() || !mySettings.isBackgroundSync() || ProjectManager.getInstance().getOpenProjects().length == 0) {
+            return;
+        }
+        VirtualFile[] roots = ManagingFS.getInstance().getLocalRoots();
+        if (roots.length == 0 || myBlockSyncOnFrameActivationCount.get() != 0) {
+            return;
+        }
+        if (!ContainerUtil.exists(roots, root -> root instanceof NewVirtualFile file && file.isDirty())) {
+            return;
+        }
+        if (!myBackgroundRefreshRunning.compareAndSet(false, true)) {
+            return;
+        }
+        LOG.debug("VFS refresh started (background sync)");
+        RefreshQueue.getInstance().refresh(true, true, () -> myBackgroundRefreshRunning.set(false), roots);
     }
 
     @RequiredUIAccess

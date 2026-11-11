@@ -7,12 +7,14 @@ import consulo.language.editor.problemView.*;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
 import consulo.virtualFileSystem.event.VFileExistingFileEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,10 +34,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
     public ProjectErrorsCollector(Project project) {
         myProject = project;
         myProviderClassFilter = new HashSet<>(List.of("".split(" ,/|")));
-        VirtualFileManager.getInstance().addAsyncFileListener(events -> {
-            onVfsChanges(events);
-            return null;
-        }, project);
+        VirtualFileManager.getInstance().addAsyncFileListener(this::onVfsChanges, project);
     }
 
     @Override
@@ -207,7 +206,7 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         }
     }
 
-    private void onVfsChanges(List<? extends VFileEvent> events) {
+    private AsyncFileListener.@Nullable ChangeApplier onVfsChanges(List<? extends VFileEvent> events) {
         Set<VirtualFile> files = new LinkedHashSet<>();
         for (VFileEvent event : events) {
             if (event instanceof VFileDeleteEvent || event instanceof VFileMoveEvent) {
@@ -220,8 +219,16 @@ public final class ProjectErrorsCollector implements ProblemsCollector {
         for (VirtualFile file : files) {
             toRemove.addAll(getFileProblems(file));
         }
-        for (Problem problem : toRemove) {
-            problemDisappeared(problem);
+        if (toRemove.isEmpty()) {
+            return null;
         }
+        return new AsyncFileListener.ChangeApplier() {
+            @Override
+            public void afterVfsChange() {
+                for (Problem problem : toRemove) {
+                    problemDisappeared(problem);
+                }
+            }
+        };
     }
 }

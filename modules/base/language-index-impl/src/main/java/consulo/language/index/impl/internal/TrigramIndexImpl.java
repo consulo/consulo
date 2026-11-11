@@ -23,7 +23,6 @@ import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.language.internal.TrigramIndex;
 import consulo.language.internal.psi.stub.IdIndex;
-import consulo.language.psi.stub.DocumentChangeDependentIndex;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.util.lang.ThreadLocalCachedIntArray;
@@ -39,7 +38,7 @@ import java.util.*;
  * @author max
  */
 @ExtensionImpl
-public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexFileBasedIndexExtension<Integer>, DocumentChangeDependentIndex {
+public class TrigramIndexImpl extends TrigramIndex implements CustomInputsIndexFileBasedIndexExtension<Integer> {
 
     private static final FileBasedIndex.InputFilter INPUT_FILTER = (project, file) -> isIndexable(file.getFileType());
 

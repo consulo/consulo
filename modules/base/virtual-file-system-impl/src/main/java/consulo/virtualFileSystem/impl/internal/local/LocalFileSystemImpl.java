@@ -22,6 +22,7 @@ import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.util.collection.Maps;
+import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Couple;
@@ -29,6 +30,8 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.impl.internal.BatchingFileSystem;
+import consulo.virtualFileSystem.internal.DiskQueryRelay;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +41,10 @@ import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -45,12 +52,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @ExtensionImpl(profiles = ComponentProfiles.PRODUCTION)
-public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem, Disposable {
+public final class LocalFileSystemImpl extends LocalFileSystemBase
+    implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem, Disposable, BatchingFileSystem {
     private static final String FS_ROOT = "/";
     private static final int STATUS_UPDATE_PERIOD = 1000;
 
     private final ManagingFS myManagingFS;
     private final FileWatcher myWatcher;
+
+    private final DiskQueryRelay<Pair<VirtualFile, @Nullable Set<String>>, Map<String, FileAttributes>> myChildrenAttrGetter =
+        new DiskQueryRelay<>(pair -> listWithAttributesImpl(pair.first, pair.second));
 
     private final Object myLock = new Object();
     private final Set<WatchRequestImpl> myRootsToWatch = new HashSet<>();
@@ -435,6 +446,44 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase implements Re
         else {
             heavyRefresh.run();
         }
+    }
+
+    @Override
+    public Map<String, FileAttributes> listWithAttributes(VirtualFile dir, @Nullable Set<String> childrenNames) {
+        return dir.isDirectory() ? myChildrenAttrGetter.accessDiskWithCheckCanceled(Pair.create(dir, childrenNames)) : Map.of();
+    }
+
+    private static Map<String, FileAttributes> listWithAttributesImpl(VirtualFile dir, @Nullable Set<String> filter) {
+        try {
+            var path = Path.of(toIoPath(dir));
+            return listWithAttributesLocal(path, filter);
+        }
+        catch (AccessDeniedException | NoSuchFileException e) {
+            LOG.debug(e);
+        }
+        catch (IOException | RuntimeException e) {
+            LOG.warn(e);
+        }
+        return Map.of();
+    }
+
+    private static Map<String, FileAttributes> listWithAttributesLocal(Path dir, @Nullable Set<String> filter) throws IOException {
+        var expectedSize = filter != null ? filter.size() : 10;
+        // we must return a 'normal' (=case-sensitive) map from this method (see the [BatchingFileSystem#listWithAttributes] contract)
+        Map<String, FileAttributes> childrenWithAttributes = new HashMap<>(expectedSize);
+
+        PlatformNioHelper.visitDirectory(dir, filter, (file, ioAttributesHolder) -> {
+            try {
+                var attributes = FileAttributes.fromNio(file, ioAttributesHolder.get());
+                childrenWithAttributes.put(file.getFileName().toString(), attributes);
+            }
+            catch (Exception e) {
+                LOG.debug(e);
+            }
+            return true;
+        });
+
+        return childrenWithAttributes;
     }
 
     @Override

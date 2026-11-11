@@ -477,7 +477,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         ChildInfo info = added.get(i);
         assert info.getId() > 0 : info;
         FileAttributes attributes = info.getFileAttributes();
-        boolean isEmptyDirectory = info.getChildren() != null && info.getChildren().length == 0;
+        boolean isEmptyDirectory = info.isAllChildren() && info.getChildren() != null && info.getChildren().length == 0;
         VirtualFileSystemEntry file;
         synchronized (myData) {
           file = createChild(info.getId(), info.getNameId(), getFileSystem(), attributes, isEmptyDirectory);
@@ -504,7 +504,7 @@ public class VirtualDirectoryImpl extends VirtualFileSystemEntry {
         ChildInfo info = added.get(i);
         assert info.getId() > 0 : info;
         FileAttributes attributes = info.getFileAttributes();
-        boolean isEmptyDirectory = info.getChildren() != null && info.getChildren().length == 0;
+        boolean isEmptyDirectory = info.isAllChildren() && info.getChildren() != null && info.getChildren().length == 0;
         myData.removeAdoptedName(info.getName());
         VirtualFileSystemEntry file = createChild(info.getId(), info.getNameId(), getFileSystem(), attributes, isEmptyDirectory);
         fileCreated.consume(file, info);

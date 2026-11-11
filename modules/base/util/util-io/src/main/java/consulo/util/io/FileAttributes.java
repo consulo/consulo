@@ -15,10 +15,17 @@
  */
 package consulo.util.io;
 
+import consulo.util.io.internal.OSInfo;
 import consulo.util.lang.BitUtil;
 import org.intellij.lang.annotations.MagicConstant;
 
 import org.jspecify.annotations.Nullable;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributes;
 
 /**
  * @version 11.1
@@ -158,5 +165,46 @@ public final class FileAttributes {
   public static FileAttributes createFrom(byte fileAttributesType, byte flags, long length, long lastModified) {
     Type type = fileAttributesType == -1 ? null : Type.values()[fileAttributesType];
     return new FileAttributes(type, flags, length, lastModified);
+  }
+
+  public static FileAttributes fromNio(Path path, BasicFileAttributes attrs) {
+    boolean isDirectory = attrs.isDirectory();
+    boolean isOther = attrs.isOther();
+    Path parent = path.getParent();
+
+    // reparse points are directories (not special files):
+    boolean isSpecial = isOther && !(OSInfo.isWindows && isDirectory);
+    boolean isSymbolicLink = attrs.isSymbolicLink()
+                             // marking reparse points as symlinks (except roots):
+                             || (OSInfo.isWindows && isOther && isDirectory && parent != null);
+
+    if (isSymbolicLink) {
+      try {
+        attrs = Files.readAttributes(path, BasicFileAttributes.class);
+        isDirectory = attrs.isDirectory();
+      }
+      catch (IOException e) {
+        return BROKEN_SYMLINK;
+      }
+    }
+
+    boolean isHidden = false;
+    boolean isWritable = false;
+    // TODO KN: We should look at the OS of a Path, not at the OS of the IDE.
+    if (OSInfo.isWindows) {
+      isHidden = parent != null && ((DosFileAttributes)attrs).isHidden();
+      isWritable = isDirectory || !((DosFileAttributes)attrs).isReadOnly();
+    }
+    else {
+      try {
+        isWritable = isDirectory || Files.isWritable(path);
+      }
+      catch (SecurityException ignored) {
+      }
+    }
+
+    long lastModified = attrs.lastModifiedTime().toMillis();
+
+    return new FileAttributes(isDirectory, isSpecial, isSymbolicLink, isHidden, attrs.size(), lastModified, isWritable);
   }
 }

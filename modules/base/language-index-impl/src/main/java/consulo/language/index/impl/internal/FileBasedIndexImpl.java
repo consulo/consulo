@@ -152,7 +152,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
     private final Set<ID<?, ?>> myNotRequiringContentIndices = new HashSet<>();
     final Set<ID<?, ?>> myRequiringContentIndices = new HashSet<>();
-    private final Set<ID<?, ?>> myPsiDependentIndices = new HashSet<>();
     private final Set<FileType> myNoLimitCheckTypes = new HashSet<>();
 
     private volatile boolean myExtensionsRelatedDataWasLoaded;
@@ -252,7 +251,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     void clearUpToDateIndexesForUnsavedOrTransactedDocs() {
-        myUpToDateIndicesForUnsavedOrTransactedDocuments.clear();
+        if (!myUpToDateIndicesForUnsavedOrTransactedDocuments.isEmpty()) {
+            myUpToDateIndicesForUnsavedOrTransactedDocuments.clear();
+        }
     }
 
     void extensionsDataWasLoaded() {
@@ -267,7 +268,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     void registerIndexExtension(FileBasedIndexExtension<?, ?> extension) {
         ID<?, ?> name = extension.getName();
 
-        myUnsavedDataUpdateTasks.put(name, new DocumentUpdateTask(name));
+        if (extension.dependsOnFileContent()) {
+            myUnsavedDataUpdateTasks.put(name, new DocumentUpdateTask(name));
+        }
 
         if (!extension.dependsOnFileContent()) {
             if (extension.indexDirectories()) {
@@ -279,9 +282,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             myRequiringContentIndices.add(name);
         }
 
-        if (isPsiDependentIndex(extension)) {
-            myPsiDependentIndices.add(name);
-        }
         myNoLimitCheckTypes.addAll(extension.getFileTypesWithSizeLimitNotApplicable());
     }
 
@@ -821,9 +821,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             document.putUserData(ourFileContentKey, null);
         }
 
-        if (!myUpToDateIndicesForUnsavedOrTransactedDocuments.isEmpty()) {
-            myUpToDateIndicesForUnsavedOrTransactedDocuments.clear();
-        }
+        clearUpToDateIndexesForUnsavedOrTransactedDocs();
     }
 
     private void flushAllIndices(long modCount) {
@@ -1504,18 +1502,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     
-    private Set<Document> getUnsavedDocuments() {
-        Document[] documents = myFileDocumentManager.getUnsavedDocuments();
-        if (documents.length == 0) {
-            return Collections.emptySet();
-        }
-        if (documents.length == 1) {
-            return Collections.singleton(documents[0]);
-        }
-        return new HashSet<>(Arrays.asList(documents));
-    }
-
-    
     private Set<Document> getTransactedDocuments() {
         return myTransactionMap.keySet();
     }
@@ -1530,49 +1516,36 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             return; // no need to index unsaved docs        // todo: check scope ?
         }
 
-        Collection<Document> documents = getUnsavedDocuments();
-        boolean psiBasedIndex = myPsiDependentIndices.contains(indexId);
-        if (psiBasedIndex) {
-            Set<Document> transactedDocuments = getTransactedDocuments();
-            if (documents.isEmpty()) {
-                documents = transactedDocuments;
-            }
-            else if (!transactedDocuments.isEmpty()) {
-                documents = new HashSet<>(documents);
-                documents.addAll(transactedDocuments);
-            }
-            Document[] uncommittedDocuments =
-                project != null ? PsiDocumentManager.getInstance(project).getUncommittedDocuments() : Document.EMPTY_ARRAY;
-            if (uncommittedDocuments.length > 0) {
-                List<Document> uncommittedDocumentsCollection = Arrays.asList(uncommittedDocuments);
-                if (documents.isEmpty()) {
-                    documents = uncommittedDocumentsCollection;
-                }
-                else {
-                    if (!(documents instanceof HashSet)) {
-                        documents = new HashSet<>(documents);
-                    }
+        Document[] unsavedDocuments = myFileDocumentManager.getUnsavedDocuments();
+        Set<Document> transactedDocuments = getTransactedDocuments();
+        Document[] uncommittedDocuments =
+            project == null ? Document.EMPTY_ARRAY : PsiDocumentManager.getInstance(project).getUncommittedDocuments();
 
-                    documents.addAll(uncommittedDocumentsCollection);
-                }
-            }
+        if (unsavedDocuments.length == 0 && uncommittedDocuments.length == 0 && transactedDocuments.isEmpty()) {
+            return;
         }
 
-        if (!documents.isEmpty()) {
-            Collection<Document> documentsToProcessForProject = ContainerUtil.filter(
-                documents,
-                document -> belongsToScope(myFileDocumentManager.getFile(document), restrictedFile, filter)
-            );
+        Set<Document> documents = new HashSet<>();
+        Collections.addAll(documents, unsavedDocuments);
+        documents.addAll(transactedDocuments);
+        Collections.addAll(documents, uncommittedDocuments);
 
-            if (!documentsToProcessForProject.isEmpty()) {
-                DocumentUpdateTask task = myUnsavedDataUpdateTasks.get(indexId);
-                assert task != null : "Task for unsaved data indexing was not initialized for index " + indexId;
+        Collection<Document> documentsToProcessForProject = ContainerUtil.filter(
+            documents,
+            document -> belongsToScope(myFileDocumentManager.getFile(document), restrictedFile, filter)
+        );
 
-                if (runUpdate(true, () -> task.processAll(documentsToProcessForProject, project))
-                    && documentsToProcessForProject.size() == documents.size() && !hasActiveTransactions()) {
-                    ProgressManager.checkCanceled();
-                    myUpToDateIndicesForUnsavedOrTransactedDocuments.add(indexId);
-                }
+        if (!documentsToProcessForProject.isEmpty()) {
+            if (project == null) {
+                throw new IllegalArgumentException("project must not be null here");
+            }
+
+            DocumentUpdateTask task = myUnsavedDataUpdateTasks.get(indexId);
+            assert task != null : "Task for unsaved data indexing was not initialized for index " + indexId;
+
+            if (runUpdate(true, () -> task.processAll(documentsToProcessForProject, project))
+                && documentsToProcessForProject.size() == documents.size() && !hasActiveTransactions()) {
+                myUpToDateIndicesForUnsavedOrTransactedDocuments.add(indexId);
             }
         }
     }
@@ -1633,6 +1606,12 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
+    static DocumentContent findLatestContent(Document document, @Nullable PsiFile dominantContentFile) {
+        return dominantContentFile != null && dominantContentFile.getViewProvider().getModificationStamp() > document.getModificationStamp()
+            ? new PsiContent(document, dominantContentFile)
+            : new AuthenticContent(document);
+    }
+
     private static final Key<WeakReference<FileContentImpl>> ourFileContentKey = Key.create("unsaved.document.index.content");
 
     // returns false if doc was not indexed because it is already up to date
@@ -1644,21 +1623,11 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         Project project,
         VirtualFile vFile
     ) {
-        PsiFile dominantContentFile = project == null ? null : findLatestKnownPsiForUncommittedDocument(document, project);
+        PsiFile dominantContentFile = findLatestKnownPsiForUncommittedDocument(document, project);
 
-        DocumentContent content;
-        if (dominantContentFile != null && dominantContentFile.getViewProvider()
-            .getModificationStamp() != document.getModificationStamp()) {
-            content = new PsiContent(document, dominantContentFile);
-        }
-        else {
-            content = new AuthenticContent(document);
-        }
+        DocumentContent content = findLatestContent(document, dominantContentFile);
 
-        boolean psiBasedIndex = myPsiDependentIndices.contains(requestedIndexId);
-
-        long currentDocStamp =
-            psiBasedIndex ? PsiDocumentManager.getInstance(project).getLastCommittedStamp(document) : content.getModificationStamp();
+        long currentDocStamp = PsiDocumentManager.getInstance(project).getLastCommittedStamp(document);
 
         long previousDocStamp = myLastIndexedDocStamps.get(document, requestedIndexId);
         if (previousDocStamp == currentDocStamp) {
@@ -1750,7 +1719,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
-    void cleanupMemoryStorage(boolean skipPsiBasedIndices) {
+    void cleanupMemoryStorage(boolean skipContentDependentIndexes) {
         myLastIndexedDocStamps.clear();
         IndexConfiguration state = myState;
         if (state == null) {
@@ -1759,7 +1728,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             return;
         }
         for (ID<?, ?> indexId : state.getIndexIDs()) {
-            if (skipPsiBasedIndices && myPsiDependentIndices.contains(indexId)) {
+            if (skipContentDependentIndexes && isContentDependentIndex(indexId)) {
                 continue;
             }
             UpdatableIndex<?, ?, FileContent, ?> index = state.getIndex(indexId);
@@ -2360,7 +2329,11 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     boolean needsFileContentLoading(ID<?, ?> indexId) {
-        return !myNotRequiringContentIndices.contains(indexId);
+        return isContentDependentIndex(indexId);
+    }
+
+    boolean isContentDependentIndex(ID<?, ?> indexId) {
+        return myRequiringContentIndices.contains(indexId);
     }
 
     @Nullable IndexableFileSet getIndexableSetForFile(VirtualFile file) {
@@ -2374,10 +2347,35 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
     void doTransientStateChangeForFile(int fileId, VirtualFile file, List<Project> dirtyQueueProjects) {
         waitUntilIndicesAreInitialized();
-        if (!clearUpToDateStateForPsiIndicesOfUnsavedDocuments(file, IndexingStamp.getNontrivialFileIndexedStates(fileId))) {
-            // change in persistent file
-            clearUpToDateStateForPsiIndicesOfVirtualFile(file, dirtyQueueProjects);
+        Set<Project> containingProjects = getContainingProjects(file);
+        if (containingProjects.isEmpty()) {
+            doInvalidateIndicesForFile(fileId, file, containingProjects, dirtyQueueProjects);
+            return;
         }
+
+        clearUpToDateIndexesForUnsavedOrTransactedDocs();
+
+        Document document = myFileDocumentManager.getCachedDocument(file);
+        if (document != null && myFileDocumentManager.isDocumentUnsaved(document)) {   // will be reindexed in indexUnsavedDocuments
+            myLastIndexedDocStamps.clearForDocument(document); // Q: non psi indices
+            document.putUserData(ourFileContentKey, null);
+            return;
+        }
+
+        Collection<ID<?, ?>> contentDependentIndexes =
+            ContainerUtil.intersection(IndexingStamp.getNontrivialFileIndexedStates(fileId), myRequiringContentIndices);
+
+        removeTransientFileDataFromIndices(contentDependentIndexes, fileId, file);
+        for (ID<?, ?> candidate : contentDependentIndexes) {
+            getIndex(candidate).invalidateIndexedStateForFile(fileId);
+        }
+        IndexingStamp.flushCache(fileId);
+
+        myFilesToUpdateCollector.scheduleForUpdate(
+            FileIndexingRequest.updateRequest(file),
+            containingProjects,
+            union(dirtyQueueProjects, containingProjects)
+        );
     }
 
     public void doInvalidateIndicesForFile(
@@ -2530,27 +2528,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         return (FileTypeManagerEx) FileTypeManager.getInstance();
     }
 
-    private boolean clearUpToDateStateForPsiIndicesOfUnsavedDocuments(
-        VirtualFile file,
-        Collection<? extends ID<?, ?>> affectedIndices
-    ) {
-        if (!myUpToDateIndicesForUnsavedOrTransactedDocuments.isEmpty()) {
-            myUpToDateIndicesForUnsavedOrTransactedDocuments.clear();
-        }
-
-        Document document = myFileDocumentManager.getCachedDocument(file);
-
-        if (document != null && myFileDocumentManager.isDocumentUnsaved(document)) {   // will be reindexed in indexUnsavedDocuments
-            myLastIndexedDocStamps.clearForDocument(document); // Q: non psi indices
-            document.putUserData(ourFileContentKey, null);
-
-            return true;
-        }
-
-        removeTransientFileDataFromIndices(ContainerUtil.intersection(affectedIndices, myPsiDependentIndices), getFileId(file), file);
-        return false;
-    }
-
     static int getIdMaskingNonIdBasedFile(VirtualFile file) {
         return file instanceof VirtualFileWithId virtualFileWithId ? virtualFileWithId.getId() : IndexingStamp.INVALID_FILE_ID;
     }
@@ -2600,31 +2577,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     }
                 }
             });
-        }
-    }
-
-    private void clearUpToDateStateForPsiIndicesOfVirtualFile(VirtualFile virtualFile, List<Project> dirtyQueueProjects) {
-        if (virtualFile instanceof VirtualFileWithId virtualFileWithId) {
-            int fileId = virtualFileWithId.getId();
-            boolean wasIndexed = false;
-            List<ID<?, ?>> candidates = getAffectedIndexCandidates(virtualFile);
-            for (ID<?, ?> candidate : candidates) {
-                if (myPsiDependentIndices.contains(candidate)) {
-                    if (acceptsInput(candidate, null, virtualFile)) {
-                        getIndex(candidate).invalidateIndexedStateForFile(fileId);
-                        wasIndexed = true;
-                    }
-                }
-            }
-            if (wasIndexed) {
-                Set<Project> containingProjects = getContainingProjects(virtualFile);
-                myFilesToUpdateCollector.scheduleForUpdate(
-                    FileIndexingRequest.updateRequest(virtualFile),
-                    containingProjects,
-                    union(dirtyQueueProjects, containingProjects)
-                );
-                IndexingStamp.flushCache(fileId);
-            }
         }
     }
 
@@ -2758,11 +2710,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     @Override
     public void invalidateCaches() {
         CorruptionMarker.requestInvalidation();
-    }
-
-    static boolean isPsiDependentIndex(IndexExtension<?, ?, ?> extension) {
-        return extension instanceof FileBasedIndexExtension && ((FileBasedIndexExtension<?, ?>) extension).dependsOnFileContent()
-            && !(extension instanceof DocumentChangeDependentIndex);
     }
 
     @Override

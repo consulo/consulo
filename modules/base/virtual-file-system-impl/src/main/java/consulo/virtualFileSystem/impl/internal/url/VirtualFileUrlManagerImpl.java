@@ -76,6 +76,7 @@ public class VirtualFileUrlManagerImpl implements VirtualFileUrlManager {
      * Unlike {@link #get}, the function also returns a node which {@link #storeAndGet} didn't register.
      * Use {@link VirtualFileUrl#findChild} to get the nodes below the result.
      */
+    @Override
     public @Nullable VirtualFileUrlImpl findNode(String url) {
         VirtualFileUrlImpl[] current = {myRoot};
         boolean found = forEachNameSegment(url, nameSegment -> {

@@ -123,7 +123,10 @@ class FindInProjectTask {
         try {
             myProgress.setIndeterminate(true);
             myProgress.setText(FindLocalize.progressTextScanningIndexedFiles());
-            Set<VirtualFile> filesForFastWordSearch = ReadAction.compute(this::getFilesForFastWordSearch);
+            Set<VirtualFile> filesForFastWordSearch = ReadAction
+                .nonBlocking(this::getFilesForFastWordSearch)
+                .withDocumentsCommitted(myProject)
+                .executeSynchronously();
             myProgress.setIndeterminate(false);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Searching for " + myFindModel.getStringToFind() + " in " + filesForFastWordSearch.size() + " indexed files");

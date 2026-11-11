@@ -590,6 +590,8 @@ checkbox.show.tool.window.numbers:
     text: Show tool window numbers
 checkbox.support.screen.readers:
     text: Support screen readers (requires restart)
+checkbox.synchronize.files.in.background:
+    text: Synchronize files periodically when the IDE is inactive
 checkbox.synchronize.files.on.frame.activation:
     text: Synchronize files on frame activation
 checkbox.transparent.native.to.ascii.conversion:

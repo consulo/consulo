@@ -20,6 +20,7 @@ public final class VFileCreateEvent extends VFileEvent {
   private final @Nullable FileAttributes myAttributes;
   private final @Nullable String mySymlinkTarget;
   private final ChildInfo @Nullable [] myChildren;
+  private final boolean myAllChildren;
   private final int myChildNameId;
   private @Nullable VirtualFile myCreatedFile = null;
 
@@ -41,12 +42,29 @@ public final class VFileCreateEvent extends VFileEvent {
                           @Nullable String symlinkTarget,
                           boolean isFromRefresh,
                           ChildInfo @Nullable [] children) {
+    this(requestor, parent, childName, isDirectory, attributes, symlinkTarget, isFromRefresh, children, children != null);
+  }
+
+  /**
+   * @param children    null means children not available (e.g. the created file is not a directory) or unknown
+   * @param allChildren whether {@code children} contains all children of the created directory
+   */
+  public VFileCreateEvent(Object requestor,
+                          VirtualFile parent,
+                          String childName,
+                          boolean isDirectory,
+                          @Nullable FileAttributes attributes,
+                          @Nullable String symlinkTarget,
+                          boolean isFromRefresh,
+                          ChildInfo @Nullable [] children,
+                          boolean allChildren) {
     super(requestor, isFromRefresh);
     myParent = parent;
     myDirectory = isDirectory;
     myAttributes = attributes;
     mySymlinkTarget = symlinkTarget;
     myChildren = children;
+    myAllChildren = children != null && allChildren;
     myChildNameId = VirtualFileManager.getInstance().storeName(childName);
   }
 
@@ -70,11 +88,9 @@ public final class VFileCreateEvent extends VFileEvent {
     return mySymlinkTarget;
   }
 
-  /**
-   * @return true if the newly created file is a directory which has no children.
-   */
+  /** @return {@code true} if the newly created file is a directory that has no children. */
   public boolean isEmptyDirectory() {
-    return isDirectory() && myChildren != null && myChildren.length == 0;
+    return isDirectory() && myAllChildren && myChildren != null && myChildren.length == 0;
   }
 
   @Override
@@ -94,10 +110,19 @@ public final class VFileCreateEvent extends VFileEvent {
   }
 
   /**
-   * @return null means children not available (e.g. the created file is not a directory) or unknown
+   * Children of the created file if it's a directory.
+   * <br/>
+   * <code>null</code> is returned if the file is not a directory or the children are not known.
+   * If {@link #isAllChildren()} returns {@code false}, the returned array contains only some children.
+   *
+   * @return children of the created file if it's a directory
    */
   public ChildInfo @Nullable [] getChildren() {
     return myChildren;
+  }
+
+  public boolean isAllChildren() {
+    return myAllChildren;
   }
 
   public void resetCache() {

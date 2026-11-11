@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -36,17 +37,34 @@ import java.util.function.Supplier;
  */
 public final class WriteLock<I, O> extends CoroutineStep<I, O> {
     public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction Function<I, O> function) {
-        return new WriteLock<>((i, c) -> function.apply(i));
+        return new WriteLock<>((i, c) -> function.apply(i), null, null);
     }
 
     public static <I, O> CoroutineStep<I, O> apply(@RequiredWriteAction BiFunction<I, Continuation<?>, O> function) {
-        return new WriteLock<>(function);
+        return new WriteLock<>(function, null, null);
+    }
+
+    /**
+     * Runs {@code function} in a write action only if {@code canWrite} holds once the write-intent lock is taken - no other
+     * write action can start between the check and the write action. Otherwise no write action runs and the step returns
+     * {@code denied}.
+     */
+    public static <I, O> CoroutineStep<I, O> applyIf(
+        Predicate<I> canWrite,
+        @RequiredWriteAction Function<I, O> function,
+        Function<I, O> denied
+    ) {
+        return new WriteLock<>((i, c) -> function.apply(i), canWrite, denied);
     }
 
     private final BiFunction<I, Continuation<?>, O> myFunction;
+    private final @Nullable Predicate<I> myCanWrite;
+    private final @Nullable Function<I, O> myDenied;
 
-    private WriteLock(BiFunction<I, Continuation<?>, O> function) {
+    private WriteLock(BiFunction<I, Continuation<?>, O> function, @Nullable Predicate<I> canWrite, @Nullable Function<I, O> denied) {
         myFunction = function;
+        myCanWrite = canWrite;
+        myDenied = denied;
     }
 
     @Override
@@ -68,11 +86,16 @@ public final class WriteLock<I, O> extends CoroutineStep<I, O> {
         return (ApplicationEx) Objects.requireNonNull(continuation.getConfiguration(Application.KEY), "Application required");
     }
 
+    // NullAway: the input is nullable by the step contract, it is null only when I is nullable
+    @SuppressWarnings("NullAway")
     private @Nullable O doExecute(ApplicationEx application, @Nullable I input, Continuation<?> continuation) {
         ApplicationWithIntentWriteLock writeLockApplication = (ApplicationWithIntentWriteLock) application;
 
         try {
             writeLockApplication.acquireWriteIntentLock(WriteLock.class.getName());
+            if (myCanWrite != null && myDenied != null && !myCanWrite.test(input)) {
+                return myDenied.apply(input);
+            }
             //noinspection RequiredXAction
             return writeLockApplication.runWriteAction((Supplier<O>) () -> myFunction.apply(input, continuation));
         }

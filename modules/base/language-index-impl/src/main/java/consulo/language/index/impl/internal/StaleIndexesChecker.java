@@ -38,7 +38,7 @@ public final class StaleIndexesChecker {
     }
 
     public static boolean shouldCheckStaleIndexesOnStartup() {
-        return !getFreeRecords(true).isEmpty() && ApplicationManager.getApplication().isInternal();
+        return FSRecords.REUSE_DELETED_FILE_IDS && !getFreeRecords(true).isEmpty() && ApplicationManager.getApplication().isInternal();
     }
 
     /**

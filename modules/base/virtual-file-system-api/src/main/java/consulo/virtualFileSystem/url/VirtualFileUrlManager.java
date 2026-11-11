@@ -26,6 +26,13 @@ public interface VirtualFileUrlManager {
     @Nullable VirtualFileUrl get(String url);
 
     /**
+     * Returns the trie node for [url], or {@code null} if the trie has no such node.
+     * Unlike {@link #get}, the function also returns a node which {@link #storeAndGet} didn't register.
+     * Use {@link VirtualFileUrl#findChild} to get the nodes below the result.
+     */
+    @Nullable VirtualFileUrl findNode(String url);
+
+    /**
      * Returns an existing or creates a new instance of {@link VirtualFileUrl} instance for the given path to a file in the local
      * filesystems. It's better to use {@link #storeAndGet} wherever possible, because it works for files in other filesystems as
      * well, e.g. inside JAR files and for remote filesystems.

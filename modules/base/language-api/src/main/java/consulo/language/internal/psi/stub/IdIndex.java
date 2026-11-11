@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @author Eugene Zhuravlev
  */
-public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> implements DocumentChangeDependentIndex {
+public class IdIndex extends FileBasedIndexExtension<IdIndexEntry, Integer> {
   public static final ID<IdIndexEntry, Integer> NAME = ID.create("IdIndex");
 
   private final FileBasedIndex.InputFilter myInputFilter;

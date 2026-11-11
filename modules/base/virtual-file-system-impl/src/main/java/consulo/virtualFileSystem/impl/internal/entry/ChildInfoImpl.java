@@ -18,6 +18,7 @@ public class ChildInfoImpl implements ChildInfo {
    */
   private final
   @Nullable ChildInfo[] children;
+  private final boolean allChildren;
 
   private final byte fileAttributesType;  // inlined FileAttributes to reduce memory
   private final
@@ -30,10 +31,29 @@ public class ChildInfoImpl implements ChildInfo {
     this(id, FileNameCache.storeName(name), attributes, children, symLinkTarget);
   }
 
+  public ChildInfoImpl(int id,
+                       String name,
+                       @Nullable FileAttributes attributes,
+                       @Nullable ChildInfo[] children,
+                       @Nullable String symLinkTarget,
+                       boolean allChildren) {
+    this(id, FileNameCache.storeName(name), attributes, children, symLinkTarget, allChildren);
+  }
+
   public ChildInfoImpl(int id, int nameId, @Nullable FileAttributes attributes, @Nullable ChildInfo[] children, @Nullable String symLinkTarget) {
+    this(id, nameId, attributes, children, symLinkTarget, children != null);
+  }
+
+  public ChildInfoImpl(int id,
+                       int nameId,
+                       @Nullable FileAttributes attributes,
+                       @Nullable ChildInfo[] children,
+                       @Nullable String symLinkTarget,
+                       boolean allChildren) {
     this.nameId = nameId;
     this.id = id;
     this.children = children;
+    this.allChildren = children != null && allChildren;
     this.symLinkTarget = symLinkTarget;
     if (id <= 0 && id != UNKNOWN_ID_YET || nameId <= 0) throw new IllegalArgumentException("invalid arguments id: " + id + "; nameId: " + nameId);
     if (attributes == null) {
@@ -74,6 +94,15 @@ public class ChildInfoImpl implements ChildInfo {
   @Override
   public @Nullable ChildInfo[] getChildren() {
     return children;
+  }
+
+  @Override
+  public boolean isAllChildren() {
+    return allChildren;
+  }
+
+  public ChildInfo withChildren(@Nullable ChildInfo[] children, boolean allChildren) {
+    return new ChildInfoImpl(id, nameId, getFileAttributes(), children, symLinkTarget, allChildren);
   }
 
   @Override

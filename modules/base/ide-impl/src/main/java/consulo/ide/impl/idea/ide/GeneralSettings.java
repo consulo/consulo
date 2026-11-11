@@ -44,6 +44,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     private boolean mySupportScreenReaders = false;
     private boolean myReopenLastProject = true;
     private boolean mySyncOnFrameActivation = true;
+    private boolean myBackgroundSync = true;
     private boolean mySaveOnFrameDeactivation = true;
     private boolean myAutoSaveIfInactive = false;  // If true the IDEA automatically saves files if it is inactive for some seconds
     private int myInactiveTimeout = 15; // Number of seconds of inactivity after which IDEA automatically saves all files
@@ -102,6 +103,14 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
 
     public void setSyncOnFrameActivation(boolean syncOnFrameActivation) {
         mySyncOnFrameActivation = syncOnFrameActivation;
+    }
+
+    public boolean isBackgroundSync() {
+        return myBackgroundSync;
+    }
+
+    public void setBackgroundSync(boolean backgroundSync) {
+        myBackgroundSync = backgroundSync;
     }
 
     public boolean isSupportScreenReaders() {

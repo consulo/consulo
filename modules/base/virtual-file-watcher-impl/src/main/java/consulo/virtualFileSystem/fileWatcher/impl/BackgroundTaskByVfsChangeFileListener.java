@@ -45,30 +45,30 @@ public class BackgroundTaskByVfsChangeFileListener implements AsyncFileListener 
 
   @Override
   public @Nullable ChangeApplier prepareChange(List<? extends VFileEvent> events) {
-    return new ChangeApplier() {
-      private List<Runnable> myTasks = new ArrayList<>();
-
-      @Override
-      public void beforeVfsChange() {
-        for (VFileEvent event : events) {
-          if (!(event instanceof VFileContentChangeEvent)) {
-            continue;
-          }
-
-          for (Project project : myProjectManager.get().getOpenProjects()) {
-            BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(project);
-
-            VirtualFile file = event.getFile();
-            if(!vfsChangeManager.findEnabledTasks(file).isEmpty()) {
-              myTasks.add(() -> vfsChangeManager.runTasks(file));
-            }
-          }
-        }
+    List<Runnable> tasks = new ArrayList<>();
+    for (VFileEvent event : events) {
+      if (!(event instanceof VFileContentChangeEvent)) {
+        continue;
       }
 
+      for (Project project : myProjectManager.get().getOpenProjects()) {
+        BackgroundTaskByVfsChangeManager vfsChangeManager = BackgroundTaskByVfsChangeManager.getInstance(project);
+
+        VirtualFile file = event.getFile();
+        if (!vfsChangeManager.findEnabledTasks(file).isEmpty()) {
+          tasks.add(() -> vfsChangeManager.runTasks(file));
+        }
+      }
+    }
+
+    if (tasks.isEmpty()) {
+      return null;
+    }
+
+    return new ChangeApplier() {
       @Override
       public void afterVfsChange() {
-        for (Runnable task : myTasks) {
+        for (Runnable task : tasks) {
           task.run();
         }
       }

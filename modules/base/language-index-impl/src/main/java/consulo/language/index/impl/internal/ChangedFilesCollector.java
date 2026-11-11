@@ -90,9 +90,6 @@ final class ChangedFilesCollector extends IndexedFilesListener {
 
     @Inject
     ChangedFilesCollector() {
-        LOG.warn("DIRTY-DEBUG collector-created id=" + System.identityHashCode(this)
-            + " manager=" + System.identityHashCode(myManager)
-            + " thread=" + Thread.currentThread().getName(), new Throwable());
     }
 
     DirtyFiles getDirtyFiles() {

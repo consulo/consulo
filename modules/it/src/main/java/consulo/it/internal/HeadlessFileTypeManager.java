@@ -20,6 +20,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.util.FileContentUtilCore;
 import consulo.language.file.FileTypeManager;
 import consulo.language.internal.FileTypeManagerEx;
@@ -45,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,7 +56,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * ({@code FileTypeManagerImpl}) lives in {@code ide-impl}; file types registered through
  * {@link FileTypeFactory} extensions are resolved by extension and name matcher, and whatever the name cannot answer
  * goes through the real {@link FileTypeDetectionService}, so content-based detection behaves as it does in production.
- * No ignore patterns / user associations are known. Bound only under the
+ * No user associations are known, and no names are ignored unless a test adds them with {@link #ignoreFileName}.
+ * Bound only under the
  * {@link ComponentProfiles#INTEGRATION_TEST} profile.
  *
  * @author VISTALL
@@ -79,6 +82,16 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
     public static void resetFlagWriteCount() {
         ourFlagWrites.clear();
+    }
+
+    private static final Set<String> ourIgnoredNames = ConcurrentHashMap.newKeySet();
+
+    /**
+     * Makes {@code name} an ignored file name until {@code disposable} is disposed.
+     */
+    public static void ignoreFileName(String name, Disposable disposable) {
+        ourIgnoredNames.add(name);
+        Disposer.register(disposable, () -> ourIgnoredNames.remove(name));
     }
 
     @Inject
@@ -175,12 +188,12 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
     @Override
     public boolean isFileIgnored(String name) {
-        return false;
+        return ourIgnoredNames.contains(name);
     }
 
     @Override
     public boolean isFileIgnored(VirtualFile file) {
-        return false;
+        return isFileIgnored(file.getName());
     }
 
     @Override
