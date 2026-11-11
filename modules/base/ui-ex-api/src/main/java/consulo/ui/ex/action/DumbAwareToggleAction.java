@@ -8,6 +8,10 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * The constructor parameters named {@code text}, {@code description} and {@code icon} are read at compile time to know
+ * the presentation of the actions extending this class - don't rename them, see {@link AnAction}.
+ */
 public abstract class DumbAwareToggleAction extends ToggleAction implements DumbAware {
     protected DumbAwareToggleAction() {
     }

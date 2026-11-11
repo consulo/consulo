@@ -1357,7 +1357,8 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     /**
-     * lock required !
+     * Creates the actions still stubs - outside the registration lock, so nobody waits for it. An action asked for
+     * meanwhile is created by whoever asks.
      */
     @Override
     public void preloadActions(ProgressIndicator indicator) {

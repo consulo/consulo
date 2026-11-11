@@ -32,6 +32,13 @@ import jakarta.inject.Provider;
  */
 @ExtensionImpl(order = "first")
 public class ActionPreloader extends PreloadingActivity {
+    /**
+     * Creates every action in the background after they are registered - off by default. The stubs show the
+     * presentation generated into their bindings, so nothing waits for it, and measured with a CPU limit it makes the
+     * startup slower (about 1s at one CPU) for no gain elsewhere. Kept to compare.
+     */
+    private static final String PRELOAD_ACTIONS_PROPERTY = "consulo.actions.preload";
+
     private final Application myApplication;
     private final ActionManager myActionManager;
     private final Provider<TouchBarController> myTouchBarControllerProvider;
@@ -49,17 +56,20 @@ public class ActionPreloader extends PreloadingActivity {
     public void preload(ProgressIndicator indicator) {
         ActionManagerEx actionManager = (ActionManagerEx) myActionManager;
 
+        // only the registration blocks those who ask for an action - the stubs are there once it is done
         actionManager.initialize(() -> {
             actionManager.loadActions();
 
             myApplication.getExtensionPoint(ActionPreInitializer.class).forEach(i -> i.preload(actionManager));
-
-            actionManager.preloadActions(indicator);
-
-            TouchBarControllerInternal touchBarController =
-                    (TouchBarControllerInternal) myTouchBarControllerProvider.get();
-
-            touchBarController.tryToInitialize();
         });
+
+        TouchBarControllerInternal touchBarController = (TouchBarControllerInternal) myTouchBarControllerProvider.get();
+        touchBarController.tryToInitialize();
+
+        // the actions are not created ahead - a stub shows the presentation generated into its binding, and the action
+        // is created when it is updated or performed
+        if (Boolean.getBoolean(PRELOAD_ACTIONS_PROPERTY)) {
+            actionManager.preloadActions(indicator);
+        }
     }
 }

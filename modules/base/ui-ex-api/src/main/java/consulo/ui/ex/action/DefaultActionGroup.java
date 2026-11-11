@@ -23,6 +23,10 @@ import java.util.function.Supplier;
  * on rules different than just positional constraints, that's when you need
  * to implement your own {@code ActionGroup}.
  *
+ * <p/>
+ * The constructor parameters named {@code text}, {@code description} and {@code icon} are read at compile time to know
+ * the presentation of the actions extending this class - don't rename them, see {@link AnAction}.
+ *
  * @see Constraints
  * @see ComputableActionGroup
  * @see NonEmptyActionGroup

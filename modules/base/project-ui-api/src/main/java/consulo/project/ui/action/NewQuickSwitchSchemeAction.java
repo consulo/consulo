@@ -35,6 +35,10 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 /**
+ * <p/>
+ * The constructor parameters named {@code text}, {@code description} and {@code icon} are read at compile time to know
+ * the presentation of the actions extending this class - don't rename them, see {@link AnAction}.
+ *
  * @author VISTALL
  * @since 2025-08-13
  */
@@ -42,8 +46,11 @@ public abstract class NewQuickSwitchSchemeAction<T> extends AnAction implements 
     private record Item<K>(LocalizeValue actionText, K value) {
     }
 
-    public NewQuickSwitchSchemeAction(LocalizeValue actionText) {
-        super(actionText, actionText);
+    /**
+     * @param text the text of the action - the parameter name is read at compile time, see {@link AnAction}
+     */
+    public NewQuickSwitchSchemeAction(LocalizeValue text) {
+        super(text, text);
     }
 
     public abstract void fill(BiConsumer<LocalizeValue, T> itemsAcceptor);

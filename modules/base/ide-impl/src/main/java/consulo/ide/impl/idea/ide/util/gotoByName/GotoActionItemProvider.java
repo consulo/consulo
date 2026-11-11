@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.ui.ex.internal.ActionStubBase;
 import consulo.configurable.search.SearchTopHitProvider;
 import consulo.configurable.search.OptionsTopHitProvider;
 import consulo.configurable.search.OptionDescription;
@@ -174,8 +175,15 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
 
     private boolean processActions(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
         Set<String> ids = ((ActionManagerEx)myActionManager).getActionIds();
-        JBIterable<AnAction> actions = JBIterable.from(ids).filterMap(myActionManager::getAction);
         Matcher matcher = buildMatcher(pattern);
+        JBIterable<AnAction> actions = JBIterable.from(ids).filterMap(id -> {
+            AnAction action = myActionManager.getActionOrStub(id);
+            // a stub which knows its presentation is matched as it is - only a matching action is created
+            if (action instanceof ActionStubBase && action.getTemplatePresentation().getTextValue().isNotEmpty()) {
+                return myModel.actionMatches(pattern, matcher, action) == MatchMode.NONE ? null : myActionManager.getAction(id);
+            }
+            return myActionManager.getAction(id);
+        });
 
         QuickActionProvider provider = dataContext.getData(QuickActionProvider.KEY);
         if (provider != null) {

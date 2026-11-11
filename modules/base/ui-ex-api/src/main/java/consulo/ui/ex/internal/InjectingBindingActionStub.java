@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.internal;
 
+import consulo.ui.ex.action.ActionPresentationBinding;
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.component.bind.InjectingBinding;
@@ -40,6 +41,7 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
   public InjectingBindingActionStub(ActionImpl actionImpl, InjectingBinding binding) {
     myActionImpl = actionImpl;
     myInjectingBinding = binding;
+    applyBindingPresentation(this, binding);
   }
 
   @Override
@@ -76,5 +78,17 @@ public class InjectingBindingActionStub extends AnAction implements InjectingBin
   @RequiredUIAccess
   public void actionPerformed(AnActionEvent e) {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * The text, description and icon generated into the binding - the stub shows them without creating the action.
+   */
+  static void applyBindingPresentation(AnAction stub, InjectingBinding binding) {
+    if (binding instanceof ActionPresentationBinding presentationBinding) {
+      Presentation presentation = stub.getTemplatePresentation();
+      presentation.setText(presentationBinding.getTemplateText());
+      presentation.setDescription(presentationBinding.getTemplateDescription());
+      presentation.setIcon(presentationBinding.getTemplateIcon());
+    }
   }
 }

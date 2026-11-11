@@ -25,6 +25,10 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 /**
+ * <p/>
+ * The constructor parameters named {@code text}, {@code description} and {@code icon} are read at compile time to know
+ * the presentation of the actions extending this class - don't rename them, see {@link AnAction}.
+ *
  * @author nik
  */
 public abstract class DumbAwareAction extends AnAction implements DumbAware {

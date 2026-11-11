@@ -34,6 +34,10 @@ import org.jspecify.annotations.Nullable;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
+/**
+ * The constructor parameters named {@code text}, {@code description} and {@code icon} are read at compile time to know
+ * the presentation of the actions extending this class - don't rename them, see {@link consulo.ui.ex.action.AnAction}.
+ */
 public abstract class EditorAction extends AnAction implements DumbAware, AnActionWithUIUpdate {
     private EditorActionHandler myHandler;
     private boolean myHandlersLoaded;

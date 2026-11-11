@@ -81,6 +81,11 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     protected final ActionManager myActionManager = ActionManager.getInstance();
 
     private final CompletableFuture<Map<AnAction, GroupMapping>> myActionGroups;
+    /**
+     * The same mappings by the id of the action - the groups are walked through their stubs, and an action found later
+     * is the real one which replaced its stub.
+     */
+    private volatile Map<String, GroupMapping> myActionGroupsById = Map.of();
 
     private final NotNullLazyValue<Map<String, String>> myConfigurablesNames = VolatileNotNullLazyValue.createValue(() -> {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -131,6 +136,14 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             .thenApply(ignored -> {
                 // Let menu groups have priority over keymap (and do not introduce ambiguity)
                 keymapActionGroups.forEach(menuActionGroups::putIfAbsent);
+                Map<String, GroupMapping> byId = new HashMap<>();
+                menuActionGroups.forEach((action, mapping) -> {
+                    String id = myActionManager.getId(action);
+                    if (id != null) {
+                        byId.putIfAbsent(id, mapping);
+                    }
+                });
+                myActionGroupsById = byId;
                 return menuActionGroups;
             });
     }
@@ -422,6 +435,10 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     }
 
     private static CompletableFuture<List<AnAction>> getChildrenAsync(CoroutineScope scope, ActionGroup group) {
+        // a group of fixed children is walked through their stubs - asking for the children would create every action of the menus
+        if (group instanceof DefaultActionGroup defaultGroup) {
+            return CompletableFuture.completedFuture(Arrays.asList(defaultGroup.getChildActionsOrStubs()));
+        }
         return group.getChildrenAsync(null)
             .runAsync(scope, null)
             .toFuture()
@@ -433,7 +450,12 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     }
 
     @Nullable GroupMapping getGroupMapping(AnAction action) {
-        return getActionGroups().get(action);
+        GroupMapping mapping = getActionGroups().get(action);
+        if (mapping != null) {
+            return mapping;
+        }
+        String id = myActionManager.getId(action);
+        return id == null ? null : myActionGroupsById.get(id);
     }
 
     @Override
@@ -471,7 +493,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
             return MatchMode.NONE;
         }
 
-        GroupMapping groupMapping = getActionGroups().get(anAction);
+        GroupMapping groupMapping = getGroupMapping(anAction);
         if (groupMapping != null) {
             for (String groupName : groupMapping.getAllGroupNames()) {
                 if (matcher.matches(groupName + " " + text)) {

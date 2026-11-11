@@ -67,6 +67,14 @@ import java.util.function.Consumer;
  *  }
  * </pre>
  *
+ * <p/>
+ * <b>Presentation without creating the action.</b> The binding of an {@code @ActionImpl} is generated with the text,
+ * description and icon the action gets from its constructor, so menus, Find Action and the keymap show the action
+ * without creating it. The constants are followed at compile time through {@code super(...)} and {@code this(...)} down
+ * to a constructor whose parameters are named {@code text}, {@code description} and {@code icon} - those parameter names
+ * are read from the class files. Don't rename them, here or in any base action class: an action whose text no longer
+ * reaches a parameter named {@code text} is created whenever it is shown.
+ *
  * @see AnActionEvent
  * @see Presentation
  * @see ActionPlaces

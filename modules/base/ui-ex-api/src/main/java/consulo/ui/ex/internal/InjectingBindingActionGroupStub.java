@@ -39,6 +39,7 @@ public class InjectingBindingActionGroupStub extends DefaultActionGroup implemen
   public InjectingBindingActionGroupStub(ActionImpl actionImpl, InjectingBinding binding) {
     myActionImpl = actionImpl;
     myInjectingBinding = binding;
+    InjectingBindingActionStub.applyBindingPresentation(this, binding);
   }
 
   @Override
