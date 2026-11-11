@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.idea.application.options.editor;
 
+import consulo.localize.LocalizeValue;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
+import consulo.configurable.search.SearchableOptionContributor;
+import consulo.configurable.search.SearchableOptionProcessor;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.impl.internal.daemon.GutterIconsConfigurable;
 import jakarta.inject.Inject;
@@ -43,14 +44,10 @@ public class GutterIconSearchableOptionContributor extends SearchableOptionContr
 
     @Override
     public void processOptions(SearchableOptionProcessor processor) {
-        String displayName = GutterIconsConfigurable.DISPLAY_NAME.get();
-
         for (List<GutterIconDescriptor> descriptors : GutterIconsConfigurable.collectGroups(myApplication).values()) {
             for (GutterIconDescriptor descriptor : descriptors) {
-                String name = descriptor.getName().get();
-                for (String word : processor.getProcessedWords(name)) {
-                    processor.addOption(word, null, name, GutterIconsConfigurable.ID, displayName);
-                }
+                LocalizeValue name = descriptor.getName();
+                processor.addOption(name, name, GutterIconsConfigurable.ID, GutterIconsConfigurable.DISPLAY_NAME);
             }
         }
     }

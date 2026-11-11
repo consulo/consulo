@@ -19,6 +19,7 @@ module consulo.configurable.api {
 
     exports consulo.configurable;
     exports consulo.configurable.localize;
+    exports consulo.configurable.search;
 
     exports consulo.configurable.internal to
         consulo.ai.impl,

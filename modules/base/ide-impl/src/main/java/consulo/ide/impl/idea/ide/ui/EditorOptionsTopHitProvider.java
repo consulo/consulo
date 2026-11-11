@@ -17,19 +17,29 @@ package consulo.ide.impl.idea.ide.ui;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
+import consulo.application.ui.UISettings;
+import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.ComponentManager;
-import consulo.ui.ex.action.BooleanOptionDescription;
+import consulo.configurable.search.BooleanOptionDescription;
+import consulo.configurable.search.OptionsTopHitProvider;
+import consulo.configurable.search.PublicMethodBasedOptionDescription;
 import consulo.ide.localize.IdeLocalize;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.ui.ex.action.OptionsTopHitProvider;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
+ * The editor options no page binds - the others come from the generated options of the editor pages.
+ *
  * @author Konstantin Bulenkov
  */
 @ExtensionImpl
@@ -38,62 +48,54 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
 
   private static final Collection<BooleanOptionDescription> ourOptions = List.of(
     editor(
-      IdeLocalize.labelOptionMouse(ApplicationLocalize.checkboxHonorCamelhumpsWordsSettingsOnDoubleClick()),
-      "IS_MOUSE_CLICK_SELECTION_HONORS_CAMEL_WORDS"
-    ),
-    editor(
       IdeLocalize.labelOptionMouse(
         Platform.current().os().isMac()
           ? ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSizeMacos()
           : ApplicationLocalize.checkboxEnableCtrlMousewheelChangesFontSize()
       ),
-      "IS_WHEEL_FONTCHANGE_ENABLED"
+      "editor.general",
+      EditorSettingsExternalizable::isWheelFontChangeEnabled,
+      EditorSettingsExternalizable::setWheelFontChangeEnabled
     ),
-    editor(IdeLocalize.labelOptionMouse(ApplicationLocalize.checkboxEnableDragNDropFunctionalityInEditor()), "IS_DND_ENABLED"),
-    new EditorOptionDescription(
-      null,
-      ApplicationLocalize.checkboxShowSoftwrapsOnlyForCaretLineActionText().map(HTML_STRIP).get(),
-      "preferences.editor"
-    ) {
-      @Override
-      public boolean isOptionEnabled() {
-        return !EditorSettingsExternalizable.getInstance().isAllSoftWrapsShown();
-      }
-
-      @Override
-      public void setOptionState(boolean enabled) {
-        EditorSettingsExternalizable.getInstance().setAllSoftwrapsShown(!enabled);
-        fireUpdated();
-      }
-    },
-    editor(IdeLocalize.labelOptionVirtualSpace(ApplicationLocalize.checkboxAllowPlacementOfCaretAfterEndOfLine()), "IS_VIRTUAL_SPACE"),
-    editor(IdeLocalize.labelOptionVirtualSpace(ApplicationLocalize.checkboxAllowPlacementOfCaretInsideTabs()), "IS_CARET_INSIDE_TABS"),
-    editor(IdeLocalize.labelOptionVirtualSpace(ApplicationLocalize.checkboxShowVirtualSpaceAtFileBottom()), "ADDITIONAL_PAGE_AT_BOTTOM"),
-    editorUI(IdeLocalize.labelOptionAppearance(IdeLocalize.checkboxUseAntialiasedFontInEditor()), "ANTIALIASING_IN_EDITOR"),
-    editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceCaretBlinking()), "IS_CARET_BLINKING"),
-    editorApp(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxUseBlockCaret()), "IS_BLOCK_CURSOR"),
-    editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowRightMargin()), "IS_RIGHT_MARGIN_SHOWN"),
-    editorCode(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowMethodSeparators()), "SHOW_METHOD_SEPARATORS"),
-    editorApp(IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowWhitespaces()), "IS_WHITESPACES_SHOWN"),
-    editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowLeadingWhitespaces()), "IS_LEADING_WHITESPACES_SHOWN"),
-    editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowInnerWhitespaces()), "IS_INNER_WHITESPACES_SHOWN"),
-    editorApp(IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowTrailingWhitespaces()), "IS_TRAILING_WHITESPACES_SHOWN"),
-    editorApp(IdeLocalize.labelOptionAppearance(ApplicationLocalize.labelAppearanceShowVerticalIndentGuides()), "IS_INDENT_GUIDES_SHOWN"),
-    option(
+    editor(
+      LocalizeValue.of(ApplicationLocalize.checkboxShowSoftwrapsOnlyForCaretLineActionText().get()),
+      "editor.general",
+      settings -> !settings.isAllSoftWrapsShown(),
+      (settings, enabled) -> settings.setAllSoftwrapsShown(!enabled)
+    ),
+    editor(
+      IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowLeadingWhitespaces()),
+      "editor.preferences.appearance",
+      EditorSettingsExternalizable::isLeadingWhitespacesShown,
+      EditorSettingsExternalizable::setLeadingWhitespacesShown
+    ),
+    editor(
+      IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowInnerWhitespaces()),
+      "editor.preferences.appearance",
+      EditorSettingsExternalizable::isInnerWhitespacesShown,
+      EditorSettingsExternalizable::setInnerWhitespacesShown
+    ),
+    editor(
+      IdeLocalize.labelOptionAppearance(IdeLocalize.labelAppearanceShowTrailingWhitespaces()),
+      "editor.preferences.appearance",
+      EditorSettingsExternalizable::isTrailingWhitespacesShown,
+      EditorSettingsExternalizable::setTrailingWhitespacesShown
+    ),
+    // code folding rebuilds the foldings when applied, so its page gets no generated options
+    editor(
       IdeLocalize.labelOptionAppearance(ApplicationLocalize.checkboxShowCodeFoldingOutline()),
-      "IS_FOLDING_OUTLINE_SHOWN",
-      "editor.preferences.folding"
+      "editor.preferences.folding",
+      EditorSettingsExternalizable::isFoldingOutlineShown,
+      EditorSettingsExternalizable::setFoldingOutlineShown
     ),
-    editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxEditorTabsInSingleRow()), "SCROLL_TAB_LAYOUT_IN_EDITOR"),
-    editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxHideFileExtensionInEditorTabs()), "HIDE_KNOWN_EXTENSION_IN_TABS"),
-    editorTabs(IdeLocalize.labelOptionTabs(IdeLocalize.labelTabsShowDirectoryForNonUniqueFilenames()), "SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES"),
-    editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxEditorTabsShowCloseButton()), "SHOW_CLOSE_BUTTON"),
-    editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxMarkModifiedTabsWithAsterisk()), "MARK_MODIFIED_TABS_WITH_ASTERISK"),
-    editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.checkboxShowTabsTooltips()), "SHOW_TABS_TOOLTIPS"),
-    editorTabs(IdeLocalize.labelOptionTabs(ApplicationLocalize.radioCloseNonModifiedFilesFirst()), "CLOSE_NON_MODIFIED_FILES_FIRST")
+    AppearanceOptionsTopHitProvider.uiOption(
+      IdeLocalize.labelOptionTabs(ApplicationLocalize.radioCloseNonModifiedFilesFirst()),
+      "editor.preferences.tabs",
+      UISettings::getCloseNonModifiedFilesFirst,
+      UISettings::setCloseNonModifiedFilesFirst
+    )
   );
 
-  
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;
@@ -104,27 +106,27 @@ public class EditorOptionsTopHitProvider extends OptionsTopHitProvider {
     return ID;
   }
 
-  static BooleanOptionDescription editor(LocalizeValue option, String field) {
-    return option(option, field, "preferences.editor");
+  /**
+   * An option of the editor settings - the editors and the daemons follow it once switched.
+   */
+  static BooleanOptionDescription editor(LocalizeValue option,
+                                         String configurableId,
+                                         Function<EditorSettingsExternalizable, Boolean> getter,
+                                         BiConsumer<EditorSettingsExternalizable, Boolean> setter) {
+    return new PublicMethodBasedOptionDescription<>(
+      option.map(HTML_STRIP).get(),
+      configurableId,
+      EditorSettingsExternalizable::getInstance,
+      getter,
+      setter,
+      EditorOptionsTopHitProvider::editorSettingsChanged
+    );
   }
 
-  static BooleanOptionDescription editorTabs(LocalizeValue option, String field) {
-    return AppearanceOptionsTopHitProvider.option(option, field, "editor.preferences.tabs");
-  }
-
-  static BooleanOptionDescription option(LocalizeValue option, String field, String configurableId) {
-    return new EditorOptionDescription(field, option.map(HTML_STRIP).get(), configurableId);
-  }
-
-  static BooleanOptionDescription editorApp(LocalizeValue option, String field) {
-    return option(option, field, "editor.preferences.appearance");
-  }
-
-  static BooleanOptionDescription editorUI(LocalizeValue option, String field) {
-    return AppearanceOptionsTopHitProvider.option(option, field, "editor.preferences.appearance");
-  }
-
-  static BooleanOptionDescription editorCode(LocalizeValue option, String field) {
-    return new DaemonCodeAnalyzerOptionDescription(field, option.map(HTML_STRIP).get(), "editor.preferences.appearance");
+  private static void editorSettingsChanged() {
+    for (Project project : ProjectManager.getInstance().getOpenProjects()) {
+      DaemonCodeAnalyzer.getInstance(project).settingsChanged();
+    }
+    EditorFactory.getInstance().refreshAllEditors();
   }
 }

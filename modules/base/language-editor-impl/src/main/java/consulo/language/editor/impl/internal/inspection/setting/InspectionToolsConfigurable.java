@@ -15,8 +15,6 @@
  */
 package consulo.language.editor.impl.internal.inspection.setting;
 
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.impl.internal.inspection.InspectionManagerBase;
 import consulo.application.Application;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributes;
@@ -172,10 +170,6 @@ public abstract class InspectionToolsConfigurable implements SearchableConfigura
         DockLayout root = myRoot;
         if (root != null) {
             return root;
-        }
-
-        if (InspectionManager.getInstance(getProject()) instanceof InspectionManagerBase manager) {
-            manager.buildInspectionSearchIndexIfNecessary();
         }
 
         Disposable uiDisposable = Disposable.newDisposable();

@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.configurable.search.OptionDescription;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
@@ -10,7 +11,7 @@ import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.actions.GotoActionAction;
 import consulo.ide.impl.idea.ide.actions.SetShortcutAction;
-import consulo.ui.ex.action.BooleanOptionDescription;
+import consulo.configurable.search.BooleanOptionDescription;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;

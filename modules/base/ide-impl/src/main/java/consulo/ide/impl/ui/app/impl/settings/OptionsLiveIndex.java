@@ -17,7 +17,7 @@ package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.configurable.search.SearchableOptionsRegistrar;
 import consulo.configurable.internal.ConfigurableSearchWalker;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

@@ -239,12 +239,20 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return SHOW_TABS_TOOLTIPS;
     }
 
+    public void setShowTabsTooltips(boolean value) {
+        SHOW_TABS_TOOLTIPS = value;
+    }
+
     public boolean getHideTabsIfNeed() {
         return HIDE_TABS_IF_NEED;
     }
 
     public boolean getMarkModifiedTabsWithAsterisk() {
         return MARK_MODIFIED_TABS_WITH_ASTERISK;
+    }
+
+    public void setMarkModifiedTabsWithAsterisk(boolean value) {
+        MARK_MODIFIED_TABS_WITH_ASTERISK = value;
     }
 
     public boolean getActiveMruEditorOnClose() {
@@ -257,6 +265,18 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
     public boolean getCloseNonModifiedFilesFirst() {
         return CLOSE_NON_MODIFIED_FILES_FIRST;
+    }
+
+    public void setCloseNonModifiedFilesFirst(boolean value) {
+        CLOSE_NON_MODIFIED_FILES_FIRST = value;
+    }
+
+    public boolean getNavigateToPreview() {
+        return NAVIGATE_TO_PREVIEW;
+    }
+
+    public void setNavigateToPreview(boolean value) {
+        NAVIGATE_TO_PREVIEW = value;
     }
 
     public boolean getPresentationMode() {
@@ -275,8 +295,16 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return SCROLL_TAB_LAYOUT_IN_EDITOR;
     }
 
+    public void setScrollTabLayoutInEditor(boolean value) {
+        SCROLL_TAB_LAYOUT_IN_EDITOR = value;
+    }
+
     public boolean getShowCloseButton() {
         return SHOW_CLOSE_BUTTON;
+    }
+
+    public void setShowCloseButton(boolean value) {
+        SHOW_CLOSE_BUTTON = value;
     }
 
     public boolean getShowMainToolbar() {
@@ -327,12 +355,48 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return ANIMATE_WINDOWS;
     }
 
+    public void setAnimateWindows(boolean value) {
+        ANIMATE_WINDOWS = value;
+    }
+
     public boolean getShowIconInQuickNavigation() {
         return SHOW_ICONS_IN_QUICK_NAVIGATION;
     }
 
+    public void setShowIconInQuickNavigation(boolean value) {
+        SHOW_ICONS_IN_QUICK_NAVIGATION = value;
+    }
+
     public boolean getDndWithPressedAltOnly() {
         return DND_WITH_PRESSED_ALT_ONLY;
+    }
+
+    public void setDndWithPressedAltOnly(boolean value) {
+        DND_WITH_PRESSED_ALT_ONLY = value;
+    }
+
+    public boolean getMoveMouseOnDefaultButton() {
+        return MOVE_MOUSE_ON_DEFAULT_BUTTON;
+    }
+
+    public void setMoveMouseOnDefaultButton(boolean value) {
+        MOVE_MOUSE_ON_DEFAULT_BUTTON = value;
+    }
+
+    public boolean getAllowMergeButtons() {
+        return ALLOW_MERGE_BUTTONS;
+    }
+
+    public void setAllowMergeButtons(boolean value) {
+        ALLOW_MERGE_BUTTONS = value;
+    }
+
+    public boolean getSmoothScrolling() {
+        return SMOOTH_SCROLLING;
+    }
+
+    public void setSmoothScrolling(boolean value) {
+        SMOOTH_SCROLLING = value;
     }
 
     public void setDisableMnemonics(boolean value) {
@@ -363,6 +427,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return USE_SMALL_LABELS_ON_TABS;
     }
 
+    public void setUseSmallLabelsOnTabs(boolean value) {
+        USE_SMALL_LABELS_ON_TABS = value;
+    }
+
     public AntialiasingType getIdeAAType() {
         return IDE_AA_TYPE;
     }
@@ -373,6 +441,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
     public boolean getCycleScrolling() {
         return CYCLE_SCROLLING;
+    }
+
+    public void setCycleScrolling(boolean value) {
+        CYCLE_SCROLLING = value;
     }
 
     public boolean getShowEditorToolTip() {
@@ -387,6 +459,10 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return HIDE_KNOWN_EXTENSION_IN_TABS;
     }
 
+    public void setHideKnownExtensionInTabs(boolean value) {
+        HIDE_KNOWN_EXTENSION_IN_TABS = value;
+    }
+
     public boolean getOverrideConsoleCycleBufferSize() {
         return OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE;
     }
@@ -399,12 +475,24 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
         return SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES;
     }
 
+    public void setShowDirectoryForNonUniqueFilenames(boolean value) {
+        SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = value;
+    }
+
     public boolean getHideNavigationOnFocusLoss() {
         return HIDE_NAVIGATION_ON_FOCUS_LOSS;
     }
 
+    public void setHideNavigationOnFocusLoss(boolean value) {
+        HIDE_NAVIGATION_ON_FOCUS_LOSS = value;
+    }
+
     public boolean getShowIconsInMenus() {
         return SHOW_ICONS_IN_MENUS;
+    }
+
+    public void setShowIconsInMenus(boolean value) {
+        SHOW_ICONS_IN_MENUS = value;
     }
 
     public boolean getShowInplaceCommentsInternal() {

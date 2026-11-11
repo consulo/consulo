@@ -16,7 +16,7 @@
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
 import consulo.application.Application;
-import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.configurable.search.SearchableOptionsRegistrar;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.dataContext.UiDataProvider;

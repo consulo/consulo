@@ -5,6 +5,7 @@
 module consulo.search.everywhere.api {
     requires transitive consulo.project.api;
     requires transitive consulo.ui.ex.api;
+    requires consulo.configurable.api;
     requires transitive consulo.application.content.api;
     requires transitive consulo.ui.ex.awt.api;
 

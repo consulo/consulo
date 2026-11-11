@@ -536,3 +536,5 @@ template.project.settings.display.name:
     text: Template Project Settings
 template.project.settings.short.name:
     text: Template Project
+label.option.configurable:
+    text: '{0}: {1}'

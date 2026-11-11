@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
-import consulo.ui.ex.action.OptionDescription;
+import consulo.configurable.search.OptionDescription;
 import org.jspecify.annotations.Nullable;
 
 /**

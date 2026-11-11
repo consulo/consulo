@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
+import consulo.configurable.search.SearchTopHitProvider;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.matcher.MinusculeMatcher;

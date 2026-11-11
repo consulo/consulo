@@ -11,6 +11,7 @@ module consulo.external.service.impl {
     requires consulo.component.store.api;
     requires consulo.configuration.editor.api;
     requires consulo.external.service.api;
+    requires consulo.configurable.api;
     requires consulo.http.adapter.httpclient4;
     requires consulo.http.api;
     requires consulo.virtual.file.status.api;

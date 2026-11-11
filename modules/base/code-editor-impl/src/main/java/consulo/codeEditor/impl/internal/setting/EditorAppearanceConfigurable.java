@@ -29,6 +29,7 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.search.AfterOptionChange;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
@@ -187,12 +188,18 @@ public class EditorAppearanceConfigurable extends SimpleConfigurableByProperties
         EditorFactory.getInstance().refreshAllEditors();
     }
 
+    /**
+     * An option switched from Find Action - the editors follow the settings.
+     */
+    @AfterOptionChange
+    static void optionChanged() {
+        EditorFactory.getInstance().refreshAllEditors();
+    }
     
     @Override
     public LocalizeValue getDisplayName() {
-        return LocalizeValue.localizeTODO("Appearance");
+        return ApplicationLocalize.tabEditorSettingsAppearance();
     }
-
     
     @Override
     public String getId() {

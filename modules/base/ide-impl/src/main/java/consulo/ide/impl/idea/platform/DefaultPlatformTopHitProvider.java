@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.platform;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ui.ex.action.ActionsTopHitProvider;
+import consulo.configurable.search.ActionsTopHitProvider;
 import consulo.ui.ex.action.IdeActions;
 
 /**

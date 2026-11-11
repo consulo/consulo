@@ -18,19 +18,22 @@ package consulo.ide.impl.idea.ide.ui;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.component.ComponentManager;
-import consulo.ui.ex.action.BooleanOptionDescription;
-import consulo.project.ui.impl.internal.notification.NotificationsConfigurationImpl;
+import consulo.configurable.search.BooleanOptionDescription;
+import consulo.configurable.search.OptionsTopHitProvider;
+import consulo.configurable.search.PublicMethodBasedOptionDescription;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
-import consulo.ui.ex.action.OptionsTopHitProvider;
-import consulo.ui.ex.action.PublicFieldBasedOptionDescription;
-import consulo.ui.ex.keymap.localize.KeyMapLocalize;
+import consulo.project.ui.impl.internal.notification.NotificationsConfigurationImpl;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
+ * The appearance options no page binds - the others come from the generated options of the pages.
+ *
  * @author Sergey.Malenkov
  */
 @ExtensionImpl
@@ -38,27 +41,21 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
   public static final String ID = "appearance";
 
   private static final Collection<BooleanOptionDescription> ourOptions = List.of(
-    appearance(IdeLocalize.labelOptionUi(IdeLocalize.checkbooxCyclicScrollingInLists()), "CYCLE_SCROLLING"),
-    appearance(IdeLocalize.labelOptionUi(IdeLocalize.checkboxShowIconsInQuickNavigation()), "SHOW_ICONS_IN_QUICK_NAVIGATION"),
-    appearance(IdeLocalize.labelOptionUi(IdeLocalize.checkboxPositionCursorOnDefaultButton()), "MOVE_MOUSE_ON_DEFAULT_BUTTON"),
-    appearance(IdeLocalize.labelOptionUi(IdeLocalize.ideHideNavigationOnFocusLossDescription()), "HIDE_NAVIGATION_ON_FOCUS_LOSS"),
-    appearance(IdeLocalize.labelOptionUi(IdeLocalize.dndWithAltPressedOnly()), "DND_WITH_PRESSED_ALT_ONLY"),
-    notifications(IdeLocalize.labelOptionUi(IdeLocalize.displayBalloonNotifications()), "SHOW_BALLOONS"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxAnimateWindows()), "ANIMATE_WINDOWS"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowMemoryIndicator()), "SHOW_MEMORY_INDICATOR"),
-    appearance(IdeLocalize.labelOptionWindow(KeyMapLocalize.disableMnemonicInMenuCheckBox()), "DISABLE_MNEMONICS"),
-    appearance(IdeLocalize.labelOptionWindow(KeyMapLocalize.disableMnemonicInControlsCheckBox()), "DISABLE_MNEMONICS_IN_CONTROLS"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowIconsInMenuItems()), "SHOW_ICONS_IN_MENUS"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxShowEditorPreviewPopup()), "SHOW_EDITOR_TOOLTIP"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.allowMergingDialogButtons()), "ALLOW_MERGE_BUTTONS"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.smallLabelsInEditorTabs()), "USE_SMALL_LABELS_ON_TABS"),
-    appearance(IdeLocalize.labelOptionWindow(IdeLocalize.checkboxUsePreviewWindow()), "NAVIGATE_TO_PREVIEW"),
-    appearance(IdeLocalize.labelOptionView(IdeLocalize.showMainToolbar()), "SHOW_MAIN_TOOLBAR"),
-    appearance(IdeLocalize.labelOptionView(IdeLocalize.showStatusBar()), "SHOW_STATUS_BAR"),
-    appearance(IdeLocalize.labelOptionView(IdeLocalize.showNavigationBar()), "SHOW_NAVIGATION_BAR")
+    new PublicMethodBasedOptionDescription<>(
+      IdeLocalize.labelOptionUi(IdeLocalize.displayBalloonNotifications()).map(HTML_STRIP).get(),
+      "reference.settings.ide.settings.notifications",
+      NotificationsConfigurationImpl::getInstanceImpl,
+      NotificationsConfigurationImpl::isShowBalloons,
+      NotificationsConfigurationImpl::setShowBalloons
+    ),
+    // the main toolbar, the status bar and the navigation bar are switched by the toggle actions of View
+    appearance(
+      IdeLocalize.labelOptionWindow(IdeLocalize.checkboxUsePreviewWindow()),
+      UISettings::getNavigateToPreview,
+      UISettings::setNavigateToPreview
+    )
   );
 
-  
   @Override
   public Collection<BooleanOptionDescription> getOptions(@Nullable ComponentManager project) {
     return ourOptions;
@@ -69,45 +66,26 @@ public class AppearanceOptionsTopHitProvider extends OptionsTopHitProvider {
     return ID;
   }
 
-  static BooleanOptionDescription appearance(LocalizeValue option, String field) {
-    return option(option, field, "preferences.lookFeel");
+  static BooleanOptionDescription appearance(LocalizeValue option,
+                                             Function<UISettings, Boolean> getter,
+                                             BiConsumer<UISettings, Boolean> setter) {
+    return uiOption(option, ID, getter, setter);
   }
 
-  static BooleanOptionDescription option(LocalizeValue option, String field, String configurableId) {
-    return new PublicFieldBasedOptionDescription(option.map(HTML_STRIP).get(), configurableId, field) {
-      @Override
-      public Object getInstance() {
-        return UISettings.getInstance();
-      }
-
-      @Override
-      protected void fireUpdated() {
-        UISettings.getInstance().fireUISettingsChanged();
-      }
-    };
-  }
-
-  static BooleanOptionDescription notifications(LocalizeValue option, String field) {
-    return new PublicFieldBasedOptionDescription(option.map(HTML_STRIP).get(), "reference.settings.ide.settings.notifications", field) {
-      @Override
-      public Object getInstance() {
-        return NotificationsConfigurationImpl.getInstanceImpl();
-      }
-    };
-  }
-
-  @Deprecated
-  static BooleanOptionDescription appearance(String option, String field) {
-    return appearance(LocalizeValue.of(option), field);
-  }
-
-  @Deprecated
-  static BooleanOptionDescription option(String option, String field, String configurableId) {
-    return option(LocalizeValue.of(option), field, configurableId);
-  }
-
-  @Deprecated
-  static BooleanOptionDescription notifications(String option, String field) {
-    return notifications(LocalizeValue.of(option), field);
+  /**
+   * An option of {@link UISettings} - the UI follows it once switched.
+   */
+  static BooleanOptionDescription uiOption(LocalizeValue option,
+                                           String configurableId,
+                                           Function<UISettings, Boolean> getter,
+                                           BiConsumer<UISettings, Boolean> setter) {
+    return new PublicMethodBasedOptionDescription<>(
+      option.map(HTML_STRIP).get(),
+      configurableId,
+      UISettings::getInstance,
+      getter,
+      setter,
+      () -> UISettings.getInstance().fireUISettingsChanged()
+    );
   }
 }

@@ -146,6 +146,10 @@ public class NotificationsConfigurationImpl implements NotificationsConfiguratio
     return SHOW_BALLOONS;
   }
 
+  public void setShowBalloons(boolean showBalloons) {
+    SHOW_BALLOONS = showBalloons;
+  }
+
   @Override
   public synchronized boolean isRegistered(String id) {
     return myIdToSettingsMap.containsKey(id) || NotificationGroupRegistrator.last().get(id) != null;

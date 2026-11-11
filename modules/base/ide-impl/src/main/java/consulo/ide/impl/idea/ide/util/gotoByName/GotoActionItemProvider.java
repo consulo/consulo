@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.configurable.search.SearchTopHitProvider;
+import consulo.configurable.search.OptionsTopHitProvider;
+import consulo.configurable.search.OptionDescription;
 import consulo.application.AccessRule;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.NotNullLazyValue;
@@ -8,11 +11,10 @@ import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.application.util.matcher.WordPrefixMatcher;
 import consulo.application.util.registry.Registry;
-import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.configurable.search.SearchableOptionsRegistrar;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.ide.actions.ApplyIntentionAction;
 import consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrarImpl;
 import consulo.ui.ex.action.AbbreviationManager;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.logging.Logger;
@@ -92,9 +94,6 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
         Project project = dataContext.getData(Project.KEY);
         CollectConsumer<Object> collector = new CollectConsumer<>();
         for (SearchTopHitProvider provider : SearchTopHitProvider.EP_NAME.getExtensionList()) {
-            if (provider instanceof OptionsTopHitProvider.CoveredByToggleActions) {
-                continue;
-            }
             if (provider instanceof OptionsTopHitProvider topHitProvider && !topHitProvider.isEnabled(project)) {
                 continue;
             }
@@ -116,7 +115,7 @@ public class GotoActionItemProvider implements ChooseByNameItemProvider {
 
     private boolean processOptions(String pattern, Predicate<? super MatchedValue> consumer, DataContext dataContext) {
         Map<String, String> map = myModel.getConfigurablesNames();
-        SearchableOptionsRegistrarImpl registrar = (SearchableOptionsRegistrarImpl)SearchableOptionsRegistrar.getInstance();
+        SearchableOptionsRegistrar registrar = SearchableOptionsRegistrar.getInstance();
 
         List<Object> options = new ArrayList<>();
         Set<String> words = registrar.getProcessedWords(pattern);

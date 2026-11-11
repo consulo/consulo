@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.configurable.search.SearchableOptionsRegistrar;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.OptionDescription;
+import consulo.configurable.search.OptionDescription;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
@@ -213,10 +213,11 @@ public class SearchUtil {
         String filter
     ) {
         if (pos < end) {
-            Set<String> filters = SearchableOptionsRegistrar.getInstance().getProcessedWords(filter);
+            SearchableOptionsRegistrar registrar = SearchableOptionsRegistrar.getInstance();
+            Set<String> filters = registrar.getProcessedWords(filter);
             String[] words = text.substring(pos, end).split("[\\W&&[^-]]+");
             for (String word : words) {
-                if (filters.contains(PorterStemmerUtil.stem(word.toLowerCase()))) {
+                if (!Collections.disjoint(filters, registrar.getProcessedWords(word))) {
                     selectedWords.add(word);
                 }
             }
@@ -229,7 +230,7 @@ public class SearchUtil {
         SearchableOptionsRegistrar optionsRegistrar = SearchableOptionsRegistrar.getInstance();
         Set<String> words = optionsRegistrar.getProcessedWords(filter);
         for (String word : words) {
-            Set<OptionDescription> descriptions = ((SearchableOptionsRegistrarImpl) optionsRegistrar).getAcceptableDescriptions(word);
+            Set<OptionDescription> descriptions = optionsRegistrar.getAcceptableDescriptions(word);
             Set<String> keySet = new HashSet<>();
             if (descriptions != null) {
                 for (OptionDescription description : descriptions) {

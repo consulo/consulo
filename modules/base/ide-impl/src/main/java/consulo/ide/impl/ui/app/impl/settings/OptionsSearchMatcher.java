@@ -16,7 +16,7 @@
 package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.configurable.search.SearchableOptionsRegistrar;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
@@ -36,7 +36,7 @@ public final class OptionsSearchMatcher {
         }
         SearchableOptionsRegistrar searchableOptionsRegistrar = SearchableOptionsRegistrar.getInstance();
         Set<String> words = searchableOptionsRegistrar.getProcessedWords(option);
-        Set<String> options = configurable != null ? searchableOptionsRegistrar.replaceSynonyms(words, configurable) : words;
+        Set<String> options = words;
         if (options.isEmpty()) {
             return text.toLowerCase().contains(option.toLowerCase());
         }

@@ -30,6 +30,7 @@ import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.search.AfterOptionChange;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
@@ -287,9 +288,9 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
         );
         refactoringLayout.add(enableInplaceMode);
 
-        CheckBox presectOldName = CheckBox.create(ApplicationLocalize.checkboxRenameLocalVariablesPreselect());
-        propertyBuilder.add(enableInplaceMode, editorSettings::isPreselectRename, editorSettings::setPreselectRename);
-        refactoringLayout.add(presectOldName);
+        CheckBox preselectOldName = CheckBox.create(ApplicationLocalize.checkboxRenameLocalVariablesPreselect());
+        propertyBuilder.add(preselectOldName, editorSettings::isPreselectRename, editorSettings::setPreselectRename);
+        refactoringLayout.add(preselectOldName);
 
         layout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Refactorings"), refactoringLayout));
 
@@ -442,9 +443,16 @@ public class EditorGeneralConfigurable extends SimpleConfigurableByProperties im
 
     @Override
     protected void afterApply() {
-        UISettings uiSettings = UISettings.getInstance();
+        optionChanged();
+    }
 
-        uiSettings.fireUISettingsChanged();
+    /**
+     * After the page is applied, or an option is switched from Find Action - the UI, the editors and the daemons
+     * follow the settings.
+     */
+    @AfterOptionChange
+    static void optionChanged() {
+        UISettings.getInstance().fireUISettingsChanged();
 
         clearAllIdentifierHighlighters();
 

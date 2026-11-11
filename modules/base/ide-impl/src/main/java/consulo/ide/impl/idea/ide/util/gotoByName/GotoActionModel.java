@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
+import consulo.configurable.search.BooleanOptionDescription;
+import consulo.configurable.search.OptionDescription;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;

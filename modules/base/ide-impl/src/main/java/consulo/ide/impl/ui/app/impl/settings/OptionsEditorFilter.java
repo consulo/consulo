@@ -16,9 +16,9 @@
 package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurableHit;
+import consulo.configurable.search.ConfigurableHit;
 import consulo.configurable.SearchableConfigurable;
-import consulo.configurable.SearchableOptionsRegistrar;
+import consulo.configurable.search.SearchableOptionsRegistrar;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 

@@ -21,6 +21,7 @@ import consulo.application.ui.UISettings;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.configurable.StandardConfigurableIds;
+import consulo.configurable.search.AfterOptionChange;
 import consulo.disposer.Disposable;
 import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
@@ -86,32 +87,32 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
 
     CheckBox showTabsInSingleRow = CheckBox.create(ApplicationLocalize.checkboxEditorTabsInSingleRow());
     showTabsInSingleRow.setEnabled(false);
-    propertyBuilder.add(showTabsInSingleRow, () -> uiSettings.SCROLL_TAB_LAYOUT_IN_EDITOR, v -> uiSettings.SCROLL_TAB_LAYOUT_IN_EDITOR = v);
+    propertyBuilder.add(showTabsInSingleRow, uiSettings::getScrollTabLayoutInEditor, uiSettings::setScrollTabLayoutInEditor);
     tabAppearanceLayout.add(showTabsInSingleRow);
 
     CheckBox hideExtensionsInTabs = CheckBox.create(ApplicationLocalize.checkboxHideFileExtensionInEditorTabs());
     hideExtensionsInTabs.setEnabled(false);
-    propertyBuilder.add(hideExtensionsInTabs, () -> uiSettings.HIDE_KNOWN_EXTENSION_IN_TABS, v -> uiSettings.HIDE_KNOWN_EXTENSION_IN_TABS = v);
+    propertyBuilder.add(hideExtensionsInTabs, uiSettings::getHideKnownExtensionInTabs, uiSettings::setHideKnownExtensionInTabs);
     tabAppearanceLayout.add(hideExtensionsInTabs);
 
     CheckBox showDirectoryWithNotUniqueName = CheckBox.create(IdeLocalize.labelTabsShowDirectoryForNonUniqueFilenames());
     showDirectoryWithNotUniqueName.setEnabled(false);
-    propertyBuilder.add(showDirectoryWithNotUniqueName, () -> uiSettings.SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES, v -> uiSettings.SHOW_DIRECTORY_FOR_NON_UNIQUE_FILENAMES = v);
+    propertyBuilder.add(showDirectoryWithNotUniqueName, uiSettings::getShowDirectoryForNonUniqueFilenames, uiSettings::setShowDirectoryForNonUniqueFilenames);
     tabAppearanceLayout.add(showDirectoryWithNotUniqueName);
 
     CheckBox showCloseButton = CheckBox.create(ApplicationLocalize.checkboxEditorTabsShowCloseButton());
     showCloseButton.setEnabled(false);
-    propertyBuilder.add(showCloseButton, () -> uiSettings.SHOW_CLOSE_BUTTON, v -> uiSettings.SHOW_CLOSE_BUTTON = v);
+    propertyBuilder.add(showCloseButton, uiSettings::getShowCloseButton, uiSettings::setShowCloseButton);
     tabAppearanceLayout.add(showCloseButton);
 
     CheckBox markModifiedTabsWithAsterisk = CheckBox.create(ApplicationLocalize.checkboxMarkModifiedTabsWithAsterisk());
     markModifiedTabsWithAsterisk.setEnabled(false);
-    propertyBuilder.add(markModifiedTabsWithAsterisk, () -> uiSettings.MARK_MODIFIED_TABS_WITH_ASTERISK, v -> uiSettings.MARK_MODIFIED_TABS_WITH_ASTERISK = v);
+    propertyBuilder.add(markModifiedTabsWithAsterisk, uiSettings::getMarkModifiedTabsWithAsterisk, uiSettings::setMarkModifiedTabsWithAsterisk);
     tabAppearanceLayout.add(markModifiedTabsWithAsterisk);
 
     CheckBox showTabsTooltip = CheckBox.create(ApplicationLocalize.checkboxShowTabsTooltips());
     showTabsTooltip.setEnabled(false);
-    propertyBuilder.add(showTabsTooltip, () -> uiSettings.SHOW_TABS_TOOLTIPS, v -> uiSettings.SHOW_TABS_TOOLTIPS = v);
+    propertyBuilder.add(showTabsTooltip, uiSettings::getShowTabsTooltips, uiSettings::setShowTabsTooltips);
     tabAppearanceLayout.add(showTabsTooltip);
 
     tabPlacementBox.addValueListener(event -> {
@@ -185,5 +186,13 @@ public class EditorTabsConfigurable extends SimpleConfigurableByProperties imple
   @Override
   protected void afterApply() {
     UISettings.getInstance().fireUISettingsChanged();
+  }
+
+  /**
+   * An option switched from Find Action - the tabs follow the settings.
+   */
+  @AfterOptionChange
+  static void optionChanged(UISettings settings) {
+    settings.fireUISettingsChanged();
   }
 }
