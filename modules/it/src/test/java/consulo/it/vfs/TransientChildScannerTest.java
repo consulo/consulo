@@ -15,7 +15,9 @@
  */
 package consulo.it.vfs;
 
+import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
 import consulo.content.library.Library;
@@ -32,12 +34,15 @@ import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.impl.internal.refresh.RefreshWorker;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -45,6 +50,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static consulo.it.index.ScanningTestSupport.awaitIdle;
@@ -65,6 +71,36 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ExtendWith(HeadlessProjectExtension.class)
 public class TransientChildScannerTest {
+    /**
+     * The creations any refresh published - a refresh queued by the roots change may pick up a new directory before the
+     * scan of the test does, with the same worker and the same child scanner.
+     */
+    private final List<VFileCreateEvent> myPublishedCreations = new CopyOnWriteArrayList<>();
+    private @Nullable MessageBusConnection myConnection;
+
+    @BeforeEach
+    public void setUp() {
+        myConnection = Application.get().getMessageBus().connect();
+        myConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
+            @Override
+            public void after(List<? extends VFileEvent> events) {
+                for (VFileEvent event : events) {
+                    if (event instanceof VFileCreateEvent create) {
+                        myPublishedCreations.add(create);
+                    }
+                }
+            }
+        });
+    }
+
+    @AfterEach
+    public void tearDown() {
+        MessageBusConnection connection = myConnection;
+        if (connection != null) {
+            connection.disconnect();
+        }
+    }
+
     @Test
     public void treeUnderContentRootIsPreScanned(HeadlessProjects projects) throws Exception {
         Path directory = Files.createTempDirectory("consulo-it-scanner-content");
@@ -239,15 +275,22 @@ public class TransientChildScannerTest {
         return file;
     }
 
-    private static VFileCreateEvent scanCreation(VirtualFile parent, String childName) {
+    private VFileCreateEvent scanCreation(VirtualFile parent, String childName) {
         ((NewVirtualFile) parent).markDirty();
         List<VFileEvent> events = new RefreshWorker(List.of((NewVirtualFile) parent), false).scan();
         List<VFileCreateEvent> creations = events.stream()
-            .filter(event -> event instanceof VFileCreateEvent create && create.getChildName().equals(childName))
+            .filter(event -> isCreationOf(event, parent, childName))
             .map(event -> (VFileCreateEvent) event)
             .toList();
-        assertThat(creations).as("the creation of %s, events: %s", childName, events).hasSize(1);
+        if (creations.isEmpty()) {
+            creations = myPublishedCreations.stream().filter(event -> isCreationOf(event, parent, childName)).toList();
+        }
+        assertThat(creations).as("the creation of %s, events: %s, published: %s", childName, events, myPublishedCreations).hasSize(1);
         return creations.getFirst();
+    }
+
+    private static boolean isCreationOf(VFileEvent event, VirtualFile parent, String childName) {
+        return event instanceof VFileCreateEvent create && create.getParent().equals(parent) && create.getChildName().equals(childName);
     }
 
     private static List<String> names(ChildInfo @Nullable [] children) {
