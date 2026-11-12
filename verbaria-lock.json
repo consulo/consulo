@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-11-12T19:24:11.810392878Z",
+  "generatedAt" : "2026-11-12T19:42:33.329132395Z",
   "documents" : {
     "consulo.accountManagement.AccountManagementLocalize" : {
       "source" : {
@@ -22,7 +22,7 @@
     },
     "consulo.application.ApplicationLocalize" : {
       "source" : {
-        "sig" : "dac467ef60fe790db87b5f23d540baad"
+        "sig" : "083a7db723e7f0d4bbd4e192d0ab8dfd"
       }
     },
     "consulo.bookmark.BookmarkLocalize" : {
@@ -317,7 +317,7 @@
     },
     "consulo.project.ProjectLocalize" : {
       "source" : {
-        "sig" : "141e6c8a5b551224c7c5beb5af346b4d"
+        "sig" : "3ba69a843556591f3790bcd3868eb0d5"
       }
     },
     "consulo.project.ui.ProjectUILocalize" : {
