@@ -30,6 +30,8 @@ import java.util.function.Supplier;
  * @since 15-Sep-17
  */
 public abstract class PlatformBase extends UserDataHolderBase implements Platform {
+    private final PlatformNetwork myNetwork = new LocalPlatformNetwork();
+
     private final PlatformFileSystem myFileSystem;
     private final PlatformOperatingSystem myOperatingSystem;
     private final PlatformJvm myJvm;
@@ -116,6 +118,11 @@ public abstract class PlatformBase extends UserDataHolderBase implements Platfor
         return myJvm;
     }
     
+    @Override
+    public PlatformNetwork net() {
+        return myNetwork;
+    }
+
     @Override
     public PlatformFileSystem fs() {
         return myFileSystem;

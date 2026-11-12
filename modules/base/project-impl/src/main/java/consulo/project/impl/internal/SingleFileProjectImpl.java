@@ -21,6 +21,8 @@ import consulo.project.ProjectManager;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
+
 /**
  * @author VISTALL
  * @since 2026-11-07
@@ -34,7 +36,7 @@ public abstract class SingleFileProjectImpl extends ProjectImpl {
         String projectName,
         ComponentBinding componentBinding
     ) {
-        super(application, manager, "", projectName, true, componentBinding);
+        super(application, manager, Path.of(""), projectName, true, componentBinding);
     }
 
     public @Nullable Element getStateElement() {

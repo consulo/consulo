@@ -25,8 +25,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.archive.ArchiveHandler;
-import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -315,7 +313,8 @@ public class VfsImplUtil {
 
                 synchronized (ourLock) {
                     for (VFileEvent event : events) {
-                        if (!(event.getFileSystem() instanceof LocalFileSystem)
+                        // the hosts of the archives: local files, and the files of other platforms
+                        if (!(event.getFileSystem() instanceof LocalFileSystem || event.getFileSystem() instanceof PlatformPathVirtualFileSystem)
                             || event instanceof VFileCreateEvent // created file should not invalidate + getFile is costly
                             || event instanceof VFilePropertyChangeEvent changeEvent && !VirtualFile.PROP_NAME.equals(changeEvent.getPropertyName())) {
                             continue;
@@ -332,6 +331,11 @@ public class VfsImplUtil {
                         VirtualFile file = event.getFile();
                         if (file == null || !file.isDirectory()) {
                             state = InvalidationState.invalidate(state, path);
+                            // a file of an archive which is a directory (a runtime home)
+                            int parentEnd = path.lastIndexOf('/');
+                            if (parentEnd > 0) {
+                                state = InvalidationState.invalidate(state, path.substring(0, parentEnd));
+                            }
                         }
                         else {
                             Collection<String> affectedPaths = ourDominatorsMap.get(path);

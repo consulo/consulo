@@ -16,7 +16,6 @@
 package consulo.sandboxPlugin.ide.run;
 
 import consulo.execution.configuration.CommandLineState;
-import consulo.content.platform.PlatformTargetManager;
 import consulo.execution.process.ProcessTerminatedListener;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.platform.Platform;
@@ -38,9 +37,8 @@ public class SandExecutableRunState extends CommandLineState {
 
     @Override
     protected ProcessHandler startProcess() throws ExecutionException {
-        Platform platform = myConfiguration.resolvePlatform(
-            getEnvironment().getProject().getApplication().getInstance(PlatformTargetManager.class)
-        );
+        // runs on the machine the project lives on
+        Platform platform = getEnvironment().getProject().getPlatform();
         String workingDirectory = myConfiguration.getWorkingDirectory();
 
         GeneralCommandLine commandLine = new GeneralCommandLine();

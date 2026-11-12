@@ -15,6 +15,15 @@
  */
 package consulo.compiler.util;
 
+import org.jspecify.annotations.Nullable;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFile;
+import java.util.stream.Stream;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.FileVisitResult;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.FileSystems;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.util.AsyncFileService;
@@ -117,6 +126,81 @@ public class CompilerUtil {
         if (!files.isEmpty()) {
             LocalFileSystem.getInstance().refreshIoFiles(files, false, true, null);
         }
+    }
+
+    /**
+     * Refreshes output directories of any machine - a directory of a remote platform through its virtual file system.
+     */
+    public static void refreshDirectories(Collection<Path> directories) {
+        List<File> localFiles = new ArrayList<>();
+        for (Path directory : directories) {
+            if (directory.getFileSystem() == FileSystems.getDefault()) {
+                localFiles.add(directory.toFile());
+            }
+            else {
+                VirtualFile file = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(directory);
+                if (file != null) {
+                    file.refresh(false, true);
+                }
+            }
+        }
+        refreshIODirectories(localFiles);
+    }
+
+    /**
+     * {@link #clearOutputDirectories} for output directories of any machine - the content goes, the directories stay.
+     */
+    public static void clearOutputDirectoryPaths(Collection<Path> outputDirectories) {
+        List<File> localDirectories = new ArrayList<>();
+        List<Path> remoteDirectories = new ArrayList<>();
+        for (Path directory : outputDirectories) {
+            if (directory.getFileSystem() == FileSystems.getDefault()) {
+                localDirectories.add(directory.toFile());
+            }
+            else {
+                remoteDirectories.add(directory);
+            }
+        }
+        clearOutputDirectories(localDirectories);
+
+        if (remoteDirectories.isEmpty()) {
+            return;
+        }
+        for (Path directory : remoteDirectories) {
+            try (Stream<Path> children = Files.list(directory)) {
+                for (Path child : (Iterable<Path>) children::iterator) {
+                    deleteRecursively(child);
+                }
+            }
+            catch (NoSuchFileException ignored) {
+            }
+            catch (IOException e) {
+                LOG.warn("Cannot clear " + directory, e);
+            }
+            try {
+                Files.createDirectories(directory);
+            }
+            catch (IOException e) {
+                LOG.warn("Cannot create " + directory, e);
+            }
+        }
+        refreshDirectories(remoteDirectories);
+    }
+
+    private static void deleteRecursively(Path path) throws IOException {
+        Files.walkFileTree(path, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.deleteIfExists(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException exc) throws IOException {
+                Files.deleteIfExists(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     public static void addLocaleOptions(List<String> commandLine, boolean launcherUsed) {

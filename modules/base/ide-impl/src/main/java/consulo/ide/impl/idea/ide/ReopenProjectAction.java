@@ -15,7 +15,11 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.application.Application;
 import consulo.application.util.UserHomeFileUtil;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
+import consulo.platform.Platform;
 import consulo.ui.ex.awt.internal.IdeEventQueueProxy;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleExtensionProvider;
@@ -74,13 +78,13 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
         myOpened = opened;
 
         Presentation presentation = getTemplatePresentation();
-        String text = projectPath.equals(displayName) ? UserHomeFileUtil.getLocationRelativeToUserHome(projectPath) : displayName;
+        String text = projectPath.equals(displayName) ? getDisplayPath() : displayName;
 
         myProjectText = LocalizeValue.of(text);
 
         presentation.setDisabledMnemonic(true);
         presentation.setText(myProjectText);
-        presentation.setDescription(LocalizeValue.of(projectPath));
+        presentation.setDescription(LocalizeValue.of(getLocation().path()));
         presentation.setIcon(getExtensionIcon());
     }
 
@@ -123,7 +127,7 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
             return;
         }
 
-        if (!new File(myProjectPath).exists()) {
+        if (!getLocation().isRemote() && !new File(myProjectPath).exists()) {
             int result = Messages.showDialog(project,
                 "The path " + FileUtil.toSystemDependentName(myProjectPath) + " does not exist.\n" +
                     "If it is on a removable or network drive, please make sure that the drive is connected.",
@@ -150,7 +154,7 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
             }
         }
 
-        ProjectImplUtil.openAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current(), context);
+        RecentProjectsManagerImpl.openRecentAsync(myProjectPath, project, forceOpenInNewFrame, UIAccess.current(), context);
     }
 
     private @Nullable Project findOpenedProject() {
@@ -205,6 +209,28 @@ public class ReopenProjectAction extends LegacyDumbAwareAction {
 
     public String getProjectPath() {
         return myProjectPath;
+    }
+
+    /**
+     * Where the project lives - a remote project names its platform target.
+     */
+    public RecentProjectLocation getLocation() {
+        return RecentProjectLocation.parse(myProjectPath);
+    }
+
+    /**
+     * The path as the user knows it - relative to the user home of its machine, a remote one as it is while its platform
+     * is not connected.
+     */
+    public String getDisplayPath() {
+        RecentProjectLocation location = getLocation();
+        if (location.isRemote()) {
+            PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTarget(location.platformTargetId());
+            Platform platform = target == null ? null : target.getPlatform();
+            String path = platform == null ? location.path() : UserHomeFileUtil.getLocationRelativeToUserHome(location.path(), false, platform);
+            return RecentProjectLocation.toPresentablePath(path);
+        }
+        return UserHomeFileUtil.getLocationRelativeToUserHome(myProjectPath);
     }
 
     public String getProjectName() {

@@ -24,6 +24,9 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
+import consulo.ide.localize.IdeLocalize;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.Module;
@@ -39,6 +42,7 @@ import consulo.project.ProjectType;
 import consulo.project.ProjectGroup;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectOpenContext;
+import consulo.project.localize.ProjectLocalize;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.impl.internal.ProjectImplUtil;
 import consulo.project.impl.internal.store.ProjectStoreImpl;
@@ -51,10 +55,12 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.SmartList;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -63,6 +69,7 @@ import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -484,11 +491,20 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
     }
 
     static @Nullable String getProjectPath(Project project) {
+        if (project.getPlatformTargetId() != null) {
+            // a project of a remote platform target - its base path is a path of that platform, shown as it is
+            String basePath = project.getBasePath();
+            return basePath == null ? null : RecentProjectLocation.of(project, basePath).key();
+        }
         VirtualFile baseDirVFile = project.getBaseDir();
         return baseDirVFile != null ? FileUtil.toSystemDependentName(baseDirVFile.getPath()) : null;
     }
 
     public static boolean isValidProjectPath(String projectPath) {
+        if (RecentProjectLocation.parse(projectPath).isRemote()) {
+            // checked once its target is connected - see openRecentAsync
+            return true;
+        }
         File file = new File(projectPath);
         return file.exists() && (!file.isDirectory() || new File(file, Project.DIRECTORY_STORE_FOLDER).exists());
     }
@@ -563,7 +579,54 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
 
     
     public String getProjectName(String path) {
-        return ProjectStoreImpl.readProjectName(new File(path));
+        RecentProjectLocation location = RecentProjectLocation.parse(path);
+        if (location.isRemote()) {
+            // no file system access - the target may not be connected
+            String remotePath = StringUtil.trimEnd(location.path(), "/");
+            return remotePath.substring(remotePath.lastIndexOf('/') + 1);
+        }
+        return ProjectStoreImpl.readProjectName(Path.of(path));
+    }
+
+    /**
+     * Opens a recent project. A project of a remote platform target is opened once its target is connected - if the
+     * target is gone or cannot be connected, an error is shown and nothing is opened.
+     */
+    @RequiredUIAccess
+    public static void openRecentAsync(String path,
+                                       @Nullable Project projectToClose,
+                                       boolean forceOpenInNewFrame,
+                                       UIAccess uiAccess,
+                                       ProjectOpenContext context) {
+        RecentProjectLocation location = RecentProjectLocation.parse(path);
+        String platformTargetId = location.platformTargetId();
+        if (platformTargetId == null) {
+            ProjectImplUtil.openAsync(path, projectToClose, forceOpenInNewFrame, uiAccess, context);
+            return;
+        }
+
+        PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTarget(platformTargetId);
+        if (target == null) {
+            Messages.showErrorDialog(
+                projectToClose,
+                ProjectLocalize.errorPlatformTargetMissing(platformTargetId).get(),
+                IdeLocalize.titleOpenProject().get()
+            );
+            return;
+        }
+
+        target.connect().whenCompleteAsync((platform, error) -> {
+            if (error != null || platform == null) {
+                String cause = error == null ? "" : StringUtil.notNullize(ExceptionUtil.getRootCause(error).getMessage());
+                Messages.showErrorDialog(
+                    projectToClose,
+                    ProjectLocalize.errorPlatformTargetConnectFailed(target.getDisplayName(), cause).get(),
+                    IdeLocalize.titleOpenProject().get()
+                );
+                return;
+            }
+            ProjectImplUtil.openAsync(platform.fs().getPath(location.path()), projectToClose, forceOpenInNewFrame, uiAccess, context);
+        }, uiAccess);
     }
 
     @Override
@@ -613,7 +676,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
                         context.putUserData(IdeFrameState.KEY, state);
                     }
 
-                    ProjectImplUtil.openAsync(openPath, null, forceNewFrame, UIAccess.current(), context);
+                    openRecentAsync(openPath, null, forceNewFrame, UIAccess.current(), context);
                 }
             }
         }

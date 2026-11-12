@@ -18,6 +18,7 @@ package consulo.virtualFileSystem.util;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileProvider;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
@@ -34,6 +35,16 @@ public class VirtualFilePathUtil {
     }
     if (file.getFileSystem().getProtocol().equals(ArchiveFileSystem.ARCHIVE_SEPARATOR) && file.getParent() != null) {
       return null;
+    }
+    boolean platformArchive = file.getFileSystem().getProtocol().startsWith(StandardFileSystems.PLATFORM_PROTOCOL + "-");
+    if (platformArchive && file.getParent() != null) {
+      // an entry of an archive of another platform - no path of its own
+      return null;
+    }
+    if (platformArchive || StandardFileSystems.PLATFORM_PROTOCOL.equals(file.getFileSystem().getProtocol())) {
+      // a file of another platform (or the root of its archive): the path of its machine - <platform id>/<path> is the path
+      // of the virtual file system only
+      return StringUtil.trimEnd(file.getFileSystem().extractPresentableUrl(file.getPath()), ArchiveFileSystem.ARCHIVE_SEPARATOR);
     }
     return getLocalPath(file.getPath());
   }

@@ -16,6 +16,8 @@
 package consulo.welcomeScreen.impl.internal;
 
 import consulo.application.util.UserHomeFileUtil;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
 import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.localize.LocalizeValue;
@@ -58,17 +60,20 @@ public class RecentProjectItemRenderer implements ComponentItemRenderer<AnAction
 
     private final RecentProjectsManager myRecentProjectsManager;
     private final RecentProjectsChecker myRecentProjectsChecker;
+    private final PlatformTargetManager myPlatformTargetManager;
     private final BiConsumer<AnAction, ComponentEvent<Component>> myActivateHandler;
     private final BiConsumer<AnAction, ComponentEvent<Component>> myMenuHandler;
 
     public RecentProjectItemRenderer(
         RecentProjectsManager recentProjectsManager,
         RecentProjectsChecker recentProjectsChecker,
+        PlatformTargetManager platformTargetManager,
         @RequiredUIAccess BiConsumer<AnAction, ComponentEvent<Component>> activateHandler,
         @RequiredUIAccess BiConsumer<AnAction, ComponentEvent<Component>> menuHandler
     ) {
         myRecentProjectsManager = recentProjectsManager;
         myRecentProjectsChecker = recentProjectsChecker;
+        myPlatformTargetManager = platformTargetManager;
         myActivateHandler = activateHandler;
         myMenuHandler = menuHandler;
     }
@@ -104,7 +109,7 @@ public class RecentProjectItemRenderer implements ComponentItemRenderer<AnAction
         row.left(icon);
 
         row.center(VerticalLayout.create().add(createTitle(action)).add(createPath(action)));
-        row.setAccessibleName(LocalizeValue.of(action.getProjectName() + " - " + action.getProjectPath()));
+        row.setAccessibleName(LocalizeValue.of(action.getProjectName() + " - " + action.getLocation().path()));
 
         row.paddingBuilder().leftSet(isInsideGroup(action) ? GROUP_INDENT : GAP).apply();
 
@@ -136,14 +141,40 @@ public class RecentProjectItemRenderer implements ComponentItemRenderer<AnAction
             title.add(branchLabel);
         }
 
+        String platformTargetId = action.getLocation().platformTargetId();
+        if (platformTargetId != null) {
+            title.add(createPlatformTarget(platformTargetId));
+        }
+
         return title;
+    }
+
+    /**
+     * The agent a remote project lives on - whether it is connected right now, and its name.
+     */
+    @RequiredUIAccess
+    private Component createPlatformTarget(String platformTargetId) {
+        PlatformTarget target = myPlatformTargetManager.findTarget(platformTargetId);
+        boolean connected = target != null && target.getPlatform() != null;
+
+        Label label = Label.create(target == null
+            ? ProjectLocalize.platformTargetMissing(platformTargetId)
+            : target.getDisplayName());
+        label.setImage(connected ? PlatformIconGroup.generalInspectionsok() : PlatformIconGroup.generalError());
+        label.setForegroundColor(ComponentColors.DISABLED_TEXT);
+        label.paddingBuilder().leftSet(GAP).apply();
+        return label;
     }
 
     @RequiredUIAccess
     private Component createPath(ReopenProjectAction action) {
         String projectPath = action.getProjectPath();
 
-        Label path = Label.create(LocalizeValue.of(UserHomeFileUtil.getLocationRelativeToUserHome(projectPath, false)));
+        // a remote path is relative to the user home of its machine
+        String displayPath = action.getLocation().isRemote()
+            ? action.getDisplayPath()
+            : UserHomeFileUtil.getLocationRelativeToUserHome(projectPath, false);
+        Label path = Label.create(LocalizeValue.of(displayPath));
         path.setForegroundColor(myRecentProjectsChecker.isValid(projectPath) ? ComponentColors.DISABLED_TEXT : StandardColors.RED);
         return path;
     }

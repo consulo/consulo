@@ -24,12 +24,13 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.archive.ArchiveEntry;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import consulo.virtualFileSystem.archive.ArchiveHandler;
+import consulo.virtualFileSystem.internal.ArchiveHandler;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -39,12 +40,7 @@ public abstract class ZipHandler extends ArchiveHandler {
   private static final FileAccessorCache<ZipHandler, ArchiveFile> ourZipFileFileAccessorCache = new FileAccessorCache<ZipHandler, ArchiveFile>(20, 10) {
     @Override
     protected ArchiveFile createAccessor(ZipHandler key) throws IOException {
-      String canonicalPathToZip = key.getCanonicalPathToZip();
-      FileAttributes attributes = FileSystemUtil.getAttributes(canonicalPathToZip);
-      key.myFileStamp = attributes != null ? attributes.lastModified : DEFAULT_TIMESTAMP;
-      key.myFileLength = attributes != null ? attributes.length : DEFAULT_LENGTH;
-
-      return key.createArchiveFile(canonicalPathToZip);
+      return key.openArchiveFile();
     }
 
     @Override
@@ -68,7 +64,39 @@ public abstract class ZipHandler extends ArchiveHandler {
     super(path);
   }
 
-  public abstract ArchiveFile createArchiveFile(String path) throws IOException;
+  public abstract ArchiveFile createArchiveFile(Path path) throws IOException;
+
+  /**
+   * Opens the archive, remembering the length and modification time it is opened at.
+   */
+  protected ArchiveFile openArchiveFile() throws IOException {
+    String canonicalPathToZip = getCanonicalPathToZip();
+    FileAttributes attributes = FileSystemUtil.getAttributes(canonicalPathToZip);
+    setFileStamp(attributes != null ? attributes.lastModified : DEFAULT_TIMESTAMP, attributes != null ? attributes.length : DEFAULT_LENGTH);
+
+    return createArchiveFile(Path.of(canonicalPathToZip));
+  }
+
+  protected final void setFileStamp(long timestamp, long length) {
+    myFileStamp = timestamp;
+    myFileLength = length;
+  }
+
+  /**
+   * Whether the archive opened is to be reopened - it was changed since.
+   */
+  protected boolean isChangedSinceOpened() throws IOException {
+    if (getFile() != getFileToUse()) {
+      return false;
+    }
+    // IDEA-148458, http://bugs.java.com/view_bug.do?bug_id=4425695, JVM crashes on use of opened ZipFile after it was updated
+    // Reopen file if the file has been changed
+    FileAttributes attributes = FileSystemUtil.getAttributes(getCanonicalPathToZip());
+    if (attributes == null) {
+      throw new FileNotFoundException(getCanonicalPathToZip());
+    }
+    return attributes.lastModified != myFileStamp || attributes.length != myFileLength;
+  }
 
   
   private String getCanonicalPathToZip() throws IOException {
@@ -105,16 +133,7 @@ public abstract class ZipHandler extends ArchiveHandler {
   private FileAccessorCache.Handle<ArchiveFile> getZipFileHandle() throws IOException {
     FileAccessorCache.Handle<ArchiveFile> handle = ourZipFileFileAccessorCache.get(this);
 
-    if (getFile() == getFileToUse()) { // files are canonicalized
-      // IDEA-148458, http://bugs.java.com/view_bug.do?bug_id=4425695, JVM crashes on use of opened ZipFile after it was updated
-      // Reopen file if the file has been changed
-      FileAttributes attributes = FileSystemUtil.getAttributes(getCanonicalPathToZip());
-      if (attributes == null) {
-        throw new FileNotFoundException(getCanonicalPathToZip());
-      }
-
-      if (attributes.lastModified == myFileStamp && attributes.length == myFileLength) return handle;
-
+    if (isChangedSinceOpened()) { // files are canonicalized
       // Note that zip_util.c#ZIP_Get_From_Cache will allow us to have duplicated ZipFile instances without a problem
       removeZipHandlerFromCache();
       handle.release();

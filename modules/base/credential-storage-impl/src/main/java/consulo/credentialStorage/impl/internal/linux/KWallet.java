@@ -41,6 +41,10 @@ interface KWallet extends DBusInterface {
 
     java.util.Map<String, Variant<String>> readPasswordList(int walletId, String folder, String key, String appId);
 
+    List<String> entryList(int walletId, String folder, String appId);
+
+    String readPassword(int walletId, String folder, String key, String appId);
+
     boolean removeFolder(int walletId, String folder, String appId);
 
     int writePassword(int walletId, String folder, String key, String value, String appId);

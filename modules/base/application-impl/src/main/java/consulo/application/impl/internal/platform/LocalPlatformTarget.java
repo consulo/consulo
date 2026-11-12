@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.content.impl.internal.platform;
+package consulo.application.impl.internal.platform;
 
-import consulo.content.platform.PlatformTarget;
+import consulo.application.platform.PlatformTarget;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;

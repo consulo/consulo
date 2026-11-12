@@ -28,6 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.ProjectManager;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.internal.PlatformPathVirtualFileSystem;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.VirtualFile;
@@ -288,7 +289,8 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
     }
 
     public static void processRecursively(VirtualFile file, boolean dbOnly, Consumer<VirtualFile> processor) {
-        if (!(file.getFileSystem() instanceof LocalFileSystem)) {
+        // the sources of a project of another platform are its files
+        if (!(file.getFileSystem() instanceof LocalFileSystem || file.getFileSystem() instanceof PlatformPathVirtualFileSystem)) {
             return;
         }
 

@@ -22,6 +22,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.function.Predicate;
 
 public interface ProjectManagerEx extends ProjectManager {
@@ -32,10 +33,10 @@ public interface ProjectManagerEx extends ProjectManager {
     /**
      * @param dirPath path to directory where .consulo directory is located
      */
-    @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings, UIAccess uiAccess);
+    @Nullable Project newProject(String projectName, Path dirPath, boolean useDefaultProjectSettings, UIAccess uiAccess);
 
     @Override
-    default @Nullable Project createProject(String name, String path, UIAccess uiAccess) {
+    default @Nullable Project createProject(String name, Path path, UIAccess uiAccess) {
         return newProject(name, path, true, uiAccess);
     }
 

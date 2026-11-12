@@ -19,7 +19,7 @@ import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFile;
-import consulo.virtualFileSystem.archive.ArchiveHandler;
+import consulo.virtualFileSystem.internal.ArchiveHandler;
 import consulo.virtualFileSystem.impl.internal.ArchiveFileSystemViaArchiveFile;
 import consulo.virtualFileSystem.impl.internal.zip.ZipHandler;
 import org.jspecify.annotations.Nullable;
@@ -61,7 +61,7 @@ public final class ArchiveNioFileSystem extends FileSystem {
         myArchiveLength = attributes.length;
         myHandler = new ZipHandler(archiveFile.toString()) {
             @Override
-            public ArchiveFile createArchiveFile(String path) throws IOException {
+            public ArchiveFile createArchiveFile(Path path) throws IOException {
                 return archiveFileSystem.createArchiveFile(path);
             }
         };

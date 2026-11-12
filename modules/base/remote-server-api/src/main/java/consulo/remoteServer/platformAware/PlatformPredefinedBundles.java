@@ -13,35 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.platform;
+package consulo.remoteServer.platformAware;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import org.jspecify.annotations.Nullable;
+import consulo.application.platform.PlatformTarget;
+import consulo.platform.Platform;
 
-import java.nio.file.Path;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
+ * Detects and adds the bundles (SDKs) of a platform target once it is connected.
+ *
  * @author VISTALL
- * @since 2026-10-13
+ * @since 2026-11-12
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface PlatformTargetManager {
+public interface PlatformPredefinedBundles {
     /**
-     * The local machine first, then every contributed target.
+     * Called when {@code target} got connected. Runs in the background - detecting bundles runs their tools on the platform.
+     *
+     * @return completes when done, with true when bundles were detected (for {@link PredefinedBundlesMode#ONCE} the
+     *         caller switches the mode off then)
      */
-    List<PlatformTarget> getTargets();
-
-    PlatformTarget getLocalTarget();
-
-    /**
-     * The target with this id, the local one for a null id, null when no target has it any more.
-     */
-    @Nullable PlatformTarget findTarget(@Nullable String id);
-
-    /**
-     * The reachable target whose file system the path belongs to - how a path chosen on some machine names it.
-     */
-    @Nullable PlatformTarget findTargetOf(Path path);
+    CompletableFuture<Boolean> targetConnected(PlatformTarget target, Platform platform, PredefinedBundlesMode mode);
 }

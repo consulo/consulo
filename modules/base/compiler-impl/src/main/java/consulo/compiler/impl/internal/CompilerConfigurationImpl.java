@@ -117,6 +117,11 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
                 return null;
             }
 
+            // the url of the base directory on the machine of the project - platform://<id>/... for a remote one
+            String baseUrl = VirtualFileManager.getInstance().getUrl(myProject.getPlatform().fs().getPath(basePath));
+            if (baseUrl != null) {
+                return baseUrl + "/" + DEFAULT_OUTPUT_URL;
+            }
             return VirtualFileManager.constructUrl(
                 URLUtil.FILE_PROTOCOL,
                 FileUtil.toSystemIndependentName(basePath) + "/" + DEFAULT_OUTPUT_URL
@@ -167,5 +172,11 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
 
             myModulesConfiguration.put(name, moduleState);
         }
+    }
+
+    @Override
+    public @Nullable Path getCompilerOutputPath() {
+        String url = getCompilerOutputUrl();
+        return url == null ? null : CompilerOutputPaths.toPath(myProject, url);
     }
 }

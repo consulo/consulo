@@ -35,6 +35,7 @@ import consulo.application.Application;
 import consulo.application.PowerSaveMode;
 import consulo.application.PowerSaveModeListener;
 import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.platform.Platform;
 import consulo.project.RecentProjectsBranchesProvider;
 import consulo.project.internal.RecentProjectsChecker;
@@ -183,16 +184,27 @@ public class RecentProjectsCheckerImpl implements RecentProjectsChecker, Applica
         service.schedule(() -> {
             long startTime = System.currentTimeMillis();
 
-            boolean pathIsValid;
-            try {
-                pathIsValid = !RecentProjectsManagerImpl.isFileSystemPath(path) || isPathAvailable(path);
-            }
-            catch (Exception e) {
-                pathIsValid = false;
-            }
+            RecentProjectLocation location = RecentProjectLocation.parse(path);
 
-            String branch = myApplication.getExtensionPoint(RecentProjectsBranchesProvider.class)
-                .computeSafeIfAny(provider -> provider.getCurrentBranch(path));
+            boolean pathIsValid;
+            String branch;
+            if (location.isRemote()) {
+                // a remote project is valid while its target is configured; its branch is the one remembered while it
+                // was open - the local providers read the local file system
+                pathIsValid = myApplication.getInstance(PlatformTargetManager.class).findTarget(location.platformTargetId()) != null;
+                branch = myRecentProjectsManager.getBranch(path);
+            }
+            else {
+                try {
+                    pathIsValid = !RecentProjectsManagerImpl.isFileSystemPath(path) || isPathAvailable(path);
+                }
+                catch (Exception e) {
+                    pathIsValid = false;
+                }
+
+                branch = myApplication.getExtensionPoint(RecentProjectsBranchesProvider.class)
+                    .computeSafeIfAny(provider -> provider.getCurrentBranch(path));
+            }
 
             boolean changed;
             synchronized (myLock) {

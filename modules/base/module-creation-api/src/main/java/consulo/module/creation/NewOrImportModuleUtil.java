@@ -37,12 +37,12 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class NewOrImportModuleUtil {
   private static final Logger LOG = Logger.getInstance(NewOrImportModuleUtil.class);
@@ -68,7 +68,7 @@ public class NewOrImportModuleUtil {
                                 boolean requireModelCommit) {
     String name = StringUtil.notNullize(context.getName(), baseDir.getName());
 
-    Module newModule = modifiableModel.newModule(name, baseDir.getPath());
+    Module newModule = modifiableModel.newModule(name, baseDir);
 
     ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(newModule);
     ModifiableRootModel modifiableModelForModule = moduleRootManager.getModifiableModel();
@@ -92,19 +92,17 @@ public class NewOrImportModuleUtil {
 
   public static <T extends ModuleImportContext> Coroutine<Void, Project> importProject(T context, ModuleImportProvider<T> importProvider, UIAccess uiAccess) {
     return Coroutine.<Void, Object>first(CodeExecution.<Void, Object>apply((input, c) -> {
-        String projectFilePath = context.getPath();
         String projectName = context.getName();
 
+        Path projectDir = context.getNioPath();
         try {
-          File projectDir = new File(projectFilePath);
-          FileUtil.ensureExists(projectDir);
-          FileUtil.ensureExists(new File(projectDir, Project.DIRECTORY_STORE_FOLDER));
+          Files.createDirectories(projectDir.resolve(Project.DIRECTORY_STORE_FOLDER));
         }
         catch (IOException e) {
           throw new RuntimeException(e);
         }
 
-        Project newProject = ProjectManager.getInstance().createProject(projectName, projectFilePath, uiAccess);
+        Project newProject = ProjectManager.getInstance().createProject(projectName, projectDir, uiAccess);
 
         if (newProject == null) {
           throw new IllegalStateException("Project not initialized");

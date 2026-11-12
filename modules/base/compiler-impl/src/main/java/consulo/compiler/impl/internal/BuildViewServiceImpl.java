@@ -34,7 +34,6 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -289,7 +288,7 @@ public class BuildViewServiceImpl {
             myBuildProgress.buildIssue(issue, kind);
         }
         else if (messageFile != null) {
-            File file = messageFile.toFile();
+            Path file = messageFile;
             FilePosition filePosition;
             if (navigatable instanceof OpenFileDescriptor fileDescriptor) {
                 int column = fileDescriptor.getColumn();

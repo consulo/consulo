@@ -1,6 +1,7 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.build.ui.impl.internal.event;
 
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.build.ui.FilePosition;
 import consulo.navigation.Navigatable;
@@ -10,7 +11,6 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -62,7 +62,7 @@ public class FileNavigatable implements Navigatable {
 
     private @Nullable OpenFileDescriptor createDescriptor() {
         OpenFileDescriptor descriptor = null;
-        VirtualFile file = VirtualFileUtil.findFileByIoFile(myFilePosition.getFile(), false);
+        VirtualFile file = VirtualFileManager.getInstance().findFileByNioPath(myFilePosition.getPath());
         if (file != null) {
             OpenFileDescriptorFactory factory = OpenFileDescriptorFactory.getInstance(myProject);
             descriptor = factory.newBuilder(file)

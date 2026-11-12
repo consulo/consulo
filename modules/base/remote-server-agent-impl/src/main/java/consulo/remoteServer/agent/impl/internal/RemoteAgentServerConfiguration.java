@@ -15,7 +15,9 @@
  */
 package consulo.remoteServer.agent.impl.internal;
 
+import consulo.remoteServer.platformAware.PredefinedBundlesMode;
 import consulo.remoteServer.configuration.ServerConfigurationBase;
+import consulo.remoteServer.platformAware.PlatformAwareServerConfiguration;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 import java.util.UUID;
@@ -27,11 +29,13 @@ import java.util.UUID;
  * @author VISTALL
  * @since 2026-03-17
  */
-public class RemoteAgentServerConfiguration extends ServerConfigurationBase<RemoteAgentServerConfiguration> {
+public class RemoteAgentServerConfiguration extends ServerConfigurationBase<RemoteAgentServerConfiguration>
+    implements PlatformAwareServerConfiguration {
     private String myHost = "localhost";
     private int myPort = 57638;
     private boolean myUseTls;
     private String myCertificateFingerprint = "";
+    private PredefinedBundlesMode myPredefinedBundlesMode = PredefinedBundlesMode.ON_FIRST_CONNECT;
 
     @Attribute("credentialId")
     private String myCredentialId = "";
@@ -70,6 +74,17 @@ public class RemoteAgentServerConfiguration extends ServerConfigurationBase<Remo
 
     public void setCertificateFingerprint(String certificateFingerprint) {
         myCertificateFingerprint = certificateFingerprint.trim();
+    }
+
+    @Override
+    @Attribute("predefinedBundles")
+    public PredefinedBundlesMode getPredefinedBundlesMode() {
+        return myPredefinedBundlesMode;
+    }
+
+    @Override
+    public void setPredefinedBundlesMode(PredefinedBundlesMode mode) {
+        myPredefinedBundlesMode = mode;
     }
 
     public String getCredentialId() {

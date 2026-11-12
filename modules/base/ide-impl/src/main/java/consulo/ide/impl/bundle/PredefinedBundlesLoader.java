@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.bundle;
 
+import consulo.content.internal.RemoteSdkNames;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
@@ -26,6 +27,7 @@ import consulo.content.bundle.*;
 import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.SystemProperties;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -39,21 +41,41 @@ import java.util.List;
  */
 @ExtensionImpl
 public class PredefinedBundlesLoader extends PreloadingActivity {
-    private static class ContextImpl implements PredefinedBundlesProvider.Context {
-        private final List<Sdk> myBundles = new ArrayList<>();
+    static class ContextImpl implements PredefinedBundlesProvider.Context {
+        final List<Sdk> myBundles = new ArrayList<>();
         private final SdkTable mySdkTable;
+        private final @Nullable String myPlatformTargetId;
+        private final String myNameSuffix;
 
         public ContextImpl(SdkTable sdkTable) {
+            this(sdkTable, null, SdkConfigurationUtil.PREDEFINED_PREFIX);
+        }
+
+        /**
+         * @param platformTargetId the target the bundles live on, null for the local machine
+         */
+        ContextImpl(SdkTable sdkTable, @Nullable String platformTargetId, String nameSuffix) {
             mySdkTable = sdkTable;
+            myPlatformTargetId = platformTargetId;
+            myNameSuffix = nameSuffix;
         }
 
         @Override
         public Sdk createSdkWithName(PlatformAwareSdkType sdkType, Path homePath, String suggestName) {
-            // TODO [VISTALL] path can be remote - handle it
-
             Sdk[] sdks = ArrayUtil.mergeArrayAndCollection(mySdkTable.getAllSdks(), myBundles, Sdk.ARRAY_FACTORY);
-            String uniqueSdkName = SdkUtil.createUniqueSdkName(suggestName + SdkConfigurationUtil.PREDEFINED_PREFIX, sdks);
+            String name = suggestName + myNameSuffix;
+            // a bundle of a target is $remote:<target>$-<name> in the table - unique per target, project files keep <name>
+            String uniqueSdkName = SdkUtil.createUniqueSdkName(
+                myPlatformTargetId == null ? name : RemoteSdkNames.toTableName(myPlatformTargetId, name),
+                sdks
+            );
             Sdk sdk = mySdkTable.createSdk(homePath, uniqueSdkName, sdkType);
+            if (myPlatformTargetId != null) {
+                // the home is a path of that target - the bundle is resolved and run there
+                SdkModificator modificator = sdk.getSdkModificator();
+                modificator.setPlatformTargetId(myPlatformTargetId);
+                modificator.commitChanges();
+            }
             myBundles.add(sdk);
             return sdk;
         }

@@ -20,7 +20,7 @@ import consulo.util.collection.Iterables;
 import consulo.util.collection.Iterators;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.function.Predicates;
-import consulo.virtualFileSystem.archive.ArchiveHandler;
+import consulo.virtualFileSystem.internal.ArchiveHandler;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;

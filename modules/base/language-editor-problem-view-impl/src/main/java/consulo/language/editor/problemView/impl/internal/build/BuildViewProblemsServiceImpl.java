@@ -55,7 +55,7 @@ public class BuildViewProblemsServiceImpl implements ProblemsProvider {
 
         buildProgressObservable.addListener((buildId, event) -> {
             if (event instanceof FileMessageEvent fileMessageEvent && fileMessageEvent.getKind() == MessageEvent.Kind.ERROR) {
-                Path nioPath = fileMessageEvent.getFilePosition().getFile() != null ? fileMessageEvent.getFilePosition().getFile().toPath() : null;
+                Path nioPath = fileMessageEvent.getFilePosition().getPath();
                 VirtualFile virtualFile = nioPath != null ? VirtualFileManager.getInstance().findFileByNioPath(nioPath) : null;
                 if (virtualFile == null) {
                     return;

@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.language.content.LanguageContentFolderScopes;
@@ -167,7 +169,27 @@ public class CompilerPaths {
 
     public static @Nullable String getModuleOutputPath(Module module, ContentFolderTypeProvider contentFolderType) {
         String outPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
-        return outPathUrl != null ? VirtualFileUtil.urlToPath(outPathUrl) : null;
+        return outPathUrl != null ? urlToMachinePath(outPathUrl) : null;
+    }
+
+    /**
+     * The path of an output url as its machine writes it - a remote platform's url has no internal id in it then.
+     */
+    public static String urlToMachinePath(String url) {
+        if (StandardFileSystems.PLATFORM_PROTOCOL.equals(VirtualFileManager.extractProtocol(url))) {
+            // <platform id>/<path> - the path as the Path of the machine prints it: /a, or C:/a of a windows drive
+            String path = VirtualFileManager.extractPath(url);
+            int separator = path.indexOf('/');
+            String filePath = separator < 0 ? "/" : path.substring(separator);
+            if (filePath.length() > 2 && filePath.charAt(2) == ':') {
+                filePath = filePath.substring(1);
+                if (filePath.length() == 2) {
+                    filePath += "/";
+                }
+            }
+            return filePath;
+        }
+        return VirtualFileUtil.urlToPath(url);
     }
 
     public static String[] getOutputPaths(Module[] modules) {
@@ -182,7 +204,7 @@ public class CompilerPaths {
             for (ContentFolderTypeProvider contentFolderType : contentFolderTypes) {
                 String outputPathUrl = ModuleCompilerPathsManager.getInstance(module).getCompilerOutputUrl(contentFolderType);
                 if (outputPathUrl != null) {
-                    outputPaths.add(VirtualFileUtil.urlToPath(outputPathUrl).replace('/', File.separatorChar));
+                    outputPaths.add(urlToMachinePath(outputPathUrl).replace('/', File.separatorChar));
                 }
             }
         }

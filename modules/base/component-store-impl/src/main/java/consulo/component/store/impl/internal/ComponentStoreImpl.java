@@ -47,7 +47,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Provider;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.concurrent.ConcurrentHashMap;
@@ -185,13 +185,13 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
-  public Continuation<?> saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public Continuation<?> saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, Path>> readonlyFiles) {
     CoroutineScope scope = CoroutineScope.of(createCoroutineContext());
     return createSaveCoroutine(readonlyFiles).runAsync(scope, null);
   }
 
   @Override
-  public Coroutine<Object, Object> createSaveCoroutine(List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  public Coroutine<Object, Object> createSaveCoroutine(List<Pair<StateStorage.SaveSession, Path>> readonlyFiles) {
     boolean force = false;
 
     StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
@@ -287,7 +287,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     return CodeExecution.apply(function);
   }
 
-  protected void doSave(boolean force, @Nullable List<StateStorage.SaveSession> saveSessions, List<Pair<StateStorage.SaveSession, File>> readonlyFiles) {
+  protected void doSave(boolean force, @Nullable List<StateStorage.SaveSession> saveSessions, List<Pair<StateStorage.SaveSession, Path>> readonlyFiles) {
     if (saveSessions == null) {
       return;
     }
@@ -305,7 +305,7 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
-  protected static void executeSave(StateStorage.SaveSession session, boolean force, List<Pair<StateStorage.SaveSession, File>> readonlyFiles, @Nullable List<VFileEvent> events) {
+  protected static void executeSave(StateStorage.SaveSession session, boolean force, List<Pair<StateStorage.SaveSession, Path>> readonlyFiles, @Nullable List<VFileEvent> events) {
     try {
       if (session instanceof VfsEventCollectingSaveSession collecting) {
         collecting.save(force, events);

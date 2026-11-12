@@ -22,6 +22,7 @@ import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
@@ -49,9 +50,19 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
 
     @Override
     public void createBundles(Context context) {
-        Platform platform = Platform.current();
+        createBundles(context, Platform.current());
+    }
 
+    /**
+     * The bundles of {@code platform} - the local machine, or a connected platform target. Only platform aware bundle
+     * types can be detected on a remote one.
+     */
+    public void createBundles(Context context, Platform platform) {
+        boolean local = platform == Platform.current();
         myApplication.getExtensionPoint(SdkType.class).forEach(sdkType -> {
+            if (!local && !(sdkType instanceof PlatformAwareSdkType)) {
+                return;
+            }
             if (sdkType instanceof PlatformAwareSdkType platformAwareSdkType) {
                 createBundles(context, platformAwareSdkType, platform);
             }
@@ -79,7 +90,8 @@ public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider 
             Path path = platformAwareSdkType.adjustSelectedSdkHome(platform, bundlePath.path());
 
             if (platformAwareSdkType.isValidSdkHome(platform, path)) {
-                VirtualFile dirPath = LocalFileSystem.getInstance().findFileByNioFile(path);
+                // the home is a path of the platform - local or remote
+                VirtualFile dirPath = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(path);
                 if (dirPath == null) {
                     continue;
                 }

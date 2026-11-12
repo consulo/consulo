@@ -31,13 +31,35 @@ import java.util.NoSuchElementException;
 public class RemotePath implements Path {
     private final RemoteNioFileSystem myFileSystem;
     private final String myPath;
+    // "" for a relative path, "/" for a unix one, "C:/" for a windows drive
+    private final String myRoot;
     private final boolean myAbsolute;
 
     RemotePath(RemoteNioFileSystem fileSystem, String path) {
         myFileSystem = fileSystem;
         // normalize separators to /
-        myPath = path.replace('\\', '/');
-        myAbsolute = myPath.startsWith("/") || (myPath.length() >= 2 && myPath.charAt(1) == ':');
+        String normalized = path.replace('\\', '/');
+        String root = rootOf(normalized);
+        if (root.length() == 3 && normalized.length() == 2) {
+            // C: alone is the root of the drive here
+            normalized = root;
+        }
+        while (normalized.length() > Math.max(root.length(), 1) && normalized.endsWith("/")) {
+            normalized = normalized.substring(0, normalized.length() - 1);
+        }
+        myPath = normalized;
+        myRoot = root;
+        myAbsolute = !root.isEmpty();
+    }
+
+    private static String rootOf(String path) {
+        if (path.startsWith("/")) {
+            return "/";
+        }
+        if (path.length() >= 2 && path.charAt(1) == ':' && Character.isLetter(path.charAt(0))) {
+            return path.substring(0, 2) + "/";
+        }
+        return "";
     }
 
     @Override
@@ -55,49 +77,30 @@ public class RemotePath implements Path {
         if (!myAbsolute) {
             return null;
         }
-        // Windows-style: C:/
-        if (myPath.length() >= 2 && myPath.charAt(1) == ':') {
-            return new RemotePath(myFileSystem, myPath.substring(0, 3));
-        }
-        return new RemotePath(myFileSystem, "/");
+        return new RemotePath(myFileSystem, myRoot);
     }
 
     @Override
     public Path getFileName() {
-        if (myPath.isEmpty() || myPath.equals("/")) {
+        String[] parts = getNameParts();
+        if (parts.length == 0) {
             return null;
         }
-        String normalized = myPath.endsWith("/") ? myPath.substring(0, myPath.length() - 1) : myPath;
-        int lastSlash = normalized.lastIndexOf('/');
-        if (lastSlash < 0) {
-            return new RemotePath(myFileSystem, normalized);
-        }
-        return new RemotePath(myFileSystem, normalized.substring(lastSlash + 1));
+        return new RemotePath(myFileSystem, parts[parts.length - 1]);
     }
 
     @Override
     public Path getParent() {
-        if (myPath.isEmpty() || myPath.equals("/")) {
+        String[] parts = getNameParts();
+        if (parts.length == 0 || (parts.length == 1 && !myAbsolute)) {
             return null;
         }
-        String normalized = myPath.endsWith("/") ? myPath.substring(0, myPath.length() - 1) : myPath;
-        int lastSlash = normalized.lastIndexOf('/');
-        if (lastSlash < 0) {
-            return null;
-        }
-        if (lastSlash == 0) {
-            return new RemotePath(myFileSystem, "/");
-        }
-        return new RemotePath(myFileSystem, normalized.substring(0, lastSlash));
+        return new RemotePath(myFileSystem, myRoot + String.join("/", java.util.Arrays.copyOf(parts, parts.length - 1)));
     }
 
     @Override
     public int getNameCount() {
-        if (myPath.isEmpty() || myPath.equals("/")) {
-            return 0;
-        }
-        String[] parts = getNameParts();
-        return parts.length;
+        return getNameParts().length;
     }
 
     @Override
@@ -127,10 +130,21 @@ public class RemotePath implements Path {
 
     @Override
     public boolean startsWith(Path other) {
-        if (!(other instanceof RemotePath rp) || rp.myFileSystem != myFileSystem) {
+        if (!(other instanceof RemotePath rp) || rp.myFileSystem != myFileSystem || !myRoot.equals(rp.myRoot)) {
             return false;
         }
-        return myPath.startsWith(rp.myPath);
+        // name by name - /a/bc does not start with /a/b
+        String[] parts = getNameParts();
+        String[] otherParts = rp.getNameParts();
+        if (otherParts.length > parts.length) {
+            return false;
+        }
+        for (int i = 0; i < otherParts.length; i++) {
+            if (!parts[i].equals(otherParts[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -144,7 +158,7 @@ public class RemotePath implements Path {
     @Override
     public Path normalize() {
         // Simple normalization: remove . and ..
-        String[] parts = myPath.split("/");
+        String[] parts = getNameParts();
         java.util.List<String> normalized = new java.util.ArrayList<>();
         for (String part : parts) {
             if (part.isEmpty() || ".".equals(part)) {
@@ -159,11 +173,7 @@ public class RemotePath implements Path {
                 normalized.add(part);
             }
         }
-        String result = String.join("/", normalized);
-        if (myAbsolute) {
-            result = "/" + result;
-        }
-        return new RemotePath(myFileSystem, result);
+        return new RemotePath(myFileSystem, myRoot + String.join("/", normalized));
     }
 
     @Override
@@ -191,8 +201,8 @@ public class RemotePath implements Path {
         if (!(other instanceof RemotePath rp) || rp.myFileSystem != myFileSystem) {
             throw new IllegalArgumentException("Cannot relativize paths from different file systems");
         }
-        if (myAbsolute != rp.myAbsolute) {
-            throw new IllegalArgumentException("Cannot relativize absolute and relative paths");
+        if (!myRoot.equals(rp.myRoot)) {
+            throw new IllegalArgumentException("Cannot relativize paths of different roots");
         }
         String[] baseParts = getNameParts();
         String[] otherParts = rp.getNameParts();
@@ -302,21 +312,10 @@ public class RemotePath implements Path {
     }
 
     private String[] getNameParts() {
-        String stripped = myPath;
-        // Remove root prefix
-        if (stripped.startsWith("/")) {
-            stripped = stripped.substring(1);
-        }
-        // Handle Windows-style: C:/path
-        if (stripped.length() >= 2 && stripped.charAt(1) == ':') {
-            stripped = stripped.substring(stripped.indexOf('/') + 1);
-        }
+        String stripped = myPath.length() >= myRoot.length() ? myPath.substring(myRoot.length()) : "";
         if (stripped.isEmpty()) {
             return new String[0];
         }
-        if (stripped.endsWith("/")) {
-            stripped = stripped.substring(0, stripped.length() - 1);
-        }
-        return stripped.split("/");
+        return java.util.Arrays.stream(stripped.split("/")).filter(part -> !part.isEmpty()).toArray(String[]::new);
     }
 }

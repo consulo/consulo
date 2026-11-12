@@ -45,6 +45,7 @@ import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.project.impl.internal.ProjectImpl;
 import consulo.project.impl.internal.ProjectStorageUtil;
 import consulo.project.macro.ProjectPathMacroManager;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
@@ -52,6 +53,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -60,12 +62,13 @@ import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -73,6 +76,7 @@ import java.util.stream.Collectors;
 public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements IProjectStore {
   protected ProjectImpl myProject;
   private String myPresentableUrl;
+  private @Nullable Path myProjectBaseDir;
 
   @Inject
   ProjectStoreImpl(Project project, Provider<ProjectPathMacroManager> pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
@@ -101,27 +105,26 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  public void setProjectFilePath(String filePath) {
+  public void setProjectFilePath(Path filePath) {
     StateStorageManager stateStorageManager = getStateStorageManager();
 
-    File file = new File(filePath);
+    Path baseDir = Files.isDirectory(filePath) ? filePath : filePath.getParent();
 
-    File dirStore = file.isDirectory()
-        ? new File(file, Project.DIRECTORY_STORE_FOLDER)
-        : new File(file.getParentFile(), Project.DIRECTORY_STORE_FOLDER);
+    Path dirStore = baseDir.resolve(Project.DIRECTORY_STORE_FOLDER);
 
-    String defaultFilePath = new File(dirStore, "misc").getPath();
+    String defaultFilePath = dirStore.resolve("misc").toString();
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_FILE, defaultFilePath);
 
     stateStorageManager.addMacro(StoragePathMacros.DEFAULT_FILE, defaultFilePath);
 
-    File ws = new File(dirStore, "workspace");
+    Path ws = dirStore.resolve("workspace");
 
-    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.getPath());
+    stateStorageManager.addMacro(StoragePathMacros.WORKSPACE_FILE, ws.toString());
 
-    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
+    stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.toString());
 
+    myProjectBaseDir = baseDir;
     myPresentableUrl = null;
   }
 
@@ -133,60 +136,43 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   public @Nullable VirtualFile getProjectBaseDir() {
     if (isSingleFile()) return null;
 
-    String path = getProjectBasePath();
-    if (path == null) return null;
+    Path baseDir = myProjectBaseDir;
+    if (baseDir == null) return null;
 
-    return LocalFileSystem.getInstance().findFileByPath(path);
+    return VirtualFileManager.getInstance().findFileByNioPath(baseDir);
   }
 
   @Override
   public String getProjectBasePath() {
     if (isSingleFile()) return null;
 
-    String path = getProjectFilePath();
-    if (!StringUtil.isEmptyOrSpaces(path)) {
-      return getBasePath(new File(path));
-    }
-
-    //we are not yet initialized completely ("open directory", etc)
-    StateStorage storage = getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.DEFAULT);
-    if (!(storage instanceof FileBasedStorage fileBasedStorage)) {
-      return null;
-    }
-
-    return getBasePath(new File(fileBasedStorage.getFilePath()));
-  }
-
-  private String getBasePath(File file) {
-    if (isSingleFile()) {
-      return file.getParent();
-    }
-    else {
-      File parentFile = file.getParentFile();
-      return parentFile == null ? null : parentFile.getParent();
-    }
+    // the base dir is known as soon as the project file path is set - computed without touching the file system,
+    // which may be a remote platform that is not reachable right now
+    Path baseDir = myProjectBaseDir;
+    return baseDir == null ? null : baseDir.toString();
   }
 
   
   @Override
   public String getProjectName() {
-    String path = getProjectBasePath();
-    assert path != null;
-    return readProjectName(new File(path));
+    Path baseDir = myProjectBaseDir;
+    assert baseDir != null;
+    return readProjectName(baseDir);
   }
 
-  public static String readProjectName(File file) {
-    if (file.isDirectory()) {
-      File nameFile = new File(new File(file, Project.DIRECTORY_STORE_FOLDER), ProjectImpl.NAME_FILE);
-      if (nameFile.exists()) {
+  public static String readProjectName(Path dir) {
+    if (Files.isDirectory(dir)) {
+      Path nameFile = dir.resolve(Project.DIRECTORY_STORE_FOLDER).resolve(ProjectImpl.NAME_FILE);
+      if (Files.exists(nameFile)) {
         try {
-          return Files.readString(nameFile.toPath());
+          return Files.readString(nameFile);
         }
         catch (IOException ignored) {
         }
       }
     }
-    return file.getName();
+    Path fileName = dir.getFileName();
+    return fileName == null ? dir.toString() : fileName.toString();
   }
 
   @Override
@@ -268,7 +254,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   }
 
   @Override
-  protected final void doSave(boolean force, @Nullable List<SaveSession> saveSessions, List<Pair<SaveSession, File>> readonlyFiles) {
+  protected final void doSave(boolean force, @Nullable List<SaveSession> saveSessions, List<Pair<SaveSession, Path>> readonlyFiles) {
     List<ProjectStorageUtil.UnableToSaveProjectNotification> notifications = NotificationService.getInstance().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
     if (!notifications.isEmpty()) {
       throw new SaveCancelledException();
@@ -280,20 +266,21 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     if (!readonlyFiles.isEmpty()) {
       ReadonlyStatusHandler.OperationStatus status = AccessRule.read(() -> {
-        List<File> filesList = getFilesList(readonlyFiles);
-        VirtualFile[] files = filesList.stream().map(file -> LocalFileSystem.getInstance().findFileByIoFile(file)).toArray(VirtualFile[]::new);
+        List<Path> filesList = getFilesList(readonlyFiles);
+        VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+        VirtualFile[] files = filesList.stream().map(virtualFileManager::findFileByNioPath).filter(Objects::nonNull).toArray(VirtualFile[]::new);
         return ReadonlyStatusHandler.getInstance(myProject).ensureFilesWritable(files);
       });
 
       if (status.hasReadonlyFiles()) {
-        ProjectStorageUtil.dropUnableToSaveProjectNotification(myProject, VirtualFileUtil.virtualToIoFiles(Arrays.asList(status.getReadonlyFiles())));
+        ProjectStorageUtil.dropUnableToSaveProjectNotification(myProject, ContainerUtil.map(status.getReadonlyFiles(), VirtualFile::toNioPath));
         throw new SaveCancelledException();
       }
       else {
-        List<Pair<SaveSession, File>> oldList = new ArrayList<>(readonlyFiles);
+        List<Pair<SaveSession, Path>> oldList = new ArrayList<>(readonlyFiles);
         readonlyFiles.clear();
         List<VFileEvent> retryEvents = new ArrayList<>();
-        for (Pair<SaveSession, File> entry : oldList) {
+        for (Pair<SaveSession, Path> entry : oldList) {
           executeSave(entry.first, false, readonlyFiles, retryEvents);
         }
         if (!retryEvents.isEmpty()) {
@@ -308,11 +295,11 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
   }
 
-  protected void beforeSave(List<Pair<SaveSession, File>> readonlyFiles) {
+  protected void beforeSave(List<Pair<SaveSession, Path>> readonlyFiles) {
   }
 
   
-  private static List<File> getFilesList(List<Pair<SaveSession, File>> readonlyFiles) {
+  private static List<Path> getFilesList(List<Pair<SaveSession, Path>> readonlyFiles) {
     return readonlyFiles.stream().map(saveSessionFilePair -> saveSessionFilePair.getSecond()).collect(Collectors.toList());
   }
 

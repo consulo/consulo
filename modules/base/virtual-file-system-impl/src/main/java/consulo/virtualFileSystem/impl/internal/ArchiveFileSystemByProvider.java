@@ -15,11 +15,14 @@
  */
 package consulo.virtualFileSystem.impl.internal;
 
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystemProvider;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -30,13 +33,37 @@ public class ArchiveFileSystemByProvider extends ArchiveFileSystemViaArchiveFile
   private final ArchiveFileSystemProvider myProvider;
 
   public ArchiveFileSystemByProvider(ArchiveFileSystemProvider provider) {
-    super(provider.getProtocol());
+    this(provider, false);
+  }
+
+  private ArchiveFileSystemByProvider(ArchiveFileSystemProvider provider, boolean platformHosted) {
+    super(provider.getProtocol(), platformHosted);
     myProvider = provider;
+  }
+
+  @Override
+  protected ArchiveFileSystemViaArchiveFile newPlatformFileSystem() {
+    return new ArchiveFileSystemByProvider(myProvider, true);
   }
 
   
   @Override
-  public ArchiveFile createArchiveFile(String filePath) throws IOException {
-    return myProvider.createArchiveFile(filePath);
+  public ArchiveFile createArchiveFile(Path path) throws IOException {
+    return myProvider.createArchiveFile(path);
+  }
+
+  @Override
+  protected boolean isCorrectFileType(VirtualFile host) {
+    if (host.isDirectory()) {
+      Path path = host.getFileSystem().getNioPath(host);
+      return path != null && myProvider.isArchiveDirectory(path);
+    }
+    return super.isCorrectFileType(host);
+  }
+
+  @Override
+  public boolean isMakeCopyOfJar(File originalJar) {
+    // an archive which is a directory is read where it is
+    return !originalJar.isDirectory() && super.isMakeCopyOfJar(originalJar);
   }
 }

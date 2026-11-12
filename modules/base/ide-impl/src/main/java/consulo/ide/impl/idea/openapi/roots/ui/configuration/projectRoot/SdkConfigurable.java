@@ -52,7 +52,7 @@ public class SdkConfigurable implements MasterDetailsConfigurable<Sdk> {
 
     @Override
     public LocalizeValue getBannerSlogan() {
-        return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getName());
+        return ProjectLocalize.sdkBannerText(((SdkType) mySdk.getSdkType()).getDisplayName(), mySdk.getPresentableName());
     }
 
     @Override

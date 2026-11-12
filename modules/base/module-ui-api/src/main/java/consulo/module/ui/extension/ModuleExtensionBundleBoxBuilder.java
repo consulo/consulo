@@ -36,6 +36,7 @@ import consulo.ui.util.LabeledComponents;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -144,6 +145,9 @@ public class ModuleExtensionBundleBoxBuilder<T extends MutableModuleExtension<?>
     }
 
     builder.withSdkTypeFilter(mySdkFilter);
+    // a module can use only the bundles of the machine its project lives on
+    String platformTargetId = myMutableModuleExtension.getModule().getProject().getPlatformTargetId();
+    builder.withBundleFilter(sdk -> Objects.equals(sdk.getPlatformTargetId(), platformTargetId));
 
     BundleBox box = builder.build();
 

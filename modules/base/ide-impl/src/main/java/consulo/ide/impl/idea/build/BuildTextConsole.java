@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import java.nio.file.Path;
 import consulo.build.ui.BuildConsoleView;
 import consulo.build.ui.FilePosition;
 import consulo.build.ui.event.*;
@@ -41,7 +42,8 @@ public interface BuildTextConsole extends ConsoleView, BuildConsoleView, AnsiEsc
                 else {
                     FilePosition position = fme.getFilePosition();
                     StringBuilder fileLink = new StringBuilder();
-                    fileLink.append(position.getFile().getName());
+                    Path fileName = position.getPath().getFileName();
+                    fileLink.append(fileName == null ? position.getPath().toString() : fileName.toString());
                     if (position.startLine() > 0) {
                         fileLink.append(":").append(position.startLine() + 1);
                     }
@@ -52,7 +54,7 @@ public interface BuildTextConsole extends ConsoleView, BuildConsoleView, AnsiEsc
                         fileLink.toString(),
                         new LazyFileHyperlinkInfo(
                             getProject(),
-                            position.getFile().getPath(),
+                            position.getPath(),
                             position.startLine(),
                             position.startColumn()
                         )

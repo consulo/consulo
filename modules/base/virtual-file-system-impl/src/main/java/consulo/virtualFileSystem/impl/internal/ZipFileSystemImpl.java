@@ -18,11 +18,13 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.archive.ArchiveFile;
+import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystemWithMacroSupport;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -31,7 +33,16 @@ import java.io.IOException;
 @ExtensionImpl(id = "zip", order = "last")
 public class ZipFileSystemImpl extends ArchiveFileSystemViaArchiveFile implements VirtualFileSystemWithMacroSupport {
   public ZipFileSystemImpl() {
-    super(ZipArchiveFileType.PROTOCOL);
+    this(false);
+  }
+
+  private ZipFileSystemImpl(boolean platformHosted) {
+    super(ZipArchiveFileType.PROTOCOL, platformHosted);
+  }
+
+  @Override
+  protected ArchiveFileSystemViaArchiveFile newPlatformFileSystem() {
+    return new ZipFileSystemImpl(true);
   }
 
   @Override
@@ -41,7 +52,7 @@ public class ZipFileSystemImpl extends ArchiveFileSystemViaArchiveFile implement
   }
 
   @Override
-  public ArchiveFile createArchiveFile(String filePath) throws IOException {
-    return new ZipArchiveFile(filePath);
+  public ArchiveFile createArchiveFile(Path path) throws IOException {
+    return ArchiveVfsUtil.openZipArchiveFile(path);
   }
 }

@@ -16,16 +16,23 @@
 package consulo.ide.ui;
 
 import consulo.application.Application;
+import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.content.OrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetManager;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
+import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineContext;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -37,6 +44,7 @@ public class SdkPathEditor extends PathEditor {
   private final boolean myImmutable;
 
   private @Nullable String myPlatformTargetId;
+  private volatile boolean myRootsLoaded = true;
 
   public SdkPathEditor(LocalizeValue displayName, String orderRootType, FileChooserDescriptor descriptor, Sdk sdk) {
     this(displayName, orderRootType, descriptor, sdk.isPredefined());
@@ -81,6 +89,10 @@ public class SdkPathEditor extends PathEditor {
   }
 
   public void apply(SdkModificator sdkModificator) {
+    if (!myRootsLoaded) {
+      // nothing shown yet, nothing changed - the roots stay as they are
+      return;
+    }
     sdkModificator.removeRoots(myOrderRootType);
     // add all items
     for (int i = 0; i < getRowCount(); i++) {
@@ -89,14 +101,30 @@ public class SdkPathEditor extends PathEditor {
     setModified(false);
   }
 
+  /**
+   * The roots are found off the UI thread - a root of an SDK of another platform is a file of that machine, an archive root is
+   * the archive opened.
+   */
   @RequiredUIAccess
   public void reset(@Nullable SdkModificator modificator) {
-    if (modificator != null) {
-      resetPath(List.of(modificator.getRoots(myOrderRootType)));
-    }
-    else {
+    if (modificator == null) {
       setEnabled(false);
+      return;
     }
+    myRootsLoaded = false;
+    resetPath(List.of());
+    CoroutineContext context = Application.get().coroutineContext().copy();
+    context.putCopyableUserData(UIAccess.KEY, UIAccess.current());
+    CoroutineScope.launchAsync(
+      context,
+      () -> Coroutine
+        .first(ReadLock.<Object, List<VirtualFile>>apply(ignored -> List.of(modificator.getRoots(myOrderRootType))))
+        .then(UIAction.<List<VirtualFile>, List<VirtualFile>>apply(roots -> {
+          resetPath(roots);
+          myRootsLoaded = true;
+          return roots;
+        }))
+    );
   }
 
 }

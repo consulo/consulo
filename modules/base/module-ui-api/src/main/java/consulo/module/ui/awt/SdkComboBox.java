@@ -15,6 +15,7 @@
  */
 package consulo.module.ui.awt;
 
+import consulo.content.internal.RemoteSdkNames;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.bundle.*;
@@ -101,7 +102,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                 setIcon(Image.empty(16));    // to fix vertical size
                 if (value instanceof InvalidSdkComboBoxItem) {
                     setIcon(PlatformIconGroup.actionsHelp());
-                    append(value.getSdkName(), SimpleTextAttributes.ERROR_ATTRIBUTES);
+                    append(RemoteSdkNames.toPresentableName(value.getSdkName()), SimpleTextAttributes.ERROR_ATTRIBUTES);
                 }
                 else if (value instanceof CustomSdkComboBoxItem customSdkComboBoxItem) {
                     setIcon(customSdkComboBoxItem.getIcon());
@@ -113,7 +114,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
 
                     String sdkName = extensionSdkComboBoxItem.getSdkName();
                     if (sdkName != null) {
-                        append(" (" + extensionSdkComboBoxItem.getSdkName() + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+                        append(" (" + RemoteSdkNames.toPresentableName(sdkName) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
                     }
                 }
                 else if (value instanceof InvalidModuleComboBoxItem invalidModuleComboBoxItem) {
@@ -129,7 +130,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
                     String sdkName = value.getSdkName();
                     assert sdkName != null;
                     setIcon(sdk == null ? PlatformIconGroup.actionsHelp() : SdkUtil.getIcon(sdk));
-                    append(sdkName, sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+                    append(RemoteSdkNames.toPresentableName(sdkName), sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
                     String version = sdk == null ? null : sdk.getVersionString();
                     if (version != null) {
                         append(" (", SimpleTextAttributes.GRAY_ATTRIBUTES);

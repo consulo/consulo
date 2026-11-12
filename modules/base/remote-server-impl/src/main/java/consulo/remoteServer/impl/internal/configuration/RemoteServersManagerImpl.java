@@ -18,6 +18,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -136,6 +137,7 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
 
     private RemoteServerState createServerState(RemoteServer<?> server) {
         RemoteServerState serverState = new RemoteServerState();
+        serverState.myId = server.getId();
         serverState.myName = server.getName();
         serverState.myTypeId = server.getType().getId();
         serverState.myConfiguration = XmlSerializer.serialize(server.getConfiguration().getSerializer().getState(), myDefaultValuesFilter);
@@ -149,7 +151,9 @@ public final class RemoteServersManagerImpl extends RemoteServersManager impleme
         C configuration = type.createDefaultConfiguration();
         PersistentStateComponent<?> serializer = configuration.getSerializer();
         ComponentSerializationUtil.loadComponentState(serializer, server.myConfiguration);
-        return new RemoteServerImpl<>(server.myName, type, configuration);
+        // a server of before the ids gets one now, kept from the next save
+        String id = server.myId == null || server.myId.isEmpty() ? UUID.randomUUID().toString() : server.myId;
+        return new RemoteServerImpl<>(id, server.myName, type, configuration);
     }
 
     private static @Nullable ServerType<?> findServerType(String typeId) {

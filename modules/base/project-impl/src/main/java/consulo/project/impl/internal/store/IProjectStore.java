@@ -26,12 +26,14 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
+
 /**
  * @see ProjectImpl#getStateStore()
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface IProjectStore extends IComponentStore {
-  void setProjectFilePath(String filePath);
+  void setProjectFilePath(Path filePath);
 
   @Nullable VirtualFile getProjectBaseDir();
 

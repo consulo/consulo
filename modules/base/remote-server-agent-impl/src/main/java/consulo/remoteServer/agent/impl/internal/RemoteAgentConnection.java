@@ -32,6 +32,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.SSLException;
 import java.security.cert.CertificateException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -46,6 +47,7 @@ public class RemoteAgentConnection implements AutoCloseable {
 
     private final String myHost;
     private final int myPort;
+    private final String myPlatformId;
     private final boolean myUseTls;
     private final String myCertificateFingerprint;
     private final @Nullable String myToken;
@@ -53,12 +55,17 @@ public class RemoteAgentConnection implements AutoCloseable {
 
     private volatile @Nullable ManagedChannel myChannel;
 
-    public RemoteAgentConnection(String host,
+    /**
+     * @param platformId identifies the machine for good - the id of its server, not its address
+     */
+    public RemoteAgentConnection(String platformId,
+                                 String host,
                                  int port,
                                  boolean useTls,
                                  String certificateFingerprint,
                                  @Nullable String token,
                                  Executor executor) {
+        myPlatformId = platformId;
         myHost = host;
         myPort = port;
         myUseTls = useTls;
@@ -95,7 +102,9 @@ public class RemoteAgentConnection implements AutoCloseable {
         }
         catch (StatusRuntimeException e) {
             channel.shutdownNow();
-            throw new RemoteAgentException("Failed to connect to remote agent at " + address() + ": " + describe(e), e.getStatus().getCode(), e);
+            boolean noToken = myToken == null || myToken.isEmpty();
+            String reason = noToken && e.getStatus().getCode() == Status.Code.UNAUTHENTICATED ? "the agent requires a token" : describe(e);
+            throw new RemoteAgentException("Failed to connect to remote agent at " + address() + ": " + reason, e.getStatus().getCode(), e);
         }
         myChannel = channel;
     }
@@ -150,8 +159,57 @@ public class RemoteAgentConnection implements AutoCloseable {
         return RemoteAgentServiceGrpc.newStub(channel()).exec(events);
     }
 
+    /**
+     * One TCP connection to {@code host:port} of the agent's machine - waits until the agent has connected it.
+     */
+    public RemoteTunnel openTunnel(String host, int port) throws java.io.IOException {
+        return openTunnel(TunnelConnect.newBuilder().setHost(host).setPort(port).build());
+    }
+
+    /**
+     * The connection a {@link #listen} reported as accepted.
+     */
+    public RemoteTunnel openAcceptedTunnel(String acceptedId) throws java.io.IOException {
+        return openTunnel(TunnelConnect.newBuilder().setAccepted(acceptedId).build());
+    }
+
+    private RemoteTunnel openTunnel(TunnelConnect connect) throws java.io.IOException {
+        RemoteAgentServiceGrpc.RemoteAgentServiceStub stub = RemoteAgentServiceGrpc.newStub(channel());
+        return RemoteTunnel.open(stub::tunnel, connect);
+    }
+
+    /**
+     * Binds {@code host:port} of the agent's machine - the events: the bound port, then the accepted connections.
+     */
+    public void listen(String host, int port, io.grpc.stub.ClientResponseObserver<ListenRequest, ListenEvent> events) {
+        RemoteAgentServiceGrpc.newStub(channel()).listen(ListenRequest.newBuilder().setHost(host).setPort(port).build(), events);
+    }
+
     public byte[] readFile(String path) {
         return call(stub -> stub.readFile(pathRequest(path))).getData().toByteArray();
+    }
+
+    /**
+     * Up to {@code length} bytes of the file from {@code offset} - fewer at the end of the file.
+     */
+    public byte[] readFileRange(String path, long offset, int length) {
+        ReadStreamRequest request = ReadStreamRequest.newBuilder().setPath(path).setOffset(offset).setLength(length).build();
+        return call(stub -> {
+            Iterator<FileContent> chunks = stub.readFileStream(request);
+            ByteString data = ByteString.EMPTY;
+            while (chunks.hasNext()) {
+                data = data.concat(chunks.next().getData());
+            }
+            return data.toByteArray();
+        });
+    }
+
+    /**
+     * A new empty temporary file (or directory) of the machine - the agent removes it when it stops.
+     */
+    public String createTemp(String prefix, String suffix, boolean directory) {
+        CreateTempRequest request = CreateTempRequest.newBuilder().setPrefix(prefix).setSuffix(suffix).setDirectory(directory).build();
+        return call(stub -> stub.createTemp(request)).getPath();
     }
 
     public void writeFile(String path, byte[] data) {
@@ -195,10 +253,10 @@ public class RemoteAgentConnection implements AutoCloseable {
     }
 
     /**
-     * Names the machine for as long as its address stays the same - the agent's own id is the same for every agent.
+     * Names the machine for good - the id of its server: the name and the address of the server may change.
      */
     public String getPlatformId() {
-        return "remote-agent@" + myHost + ":" + myPort;
+        return myPlatformId;
     }
 
     public RemoteAgentException toException(Throwable error) {

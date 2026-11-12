@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -110,5 +111,11 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager {
         }
 
         return myCompilerConfiguration.getCompilerOutputUrl() + "/" + getRelativePathForProvider(contentFolderType, myModule);
+    }
+
+    @Override
+    public @Nullable Path getCompilerOutputPath(ContentFolderTypeProvider contentFolderType) {
+        String url = getCompilerOutputUrl(contentFolderType);
+        return url == null ? null : CompilerOutputPaths.toPath(myModule.getProject(), url);
     }
 }

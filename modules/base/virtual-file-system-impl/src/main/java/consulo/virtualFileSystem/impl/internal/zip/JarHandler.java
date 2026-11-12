@@ -33,7 +33,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.archive.ArchiveFile;
 import consulo.virtualFileSystem.impl.internal.ArchiveFileSystemViaArchiveFile;
-import consulo.virtualFileSystem.archive.ArchiveHandler;
+import consulo.virtualFileSystem.internal.ArchiveHandler;
 import consulo.virtualFileSystem.impl.internal.FSRecords;
 import consulo.virtualFileSystem.internal.FlushingDaemon;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
@@ -41,6 +41,7 @@ import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import org.jspecify.annotations.Nullable;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,7 +67,7 @@ public class JarHandler extends ZipHandler {
   }
 
   @Override
-  public ArchiveFile createArchiveFile(String path) throws IOException {
+  public ArchiveFile createArchiveFile(Path path) throws IOException {
     return myFileSystem.createArchiveFile(path);
   }
 

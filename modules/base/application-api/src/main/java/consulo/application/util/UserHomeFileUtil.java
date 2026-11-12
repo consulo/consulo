@@ -17,10 +17,10 @@ package consulo.application.util;
 
 import com.uber.nullaway.annotations.Contract;
 import consulo.platform.Platform;
-import consulo.util.io.FileUtil;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
 /**
  * Some file path trim util which depends to user home path.
@@ -36,16 +36,29 @@ public class UserHomeFileUtil {
 
   @Contract("null,_ -> null; !null,_ -> !null")
   public static @Nullable String getLocationRelativeToUserHome(@Nullable String path, boolean unixOnly) {
+    return getLocationRelativeToUserHome(path, unixOnly, Platform.current());
+  }
+
+  /**
+   * @param platform the machine of the path - its user home, file system and separator are used
+   */
+  @Contract("null,_,_ -> null; !null,_,_ -> !null")
+  public static @Nullable String getLocationRelativeToUserHome(@Nullable String path, boolean unixOnly, Platform platform) {
     if (path == null) {
       return null;
     }
 
-    Platform platform = Platform.current();
     if (platform.os().isUnix() || !unixOnly) {
-      File projectDir = new File(path);
-      File userHomeDir = platform.user().homePath().toFile();
-      if (FileUtil.isAncestor(userHomeDir, projectDir, true)) {
-        return '~' + File.separator + FileUtil.getRelativePath(userHomeDir, projectDir);
+      Path projectDir;
+      try {
+        projectDir = platform.fs().getPath(path);
+      }
+      catch (InvalidPathException e) {
+        return path;
+      }
+      Path userHomeDir = platform.user().homePath();
+      if (projectDir.startsWith(userHomeDir) && !projectDir.equals(userHomeDir)) {
+        return '~' + platform.fs().getSeparator() + userHomeDir.relativize(projectDir);
       }
     }
 

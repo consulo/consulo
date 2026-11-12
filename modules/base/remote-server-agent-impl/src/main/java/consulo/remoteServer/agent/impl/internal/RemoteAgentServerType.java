@@ -78,9 +78,15 @@ public class RemoteAgentServerType extends PlatformAwareServerType<RemoteAgentSe
     }
 
     @Override
+    public ServerConnector<?> createConnector(RemoteServer<RemoteAgentServerConfiguration> server, ServerTaskExecutor asyncTasksExecutor) {
+        // the machine is known by the id of the server - its name and its address may change
+        return new RemoteAgentServerConnector(server.getId(), server.getConfiguration(), myCredentials, myApplicationConcurrency.executor());
+    }
+
+    @Override
     public ServerConnector<?> createConnector(RemoteAgentServerConfiguration configuration,
                                               ServerTaskExecutor asyncTasksExecutor) {
-        return new RemoteAgentServerConnector(configuration, myCredentials, myApplicationConcurrency.executor());
+        throw new UnsupportedOperationException("A remote agent connects as a server - by its id");
     }
 
     private static class RemoteAgentDeploymentConfigurator

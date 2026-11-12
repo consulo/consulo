@@ -51,6 +51,11 @@ public interface Platform extends UserDataHolder {
 
     PlatformUser user();
 
+    /**
+     * TCP of this machine - connections and bound ports.
+     */
+    PlatformNetwork net();
+
     default boolean supportsFeature(PlatformFeature feature) {
         return false;
     }

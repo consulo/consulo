@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.AccessDeniedException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -31,6 +32,37 @@ import java.nio.file.Path;
  * @since 2024-08-10
  */
 public class PathStorageUtil {
+    /**
+     * True for a path of the local file system, false for one of a remote platform.
+     */
+    public static boolean isLocal(Path path) {
+        return path.getFileSystem() == FileSystems.getDefault();
+    }
+
+    /**
+     * Like {@link java.io.File#lastModified()} - 0 when the file does not exist or cannot be read.
+     */
+    public static long lastModified(Path path) {
+        try {
+            return Files.getLastModifiedTime(path).toMillis();
+        }
+        catch (IOException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Like {@link java.io.File#length()} - 0 when the file does not exist or cannot be read.
+     */
+    public static long length(Path path) {
+        try {
+            return Files.size(path);
+        }
+        catch (IOException e) {
+            return 0;
+        }
+    }
+
     public static void writeFile(Path file, byte[] content, @Nullable LineSeparator lineSeparatorIfPrependXmlProlog) throws IOException {
         try {
 
@@ -43,7 +75,7 @@ public class PathStorageUtil {
             }
         }
         catch (AccessDeniedException e) {
-            throw new ReadOnlyModificationException(file.toFile());
+            throw new ReadOnlyModificationException(file);
         }
     }
 }

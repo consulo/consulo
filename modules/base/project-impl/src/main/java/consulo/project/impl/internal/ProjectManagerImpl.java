@@ -61,8 +61,8 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -156,10 +156,8 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     }
 
     @Override
-    public @Nullable Project newProject(String projectName, String dirPath, boolean useDefaultProjectSettings, UIAccess uiAccess) {
-        dirPath = toCanonicalName(dirPath);
-
-        ProjectImpl project = createProject(projectName, dirPath, false);
+    public @Nullable Project newProject(String projectName, Path dirPath, boolean useDefaultProjectSettings, UIAccess uiAccess) {
+        ProjectImpl project = createProject(projectName, toCanonicalPath(dirPath), false);
         try {
             initProject(project, useDefaultProjectSettings ? (ProjectImpl) getDefaultProject() : null, uiAccess);
             return project;
@@ -200,22 +198,25 @@ public class ProjectManagerImpl implements ProjectManagerEx, Disposable {
     
     private ProjectImpl createProject(
         @Nullable String projectName,
-        String dirPath,
+        Path dirPath,
         boolean noUICall
     ) {
-        return new ProjectImpl(myApplication, this, new File(dirPath).getAbsolutePath(), projectName, noUICall, myComponentBinding);
+        return new ProjectImpl(myApplication, this, dirPath.toAbsolutePath(), projectName, noUICall, myComponentBinding);
     }
 
-    
-    private static String toCanonicalName(String filePath) {
+    private static Path toCanonicalPath(Path dirPath) {
+        if (dirPath.getFileSystem() != FileSystems.getDefault()) {
+            // short Windows names exist only on the local file system
+            return dirPath;
+        }
         try {
-            return FileUtil.resolveShortWindowsName(filePath);
+            return Path.of(FileUtil.resolveShortWindowsName(dirPath.toString()));
         }
         catch (IOException e) {
             // OK. File does not yet exist so it's canonical path will be equal to its original path.
         }
 
-        return filePath;
+        return dirPath;
     }
 
     @Override

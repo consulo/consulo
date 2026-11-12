@@ -43,7 +43,6 @@ import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -73,7 +72,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
     private volatile VirtualFile myCachedVirtualFile;
 
     public PathFileBasedStorage(
-        String filePath,
+        Path filePath,
         String fileSpec,
         @Nullable RoamingType roamingType,
         @Nullable TrackingPathMacroSubstitutor pathMacroManager,
@@ -88,9 +87,10 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
         super(fileSpec, roamingType, pathMacroManager, rootElementName, streamProvider, pathMacrosService);
 
         myUseXmlProlog = useXmlProlog;
-        myCollectVfsEvents = collectVfsEvents;
-        myXmlFile = Path.of(filePath + StorageFormat.XML_EXTENSION);
-        myJsonFile = Path.of(filePath + StorageFormat.JSON_EXTENSION);
+        // VFS events are only kept in sync for the local file system - a file on a remote platform is not tracked by PersistentFS
+        myCollectVfsEvents = collectVfsEvents && PathStorageUtil.isLocal(filePath);
+        myXmlFile = filePath.resolveSibling(filePath.getFileName() + StorageFormat.XML_EXTENSION);
+        myJsonFile = filePath.resolveSibling(filePath.getFileName() + StorageFormat.JSON_EXTENSION);
         myFile = Files.exists(myJsonFile) ? myJsonFile : myXmlFile;
 
         if (myCollectVfsEvents && listener != null) {
@@ -102,7 +102,7 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
 
     private void registerTracker(VirtualFileTracker virtualFileTracker, Path path, StateStorageListener listener, Disposable parentDisposable) {
         {
-            String url = LocalFileSystem.PROTOCOL_PREFIX + path.toAbsolutePath().toString().replace(File.separatorChar, '/');
+            String url = LocalFileSystem.PROTOCOL_PREFIX + path.toAbsolutePath().toString().replace(path.getFileSystem().getSeparator(), "/");
             virtualFileTracker.addTracker(url, new VirtualFileListener() {
                 @Override
                 public void fileMoved(VirtualFileMoveEvent event) {
@@ -231,9 +231,8 @@ public class PathFileBasedStorage extends XmlElementStorage implements FileBased
 
             // Keep the VFS in sync via an explicit save-tagged content-change event with the real on-disk timestamp/length,
             // so that a later filesystem refresh observes no diff and does not report an external change.
-            File io = target.toFile();
-            long newTimestamp = io.lastModified();
-            long newLength = io.length();
+            long newTimestamp = Files.getLastModifiedTime(target).toMillis();
+            long newLength = Files.size(target);
             collect(events, new VFileContentChangeEvent(this, file, oldModificationStamp, -1, oldTimestamp, newTimestamp, oldLength, newLength, false));
         }
     }

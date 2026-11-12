@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.content.impl.internal.platform;
+package consulo.application.impl.internal.platform;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetManager;
-import consulo.content.platform.PlatformTargetProvider;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
+import consulo.application.platform.PlatformTargetProvider;
 import consulo.platform.Platform;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -68,6 +69,19 @@ public class PlatformTargetManagerImpl implements PlatformTargetManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public Platform getPlatform(@Nullable String id) {
+        PlatformTarget target = findTarget(id);
+        if (target == null) {
+            return new UnknownPlatform(Objects.requireNonNull(id), id);
+        }
+        Platform platform = target.getPlatform();
+        if (platform == null) {
+            return new UnknownPlatform(target.getId(), target.getDisplayName().get());
+        }
+        return platform;
     }
 
     @Override

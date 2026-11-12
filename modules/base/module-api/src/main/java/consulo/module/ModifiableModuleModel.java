@@ -17,6 +17,7 @@ package consulo.module;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Map;
@@ -45,6 +46,12 @@ public interface ModifiableModuleModel {
    * @return the module instance.
    */
   Module newModule(String name, @Nullable String dirPath);
+
+  /**
+   * Like {@link #newModule(String, String)}, the module dir url taken from the directory itself - for a directory of any
+   * file system, e.g. a project on a remote platform.
+   */
+  Module newModule(String name, VirtualFile moduleDir);
 
   /**
    * Creates a module of the specified type at the specified path and adds it to the project

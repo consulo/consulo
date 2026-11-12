@@ -19,6 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.component.macro.PathMacroManager;
 import consulo.project.Project;
+import consulo.util.io.URLUtil;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -26,7 +28,21 @@ import consulo.project.Project;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public interface ProjectPathMacroManager extends PathMacroManager {
+  /**
+   * Urls of a project on a remote platform are stored as {@code file://} urls - so the project files can be shared with a
+   * local checkout of the same project - and mean files of that platform.
+   */
+  String STORED_URL_PREFIX = URLUtil.FILE_PROTOCOL_PREFIX;
+
   public static ProjectPathMacroManager getInstance(Project project) {
     return project.getInstance(ProjectPathMacroManager.class);
+  }
+
+  /**
+   * The url prefix {@link #STORED_URL_PREFIX} maps to while the project is open - {@code platform://<id>} for a project on
+   * a remote platform, null for a local project.
+   */
+  default @Nullable String getPlatformUrlPrefix() {
+    return null;
   }
 }

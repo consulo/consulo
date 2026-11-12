@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
+import consulo.platform.Platform;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
 import consulo.project.Project;
@@ -84,6 +85,11 @@ public class DummyProject extends UserDataHolderBase implements Project {
     @Override
     public @Nullable String getBasePath() {
         return null;
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.current();
     }
 
     @Override

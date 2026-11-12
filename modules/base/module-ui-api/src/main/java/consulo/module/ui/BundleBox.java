@@ -15,6 +15,7 @@
  */
 package consulo.module.ui;
 
+import consulo.content.internal.RemoteSdkNames;
 import consulo.annotation.UsedInPlugin;
 import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
@@ -287,13 +288,27 @@ public class BundleBox implements PseudoComponent {
         LocalizeValue nullItemName,
         @Nullable Image nullIcon
     ) {
-        myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, nullItemName));
+        this(bundleHolder, filter, nullItemName, nullIcon, null);
+    }
+
+    /**
+     * @param bundleFilter which bundles are offered at all - e.g. only the ones of the machine a project lives on
+     */
+    @RequiredUIAccess
+    public BundleBox(
+        BundleHolder bundleHolder,
+        @Nullable Predicate<SdkTypeId> filter,
+        LocalizeValue nullItemName,
+        @Nullable Image nullIcon,
+        @Nullable Predicate<Sdk> bundleFilter
+    ) {
+        myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, bundleFilter, nullItemName));
 
         myOriginalComboBox.setRenderer((renderer, renderItem) -> {
             var value = renderItem.getValue();
             if (value instanceof InvalidBundleBoxItem) {
                 renderer.withIcon(PlatformIconGroup.actionsHelp());
-                renderer.append(value.getBundleName(), TextAttribute.ERROR);
+                renderer.append(RemoteSdkNames.toPresentableName(value.getBundleName()), TextAttribute.ERROR);
             }
             else if (value instanceof CustomBundleBoxItem customBundleBoxItem) {
                 renderer.withIcon(customBundleBoxItem.getIcon());
@@ -305,7 +320,7 @@ public class BundleBox implements PseudoComponent {
 
                 String sdkName = extensionSdkComboBoxItem.getBundleName();
                 if (sdkName != null) {
-                    renderer.append(" (" + extensionSdkComboBoxItem.getBundleName() + ")", TextAttribute.GRAYED);
+                    renderer.append(" (" + RemoteSdkNames.toPresentableName(sdkName) + ")", TextAttribute.GRAYED);
                 }
             }
             else if (value instanceof InvalidModuleBundleBoxItem invalidModuleBundleBoxItem) {
@@ -322,7 +337,7 @@ public class BundleBox implements PseudoComponent {
                 String sdkName = value.getBundleName();
                 assert sdkName != null;
                 renderer.withIcon(sdk == null ? PlatformIconGroup.actionsHelp() : SdkUtil.getIcon(sdk));
-                renderer.append(sdkName, sdk == null ? TextAttribute.ERROR : TextAttribute.REGULAR);
+                renderer.append(RemoteSdkNames.toPresentableName(sdkName), sdk == null ? TextAttribute.ERROR : TextAttribute.REGULAR);
                 String version = sdk == null ? null : sdk.getVersionString();
                 if (version != null) {
                     renderer.append(" (", TextAttribute.GRAY);
@@ -334,11 +349,20 @@ public class BundleBox implements PseudoComponent {
     }
 
     static List<BundleBoxItem> buildItems(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, boolean withNullItem) {
+        return buildItems(holder, filter, null, withNullItem);
+    }
+
+    static List<BundleBoxItem> buildItems(
+        BundleHolder holder,
+        @Nullable Predicate<SdkTypeId> filter,
+        @Nullable Predicate<Sdk> bundleFilter,
+        boolean withNullItem
+    ) {
         List<BundleBoxItem> list = new ArrayList<>();
 
         List<Sdk> targetSdks = new ArrayList<>();
         holder.forEachBundle(sdk -> {
-            if (filter == null || filter.test(sdk.getSdkType())) {
+            if ((filter == null || filter.test(sdk.getSdkType())) && (bundleFilter == null || bundleFilter.test(sdk))) {
                 targetSdks.add(sdk);
             }
         });
@@ -356,8 +380,13 @@ public class BundleBox implements PseudoComponent {
     }
 
     @RequiredUIAccess
-    private static FlatDataModel<BundleBoxItem> model(BundleHolder holder, @Nullable Predicate<SdkTypeId> filter, LocalizeValue nullItemName) {
-        return FlatDataModel.of(buildItems(holder, filter, nullItemName.isNotEmpty()));
+    private static FlatDataModel<BundleBoxItem> model(
+        BundleHolder holder,
+        @Nullable Predicate<SdkTypeId> filter,
+        @Nullable Predicate<Sdk> bundleFilter,
+        LocalizeValue nullItemName
+    ) {
+        return FlatDataModel.of(buildItems(holder, filter, bundleFilter, nullItemName.isNotEmpty()));
     }
 
     @RequiredUIAccess

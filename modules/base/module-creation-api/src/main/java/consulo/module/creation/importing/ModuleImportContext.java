@@ -20,6 +20,10 @@ import consulo.module.creation.NewModuleWizardContext;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+
 /**
  * @author VISTALL
  * @since 30-Jan-17
@@ -30,6 +34,7 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
 
   private String myName;
   private String myPath;
+  private FileSystem myFileSystem = FileSystems.getDefault();
 
   public ModuleImportContext(@Nullable Project project) {
     myProject = project;
@@ -41,6 +46,21 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
 
   public String getFileToImport() {
     return myFileToImport;
+  }
+
+  /**
+   * The file system the imported file belongs to - the local one, or a remote platform's.
+   * The paths of this context are paths of it.
+   */
+  public void setFileSystem(FileSystem fileSystem) {
+    myFileSystem = fileSystem;
+  }
+
+  /**
+   * {@link #getPath()} as a path of the file system the project is imported on.
+   */
+  public Path getNioPath() {
+    return myFileSystem.getPath(myPath);
   }
 
   @Override

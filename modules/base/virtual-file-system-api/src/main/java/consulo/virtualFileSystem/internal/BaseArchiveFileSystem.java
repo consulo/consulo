@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.archive;
+package consulo.virtualFileSystem.internal;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
@@ -25,9 +25,12 @@ import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.archive.ArchiveNioFileSystemManager;
+import consulo.virtualFileSystem.archive.ArchivePath;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.localize.VirtualFileSystemLocalize;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -91,7 +94,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
         VirtualFile local = LOCAL_FILE.get(root);
         if (local == null) {
             String localPath = extractLocalPath(root.getPath());
-            local = StandardFileSystems.local().findFileByPath(localPath);
+            local = getHostFileSystem().findFileByPath(localPath);
             if (local != null) {
                 LOCAL_FILE.set(root, local);
             }
@@ -177,6 +180,23 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     }
 
     public abstract ArchiveHandler getHandler(VirtualFile entryFile);
+
+    /**
+     * The file system of the files hosting the archives - {@code file} here, {@code platform} for the archives of other machines.
+     */
+    public VirtualFileSystem getHostFileSystem() {
+        return StandardFileSystems.local();
+    }
+
+    /**
+     * The same archives, hosted by the files of other platforms - its protocol is
+     * {@code platform-<protocol>} from this one. Created on the first request of that protocol.
+     *
+     * @return {@code null} if the archives of other platforms are not supported
+     */
+    public @Nullable BaseArchiveFileSystem createPlatformFileSystem() {
+        return null;
+    }
 
     // standard implementations
 
@@ -324,7 +344,7 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
      */
     public @Nullable VirtualFile findLocalByRootPath(String rootPath) {
         String localPath = extractLocalPath(rootPath);
-        VirtualFile local = StandardFileSystems.local().findFileByPath(localPath);
+        VirtualFile local = getHostFileSystem().findFileByPath(localPath);
         return local != null && isCorrectFileType(local) ? local : null;
     }
 
@@ -334,9 +354,17 @@ public abstract class BaseArchiveFileSystem extends NewVirtualFileSystem impleme
     protected boolean isCorrectFileType(VirtualFile local) {
         FileType fileTypeByName = FileTypeRegistry.getInstance().getFileTypeByFileName(local.getNameSequence());
         if (fileTypeByName instanceof ArchiveFileType archiveFileTypeByName) {
-            return archiveFileTypeByName.getFileSystem() == this;
+            return isArchiveOf(archiveFileTypeByName);
         }
-        return local.getFileType() instanceof ArchiveFileType archiveFileType && archiveFileType.getFileSystem() == this;
+        return local.getFileType() instanceof ArchiveFileType archiveFileType && isArchiveOf(archiveFileType);
+    }
+
+    /**
+     * The archives of the file type are of this file system - or of the same one, of other platforms.
+     */
+    private boolean isArchiveOf(ArchiveFileType fileType) {
+        ArchiveFileSystem fileSystem = fileType.getFileSystem();
+        return fileSystem == this || PlatformArchives.getPlatformProtocol(fileSystem.getProtocol()).equals(getProtocol());
     }
 
     @Override

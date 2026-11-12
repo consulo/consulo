@@ -120,7 +120,8 @@ public class CompileDriverImpl implements CompileDriver {
     private static final Predicate<Compiler> SOURCE_PROCESSING_ONLY = compiler -> compiler instanceof SourceProcessingCompiler;
     private static final Predicate<Compiler> ALL_EXCEPT_SOURCE_PROCESSING = compiler -> !SOURCE_PROCESSING_ONLY.test(compiler);
 
-    private Set<File> myAllOutputDirectories;
+    // paths of the machine the project lives on
+    private Set<Path> myAllOutputDirectories;
     private static final long ONE_MINUTE_MS = 60L /*sec*/ * 1000L /*millisec*/;
 
     public CompileDriverImpl(Project project) {
@@ -581,34 +582,33 @@ public class CompileDriverImpl implements CompileDriver {
     ) {
         long duration = System.currentTimeMillis() - compileContext.getStartCompilationStamp();
         // refresh on output roots is required in order for the order enumerator to see all roots via VFS
-        Set<File> outputs = new HashSet<>();
+        Set<Path> outputs = new HashSet<>();
         Module[] affectedModules = compileContext.getCompileScope().getAffectedModules();
         for (String path : CompilerPaths.getOutputPaths(affectedModules)) {
-            outputs.add(new File(path));
+            outputs.add(toProjectPath(path));
         }
-        LocalFileSystem lfs = LocalFileSystem.getInstance();
         if (!outputs.isEmpty()) {
             ProgressIndicator indicator = compileContext.getProgressIndicator();
             indicator.setText(CompilerLocalize.progressSynchronizingOutputDirectories());
-            lfs.refreshIoFiles(outputs, _status == ExitStatus.CANCELLED, false, null);
+            CompilerUtil.refreshDirectories(outputs);
             indicator.setText(LocalizeValue.empty());
         }
 
-        Set<File> genSourceRoots = Sets.newHashSet(FileUtil.FILE_HASHING_STRATEGY);
+        Set<Path> genSourceRoots = new HashSet<>();
         for (Module affectedModule : affectedModules) {
             ExtensionPoint<ModuleAdditionalOutputDirectoriesProvider> point =
                 affectedModule.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
 
             point.forEachExtensionSafe(provider -> {
                 for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                    genSourceRoots.add(new File(directory.path()));
+                    genSourceRoots.add(toProjectPath(directory.path()));
                 }
             });
         }
 
         if (!genSourceRoots.isEmpty()) {
             // refresh generates source roots asynchronously; needed for error highlighting update
-            lfs.refreshIoFiles(genSourceRoots, true, true, null);
+            CompilerUtil.refreshDirectories(genSourceRoots);
         }
         myProject.getUIAccess().give(() -> {
             int errorCount = 0;
@@ -803,21 +803,20 @@ public class CompileDriverImpl implements CompileDriver {
 
     private void clearAffectedOutputPathsIfPossible(CompileContextEx context) {
         @RequiredReadAction
-        ThrowableComputable<List<File>, RuntimeException> action = () -> {
-            MultiMap<File, Module> outputToModulesMap = new MultiMap<>();
+        ThrowableComputable<List<Path>, RuntimeException> action = () -> {
+            MultiMap<Path, Module> outputToModulesMap = new MultiMap<>();
             for (Module module : ModuleManager.getInstance(myProject).getModules()) {
                 ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
                 for (ContentFolderTypeProvider contentFolderTypeProvider : ContentFolderTypeProvider.filter(LanguageContentFolderScopes.productionAndTest())) {
                     String outputPathUrl = moduleCompilerPathsManager.getCompilerOutputUrl(contentFolderTypeProvider);
                     if (outputPathUrl != null) {
-                        String path = VirtualFileManager.extractPath(outputPathUrl);
-                        outputToModulesMap.putValue(new File(path), module);
+                        outputToModulesMap.putValue(CompilerOutputPaths.toPath(myProject, outputPathUrl), module);
                     }
                 }
             }
             Set<Module> affectedModules = new HashSet<>(Arrays.asList(context.getCompileScope().getAffectedModules()));
-            List<File> result = new ArrayList<>(affectedModules.size() * 2);
-            for (File output : outputToModulesMap.keySet()) {
+            List<Path> result = new ArrayList<>(affectedModules.size() * 2);
+            for (Path output : outputToModulesMap.keySet()) {
                 if (affectedModules.containsAll(outputToModulesMap.get(output))) {
                     result.add(output);
                 }
@@ -827,17 +826,17 @@ public class CompileDriverImpl implements CompileDriver {
             for (Artifact artifact : artifactsToBuild) {
                 String outputFilePath = ((ArtifactImpl) artifact).getOutputDirectoryPathToCleanOnRebuild();
                 if (outputFilePath != null) {
-                    result.add(new File(FileUtil.toSystemDependentName(outputFilePath)));
+                    result.add(toProjectPath(outputFilePath));
                 }
             }
             return result;
         };
-        List<File> scopeOutputs = ReadAction.compute(action);
+        List<Path> scopeOutputs = ReadAction.compute(action);
         if (!scopeOutputs.isEmpty()) {
             CompilerUtil.runInContext(
                 context,
                 CompilerLocalize.progressClearingOutput(),
-                () -> CompilerUtil.clearOutputDirectories(scopeOutputs)
+                () -> CompilerUtil.clearOutputDirectoryPaths(scopeOutputs)
             );
         }
     }
@@ -885,7 +884,7 @@ public class CompileDriverImpl implements CompileDriver {
             CompilerLocalize.progressClearingOutput(),
             () -> {
                 if (myShouldClearOutputDirectory) {
-                    CompilerUtil.clearOutputDirectories(myAllOutputDirectories);
+                    CompilerUtil.clearOutputDirectoryPaths(myAllOutputDirectories);
                 }
                 else { // refresh is still required
                     try {
@@ -902,7 +901,7 @@ public class CompileDriverImpl implements CompileDriver {
                         pruneEmptyDirectories(context, context.getProgressIndicator(), myAllOutputDirectories);
                     }
                     finally {
-                        CompilerUtil.refreshIODirectories(myAllOutputDirectories);
+                        CompilerUtil.refreshDirectories(myAllOutputDirectories);
                     }
                 }
                 dropScopesCaches();
@@ -918,23 +917,32 @@ public class CompileDriverImpl implements CompileDriver {
             .runReadAction(() -> ((ProjectRootManagerEx) ProjectRootManager.getInstance(myProject)).clearScopesCachesForModules());
     }
 
-    private void pruneEmptyDirectories(CompileContextEx context, ProgressIndicator progress, Set<File> directories) {
-        for (File directory : directories) {
+    private void pruneEmptyDirectories(CompileContextEx context, ProgressIndicator progress, Set<Path> directories) {
+        for (Path directory : directories) {
             doPrune(context, progress, directory, directories);
         }
     }
 
-    private boolean doPrune(CompileContextEx context, ProgressIndicator progress, File directory, Set<File> outPutDirectories) {
+    private boolean doPrune(CompileContextEx context, ProgressIndicator progress, Path directory, Set<Path> outPutDirectories) {
         progress.checkCanceled();
-        File[] files = directory.listFiles();
+        if (!Files.isDirectory(directory)) {
+            return false;
+        }
+        List<Path> files;
+        try (Stream<Path> children = Files.list(directory)) {
+            files = children.toList();
+        }
+        catch (IOException e) {
+            return false;
+        }
         boolean isEmpty = true;
-        if (files != null) {
-            for (File file : files) {
-                if (!outPutDirectories.contains(file)) {
-                    if (doPrune(context, progress, file, outPutDirectories)) {
-                        deleteFile(file);
+        for (Path file : files) {
+            if (!outPutDirectories.contains(file)) {
+                if (doPrune(context, progress, file, outPutDirectories)) {
+                    try {
+                        Files.deleteIfExists(file);
                     }
-                    else {
+                    catch (IOException e) {
                         isEmpty = false;
                     }
                 }
@@ -942,23 +950,29 @@ public class CompileDriverImpl implements CompileDriver {
                     isEmpty = false;
                 }
             }
+            else {
+                isEmpty = false;
+            }
         }
-        else {
-            isEmpty = false;
-        }
-
         return isEmpty;
     }
 
-    private Set<File> getAllOutputDirectories(CompileContext context) {
-        Set<File> outputDirs = new OrderedSet<>();
+    /**
+     * A path of the machine the project lives on
+     */
+    private Path toProjectPath(String path) {
+        return myProject.getPlatform().fs().getPath(path);
+    }
+
+    private Set<Path> getAllOutputDirectories(CompileContext context) {
+        Set<Path> outputDirs = new OrderedSet<>();
         Module[] modules = ModuleManager.getInstance(myProject).getModules();
         for (String path : CompilerPaths.getOutputPaths(modules)) {
-            outputDirs.add(new File(path));
+            outputDirs.add(toProjectPath(path));
         }
         for (Pair<IntermediateOutputCompiler, Module> pair : myGenerationCompilerModuleToOutputDirMap.keySet()) {
-            outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), false)));
-            outputDirs.add(new File(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true)));
+            outputDirs.add(toProjectPath(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), false)));
+            outputDirs.add(toProjectPath(CompilerPaths.getGenerationOutputPath(pair.getFirst(), pair.getSecond(), true)));
         }
 
         for (Module module : modules) {
@@ -967,7 +981,7 @@ public class CompileDriverImpl implements CompileDriver {
 
             point.forEachExtensionSafe(provider -> {
                 for (ModuleAdditionalOutputDirectory outputDirectory : provider.getOutputDirectories()) {
-                    outputDirs.add(new File(outputDirectory.path()));
+                    outputDirs.add(toProjectPath(outputDirectory.path()));
                 }
             });
         }
@@ -975,7 +989,7 @@ public class CompileDriverImpl implements CompileDriver {
         for (Artifact artifact : ArtifactManager.getInstance(myProject).getArtifacts()) {
             String path = ((ArtifactImpl) artifact).getOutputDirectoryPathToCleanOnRebuild();
             if (path != null) {
-                outputDirs.add(new File(FileUtil.toSystemDependentName(path)));
+                outputDirs.add(toProjectPath(path));
             }
         }
         return outputDirs;
@@ -1120,7 +1134,8 @@ public class CompileDriverImpl implements CompileDriver {
             Module[] scopeModules = scope.getAffectedModules()/*ModuleManager.getInstance(myProject).getModules()*/;
             List<String> modulesWithoutOutputPathSpecified = new ArrayList<>();
             boolean isProjectCompilePathSpecified = true;
-            Set<File> nonExistingOutputPaths = new HashSet<>();
+            // paths of the machine the project lives on
+            Set<Path> nonExistingOutputPaths = new HashSet<>();
             CompilerManager compilerManager = CompilerManager.getInstance(myProject);
             for (Module module : scopeModules) {
                 boolean isEmpty = true;
@@ -1140,8 +1155,8 @@ public class CompileDriverImpl implements CompileDriver {
 
                         String outputPath = getModuleOutputPath(module, contentFolderType);
                         if (outputPath != null) {
-                            File file = new File(FileUtil.toSystemDependentName(outputPath));
-                            if (!file.exists()) {
+                            Path file = myProject.getPlatform().fs().getPath(outputPath);
+                            if (!Files.exists(file)) {
                                 nonExistingOutputPaths.add(file);
                             }
                         }
@@ -1154,8 +1169,8 @@ public class CompileDriverImpl implements CompileDriver {
                 var point = module.getExtensionPoint(ModuleAdditionalOutputDirectoriesProvider.class);
                 point.forEachExtensionSafe(provider -> {
                     for (ModuleAdditionalOutputDirectory directory : provider.getOutputDirectories()) {
-                        File file = new File(directory.path());
-                        if (!file.exists()) {
+                        Path file = myProject.getPlatform().fs().getPath(directory.path());
+                        if (!Files.exists(file)) {
                             nonExistingOutputPaths.add(file);
                         }
                     }
@@ -1179,16 +1194,16 @@ public class CompileDriverImpl implements CompileDriver {
             }
 
             if (!nonExistingOutputPaths.isEmpty()) {
-                for (File file : nonExistingOutputPaths) {
-                    boolean succeeded = file.mkdirs();
-                    if (!succeeded) {
-                        if (file.exists()) {
-                            // for overlapping paths, this one might have been created as an intermediate path on a previous iteration
-                            continue;
-                        }
+                for (Path file : nonExistingOutputPaths) {
+                    try {
+                        // overlapping paths may have been created as intermediate ones of a previous iteration - that is fine
+                        Files.createDirectories(file);
+                    }
+                    catch (IOException e) {
+                        LOG.warn(e);
                         Messages.showMessageDialog(
                             myProject,
-                            CompilerLocalize.errorFailedToCreateDirectory(file.getPath()).get(),
+                            CompilerLocalize.errorFailedToCreateDirectory(file.toString()).get(),
                             CommonLocalize.titleError().get(),
                             UIUtil.getErrorIcon()
                         );

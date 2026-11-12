@@ -15,6 +15,7 @@
  */
 package consulo.test.light.impl;
 
+import consulo.platform.Platform;
 import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ComponentScope;
 import consulo.application.Application;
@@ -93,6 +94,11 @@ public class LightProject extends BaseComponentManager implements Project {
     @Override
     public @Nullable String getBasePath() {
         return null;
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.current();
     }
 
     @Override

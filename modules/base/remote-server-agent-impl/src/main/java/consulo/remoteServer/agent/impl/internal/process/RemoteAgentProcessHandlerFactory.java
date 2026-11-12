@@ -39,6 +39,11 @@ public class RemoteAgentProcessHandlerFactory implements PlatformProcessHandlerF
 
     @Override
     public KillableProcessHandler createProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
+        return createProcessHandler(commandLine, false);
+    }
+
+    @Override
+    public KillableProcessHandler createProcessHandler(GeneralCommandLine commandLine, boolean colored) throws ExecutionException {
         RemotePlatform platform = (RemotePlatform) commandLine.getPlatform();
         RemoteAgentConnection connection = platform.getConnection();
 
@@ -60,7 +65,7 @@ public class RemoteAgentProcessHandlerFactory implements PlatformProcessHandlerF
             .build();
 
         RemoteAgentProcessHandler handler =
-            new RemoteAgentProcessHandler(connection, commandLine.getCommandLineString(), platform.getConsoleCharset());
+            new RemoteAgentProcessHandler(connection, commandLine.getCommandLineString(), platform.getConsoleCharset(), colored);
         handler.start(start);
         return handler;
     }

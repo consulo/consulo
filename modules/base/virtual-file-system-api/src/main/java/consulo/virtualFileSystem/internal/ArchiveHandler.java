@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.archive;
+package consulo.virtualFileSystem.internal;
 
 import consulo.application.internal.SlowOperations;
 import consulo.logging.Logger;
@@ -22,7 +22,6 @@ import consulo.util.io.FileAttributes;
 import consulo.util.lang.ByteArrayCharSequence;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SoftReference;
-import consulo.virtualFileSystem.internal.FileSystemUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;

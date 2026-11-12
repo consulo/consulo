@@ -51,6 +51,13 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
 
     public abstract NamedPointer<T> getPointer(ModuleRootLayer layer, String name);
 
+    /**
+     * The name as project files store it.
+     */
+    protected String toStoredName(String name) {
+        return name;
+    }
+
     @Override
     public @Nullable T get() {
         if (myModulePointer != null) {
@@ -139,7 +146,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
         }
 
         if (myTargetPointer != null) {
-            return new ModuleInheritableNamePointerStateProvider.State(myTargetPointer.getName(), null);
+            return new ModuleInheritableNamePointerStateProvider.State(toStoredName(myTargetPointer.getName()), null);
         }
         return new ModuleInheritableNamePointerStateProvider.State(null, null);
     }
@@ -149,7 +156,7 @@ public abstract class ModuleInheritableNamedPointerImpl<T extends Named> impleme
             element.setAttribute(myPointerId + "-module-name", myModulePointer.getName());
         }
         else if (myTargetPointer != null) {
-            element.setAttribute(myPointerId + "-name", myTargetPointer.getName());
+            element.setAttribute(myPointerId + "-name", toStoredName(myTargetPointer.getName()));
         }
     }
 

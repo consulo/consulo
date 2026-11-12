@@ -17,6 +17,7 @@ package consulo.compiler.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
+import consulo.compiler.CompilerPaths;
 import consulo.compiler.*;
 import consulo.compiler.impl.internal.scope.CompositeScope;
 import consulo.compiler.scope.CompileScope;
@@ -39,8 +40,8 @@ import consulo.util.collection.Sets;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Pair;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -147,8 +148,9 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
         myContentRootToModule.clear();
         for (Module module : allModules) {
             for (String url : ModuleRootManager.getInstance(module).getContentRootUrls()) {
+                // the files of the compilation are paths of the machine of the project
                 myContentRootToModule.put(
-                    TranslatingCompilerFilesMonitorImpl.normalizePath(VirtualFileUtil.urlToPath(url)),
+                    TranslatingCompilerFilesMonitorImpl.normalizePath(CompilerPaths.urlToMachinePath(url)),
                     module
                 );
             }
@@ -389,7 +391,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
     @Override
     public Path getOutputForFile(Module module, Path file) {
         ContentFolderTypeProvider contentFolderTypeForFile = null;
-        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(file);
+        VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByNioPath(file);
         if (virtualFile != null) {
             contentFolderTypeForFile = myProjectFileIndex.getContentFolderTypeForFile(virtualFile);
         }
@@ -422,7 +424,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public boolean isInTestSourceContent(Path fileOrDir) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(fileOrDir);
+        VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByNioPath(fileOrDir);
         if (virtualFile != null
             && (TestSourcesFilter.isTestSources(virtualFile, myProject) || myProjectFileIndex.isInTestResource(virtualFile))) {
             return true;
@@ -432,7 +434,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
     @Override
     public boolean isInSourceContent(Path fileOrDir) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByNioFile(fileOrDir);
+        VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByNioPath(fileOrDir);
         if (virtualFile != null
             && (myProjectFileIndex.isInSourceContent(virtualFile) || myProjectFileIndex.isInResource(virtualFile))) {
             return true;

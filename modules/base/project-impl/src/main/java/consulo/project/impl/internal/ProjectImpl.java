@@ -26,8 +26,11 @@ import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.store.internal.IComponentStore;
 import consulo.component.store.internal.StorableComponent;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ProjectType;
@@ -46,15 +49,16 @@ import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
@@ -65,7 +69,9 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
     private final ProjectManagerEx myManager;
     
-    private final String myDirPath;
+    private final Path myDirPath;
+
+    private final @Nullable String myPlatformTargetId;
 
     private boolean myFullyInitialized;
 
@@ -86,13 +92,14 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     public ProjectImpl(
         Application application,
         ProjectManager manager,
-        String dirPath,
-        String projectName,
+        Path dirPath,
+        @Nullable String projectName,
         boolean noUIThread,
         ComponentBinding componentBinding
     ) {
         super(application, "Project " + (projectName == null ? dirPath : projectName), ComponentScope.PROJECT, componentBinding);
         myDirPath = dirPath;
+        myPlatformTargetId = findPlatformTargetId(application, dirPath);
 
         putUserData(CREATION_TIME, System.nanoTime());
 
@@ -107,6 +114,41 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         myManager = (ProjectManagerEx) manager;
 
         myName = projectName;
+    }
+
+    /**
+     * Null for a path of the local file system, otherwise the id of the remote target the path belongs to.
+     * Such a path only exists while its target is connected - a remote project is connected before it is opened.
+     */
+    private static @Nullable String findPlatformTargetId(Application application, Path dirPath) {
+        if (dirPath.getFileSystem() == FileSystems.getDefault()) {
+            return null;
+        }
+        PlatformTarget target = application.getInstance(PlatformTargetManager.class).findTargetOf(dirPath);
+        if (target == null) {
+            throw new IllegalArgumentException("No connected platform target owns " + dirPath);
+        }
+        return target.getId();
+    }
+
+    @Override
+    public Platform getPlatform() {
+        if (myPlatformTargetId == null) {
+            return Platform.current();
+        }
+        return getApplication().getInstance(PlatformTargetManager.class).getPlatform(myPlatformTargetId);
+    }
+
+    @Override
+    public @Nullable String getPlatformTargetId() {
+        return myPlatformTargetId;
+    }
+
+    /**
+     * The project directory as given at creation - a path of the project's platform file system.
+     */
+    public Path getDirPath() {
+        return myDirPath;
     }
 
     @Override
@@ -290,18 +332,20 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         if (projectBasePath == null) {
             return;
         }
-        File projectDir = new File(projectBasePath);
-        File nameFile = new File(projectDir, DIRECTORY_STORE_FOLDER + "/" + NAME_FILE);
-        if (!projectDir.getName().equals(getName())) {
-            try {
-                FileUtil.writeToFile(nameFile, getName());
+        Path projectDir = getPlatform().fs().getPath(projectBasePath);
+        Path nameFile = projectDir.resolve(DIRECTORY_STORE_FOLDER).resolve(NAME_FILE);
+        Path dirName = projectDir.getFileName();
+        try {
+            if (dirName == null || !dirName.toString().equals(getName())) {
+                Files.createDirectories(nameFile.getParent());
+                Files.writeString(nameFile, getName());
             }
-            catch (IOException e) {
-                LOG.error("Unable to store project name", e);
+            else {
+                Files.deleteIfExists(nameFile);
             }
         }
-        else {
-            FileUtil.delete(nameFile);
+        catch (IOException e) {
+            LOG.error("Unable to store project name", e);
         }
     }
 

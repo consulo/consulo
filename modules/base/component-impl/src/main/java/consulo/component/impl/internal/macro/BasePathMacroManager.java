@@ -28,6 +28,8 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BasePathMacroManager implements PathMacroManager {
@@ -46,6 +48,28 @@ public class BasePathMacroManager implements PathMacroManager {
     if (f == null) return;
     addFileHierarchyReplacements(result, f.getParent(), macro + "/..");
     result.put(macro, StringUtil.trimEnd(f.getPath(), "/"));
+  }
+
+  /**
+   * Like {@link #addFileHierarchyReplacements(ExpandMacroToPathMap, String, String)}, but from the path string alone -
+   * for a path of a remote platform, which is not in the local file system.
+   */
+  protected static void addPathHierarchyReplacements(ExpandMacroToPathMap result, String macroName, String path) {
+    String macro = "$" + macroName + "$";
+    String current = StringUtil.trimEnd(FileUtil.toSystemIndependentName(path), "/");
+    List<String> paths = new ArrayList<>();
+    while (true) {
+      paths.add(current);
+      int index = current.lastIndexOf('/');
+      if (index < 0) {
+        break;
+      }
+      current = current.substring(0, index);
+    }
+    // the outermost parent first - the same order as the file based variant
+    for (int i = paths.size() - 1; i >= 0; i--) {
+      result.put(macro + "/..".repeat(i), paths.get(i));
+    }
   }
 
   protected static void addFileHierarchyReplacements(ReplacePathToMacroMap result, String macroName, @Nullable String path, @Nullable String stopAt) {

@@ -21,13 +21,18 @@ import consulo.application.macro.PathMacros;
 import consulo.component.impl.internal.macro.BasePathMacroManager;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.ReplacePathToMacroMap;
+import consulo.platform.PlatformNioFileSystem;
 import consulo.project.Project;
 import consulo.project.macro.ProjectPathMacroManager;
+import consulo.util.io.URLUtil;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 @Singleton
 @ServiceImpl
@@ -43,15 +48,46 @@ public class ProjectPathMacroManagerImpl extends BasePathMacroManager implements
   @Override
   public ExpandMacroToPathMap getExpandMacroMap() {
     ExpandMacroToPathMap result = super.getExpandMacroMap();
-    addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject));
+    String platformUrlPrefix = getPlatformUrlPrefix();
+    if (platformUrlPrefix != null) {
+      // a remote project: macros expand to the paths on its platform, its stored file:// urls are urls of that platform
+      String basePath = myProject.getBasePath();
+      if (basePath != null) {
+        addPathHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, basePath);
+      }
+      result.mapUrlPrefix(STORED_URL_PREFIX, platformUrlPrefix);
+    }
+    else {
+      addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject));
+    }
     return result;
   }
 
   @Override
   public ReplacePathToMacroMap getReplacePathMap() {
     ReplacePathToMacroMap result = super.getReplacePathMap();
-    addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject), null);
+    String platformUrlPrefix = getPlatformUrlPrefix();
+    if (platformUrlPrefix != null) {
+      addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, myProject.getBasePath(), null);
+      result.mapUrlPrefix(STORED_URL_PREFIX, platformUrlPrefix);
+    }
+    else {
+      addFileHierarchyReplacements(result, PathMacrosImpl.PROJECT_DIR_MACRO_NAME, getProjectDir(myProject), null);
+    }
     return result;
+  }
+
+  @Override
+  public @Nullable String getPlatformUrlPrefix() {
+    if (myProject.getPlatformTargetId() == null || !(myProject instanceof ProjectImpl project)) {
+      return null;
+    }
+    Path dirPath = project.getDirPath();
+    if (!(dirPath.getFileSystem() instanceof PlatformNioFileSystem platformFileSystem)) {
+      return null;
+    }
+    // the platform virtual file system names a file <platform id>/<path>
+    return StandardFileSystems.PLATFORM_PROTOCOL + URLUtil.SCHEME_SEPARATOR + platformFileSystem.getPlatformId();
   }
 
   private static @Nullable String getProjectDir(Project project) {

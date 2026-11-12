@@ -30,15 +30,16 @@ import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
+import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.internal.core.local.CoreLocalFileSystem;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BaseVirtualFileManager extends VirtualFileManagerEx {
     private static final Logger LOG = Logger.getInstance(BaseVirtualFileManager.class);
@@ -46,8 +47,9 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     private final EventDispatcher<VirtualFileListener> myVirtualFileListenerMulticaster = EventDispatcher.create(VirtualFileListener.class);
     private final List<VirtualFileManagerListener> myVirtualFileManagerListeners = Lists.newLockFreeCopyOnWriteList();
 
-    private final Map<String, VirtualFileSystem> myVirtualFileSystems = new HashMap<>();
-    private final List<VirtualFileSystem> myRefreshableFileSystems = new ArrayList<>();
+    private final Map<String, VirtualFileSystem> myVirtualFileSystems = new ConcurrentHashMap<>();
+    private final Object myPlatformArchiveLock = new Object();
+    private final List<VirtualFileSystem> myRefreshableFileSystems = Lists.newLockFreeCopyOnWriteList();
     private final List<AsyncFileListener> myAsyncFileListeners = Lists.newLockFreeCopyOnWriteList();
     
     protected final Application myApplication;
@@ -91,7 +93,24 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
 
     @Override
     public @Nullable VirtualFileSystem getFileSystem(String protocol) {
-        return myVirtualFileSystems.get(protocol);
+        VirtualFileSystem fileSystem = myVirtualFileSystems.get(protocol);
+        if (fileSystem != null) {
+            return fileSystem;
+        }
+        String archiveProtocol = PlatformArchives.getArchiveProtocolOfPlatform(protocol);
+        if (archiveProtocol != null && myVirtualFileSystems.get(archiveProtocol) instanceof BaseArchiveFileSystem archiveFileSystem) {
+            // the archives of other platforms - known once asked for
+            synchronized (myPlatformArchiveLock) {
+                fileSystem = myVirtualFileSystems.get(protocol);
+                if (fileSystem == null) {
+                    fileSystem = archiveFileSystem.createPlatformFileSystem();
+                    if (fileSystem != null) {
+                        registerFileSystem(fileSystem);
+                    }
+                }
+            }
+        }
+        return fileSystem;
     }
 
     @Override
@@ -359,6 +378,22 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
     }
 
     @Override
+    public @Nullable String getUrl(Path path) {
+        if (path instanceof ArchivePath archivePath) {
+            return archivePath.getVirtualFileUrl();
+        }
+        if (path.getFileSystem() instanceof PlatformNioFileSystem) {
+            return getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL) instanceof PlatformPathVirtualFileSystem platformFileSystem
+                ? constructUrl(StandardFileSystems.PLATFORM_PROTOCOL, platformFileSystem.toVfsPath(path))
+                : null;
+        }
+        if (!FileSystems.getDefault().equals(path.getFileSystem())) {
+            return null;
+        }
+        return constructUrl(StandardFileSystems.FILE_PROTOCOL, FileUtil.toSystemIndependentName(path.toAbsolutePath().toString()));
+    }
+
+    @Override
     public @Nullable VirtualFile refreshAndFindFileByNioPath(Path path) {
         return findByNioPath(path, true);
     }
@@ -369,8 +404,8 @@ public class BaseVirtualFileManager extends VirtualFileManagerEx {
             return refresh ? refreshAndFindFileByUrl(url) : findFileByUrl(url);
         }
         if (nioPath.getFileSystem() instanceof PlatformNioFileSystem) {
-            return getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL) instanceof CoreLocalFileSystem platformFileSystem
-                ? platformFileSystem.findFileByNioFile(nioPath)
+            return getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL) instanceof PlatformPathVirtualFileSystem platformFileSystem
+                ? platformFileSystem.findFileByNioPath(nioPath, refresh)
                 : null;
         }
         if (!FileSystems.getDefault().equals(nioPath.getFileSystem())) {

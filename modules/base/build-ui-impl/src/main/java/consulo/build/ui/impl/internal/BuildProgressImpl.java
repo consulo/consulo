@@ -112,7 +112,7 @@ public class BuildProgressImpl implements BuildProgress<BuildProgressDescriptor>
         MessageEvent.Kind kind,
         FilePosition filePosition
     ) {
-        StringBuilder fileLink = new StringBuilder(filePosition.getFile().getPath());
+        StringBuilder fileLink = new StringBuilder(filePosition.getPath().toString());
         if (filePosition.startLine() > 0) {
             fileLink.append(":").append(filePosition.startLine() + 1);
             if (filePosition.startColumn() > 0) {

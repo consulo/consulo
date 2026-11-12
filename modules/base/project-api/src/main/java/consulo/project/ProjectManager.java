@@ -120,7 +120,7 @@ public interface ProjectManager {
      * @param path project location
      * @return newly crated project
      */
-    @Nullable Project createProject(String name, String path, UIAccess uiAccess);
+    @Nullable Project createProject(String name, Path path, UIAccess uiAccess);
 
     // region deprecated code
 

@@ -24,7 +24,7 @@ import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
+import consulo.virtualFileSystem.internal.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.impl.internal.util.FileImplUtil;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;

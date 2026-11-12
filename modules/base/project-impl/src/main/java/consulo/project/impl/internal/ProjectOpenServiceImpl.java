@@ -50,8 +50,8 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.concurrent.coroutine.step.CompletableFutureStep;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -60,6 +60,8 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -139,7 +141,8 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
             .cancelable()
             .execute(uiAccess, () -> {
                 // the supplier runs on the progress thread, so the VFS refresh stays off the UI thread
-                VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(filePath);
+                // routes by the path's file system - the local one, or the platform one for a path of a remote target
+                VirtualFile virtualFile = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(filePath);
                 ProjectOpenProcessor processor = virtualFile == null
                     ? null
                     : myProjectOpenProcessors.findProcessor(filePath);
@@ -218,7 +221,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                             p = (ProjectImpl) contextData;
                             p.putUserData(ALREADY_INITIALIZED, true);
                         } else {
-                            p = new ProjectImpl(myApplication, myProjectManager.get(), projectDir.getPath(), null, true, myComponentBinding);
+                            p = new ProjectImpl(myApplication, myProjectManager.get(), projectDir.toNioPath(), null, true, myComponentBinding);
                         }
 
                         // before anything of the project asks for a ui - its coroutine context keeps the first
@@ -382,7 +385,7 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
                 }
                 else {
                     if (filePath != null) {
-                        updateLastProjectLocation(filePath.toString());
+                        updateLastProjectLocation(filePath);
                     }
                     future.complete(project);
                 }
@@ -518,19 +521,23 @@ public class ProjectOpenServiceImpl implements ProjectOpenService {
         return result;
     }
 
-    private static void updateLastProjectLocation(String projectFilePath) {
-        File lastProjectLocation = new File(projectFilePath);
-        if (lastProjectLocation.isFile()) {
-            lastProjectLocation = lastProjectLocation.getParentFile();
+    private static void updateLastProjectLocation(Path projectFilePath) {
+        if (projectFilePath.getFileSystem() != FileSystems.getDefault()) {
+            // the last creation location is a local directory
+            return;
+        }
+        Path lastProjectLocation = projectFilePath;
+        if (Files.isRegularFile(lastProjectLocation)) {
+            lastProjectLocation = lastProjectLocation.getParent();
         }
         if (lastProjectLocation == null) {
             return;
         }
-        lastProjectLocation = lastProjectLocation.getParentFile();
+        lastProjectLocation = lastProjectLocation.getParent();
         if (lastProjectLocation == null) {
             return;
         }
-        String path = lastProjectLocation.getPath();
+        String path = lastProjectLocation.toString();
         try {
             path = FileUtil.resolveShortWindowsName(path);
         }

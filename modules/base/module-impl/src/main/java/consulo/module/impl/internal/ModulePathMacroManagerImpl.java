@@ -25,8 +25,10 @@ import consulo.component.macro.PathMacroUtil;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.module.Module;
 import consulo.module.macro.ModulePathMacroManager;
+import consulo.project.macro.ProjectPathMacroManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 @Singleton
 @ServiceImpl
@@ -43,12 +45,24 @@ public class ModulePathMacroManagerImpl extends BasePathMacroManager implements 
   public ExpandMacroToPathMap getExpandMacroMap() {
     ExpandMacroToPathMap result = new ExpandMacroToPathMap();
 
+    String platformUrlPrefix = getPlatformUrlPrefix();
     if (!myModule.isDisposed()) {
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath());
+      if (platformUrlPrefix != null) {
+        String moduleDirPath = getPlatformModuleDirPath(platformUrlPrefix);
+        if (moduleDirPath != null) {
+          addPathHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, moduleDirPath);
+        }
+      }
+      else {
+        addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath());
+      }
     }
 
     result.putAll(super.getExpandMacroMap());
 
+    if (platformUrlPrefix != null) {
+      result.mapUrlPrefix(ProjectPathMacroManager.STORED_URL_PREFIX, platformUrlPrefix);
+    }
     return result;
   }
 
@@ -56,11 +70,43 @@ public class ModulePathMacroManagerImpl extends BasePathMacroManager implements 
   public ReplacePathToMacroMap getReplacePathMap() {
     ReplacePathToMacroMap result = super.getReplacePathMap();
 
+    String platformUrlPrefix = getPlatformUrlPrefix();
     if (!myModule.isDisposed()) {
-
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil.getUserHomePath());
+      if (platformUrlPrefix != null) {
+        // the user home of the IDE machine says nothing about a path of a remote platform
+        addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, getPlatformModuleDirPath(platformUrlPrefix), null);
+      }
+      else {
+        addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil.getUserHomePath());
+      }
     }
 
+    if (platformUrlPrefix != null) {
+      result.mapUrlPrefix(ProjectPathMacroManager.STORED_URL_PREFIX, platformUrlPrefix);
+    }
     return result;
+  }
+
+  /**
+   * The url prefix the project's stored file:// urls map to, null for a local project.
+   */
+  private @Nullable String getPlatformUrlPrefix() {
+    return ProjectPathMacroManager.getInstance(myModule.getProject()).getPlatformUrlPrefix();
+  }
+
+  /**
+   * The module directory as a path of the remote platform - its url is {@code <platform url prefix><path>}.
+   */
+  private @Nullable String getPlatformModuleDirPath(String platformUrlPrefix) {
+    String dirUrl = myModule.getModuleDirUrl();
+    if (dirUrl == null || !dirUrl.startsWith(platformUrlPrefix)) {
+      return null;
+    }
+    String path = dirUrl.substring(platformUrlPrefix.length());
+    // /C:/a - a drive of a windows platform is C:/a, as the project base path is
+    if (path.length() >= 3 && path.charAt(0) == '/' && Character.isLetter(path.charAt(1)) && path.charAt(2) == ':') {
+      return path.substring(1);
+    }
+    return path;
   }
 }

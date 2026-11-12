@@ -15,7 +15,4 @@ public class SandExecutableConfigurationLegacyState {
 
     @Attribute("passParentEnvs")
     public @Nullable String passParentEnvs;
-
-    @Attribute("platformTarget")
-    public @Nullable String platformTarget;
 }

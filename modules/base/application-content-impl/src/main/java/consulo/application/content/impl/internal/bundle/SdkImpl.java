@@ -7,8 +7,8 @@ import consulo.application.ApplicationManager;
 import consulo.content.RootProvider;
 import consulo.content.RootProviderBase;
 import consulo.content.bundle.*;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetManager;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.localize.ProjectLocalize;
@@ -17,6 +17,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.url.VirtualFileUrlManager;
 import org.jdom.Element;
 import org.jspecify.annotations.Nullable;
@@ -198,7 +199,12 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator {
         if (myHomePath == null) {
             return null;
         }
-        return StandardFileSystems.local().findFileByPath(myHomePath);
+        if (myPlatformTargetId == null) {
+            return StandardFileSystems.local().findFileByPath(myHomePath);
+        }
+        // the home of a bundle of a remote machine - found there, never on the local file system
+        Platform platform = findPlatform();
+        return platform == null ? null : VirtualFileManager.getInstance().findFileByNioPath(platform.fs().getPath(myHomePath));
     }
 
     public void readExternal(Element element) {

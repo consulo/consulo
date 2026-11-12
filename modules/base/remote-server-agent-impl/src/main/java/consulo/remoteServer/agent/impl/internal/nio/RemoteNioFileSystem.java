@@ -35,6 +35,9 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
     private final RemoteAgentConnection myConnection;
     private final RemoteFileSystemProvider myProvider;
     private final String myWorkspacePath;
+    // directory listings carry the attributes of every child - kept briefly, so a listing followed by the stat of each
+    // child (what a VFS refresh or an indexing scan does) costs one round trip, not one per child
+    private final RemoteFileMetadataCache myMetadataCache = new RemoteFileMetadataCache();
     private volatile boolean myOpen = true;
 
     RemoteNioFileSystem(RemoteAgentConnection connection, RemoteFileSystemProvider provider) {
@@ -116,6 +119,10 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
     @Override
     public WatchService newWatchService() throws IOException {
         throw new UnsupportedOperationException("File watching not supported on remote file systems");
+    }
+
+    public RemoteFileMetadataCache getMetadataCache() {
+        return myMetadataCache;
     }
 
     public RemoteAgentConnection getConnection() {

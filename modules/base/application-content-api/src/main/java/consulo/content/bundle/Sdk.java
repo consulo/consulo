@@ -15,6 +15,7 @@
  */
 package consulo.content.bundle;
 
+import consulo.content.internal.RemoteSdkNames;
 import consulo.component.util.pointer.Named;
 import consulo.content.RootProvider;
 import consulo.platform.Platform;
@@ -41,6 +42,13 @@ public interface Sdk extends UserDataHolder, Named {
   @Override
   String getName();
 
+  /**
+   * The name the UI shows - a bundle of a remote platform target without its internal prefix, see {@link RemoteSdkNames}.
+   */
+  default String getPresentableName() {
+    return RemoteSdkNames.toPresentableName(getName());
+  }
+
   @Nullable String getVersionString();
 
   @Nullable String getHomePath();
@@ -54,7 +62,7 @@ public interface Sdk extends UserDataHolder, Named {
   Platform getPlatform();
 
   /**
-   * The {@link consulo.content.platform.PlatformTarget} id of the machine, null for the local one.
+   * The {@link consulo.application.platform.PlatformTarget} id of the machine, null for the local one.
    */
   @Nullable String getPlatformTargetId();
 

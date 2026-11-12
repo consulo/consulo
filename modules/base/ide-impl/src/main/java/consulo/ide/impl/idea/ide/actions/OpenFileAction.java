@@ -115,6 +115,8 @@ public class OpenFileAction extends AnAction implements DumbAware {
         descriptor.withTitle(
             showFiles ? LocalizeValue.localizeTODO("Open File or Project") : LocalizeValue.localizeTODO("Open Project")
         );
+        // a project can live on any platform target - a remote one is opened through its agent
+        descriptor.withAnyPlatform();
 
         UIAccess uiAccess = UIAccess.current();
         myFileChooserFactory.newBuilder(descriptor)

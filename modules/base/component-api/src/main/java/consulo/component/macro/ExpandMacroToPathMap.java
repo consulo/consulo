@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Eugene Zhuravlev
@@ -29,6 +30,18 @@ import java.util.Map;
 public class ExpandMacroToPathMap extends PathMacroMap {
   private final Map<String, String> myPlainMap = new LinkedHashMap<>();
   private final Map<String, String> myMacroExpands = new LinkedHashMap<>();
+  private @Nullable String myStoredUrlPrefix;
+  private @Nullable String myActualUrlPrefix;
+
+  /**
+   * After expanding, a url starting with {@code storedUrlPrefix} (e.g. {@code file://}) is rewritten to start with
+   * {@code actualUrlPrefix} (e.g. {@code platform://<id>}) - a project on a remote platform stores its urls as local
+   * ones, so its files can be shared with a local checkout of the same project.
+   */
+  public void mapUrlPrefix(String storedUrlPrefix, String actualUrlPrefix) {
+    myStoredUrlPrefix = storedUrlPrefix;
+    myActualUrlPrefix = actualUrlPrefix;
+  }
 
   public void addMacroExpand(String macroName, String path) {
     myMacroExpands.put(macroName, PathMacroMap.quotePath(path));
@@ -41,6 +54,9 @@ public class ExpandMacroToPathMap extends PathMacroMap {
   public void putAll(ExpandMacroToPathMap another) {
     myPlainMap.putAll(another.myPlainMap);
     myMacroExpands.putAll(another.myMacroExpands);
+    if (another.myStoredUrlPrefix != null && another.myActualUrlPrefix != null) {
+      mapUrlPrefix(another.myStoredUrlPrefix, another.myActualUrlPrefix);
+    }
   }
 
   @Contract("null,_ -> null; !null,_ -> !null")
@@ -51,7 +67,7 @@ public class ExpandMacroToPathMap extends PathMacroMap {
       return null;
     }
     if (text.indexOf('$') < 0) {
-      return text;
+      return mapUrl(text);
     }
     for (Map.Entry<String, String> entry : myPlainMap.entrySet()) {
       // when replacing macros with actual paths the replace utility may be used as always 'case-sensitive'
@@ -63,7 +79,26 @@ public class ExpandMacroToPathMap extends PathMacroMap {
       text = replaceMacro(text, entry.getKey(), entry.getValue());
     }
 
-    return text;
+    return mapUrl(text);
+  }
+
+  private String mapUrl(String text) {
+    String stored = myStoredUrlPrefix;
+    String actual = myActualUrlPrefix;
+    if (stored == null || actual == null || !text.startsWith(stored)) {
+      return text;
+    }
+    String path = text.substring(stored.length());
+    if (path.startsWith("$")) {
+      // a macro this map does not know (a module one, expanded by the project) - the map which expands it maps the url
+      return text;
+    }
+    while (path.startsWith("//")) {
+      // file:////a - written by a version which expanded module macros late
+      path = path.substring(1);
+    }
+    // file://C:/a - a drive of a windows platform, platform://<id>/C:/a
+    return actual + (path.startsWith("/") ? path : "/" + path);
   }
 
   private static String replaceMacro(String text, String macroName, String replacement) {
@@ -100,6 +135,6 @@ public class ExpandMacroToPathMap extends PathMacroMap {
 
   @Override
   public int hashCode() {
-    return myPlainMap.hashCode() + myMacroExpands.hashCode();
+    return myPlainMap.hashCode() + myMacroExpands.hashCode() + Objects.hashCode(myActualUrlPrefix);
   }
 }

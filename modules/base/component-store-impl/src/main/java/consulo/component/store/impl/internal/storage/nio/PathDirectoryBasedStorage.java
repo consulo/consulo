@@ -51,7 +51,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -74,7 +73,7 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
     private DirectoryStorageData myStorageData;
 
     public PathDirectoryBasedStorage(@Nullable TrackingPathMacroSubstitutor pathMacroSubstitutor,
-                                     String dir,
+                                     Path dir,
                                      StateSplitterEx splitter,
                                      Disposable parentDisposable,
                                      final @Nullable StateStorageListener listener,
@@ -82,13 +81,14 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                                      PathMacrosService pathMacrosService) {
         super(pathMacroSubstitutor, pathMacrosService);
 
-        myDir = Path.of(dir);
+        myDir = dir;
         mySplitter = splitter;
-        myCollectVfsEvents = collectVfsEvents;
+        // VFS events are only kept in sync for the local file system - a file on a remote platform is not tracked by PersistentFS
+        myCollectVfsEvents = collectVfsEvents && PathStorageUtil.isLocal(dir);
 
-        if (collectVfsEvents && listener != null) {
+        if (myCollectVfsEvents && listener != null) {
             VirtualFileTracker virtualFileTracker = Application.get().getInstance(VirtualFileTracker.class);
-            String url = LocalFileSystem.PROTOCOL_PREFIX + myDir.toAbsolutePath().toString().replace(File.separatorChar, '/');
+            String url = LocalFileSystem.PROTOCOL_PREFIX + myDir.toAbsolutePath().toString().replace(myDir.getFileSystem().getSeparator(), "/");
             virtualFileTracker.addTracker(url, new VirtualFileListener() {
                 @Override
                 public void contentsChanged(VirtualFileEvent event) {
@@ -431,22 +431,23 @@ public class PathDirectoryBasedStorage extends StateStorageBase<DirectoryStorage
                 // this save created the directory: one save-tagged event for it, its files are loaded with it - otherwise
                 // the next refresh finds the directory and reports our own write as an external change
                 VirtualFile parent = lfs.findFileByNioFile(storage.myDir.getParent());
-                File io = storage.myDir.toFile();
-                if (parent != null && parent.isValid() && io.isDirectory()) {
-                    FileAttributes attributes = new FileAttributes(true, false, false, false, 0, io.lastModified(), true);
-                    collect(events, new VFileCreateEvent(this, parent, io.getName(), true, attributes, null, false, null));
+                Path io = storage.myDir;
+                if (parent != null && parent.isValid() && Files.isDirectory(io)) {
+                    FileAttributes attributes = new FileAttributes(true, false, false, false, 0, PathStorageUtil.lastModified(io), true);
+                    collect(events, new VFileCreateEvent(this, parent, io.getFileName().toString(), true, attributes, null, false, null));
                 }
                 return;
             }
             for (String fileName : dirtyFileNames) {
                 Path childPath = storage.myDir.resolve(fileName);
                 VirtualFile file = lfs.findFileByNioFile(childPath);
-                File io = childPath.toFile();
                 if (file != null && file.isValid()) {
-                    collect(events, new VFileContentChangeEvent(this, file, file.getModificationStamp(), -1, file.getTimeStamp(), io.lastModified(), file.getLength(), io.length(), false));
+                    collect(events, new VFileContentChangeEvent(this, file, file.getModificationStamp(), -1, file.getTimeStamp(),
+                        PathStorageUtil.lastModified(childPath), file.getLength(), PathStorageUtil.length(childPath), false));
                 }
-                else if (dir != null && dir.isValid() && io.exists()) {
-                    FileAttributes attributes = new FileAttributes(false, false, false, false, io.length(), io.lastModified(), true);
+                else if (dir != null && dir.isValid() && Files.exists(childPath)) {
+                    FileAttributes attributes = new FileAttributes(false, false, false, false, PathStorageUtil.length(childPath),
+                        PathStorageUtil.lastModified(childPath), true);
                     collect(events, new VFileCreateEvent(this, dir, fileName, false, attributes, null, false, null));
                 }
             }

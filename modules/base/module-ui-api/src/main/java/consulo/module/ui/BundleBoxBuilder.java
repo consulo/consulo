@@ -55,6 +55,7 @@ public final class BundleBoxBuilder {
   private Image myNoneItemImage;
 
   private Predicate<SdkTypeId> mySdkFilter = sdkTypeId -> true;
+  private @Nullable Predicate<Sdk> myBundleFilter;
 
   private BundleBoxBuilder(@Nullable SdkModel sdkModel, @Nullable Disposable uiDisposable) {
     mySdkModel = sdkModel;
@@ -78,6 +79,14 @@ public final class BundleBoxBuilder {
 
   public BundleBoxBuilder withSdkTypeFilterByType(SdkType sdkType) {
     return withSdkTypeFilterBySet(Collections.singleton(sdkType));
+  }
+
+  /**
+   * Offers only the bundles {@code bundleFilter} accepts - e.g. the ones of the machine a project lives on.
+   */
+  public BundleBoxBuilder withBundleFilter(Predicate<Sdk> bundleFilter) {
+    myBundleFilter = bundleFilter;
+    return this;
   }
 
   public BundleBoxBuilder withNoneItem() {
@@ -119,7 +128,8 @@ public final class BundleBoxBuilder {
     BundleBox box = new BundleBox(sdkModel,
         mySdkFilter,
         myWithNoneItem ? myNoneItemName : LocalizeValue.empty(),
-        myWithNoneItem ? myNoneItemImage : null
+        myWithNoneItem ? myNoneItemImage : null,
+        myBundleFilter
     );
 
     if (myUIDisposable != null) {
@@ -161,7 +171,7 @@ public final class BundleBoxBuilder {
 
           BundleBox.BundleBoxItem bundleBoxItem = component.getValue();
 
-          List<BundleBox.BundleBoxItem> newItems = BundleBox.buildItems(sdkModel, mySdkFilter, myWithNoneItem);
+          List<BundleBox.BundleBoxItem> newItems = BundleBox.buildItems(sdkModel, mySdkFilter, myBundleFilter, myWithNoneItem);
 
           List<BundleBox.BundleBoxItem> bundleBoxItems = listModel.replaceAll(newItems);
           for (BundleBox.BundleBoxItem boxItem : bundleBoxItems) {

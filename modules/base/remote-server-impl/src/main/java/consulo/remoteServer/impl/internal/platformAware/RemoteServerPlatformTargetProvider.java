@@ -16,8 +16,8 @@
 package consulo.remoteServer.impl.internal.platformAware;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetProvider;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetProvider;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServersManager;
 import consulo.remoteServer.platformAware.PlatformAwareServerType;

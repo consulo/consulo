@@ -15,7 +15,9 @@
  */
 package consulo.remoteServer.agent.impl.internal.platform;
 
+import consulo.application.internal.PlatformTransferDirectoryProvider;
 import consulo.remoteServer.agent.impl.internal.RemoteAgentConnection;
+import consulo.remoteServer.agent.impl.internal.RemotePlatformNetwork;
 import consulo.platform.*;
 import consulo.remoteServer.agent.impl.internal.protocol.SystemInfo;
 import consulo.remoteServer.agent.impl.internal.protocol.UserInfo;
@@ -26,6 +28,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 
@@ -37,7 +40,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 2026-03-17
  */
-public class RemotePlatform extends UserDataHolderBase implements Platform {
+public class RemotePlatform extends UserDataHolderBase implements Platform, PlatformTransferDirectoryProvider {
     private final RemoteAgentConnection myConnection;
     private final String myId;
     private final String myName;
@@ -46,6 +49,8 @@ public class RemotePlatform extends UserDataHolderBase implements Platform {
     private final RemotePlatformJvm myJvm;
     private final RemotePlatformUser myUser;
     private final Charset myConsoleCharset;
+    private final Path myTransferDirectory;
+    private final RemotePlatformNetwork myNetwork;
 
     public RemotePlatform(RemoteAgentConnection connection, FileSystem nioFileSystem) {
         myConnection = connection;
@@ -58,10 +63,13 @@ public class RemotePlatform extends UserDataHolderBase implements Platform {
         myName = "Remote: " + systemInfo.getHostname();
 
         myOperatingSystem = new RemotePlatformOperatingSystem(connection, systemInfo, Collections.unmodifiableMap(envVariables));
-        myFileSystem = new RemotePlatformFileSystem(myOperatingSystem, nioFileSystem);
+        myFileSystem = new RemotePlatformFileSystem(myOperatingSystem, nioFileSystem, connection);
         myJvm = new RemotePlatformJvm(systemInfo.getArch());
         myUser = new RemotePlatformUser(userInfo, nioFileSystem);
         myConsoleCharset = findCharset(systemInfo.getConsoleEncoding());
+        // the workspace of the agent is ours - the IDE keeps its data there, never visible to the user or the tools
+        myNetwork = new RemotePlatformNetwork(connection);
+        myTransferDirectory = nioFileSystem.getPath(connection.getWorkspacePath()).resolve(".consulo").resolve("transfer");
     }
 
     @Override
@@ -107,6 +115,16 @@ public class RemotePlatform extends UserDataHolderBase implements Platform {
     @Override
     public void openDirectoryInFileManager(File file, consulo.ui.UIAccess uiAccess) {
         // Remote platform has no file manager UI
+    }
+
+    @Override
+    public Path getTransferDirectory() {
+        return myTransferDirectory;
+    }
+
+    @Override
+    public PlatformNetwork net() {
+        return myNetwork;
     }
 
     public RemoteAgentConnection getConnection() {

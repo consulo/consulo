@@ -71,8 +71,14 @@ public class PathsList {
     myPathSet.clear();
   }
 
+  /**
+   * The path of the file as one item - a path of another machine may hold the path separator of this one (C:/a on windows).
+   */
   public void add(VirtualFile file) {
-    add(LOCAL_PATH.apply(file));
+    String path = LOCAL_PATH.apply(file);
+    if (path != null && !path.isEmpty() && !myPathSet.contains(path)) {
+      addAllLast(List.of(path), myPath);
+    }
   }
 
   public void addFirst(String path) {
@@ -108,7 +114,14 @@ public class PathsList {
   }
 
   public String getPathsString() {
-    return StringUtil.join(getPathList(), File.pathSeparator);
+    return getPathsString(File.pathSeparator);
+  }
+
+  /**
+   * @param separator the path list separator of the machine the list is for
+   */
+  public String getPathsString(String separator) {
+    return StringUtil.join(getPathList(), separator);
   }
 
   public List<String> getPathList() {

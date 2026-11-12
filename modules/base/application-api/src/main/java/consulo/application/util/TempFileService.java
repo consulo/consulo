@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
+ * Please use {@link consulo.platform.PlatformFileSystem} if using code which touch platform code, and can be executed at any platforms
+ *
  * @author VISTALL
  * @since 2022-11-09
  */

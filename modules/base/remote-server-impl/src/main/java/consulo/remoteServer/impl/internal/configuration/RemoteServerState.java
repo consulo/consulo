@@ -9,6 +9,8 @@ import org.jdom.Element;
 */
 @Tag("remote-server")
 public class RemoteServerState {
+  @Attribute("id")
+  public String myId;
   @Attribute("name")
   public String myName;
   @Attribute("type")

@@ -39,13 +39,14 @@ import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
-import java.io.File;
 import java.util.List;
 
 /**
@@ -184,17 +185,29 @@ public class XLineBreakpointImpl<P extends XBreakpointProperties> extends XBreak
   @Override
   public String getPresentableFilePath() {
     String url = getFileUrl();
-    if (url != null && LocalFileSystem.PROTOCOL.equals(VirtualFileManager.extractProtocol(url))) {
+    if (url == null) {
+      return "";
+    }
+    String protocol = VirtualFileManager.extractProtocol(url);
+    if (LocalFileSystem.PROTOCOL.equals(protocol)) {
       return FileUtil.toSystemDependentName(VirtualFileUtil.urlToPath(url));
     }
-    return url != null ? url : "";
+    if (StandardFileSystems.PLATFORM_PROTOCOL.equals(protocol)) {
+      // a file of a remote platform - the path as that machine knows it, which is also what its debugger knows
+      VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
+      if (fileSystem != null) {
+        return fileSystem.extractPresentableUrl(VirtualFileManager.extractPath(url));
+      }
+    }
+    return url;
   }
 
   @Override
   public String getShortFilePath() {
     String path = getPresentableFilePath();
     if (path.isEmpty()) return "";
-    return new File(path).getName();
+    // the path may be one of another machine, with its separators
+    return path.substring(Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\')) + 1);
   }
 
   @Override

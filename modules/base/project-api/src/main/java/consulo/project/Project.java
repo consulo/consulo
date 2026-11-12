@@ -17,6 +17,7 @@ package consulo.project;
 
 import consulo.application.Application;
 import consulo.component.ComponentManager;
+import consulo.platform.Platform;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOwner;
@@ -65,6 +66,22 @@ public interface Project extends ComponentManager, WindowOwner, CoroutineContext
      * @return a path to a project base directory, or <code>null</code> for default project
      */
     @Nullable String getBasePath();
+
+    /**
+     * The machine the project lives on - never null. The local platform for a local (or default) project,
+     * the remote one for a project opened from a remote platform target. While that target is not reachable
+     * it is a platform on which every operation fails: a remote project never silently falls back to the local machine.
+     * <p>
+     * Paths of the project ({@linkplain #getBasePath()} and so on) are resolved through {@code getPlatform().fs()}.
+     */
+    Platform getPlatform();
+
+    /**
+     * The {@link Platform} target id the project was opened from, null for a local project.
+     */
+    default @Nullable String getPlatformTargetId() {
+        return null;
+    }
 
     /**
      * Returns project descriptor file:

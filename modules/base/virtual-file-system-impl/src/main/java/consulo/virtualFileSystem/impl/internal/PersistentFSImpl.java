@@ -19,7 +19,7 @@ import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.encoding.Utf8BomOptionProvider;
 import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.archive.BaseArchiveFileSystem;
+import consulo.virtualFileSystem.internal.BaseArchiveFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.*;
 import consulo.virtualFileSystem.impl.internal.local.NativeFileWatcherImpl;
 import consulo.virtualFileSystem.internal.*;

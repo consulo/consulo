@@ -42,7 +42,6 @@ import consulo.ui.layout.SwipeLayout;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +72,11 @@ public class ModuleImportDialogDescriptor<C extends ModuleImportContext> extends
         myContext = moduleImportProvider.createContext(project);
 
         String pathToImport = moduleImportProvider.getPathToBeImported(targetFile);
+        // the target may be a file of a remote platform - the context resolves its paths there
+        myContext.setFileSystem(targetFile.getFileSystem());
         myContext.setPath(pathToImport);
-        myContext.setName(new File(pathToImport).getName());
+        Path fileName = targetFile.getFileSystem().getPath(pathToImport).getFileName();
+        myContext.setName(fileName == null ? pathToImport : fileName.toString());
         myContext.setFileToImport(targetFile.toString());
 
         List<WizardStep<C>> steps = new ArrayList<>();

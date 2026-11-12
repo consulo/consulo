@@ -17,6 +17,7 @@ package consulo.compiler.scope;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.content.ContentIterator;
+import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.nio.file.Path;
@@ -40,7 +41,8 @@ public class ModuleRootCompilerContentIterator implements ContentIterator {
         if (fileOrDir.isDirectory()) {
             return true;
         }
-        if (!fileOrDir.isInLocalFileSystem()) {
+        // a file of the local machine or of another platform - not an entry of an archive
+        if (!fileOrDir.isInLocalFileSystem() && !StandardFileSystems.PLATFORM_PROTOCOL.equals(fileOrDir.getFileSystem().getProtocol())) {
             return true;
         }
 

@@ -180,7 +180,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     if (line.getSudoPromt() != null) {
       throw new ExecutionException("Sudo is not supported at " + platformName);
     }
-    return factory.createProcessHandler(line);
+    return factory.createProcessHandler(line, myColored);
   }
 
   private ProcessHandler createLocalProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.build;
 
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.application.Application;
 import consulo.application.util.DateFormatUtil;
 import consulo.application.util.UserHomeFileUtil;
@@ -49,7 +50,6 @@ import consulo.util.collection.SmartHashSet;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
@@ -492,7 +492,7 @@ public abstract class BaseBuildTreeConsoleView implements ConsoleView, BuildCons
         Navigatable failureNavigatable = failure.getNavigatable();
         FilePosition filePosition = null;
         if (failureNavigatable instanceof OpenFileDescriptorImpl fileDescriptor) {
-            File file = VirtualFileUtil.virtualToIoFile(fileDescriptor.getFile());
+            Path file = fileDescriptor.getFile().toNioPath();
             filePosition = new FilePosition(file, fileDescriptor.getLine(), fileDescriptor.getColumn());
             parentNode = createMessageParentNodes(eventTime, filePosition, failureNavigatable, parentNode);
         }
@@ -577,7 +577,7 @@ public abstract class BaseBuildTreeConsoleView implements ConsoleView, BuildCons
         @Nullable Navigatable navigatable,
         ExecutionNodeImpl parentNode
     ) {
-        String filePath = FileUtil.toSystemIndependentName(filePosition.getFile().getPath());
+        String filePath = FileUtil.toSystemIndependentName(filePosition.getPath().toString());
         String parentsPath = "";
 
         String relativePath = FileUtil.getRelativePath(myWorkingDir, filePath, '/');
@@ -613,7 +613,7 @@ public abstract class BaseBuildTreeConsoleView implements ConsoleView, BuildCons
             nodeName,
             pathHint,
             () -> {
-                VirtualFile file = VirtualFileUtil.findFileByIoFile(filePosition.getFile(), false);
+                VirtualFile file = VirtualFileManager.getInstance().findFileByNioPath(filePosition.getPath());
                 if (file != null) {
                     return file.getFileType().getIcon();
                 }

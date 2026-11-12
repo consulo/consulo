@@ -15,11 +15,15 @@
  */
 package consulo.remoteServer.impl.internal.platformAware;
 
-import consulo.content.platform.PlatformTarget;
+import consulo.application.Application;
+import consulo.remoteServer.platformAware.PlatformPredefinedBundles;
+import consulo.application.platform.PlatformTarget;
+import consulo.remoteServer.platformAware.PredefinedBundlesMode;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.deployment.DeploymentConfiguration;
+import consulo.remoteServer.platformAware.PlatformAwareServerConfiguration;
 import consulo.remoteServer.platformAware.PlatformAwareServerRuntimeInstance;
 import consulo.remoteServer.runtime.ConnectionStatus;
 import consulo.remoteServer.runtime.ServerConnection;
@@ -46,8 +50,11 @@ final class RemoteServerPlatformTarget implements PlatformTarget {
         myConnectionManager = connectionManager;
     }
 
+    /**
+     * The id of the server - not its name, nor its address: both may change.
+     */
     static String idOf(RemoteServer<?> server) {
-        return "remote-server:" + server.getType().getId() + ":" + server.getName();
+        return server.getId();
     }
 
     @Override
@@ -72,12 +79,37 @@ final class RemoteServerPlatformTarget implements PlatformTarget {
             return null;
         }
         CompletableFuture<Platform> platform = runtime(connection, new CompletableFuture<>());
-        return platform.isDone() && !platform.isCompletedExceptionally() ? platform.join() : null;
+        if (!platform.isDone() || platform.isCompletedExceptionally()) {
+            return null;
+        }
+        // the server may have been connected outside of this target (the Services view) - its bundles are detected then
+        Platform connected = platform.join();
+        detectBundles(connected);
+        return connected;
     }
 
     @Override
     public CompletableFuture<Platform> connect() {
-        return runtime(myConnectionManager.getOrCreateConnection(myServer), new CompletableFuture<>());
+        // the bundles of the platform are known before the connect completes - a project opened right after it finds its SDK
+        return runtime(myConnectionManager.getOrCreateConnection(myServer), new CompletableFuture<>())
+            .thenCompose(platform -> detectBundles(platform).handle((detected, error) -> platform));
+    }
+
+    /**
+     * Detects the bundles of the platform as the server configuration asks - only once per session,
+     * and for {@link PredefinedBundlesMode#ONCE} never again once detected.
+     */
+    private CompletableFuture<?> detectBundles(Platform platform) {
+        if (!(myServer.getConfiguration() instanceof PlatformAwareServerConfiguration configuration)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        PredefinedBundlesMode mode = configuration.getPredefinedBundlesMode();
+        return Application.get().getInstance(PlatformPredefinedBundles.class).targetConnected(this, platform, mode)
+            .whenComplete((detected, error) -> {
+                if (error == null && Boolean.TRUE.equals(detected) && mode == PredefinedBundlesMode.ONCE) {
+                    configuration.setPredefinedBundlesMode(PredefinedBundlesMode.NEVER);
+                }
+            });
     }
 
     private static <D extends DeploymentConfiguration> CompletableFuture<Platform> runtime(ServerConnection<D> connection,

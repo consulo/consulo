@@ -25,8 +25,8 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.nio.file.Path;
@@ -114,7 +114,10 @@ public class ModuleCompileScope extends FileIndexCompileScope {
         if (myScopeModules.isEmpty()) {
             return false; // optimization
         }
-        String filePath = FileUtil.toSystemIndependentName(path.toString());
+        // the path as the virtual file system knows it - the content roots are its urls; a file of another platform is
+        // <platform id>/<path>, not the path of its machine
+        String fileUrl = VirtualFileManager.getInstance().getUrl(path);
+        String filePath = fileUrl != null ? VirtualFileUtil.urlToPath(fileUrl) : FileUtil.toSystemIndependentName(path.toString());
         Module candidateModule = null;
         int maxRootLength = 0;
         ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(myProject).getFileIndex();
@@ -134,7 +137,7 @@ public class ModuleCompileScope extends FileIndexCompileScope {
                     }
                     else if (!candidateModule.equals(module)) {
                         // the same content root exists in several modules
-                        VirtualFile contentRootFile = LocalFileSystem.getInstance().findFileByPath(contentRootPath);
+                        VirtualFile contentRootFile = VirtualFileManager.getInstance().findFileByUrl(contentRootUrl);
                         candidateModule = contentRootFile != null ? projectFileIndex.getModuleForFile(contentRootFile) : null;
                     }
                 }

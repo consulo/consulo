@@ -151,13 +151,13 @@ public class WorkingContextManager {
     private JBZipFile getTasksArchive(String postfix) throws IOException {
         File file = getArchiveFile(postfix);
         try {
-            return new JBZipFile(file);
+            return new JBZipFile(file.toPath(), false);
         }
         catch (IOException e) {
             file.delete();
             JBZipFile zipFile = null;
             try {
-                zipFile = new JBZipFile(file);
+                zipFile = new JBZipFile(file.toPath(), false);
                 myNotificationService.newError(TaskManagerNotificationGroupContributor.TASKS_NOTIFICATION_GROUP)
                     .title(LocalizeValue.localizeTODO("Context Data Corrupted"))
                     .content(LocalizeValue.localizeTODO(

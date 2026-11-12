@@ -7,7 +7,11 @@ import consulo.remoteServer.configuration.ServerConfiguration;
  * @author nik
  */
 public interface RemoteServer<C extends ServerConfiguration> {
-  
+  /**
+   * Identifies the server for good - its name and its configuration (an address) may change.
+   */
+  String getId();
+
   String getName();
 
   

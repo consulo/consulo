@@ -677,6 +677,17 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
             String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
 
+            return newModuleByUrl(name, dirUrl);
+        }
+
+        @Override
+        public Module newModule(String name, VirtualFile moduleDir) {
+            assertWritable();
+
+            return newModuleByUrl(name, moduleDir.getUrl());
+        }
+
+        private Module newModuleByUrl(String name, @Nullable String dirUrl) {
             ModuleEx moduleEx = null;
             if (dirUrl != null) {
                 moduleEx = getModuleByDirUrl(dirUrl);

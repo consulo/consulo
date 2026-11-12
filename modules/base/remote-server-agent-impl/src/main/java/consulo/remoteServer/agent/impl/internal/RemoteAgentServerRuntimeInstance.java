@@ -16,7 +16,6 @@
 package consulo.remoteServer.agent.impl.internal;
 
 import consulo.remoteServer.agent.impl.internal.nio.RemoteNioFileSystem;
-import consulo.remoteServer.agent.impl.internal.nio.RemoteVirtualFileSystem;
 import consulo.remoteServer.agent.impl.internal.platform.RemotePlatform;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
@@ -25,6 +24,8 @@ import consulo.remoteServer.platformAware.PlatformAwareServerRuntimeInstance;
 import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
+
+import java.io.IOException;
 
 /**
  * Runtime instance for a connected remote agent.
@@ -37,7 +38,6 @@ class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstanc
     private final RemoteAgentConnection myConnection;
     private final RemotePlatform myPlatform;
     private final RemoteNioFileSystem myNioFileSystem;
-    private final RemoteVirtualFileSystem myVirtualFileSystem;
 
     RemoteAgentServerRuntimeInstance(RemoteAgentConnection connection,
                                      RemotePlatform platform,
@@ -45,7 +45,6 @@ class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstanc
         myConnection = connection;
         myPlatform = platform;
         myNioFileSystem = nioFileSystem;
-        myVirtualFileSystem = new RemoteVirtualFileSystem(connection, nioFileSystem);
     }
 
     @Override
@@ -62,6 +61,12 @@ class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstanc
 
     @Override
     public void disconnect() {
+        // closed first: files of this platform become unavailable (not deleted) until it is connected again
+        try {
+            myNioFileSystem.close();
+        }
+        catch (IOException ignored) {
+        }
         myConnection.close();
     }
 
@@ -78,7 +83,4 @@ class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstanc
         return myNioFileSystem;
     }
 
-    public RemoteVirtualFileSystem getVirtualFileSystem() {
-        return myVirtualFileSystem;
-    }
 }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Provider for creating which used for creating {@link ArchiveFileSystem}
@@ -28,11 +29,20 @@ import java.io.IOException;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ArchiveFileSystemProvider {
-    
     String getProtocol();
 
-    
-    ArchiveFile createArchiveFile(String path) throws IOException;
+    /**
+     * @param path the archive - a file of the local machine, or of another platform, read through its path
+     */
+    ArchiveFile createArchiveFile(Path path) throws IOException;
+
+    /**
+     * Whether the directory hosts an archive of this provider - an archive which is a directory, like a modular runtime home.
+     * Archives are files by default, recognized by their {@link ArchiveFileType file type}.
+     */
+    default boolean isArchiveDirectory(Path directory) {
+        return false;
+    }
 
     default boolean isNeedToRepackArchive() {
         return false;

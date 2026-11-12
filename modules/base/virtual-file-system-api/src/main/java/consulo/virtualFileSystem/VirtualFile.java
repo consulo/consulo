@@ -750,6 +750,12 @@ public interface VirtualFile extends CopyableUserDataHolder, ModificationTracker
       return Path.of(getPath());
     }
 
+    // a file system which knows the paths of its files - e.g. the platform one, a path of a remote machine
+    Path nioPath = fileSystem.getNioPath(this);
+    if (nioPath != null) {
+      return nioPath;
+    }
+
     throw new UnsupportedOperationException("Impossible convert " + this + " to " + Path.class);
   }
 }

@@ -20,10 +20,8 @@ import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.LegacyRunConfigurationConverter;
 import consulo.execution.configuration.LocatableConfigurationBase;
-import consulo.execution.configuration.PlatformAwareRunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.configuration.fragment.EnvironmentFragmentState;
-import consulo.execution.configuration.fragment.PlatformTargetFragmentState;
 import consulo.execution.configuration.fragment.ProgramParametersFragmentState;
 import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.fragment.WorkingDirectoryFragmentState;
@@ -38,7 +36,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class SandExecutableConfiguration extends LocatableConfigurationBase
-    implements CommonProgramRunConfigurationParameters, PlatformAwareRunProfile {
+    implements CommonProgramRunConfigurationParameters {
     private static final String DEFAULT_PARAMETERS = "Hello, World!";
 
     public SandExecutableConfiguration(Project project, ConfigurationFactory factory, String name) {
@@ -65,7 +63,6 @@ public class SandExecutableConfiguration extends LocatableConfigurationBase
         SandExecutableConfigurationOptions options = new SandExecutableConfigurationOptions();
         options.setExecutable(old.executable != null ? old.executable : SandExecutableConfigurationOptions.DEFAULT_EXECUTABLE);
         converter.setOptions(options);
-        converter.addFragment(new PlatformTargetFragmentState(old.platformTarget));
 
         converter.addFragment(new ProgramParametersFragmentState(old.programParameters));
         converter.addFragment(new WorkingDirectoryFragmentState(old.workingDirectory));

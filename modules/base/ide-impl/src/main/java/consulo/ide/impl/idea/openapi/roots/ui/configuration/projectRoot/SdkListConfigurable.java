@@ -134,7 +134,7 @@ public class SdkListConfigurable extends UnifiedMasterDetailsComponent
             return sdkType.getDisplayName().get();
         }
         if (value instanceof Sdk sdk) {
-            return sdk.getName();
+            return sdk.getPresentableName();
         }
         return String.valueOf(value);
     }
@@ -147,7 +147,7 @@ public class SdkListConfigurable extends UnifiedMasterDetailsComponent
         }
         else if (value instanceof Sdk sdk) {
             presentation.withIcon(SdkUtil.getIcon(sdk));
-            presentation.append(sdk.getName());
+            presentation.append(sdk.getPresentableName());
 
             String versionString = sdk.getVersionString();
             if (versionString != null) {

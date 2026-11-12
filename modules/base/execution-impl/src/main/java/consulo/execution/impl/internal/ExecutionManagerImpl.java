@@ -19,8 +19,8 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.SaveAndSyncHandler;
 import consulo.component.ProcessCanceledException;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetManager;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -216,16 +216,17 @@ public class ExecutionManagerImpl implements ExecutionManager, Disposable {
     }
 
     /**
-     * A profile running on a remote machine which is not connected yet connects first - starting a run is the user
-     * asking for that machine.
+     * Everything of a project runs on the machine the project lives on - a remote one which is not connected (any more)
+     * connects first, starting a run is the user asking for that machine.
      */
     private void connectPlatformThenRun(UIAccess uiAccess,
                                         Runnable startRunnable,
                                         ExecutionEnvironment environment,
                                         @Nullable Runnable onCancelRunnable) {
-        PlatformTarget target = environment.getRunProfile() instanceof PlatformAwareRunProfile profile
-            ? myProject.getApplication().getInstance(PlatformTargetManager.class).findTarget(profile.getPlatformTargetId())
-            : null;
+        String platformTargetId = myProject.getPlatformTargetId();
+        PlatformTarget target = platformTargetId == null
+            ? null
+            : myProject.getApplication().getInstance(PlatformTargetManager.class).findTarget(platformTargetId);
         if (target == null || target.getPlatform() != null) {
             startRunnable.run();
             return;

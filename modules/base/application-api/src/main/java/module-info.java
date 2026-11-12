@@ -37,6 +37,7 @@ module consulo.application.api {
     exports consulo.application.eap;
     exports consulo.application.event;
     exports consulo.application.constraint;
+    exports consulo.application.platform;
     exports consulo.application.progress;
     exports consulo.application.macro;
     exports consulo.application.presentation;
@@ -59,6 +60,7 @@ module consulo.application.api {
         consulo.web.ui.impl;
 
     exports consulo.application.internal to
+        consulo.remote.server.agent.impl,
         consulo.ui.ex.impl,
         consulo.external.system.api,
         consulo.ide.impl,

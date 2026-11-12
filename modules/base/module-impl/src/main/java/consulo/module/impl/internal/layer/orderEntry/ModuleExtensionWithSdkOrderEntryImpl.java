@@ -17,6 +17,7 @@
 package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.content.RootProvider;
+import consulo.content.internal.RemoteSdkNames;
 import consulo.content.bundle.Sdk;
 import consulo.module.content.internal.ProjectRootManagerImpl;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
@@ -90,10 +91,11 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     if (moduleExtension != null) {
       Sdk sdk = moduleExtension.getSdk();
       if (sdk == null) {
-        builder.append(moduleExtension.getSdkName());
+        String sdkName = moduleExtension.getSdkName();
+        builder.append(sdkName == null ? null : RemoteSdkNames.toPresentableName(sdkName));
       }
       else {
-        builder.append(sdk.getName());
+        builder.append(sdk.getPresentableName());
       }
     }
     else {

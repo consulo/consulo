@@ -22,6 +22,7 @@ import consulo.remoteServer.agent.impl.internal.protocol.FileInfo;
 
 import java.io.*;
 import java.net.URI;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -79,6 +80,18 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
         boolean truncate = writable && options.contains(StandardOpenOption.TRUNCATE_EXISTING);
         boolean create = options.contains(StandardOpenOption.CREATE) || options.contains(StandardOpenOption.CREATE_NEW);
         try {
+            if (!writable) {
+                // read where the file is - range by range, never the whole file
+                FileInfo info = getFileInfo(fs, remotePath);
+                if (info == null) {
+                    throw new NoSuchFileException(pathString);
+                }
+                if (info.getDirectory()) {
+                    throw new IOException("Is a directory: " + pathString);
+                }
+                return new RemoteReadChannel(fs.getConnection(), pathString, info.getSize());
+            }
+
             boolean exists = fs.getConnection().fileExists(pathString);
             if (exists && options.contains(StandardOpenOption.CREATE_NEW)) {
                 throw new FileAlreadyExistsException(pathString);
@@ -100,12 +113,24 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
         }
     }
 
+    /**
+     * A file opened for reading only - read where it is, by ranges.
+     */
+    @Override
+    public FileChannel newFileChannel(Path path, Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
+        if (options.contains(StandardOpenOption.WRITE) || options.contains(StandardOpenOption.APPEND)) {
+            throw new UnsupportedOperationException("A file of another machine opens for writing as a byte channel: " + path);
+        }
+        return (FileChannel) newByteChannel(path, options, attrs);
+    }
+
     @Override
     public DirectoryStream<Path> newDirectoryStream(Path dir, DirectoryStream.Filter<? super Path> filter) throws IOException {
         RemotePath remotePath = toRemotePath(dir);
         RemoteNioFileSystem fs = (RemoteNioFileSystem) remotePath.getFileSystem();
         try {
             List<FileInfo> entries = fs.getConnection().listDirectory(remotePath.getPathString());
+            fs.getMetadataCache().putChildren(remotePath.getPathString(), entries);
             List<Path> children = new ArrayList<>();
             for (FileInfo entry : entries) {
                 Path child = new RemotePath(fs, entry.getPath());
@@ -139,6 +164,7 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
                 throw new FileAlreadyExistsException(pathString);
             }
             fs.getConnection().createDirectory(pathString, false);
+            fs.getMetadataCache().invalidate(pathString);
         }
         catch (RemoteAgentException e) {
             throw toIOException(e);
@@ -151,6 +177,7 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
         RemoteNioFileSystem fs = (RemoteNioFileSystem) remotePath.getFileSystem();
         try {
             boolean deleted = fs.getConnection().deleteFile(remotePath.getPathString());
+            fs.getMetadataCache().invalidate(remotePath.getPathString());
             if (!deleted) {
                 throw new NoSuchFileException(remotePath.getPathString());
             }
@@ -167,7 +194,7 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
         RemoteNioFileSystem fs = (RemoteNioFileSystem) src.getFileSystem();
         try {
             byte[] data = fs.getConnection().readFile(src.getPathString());
-            fs.getConnection().writeFile(dst.getPathString(), data);
+            writeContent(fs, dst.getPathString(), data);
         }
         catch (RemoteAgentException e) {
             throw toIOException(e);
@@ -341,6 +368,7 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
 
     private static void writeContent(RemoteNioFileSystem fs, String pathString, byte[] bytes) {
         fs.getConnection().writeFile(pathString, bytes);
+        fs.getMetadataCache().invalidate(pathString);
     }
 
     private FileInfo getFileInfo(RemoteNioFileSystem fs, RemotePath path) {
@@ -349,15 +377,21 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
             // Root path
             List<FileInfo> roots = fs.getConnection().listRoots();
             for (FileInfo root : roots) {
-                if (root.getPath().equals(path.getPathString())) {
+                // the agent answers in the separators of its machine - C:\ is our C:/
+                if (new RemotePath(fs, root.getPath()).equals(path)) {
                     return root;
                 }
             }
             return null;
         }
+        FileInfo cached = fs.getMetadataCache().getFileInfo(path.getPathString());
+        if (cached != null) {
+            return cached;
+        }
         List<FileInfo> children = fs.getConnection().listDirectory(parent.toString());
+        fs.getMetadataCache().putChildren(parent.toString(), children);
         for (FileInfo info : children) {
-            if (info.getPath().equals(path.getPathString()) || info.getName().equals(path.getFileName().toString())) {
+            if (new RemotePath(fs, info.getPath()).equals(path) || info.getName().equals(path.getFileName().toString())) {
                 return info;
             }
         }

@@ -15,6 +15,9 @@
  */
 package consulo.remoteServer.agent.impl.internal.process;
 
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.process.ProcessOutputTypes;
+import consulo.process.util.AnsiEscapeDecoder;
 import consulo.remoteServer.agent.impl.internal.RemoteAgentConnection;
 import consulo.logging.Logger;
 import consulo.remoteServer.agent.impl.internal.protocol.ExecEvent;
@@ -42,12 +45,16 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
     private static final long START_TIMEOUT_SECONDS = 30;
     private static final int UNKNOWN_EXIT_CODE = -1;
     private static final int SIGNAL_EXIT_CODE_BASE = 128;
+    // an incomplete line (a prompt) is reported when nothing follows it for this long
+    private static final long INCOMPLETE_LINE_DELAY_MS = 100;
 
     private final RemoteAgentConnection myConnection;
     private final String myCommandLine;
     private final Charset myCharset;
     private final RemoteOutputDecoder myStdoutDecoder;
     private final RemoteOutputDecoder myStderrDecoder;
+    private final RemoteOutputLines myStdoutLines = new RemoteOutputLines();
+    private final RemoteOutputLines myStderrLines = new RemoteOutputLines();
     private final CompletableFuture<Long> myStarted = new CompletableFuture<>();
     private final RemoteAgentProcessInput myProcessInput = new RemoteAgentProcessInput(this::send);
 
@@ -55,8 +62,15 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
     private volatile long myPid = -1;
     private volatile int myExitCode = UNKNOWN_EXIT_CODE;
     private volatile boolean myDetached;
+    // decodes ANSI escape sequences into colored text, as a local colored process handler does - null when not colored
+    private final @Nullable AnsiEscapeDecoder myAnsiEscapeDecoder;
 
     public RemoteAgentProcessHandler(RemoteAgentConnection connection, String commandLine, Charset charset) {
+        this(connection, commandLine, charset, false);
+    }
+
+    public RemoteAgentProcessHandler(RemoteAgentConnection connection, String commandLine, Charset charset, boolean colored) {
+        myAnsiEscapeDecoder = colored ? new AnsiEscapeDecoder() : null;
         myConnection = connection;
         myCommandLine = commandLine;
         myCharset = charset;
@@ -86,6 +100,9 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
 
     @Override
     public void startNotify() {
+        // the first line of the console - as a local process shows it
+        notifyTextAvailable(myCommandLine + '\n', ProcessOutputTypes.SYSTEM);
+
         super.startNotify();
         ClientCallStreamObserver<ExecInput> requests = myRequests;
         if (requests != null) {
@@ -110,8 +127,8 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
     private void onEvent(ExecEvent event) {
         switch (event.getEventCase()) {
             case STARTED -> myStarted.complete(event.getStarted());
-            case STDOUT -> notifyText(myStdoutDecoder.decode(event.getStdout().toByteArray()), ProcessOutputType.STDOUT);
-            case STDERR -> notifyText(myStderrDecoder.decode(event.getStderr().toByteArray()), ProcessOutputType.STDERR);
+            case STDOUT -> notifyLines(myStdoutLines, myStdoutDecoder.decode(event.getStdout().toByteArray()), ProcessOutputType.STDOUT);
+            case STDERR -> notifyLines(myStderrLines, myStderrDecoder.decode(event.getStderr().toByteArray()), ProcessOutputType.STDERR);
             case EXITED -> myExitCode = exitCodeOf(event.getExited());
             case EVENT_NOT_SET -> {
             }
@@ -124,8 +141,14 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
             return;
         }
 
-        notifyText(myStdoutDecoder.flush(), ProcessOutputType.STDOUT);
-        notifyText(myStderrDecoder.flush(), ProcessOutputType.STDERR);
+        notifyLines(myStdoutLines, myStdoutDecoder.flush(), ProcessOutputType.STDOUT);
+        notifyLines(myStderrLines, myStderrDecoder.flush(), ProcessOutputType.STDERR);
+        synchronized (myStdoutLines) {
+            notifyText(myStdoutLines.flush(), ProcessOutputType.STDOUT);
+        }
+        synchronized (myStderrLines) {
+            notifyText(myStderrLines.flush(), ProcessOutputType.STDERR);
+        }
         if (error != null && !myDetached) {
             LOG.warn("Lost remote process pid=" + myPid, error);
             notifyText(myConnection.toException(error).getMessage() + "\n", ProcessOutputType.SYSTEM);
@@ -135,8 +158,34 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
         }
     }
 
+    /**
+     * Reports the output line by line, as a local process handler does.
+     */
+    private void notifyLines(RemoteOutputLines lines, String text, ProcessOutputType outputType) {
+        // text is taken and reported under one lock, so a delayed incomplete line never overtakes the next ones
+        synchronized (lines) {
+            for (String line : lines.append(text)) {
+                notifyText(line, outputType);
+            }
+            if (lines.hasIncomplete()) {
+                AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+                    synchronized (lines) {
+                        notifyText(lines.flush(), outputType);
+                    }
+                }, INCOMPLETE_LINE_DELAY_MS, TimeUnit.MILLISECONDS);
+            }
+        }
+    }
+
     private void notifyText(String text, ProcessOutputType outputType) {
-        if (!text.isEmpty()) {
+        if (text.isEmpty()) {
+            return;
+        }
+        AnsiEscapeDecoder decoder = myAnsiEscapeDecoder;
+        if (decoder != null && outputType != ProcessOutputType.SYSTEM) {
+            decoder.escapeText(text, outputType, this::notifyTextAvailable);
+        }
+        else {
             notifyTextAvailable(text, outputType);
         }
     }

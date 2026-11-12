@@ -80,6 +80,14 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
  
   protected abstract String getConfigurationMacro(boolean directorySpec);
 
+  /**
+   * Turns an expanded storage path into a {@link Path} - on the local file system by default,
+   * a project on a remote platform resolves it on that platform.
+   */
+  protected Path resolvePath(String path) {
+    return Path.of(path);
+  }
+
   @Override
  
   @SuppressWarnings("deprecation")
@@ -109,7 +117,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   private StateStorage createStateStorage(Storage storageSpec) {
     if (!storageSpec.stateSplitter().equals(StateSplitterEx.class)) {
       StateSplitterEx splitter = createSplitter(storageSpec.stateSplitter());
-      return new PathDirectoryBasedStorage(myPathMacroSubstitutor, expandMacros(buildFileSpec(storageSpec)), splitter, this, createStorageTopicListener(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
+      return new PathDirectoryBasedStorage(myPathMacroSubstitutor, resolvePath(expandMacros(buildFileSpec(storageSpec))), splitter, this, createStorageTopicListener(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
     }
     else {
       return createFileStateStorage(buildFileSpec(storageSpec), storageSpec.roamingType());
@@ -200,7 +208,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       roamingType = RoamingType.DISABLED;
     }
 
-    return new PathFileBasedStorage(filePath, fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
+    return new PathFileBasedStorage(resolvePath(filePath), fileSpec, roamingType, getMacroSubstitutor(fileSpec), myRootTagName, StateStorageManagerImpl.this, createStorageTopicListener(), myStreamProvider,
                                     isUseXmlProlog(), myCollectVfsEvents, myPathMacrosServiceSupplier.get());
   }
 
@@ -227,7 +235,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
     String basePath = expandStorageBasePath(fileSpec);
 
     String jsonPath = basePath + StorageFormat.JSON_EXTENSION;
-    if (Files.exists(Path.of(jsonPath))) {
+    if (Files.exists(resolvePath(jsonPath))) {
       return jsonPath;
     }
     return basePath + StorageFormat.XML_EXTENSION;

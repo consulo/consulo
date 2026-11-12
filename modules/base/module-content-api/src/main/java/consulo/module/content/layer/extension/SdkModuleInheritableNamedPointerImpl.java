@@ -16,6 +16,7 @@
 package consulo.module.content.layer.extension;
 
 import consulo.component.util.pointer.NamedPointer;
+import consulo.content.internal.RemoteSdkNames;
 import consulo.content.bundle.Sdk;
 import consulo.module.Module;
 import consulo.module.content.internal.ModuleRootLayerEx;
@@ -54,8 +55,18 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
         return null;
     }
 
+    /**
+     * A remote project stores the plain name of its bundle - it is the bundle of the project's target.
+     */
     @Override
     public NamedPointer<Sdk> getPointer(ModuleRootLayer layer, String name) {
-        return ((ModuleRootLayerEx) layer).getConfigurationAccessor().getSdkPointer(name);
+        String platformTargetId = layer.getModule().getProject().getPlatformTargetId();
+        String tableName = platformTargetId == null ? name : RemoteSdkNames.toTableName(platformTargetId, name);
+        return ((ModuleRootLayerEx) layer).getConfigurationAccessor().getSdkPointer(tableName);
+    }
+
+    @Override
+    protected String toStoredName(String name) {
+        return RemoteSdkNames.toStoredName(name);
     }
 }

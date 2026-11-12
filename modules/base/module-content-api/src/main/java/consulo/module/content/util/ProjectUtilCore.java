@@ -57,7 +57,7 @@ public class ProjectUtilCore {
             if (localFile != null) {
                 OrderEntry libraryEntry = ModuleContentLibraryUtil.findLibraryEntry(file, project);
                 if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry sdkOrderEntry) {
-                    return result + " [" + sdkOrderEntry.getSdkName() + "]";
+                    return result + " [" + sdkOrderEntry.getPresentableName() + "]";
                 }
                 else if (libraryEntry != null) {
                     return result + " [" + libraryEntry.getPresentableName() + "]";

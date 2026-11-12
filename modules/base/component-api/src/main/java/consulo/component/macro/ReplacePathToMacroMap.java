@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @see PathMacrosImpl#addMacroReplacements(ReplacePathToMacroMap)
@@ -35,6 +36,56 @@ import java.util.Map;
 public class ReplacePathToMacroMap extends PathMacroMap {
     private @Nullable List<String> myPathsIndex = null;
     private final Map<String, String> myMacroMap = new LinkedHashMap<>();
+    private @Nullable String myStoredUrlPrefix;
+    private @Nullable String myActualUrlPrefix;
+
+    /**
+     * Before collapsing, a url starting with {@code actualUrlPrefix} (e.g. {@code platform://<id>}) is rewritten to start
+     * with {@code storedUrlPrefix} (e.g. {@code file://}) - the reverse of {@link ExpandMacroToPathMap#mapUrlPrefix}.
+     */
+    public void mapUrlPrefix(String storedUrlPrefix, String actualUrlPrefix) {
+        myStoredUrlPrefix = storedUrlPrefix;
+        myActualUrlPrefix = actualUrlPrefix;
+    }
+
+    private String unmapUrl(String text) {
+        String stored = myStoredUrlPrefix;
+        String actual = myActualUrlPrefix;
+        if (stored == null || actual == null || !text.startsWith(actual + "/")) {
+            return text;
+        }
+        String path = text.substring(actual.length());
+        // a drive of a windows platform: platform://<id>/C:/a is stored as file://C:/a - the url of a local windows file
+        return stored + (isDrivePath(path) ? path.substring(1) : path);
+    }
+
+    private String unmapUrlsRecursively(String text) {
+        String stored = myStoredUrlPrefix;
+        String actual = myActualUrlPrefix;
+        if (stored == null || actual == null) {
+            return text;
+        }
+        StringBuilder result = new StringBuilder(text.length());
+        String prefix = actual + "/";
+        int from = 0;
+        while (true) {
+            int index = text.indexOf(prefix, from);
+            if (index < 0) {
+                result.append(text, from, text.length());
+                return result.toString();
+            }
+            result.append(text, from, index).append(stored);
+            int pathStart = index + actual.length();
+            from = isDrivePath(text.substring(pathStart, Math.min(text.length(), pathStart + 3))) ? pathStart + 1 : pathStart;
+        }
+    }
+
+    /**
+     * {@code /C:} - the start of a path of a windows drive
+     */
+    private static boolean isDrivePath(String path) {
+        return path.length() >= 3 && path.charAt(0) == '/' && Character.isLetter(path.charAt(1)) && path.charAt(2) == ':';
+    }
 
     public void addMacroReplacement(PathMacroProtocolProvider pathMacroProtocolProvider, String path, String macroName) {
         addReplacement(pathMacroProtocolProvider, quotePath(path), "$" + macroName + "$", true);
@@ -65,6 +116,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
             return null;
         }
 
+        text = unmapUrl(text);
         for (String path : getPathIndex()) {
             text = replacePathMacro(text, path, caseSensitive);
         }
@@ -98,6 +150,7 @@ public class ReplacePathToMacroMap extends PathMacroMap {
 
     @Override
     public String substituteRecursively(String text, boolean caseSensitive) {
+        text = unmapUrlsRecursively(text);
         for (String path : getPathIndex()) {
             text = replacePathMacroRecursively(text, path, caseSensitive);
         }
@@ -209,12 +262,13 @@ public class ReplacePathToMacroMap extends PathMacroMap {
     @Override
     public boolean equals(@Nullable Object obj) {
         return obj == this
-            || obj instanceof ReplacePathToMacroMap that && myMacroMap.equals(that.myMacroMap);
+            || obj instanceof ReplacePathToMacroMap that && myMacroMap.equals(that.myMacroMap)
+            && Objects.equals(myActualUrlPrefix, that.myActualUrlPrefix);
     }
 
     @Override
     public int hashCode() {
-        return myMacroMap.hashCode();
+        return myMacroMap.hashCode() + Objects.hashCode(myActualUrlPrefix);
     }
 
     public void put(String path, String replacement) {

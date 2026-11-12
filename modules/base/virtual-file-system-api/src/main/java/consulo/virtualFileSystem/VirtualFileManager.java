@@ -125,6 +125,16 @@ public abstract class VirtualFileManager implements ModificationTracker {
     }
 
     /**
+     * The url of the path - a file of the local machine, of another platform, or an entry of an archive - without finding the
+     * file: nothing is read.
+     *
+     * @return {@code null} if the file system of the path has no virtual file system
+     */
+    public @Nullable String getUrl(Path path) {
+        return null;
+    }
+
+    /**
      * Refreshes only the part of the file system needed for searching the file by the given URL and finds file
      * by the given URL.<br>
      * <p>

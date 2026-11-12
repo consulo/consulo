@@ -19,12 +19,15 @@ import consulo.credentialStorage.CredentialAttributes;
 import consulo.credentialStorage.CredentialAttributesUtil;
 import consulo.credentialStorage.Credentials;
 import consulo.credentialStorage.PasswordSafe;
+import consulo.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 class RemoteAgentCredentials {
+    private static final Logger LOG = Logger.getInstance(RemoteAgentCredentials.class);
+
     private final PasswordSafe myPasswordSafe;
     private final Executor myExecutor;
 
@@ -35,12 +38,28 @@ class RemoteAgentCredentials {
 
     CompletableFuture<@Nullable String> getTokenAsync(RemoteAgentServerConfiguration configuration) {
         return myPasswordSafe.getAsync(attributes(configuration))
-            .thenApply(credentials -> credentials == null ? null : credentials.getPasswordAsString());
+            .thenApply(credentials -> {
+                if (credentials == Credentials.ACCESS_TO_KEY_CHAIN_DENIED || credentials == Credentials.CANNOT_UNLOCK_KEYCHAIN) {
+                    // the keychain did not answer - the connect goes without a token, the user has to know why
+                    LOG.warn("Cannot read the token of " + configuration.getHost() + ":" + configuration.getPort() + " - keychain "
+                        + (credentials == Credentials.ACCESS_TO_KEY_CHAIN_DENIED ? "access denied" : "locked"));
+                    return null;
+                }
+                if (credentials == null) {
+                    LOG.info("No token stored for " + configuration.getHost() + ":" + configuration.getPort());
+                }
+                return credentials == null ? null : credentials.getPasswordAsString();
+            });
     }
 
     void setToken(RemoteAgentServerConfiguration configuration, @Nullable String token) {
         Credentials credentials = token == null || token.isEmpty() ? null : new Credentials(configuration.getCredentialId(), token);
-        CompletableFuture.runAsync(() -> myPasswordSafe.set(attributes(configuration), credentials), myExecutor);
+        CompletableFuture.runAsync(() -> myPasswordSafe.set(attributes(configuration), credentials), myExecutor)
+            .whenComplete((result, error) -> {
+                if (error != null) {
+                    LOG.error("Cannot store the remote agent token", error);
+                }
+            });
     }
 
     private static CredentialAttributes attributes(RemoteAgentServerConfiguration configuration) {

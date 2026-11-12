@@ -23,14 +23,23 @@ import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.project.Project;
 
+import java.nio.file.Path;
+
 public class ProjectStateStorageManager extends StateStorageManagerImpl {
   protected static final String ROOT_TAG_NAME = "project";
 
   private final Application myApplication;
+  private final Project myProject;
 
   public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor, PathMacrosService pathMacroManager) {
     super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager, true);
     myApplication = project.getApplication();
+    myProject = project;
+  }
+
+  @Override
+  protected Path resolvePath(String path) {
+    return myProject.getPlatform().fs().getPath(path);
   }
 
   

@@ -16,9 +16,14 @@
 package consulo.remoteServer.agent.impl.internal.platform;
 
 import consulo.platform.PlatformFileSystem;
+import consulo.remoteServer.agent.impl.internal.RemoteAgentConnection;
+import consulo.remoteServer.agent.impl.internal.RemoteAgentException;
 import consulo.platform.PlatformOperatingSystem;
 
 import java.nio.file.FileSystem;
+import org.jspecify.annotations.Nullable;
+
+import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -28,10 +33,12 @@ import java.nio.file.Path;
 public class RemotePlatformFileSystem implements PlatformFileSystem {
     private final PlatformOperatingSystem myOperatingSystem;
     private final FileSystem myNioFileSystem;
+    private final RemoteAgentConnection myConnection;
 
-    public RemotePlatformFileSystem(PlatformOperatingSystem operatingSystem, FileSystem nioFileSystem) {
+    public RemotePlatformFileSystem(PlatformOperatingSystem operatingSystem, FileSystem nioFileSystem, RemoteAgentConnection connection) {
         myOperatingSystem = operatingSystem;
         myNioFileSystem = nioFileSystem;
+        myConnection = connection;
     }
 
     @Override
@@ -57,5 +64,32 @@ public class RemotePlatformFileSystem implements PlatformFileSystem {
     @Override
     public Path getPath(String path, String... more) {
         return myNioFileSystem.getPath(path, more);
+    }
+
+    @Override
+    public String getPathListSeparator() {
+        return myOperatingSystem.isWindows() ? ";" : ":";
+    }
+
+    /**
+     * Created by the agent in the temp directory of the machine - and removed by it when it stops, so nothing is left over.
+     */
+    @Override
+    public Path createTempFile(String prefix, @Nullable String suffix) throws IOException {
+        return createTemp(prefix, suffix == null ? ".tmp" : suffix, false);
+    }
+
+    @Override
+    public Path createTempDirectory(String prefix) throws IOException {
+        return createTemp(prefix, "", true);
+    }
+
+    private Path createTemp(String prefix, String suffix, boolean directory) throws IOException {
+        try {
+            return myNioFileSystem.getPath(myConnection.createTemp(prefix, suffix, directory));
+        }
+        catch (RemoteAgentException e) {
+            throw new IOException(e.getMessage(), e);
+        }
     }
 }

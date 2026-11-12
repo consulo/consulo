@@ -34,7 +34,8 @@ import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.SystemIndependent;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +68,8 @@ public class ProgramParametersConfigurator {
       }
     }
     workingDirectory = expandPath(workingDirectory, module, project);
-    if (!FileUtil.isAbsolute(workingDirectory) && defaultWorkingDir != null) {
+    // absolute as the machine of the project sees it - C:/a is absolute on windows only
+    if (!isAbsolute(project, workingDirectory) && defaultWorkingDir != null) {
       if (PathMacroUtil.MODULE_DIR_MACRO.equals(workingDirectory)) {
         if(module != null) {
           String moduleDirPath = module.getModuleDirPath();
@@ -89,8 +91,12 @@ public class ProgramParametersConfigurator {
     return workingDirectory;
   }
 
+  /**
+   * The project directory as its machine knows it - the base path of a project of another platform is a path of that platform.
+   */
   protected @Nullable String getDefaultWorkingDir(Project project) {
-    return VirtualFilePathUtil.getLocalPath(project.getBaseDir());
+    String basePath = project.getBasePath();
+    return basePath == null ? null : FileUtil.toSystemIndependentName(basePath);
   }
 
   protected @Nullable String getDefaultWorkingDir(Module module) {
@@ -100,7 +106,9 @@ public class ProgramParametersConfigurator {
     }
     VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
     if (roots.length > 0) {
-      return VirtualFilePathUtil.getLocalPath(roots[0]);
+      // a path of the machine of the module - not the path of the virtual file system, which names the platform
+      Path path = roots[0].getFileSystem().getNioPath(roots[0]);
+      return path != null ? FileUtil.toSystemIndependentName(path.toString()) : VirtualFilePathUtil.getLocalPath(roots[0]);
     }
     return null;
   }
@@ -117,8 +125,18 @@ public class ProgramParametersConfigurator {
                                             ", module " +
                                             (module == null ? "null" : "'" + module.getName() + "' (" + module.getModuleDirPath() + ")"));
     }
-    if (!new File(workingDir).exists()) {
+    // a directory of the machine of the project
+    if (!Files.isDirectory(project.getPlatform().fs().getPath(workingDir))) {
       throw new RuntimeConfigurationWarning("Working directory '" + workingDir + "' doesn't exist");
+    }
+  }
+
+  private static boolean isAbsolute(Project project, String path) {
+    try {
+      return project.getPlatform().fs().getPath(path).isAbsolute();
+    }
+    catch (RuntimeException e) {
+      return FileUtil.isAbsolute(path);
     }
   }
 

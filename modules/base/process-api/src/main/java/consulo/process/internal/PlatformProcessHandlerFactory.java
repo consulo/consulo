@@ -27,4 +27,11 @@ public interface PlatformProcessHandlerFactory {
     boolean isApplicable(Platform platform);
 
     KillableProcessHandler createProcessHandler(GeneralCommandLine commandLine) throws ExecutionException;
+
+    /**
+     * @param colored whether ANSI escape sequences of the output are decoded into colored text, like a local colored handler does
+     */
+    default KillableProcessHandler createProcessHandler(GeneralCommandLine commandLine, boolean colored) throws ExecutionException {
+        return createProcessHandler(commandLine);
+    }
 }

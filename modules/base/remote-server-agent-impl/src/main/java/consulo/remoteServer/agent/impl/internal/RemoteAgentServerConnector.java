@@ -38,11 +38,19 @@ import java.util.concurrent.Executor;
 class RemoteAgentServerConnector extends ServerConnector<DeploymentConfiguration> {
     private static final Logger LOG = Logger.getInstance(RemoteAgentServerConnector.class);
 
+    private final String myPlatformId;
     private final RemoteAgentServerConfiguration myConfiguration;
     private final RemoteAgentCredentials myCredentials;
     private final Executor myExecutor;
 
-    RemoteAgentServerConnector(RemoteAgentServerConfiguration configuration, RemoteAgentCredentials credentials, Executor executor) {
+    /**
+     * @param platformId the id of the server - the machine is known by it
+     */
+    RemoteAgentServerConnector(String platformId,
+                               RemoteAgentServerConfiguration configuration,
+                               RemoteAgentCredentials credentials,
+                               Executor executor) {
+        myPlatformId = platformId;
         myConfiguration = configuration;
         myCredentials = credentials;
         myExecutor = executor;
@@ -60,6 +68,7 @@ class RemoteAgentServerConnector extends ServerConnector<DeploymentConfiguration
 
     private void connect(ConnectionCallback<DeploymentConfiguration> callback, @Nullable String token) {
         RemoteAgentConnection connection = new RemoteAgentConnection(
+            myPlatformId,
             myConfiguration.getHost(),
             myConfiguration.getPort(),
             myConfiguration.isUseTls(),

@@ -19,7 +19,6 @@ import com.dslplatform.json.DslJson;
 import consulo.application.Application;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.configuration.PlatformAwareRunProfile;
 import consulo.execution.configuration.ProgramParametersAware;
 import consulo.execution.impl.internal.configuration.ProjectRunConfigurationManager;
 import consulo.it.HeadlessProjectExtension;
@@ -146,23 +145,6 @@ public class RunConfigurationJsonStorageTest {
 
         assertThat(parse(Files.readString(echo))).isNotEqualTo(parse(ECHO));
         assertThat(Files.readString(ghost)).isEqualTo(GHOST);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void platformTargetIsAFragment(Application application, HeadlessProjects projects) throws Exception {
-        Path directory = projects.newDirectory();
-        Path echo = writeConfiguration(directory, "Echo.json", ECHO);
-
-        Project project = open(projects, directory);
-        RunnerAndConfigurationSettings settings = RunManager.getInstance(project).findConfigurationByName("Echo");
-        assertThat(settings).isNotNull();
-        ((PlatformAwareRunProfile) settings.getConfiguration()).setPlatformTargetId("remote-1");
-        save(project, application);
-
-        Map<String, Object> expected = parse(ECHO);
-        ((Map<String, Object>) expected.get("fragments")).put("platformTarget", Map.of("targetId", "remote-1"));
-        assertThat(parse(Files.readString(echo))).isEqualTo(expected);
     }
 
     private static Path writeConfiguration(Path directory, String fileName, String content) throws Exception {

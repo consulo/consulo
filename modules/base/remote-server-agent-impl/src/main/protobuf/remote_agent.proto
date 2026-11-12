@@ -198,6 +198,18 @@ message CreateDirectoryRequest {
     bool recursive = 2;
 }
 
+// A new empty temporary file (or directory) in the temp directory of this machine - kept for this agent process only:
+// the agent removes it when it stops, and the leftovers of agents which no longer run when it starts.
+message CreateTempRequest {
+    string prefix = 1;
+    string suffix = 2;
+    bool directory = 3;
+}
+
+message TempPath {
+    string path = 1;
+}
+
 message SetPermissionsRequest {
     string path = 1;
     // POSIX mode, e.g. 0755; a no-op returning false on Windows
@@ -212,6 +224,10 @@ message ReadStreamRequest {
     string path = 1;
     // 0 = the agent default
     int32 chunk_size = 2;
+    // where to start reading
+    int64 offset = 3;
+    // how many bytes to read at most, 0 = up to the end of the file
+    int64 length = 4;
 }
 
 // The first message must be path; then data chunks. The file is written when the
@@ -277,6 +293,50 @@ message WebSocketEvent {
 }
 
 // ============================================================
+// TCP tunnel - a port of the agent's machine reached through the agent (debuggers, RMI, ...)
+// ============================================================
+
+message TunnelConnect {
+    // usually 127.0.0.1 - a host as the agent's machine resolves it
+    string host = 1;
+    int32 port = 2;
+    // instead of connecting: the connection a Listen stream reported as accepted
+    string accepted = 3;
+}
+
+// A port bound on the agent's machine - port 0 for any free one.
+message ListenRequest {
+    string host = 1;
+    int32 port = 2;
+}
+
+// bound first (the bound port), then accepted per connection - claimed by a Tunnel with that id.
+// Cancelling the stream closes the port.
+message ListenEvent {
+    oneof event {
+        int32 bound = 1;
+        string accepted = 2;
+    }
+}
+
+// The first message must be connect; then data. close (or the end of the request stream) closes the connection.
+message TunnelInput {
+    oneof input {
+        TunnelConnect connect = 1;
+        bytes data = 2;
+        Empty close = 3;
+    }
+}
+
+// connected first, then data; the stream ends when the connection closes.
+message TunnelEvent {
+    oneof event {
+        Empty connected = 1;
+        bytes data = 2;
+    }
+}
+
+// ============================================================
 // Service
 // ============================================================
 
@@ -303,10 +363,14 @@ service RemoteAgentService {
     rpc ListDirectory(PathRequest) returns (FileInfoList);
     rpc FileExists(PathRequest) returns (ExistsResult);
     rpc CreateDirectory(CreateDirectoryRequest) returns (Empty);
+    rpc CreateTemp(CreateTempRequest) returns (TempPath);
     rpc ListRoots(Empty) returns (FileInfoList);
     rpc SetPermissions(SetPermissionsRequest) returns (SetPermissionsResult);
 
     rpc ExecuteHttpRequest(HttpRequest) returns (HttpResponse);
 
     rpc WebSocket(stream WebSocketInput) returns (stream WebSocketEvent);
+
+    rpc Tunnel(stream TunnelInput) returns (stream TunnelEvent);
+    rpc Listen(ListenRequest) returns (stream ListenEvent);
 }

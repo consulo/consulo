@@ -22,6 +22,11 @@ import consulo.platform.os.WindowsOperatingSystem;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import org.jspecify.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +54,21 @@ public class PlatformFileSystemImpl implements PlatformFileSystem {
     @Override
     public Path getPath(String path) {
         return Path.of(path);
+    }
+
+    @Override
+    public String getPathListSeparator() {
+        return File.pathSeparator;
+    }
+
+    @Override
+    public Path createTempFile(String prefix, @Nullable String suffix) throws IOException {
+        return Files.createTempFile(prefix, suffix);
+    }
+
+    @Override
+    public Path createTempDirectory(String prefix) throws IOException {
+        return Files.createTempDirectory(prefix);
     }
 
     @Override

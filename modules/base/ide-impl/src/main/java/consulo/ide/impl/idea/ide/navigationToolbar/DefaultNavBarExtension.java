@@ -59,7 +59,7 @@ public class DefaultNavBarExtension implements NavBarModelExtension {
             return ((PsiDirectory) object).getVirtualFile().getName();
         }
         else if (object instanceof ModuleExtensionWithSdkOrderEntry) {
-            return ((ModuleExtensionWithSdkOrderEntry) object).getSdkName();
+            return ((ModuleExtensionWithSdkOrderEntry) object).getPresentableName();
         }
         else if (object instanceof LibraryOrderEntry) {
             String libraryName = ((LibraryOrderEntry) object).getLibraryName();

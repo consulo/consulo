@@ -22,7 +22,7 @@ import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -36,9 +36,9 @@ public interface IComponentStore {
 
   void load() throws IOException, StateStorageException;
 
-  Coroutine<Object, Object> createSaveCoroutine(List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  Coroutine<Object, Object> createSaveCoroutine(List<Pair<StateStorage.SaveSession, Path>> readonlyFiles);
 
-  Continuation<?> saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, File>> readonlyFiles);
+  Continuation<?> saveAsync(UIAccess uiAccess, List<Pair<StateStorage.SaveSession, Path>> readonlyFiles);
 
   /**
    * Return storable info about component. Throws for a {@code PersistentStateComponentAsync}, which must be

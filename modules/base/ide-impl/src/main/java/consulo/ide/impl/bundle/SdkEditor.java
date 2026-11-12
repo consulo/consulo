@@ -20,6 +20,7 @@ import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.configurable.internal.ConfigurableUIMigrationUtil;
+import consulo.content.internal.RemoteSdkNames;
 import consulo.content.bundle.AdditionalDataConfigurable;
 import consulo.content.bundle.PlatformAwareSdkType;
 import consulo.content.bundle.Sdk;
@@ -29,8 +30,8 @@ import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.bundle.UnknownSdkType;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetManager;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.OrderRootTypeUIFactory;
 import consulo.ide.ui.PathEditor;
@@ -135,10 +136,13 @@ public class SdkEditor implements UnnamedConfigurable {
     private DockLayout createMainPanel(Disposable parentUIDisposable) {
         myUIDisposable = parentUIDisposable;
 
-        TextBox nameComponent = TextBox.create(mySdk.getName());
+        // a bundle of a remote platform is known to the table by an internal name - the platform is shown aside
+        TextBox nameComponent = TextBox.create(RemoteSdkNames.toStoredName(mySdk.getName()));
         nameComponent.setEditable(!mySdk.isPredefined());
         nameComponent.addValueListener(event -> {
-            String name = event.getValue();
+            String value = event.getValue();
+            String platformTargetId = RemoteSdkNames.getPlatformTargetId(mySdk.getName());
+            String name = value == null || platformTargetId == null ? value : RemoteSdkNames.toTableName(platformTargetId, value);
             if (name != null && !name.equals(mySdk.getName())) {
                 ((SdkImpl) mySdk).setName(name);
                 myNameChanged.run();
@@ -204,7 +208,7 @@ public class SdkEditor implements UnnamedConfigurable {
     public void updateName() {
         TextBox nameComponent = myNameComponent;
         if (nameComponent != null) {
-            nameComponent.setValue(mySdk.getName(), false);
+            nameComponent.setValue(RemoteSdkNames.toStoredName(mySdk.getName()), false);
         }
     }
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
+import consulo.content.internal.RemoteSdkNames;
 import consulo.application.Application;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.component.extension.ExtensionPoint;
@@ -312,7 +313,13 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
                 if (platform == null) {
                     return;
                 }
-                String newSdkName = SdkUtil.createUniqueSdkName(platform, platformAwareSdkType, homePath, getSdks());
+                // a bundle of a remote target is known to the table by its target too, see RemoteSdkNames
+                String newSdkName = target == null
+                    ? SdkUtil.createUniqueSdkName(platform, platformAwareSdkType, homePath, getSdks())
+                    : SdkUtil.createUniqueSdkName(
+                        RemoteSdkNames.toTableName(target.getId(), platformAwareSdkType.suggestSdkName(platform, null, homePath)),
+                        getSdks()
+                    );
                 SdkImpl newSdk = new SdkImpl(mySdkTableProvider.get(), type, homePath, newSdkName);
                 newSdk.setPlatformTargetId(target == null ? null : target.getId());
                 setupSdk(newSdk, callback);

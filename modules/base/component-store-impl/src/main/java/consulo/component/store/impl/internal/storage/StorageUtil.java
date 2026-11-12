@@ -93,7 +93,7 @@ public class StorageUtil {
       }
     }
     catch (FileNotFoundException e) {
-      throw new ReadOnlyModificationException(file);
+      throw new ReadOnlyModificationException(file.toPath());
     }
   }
 

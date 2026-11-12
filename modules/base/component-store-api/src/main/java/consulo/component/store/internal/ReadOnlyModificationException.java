@@ -15,17 +15,17 @@
  */
 package consulo.component.store.internal;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public final class ReadOnlyModificationException extends RuntimeException {
-  private final File myFile;
+  private final Path myFile;
 
-  public ReadOnlyModificationException(File file) {
+  public ReadOnlyModificationException(Path file) {
     myFile = file;
   }
 
   
-  public File getFile() {
+  public Path getFile() {
     return myFile;
   }
 }

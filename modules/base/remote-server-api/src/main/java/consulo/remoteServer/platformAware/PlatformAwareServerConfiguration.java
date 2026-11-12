@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.platform;
+package consulo.remoteServer.platformAware;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ExtensionAPI;
-
-import java.util.List;
+import consulo.remoteServer.platformAware.PredefinedBundlesMode;
 
 /**
- * Contributes the machines besides the local one.
+ * The configuration of a server whose connection is a platform - which bundles (SDKs) of that platform are detected.
  *
  * @author VISTALL
- * @since 2026-10-13
+ * @since 2026-11-12
  */
-@ExtensionAPI(ComponentScope.APPLICATION)
-public interface PlatformTargetProvider {
-    List<PlatformTarget> getTargets();
+public interface PlatformAwareServerConfiguration {
+    PredefinedBundlesMode getPredefinedBundlesMode();
+
+    void setPredefinedBundlesMode(PredefinedBundlesMode mode);
 }

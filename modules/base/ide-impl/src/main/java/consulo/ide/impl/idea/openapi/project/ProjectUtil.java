@@ -109,7 +109,7 @@ public class ProjectUtil {
           OrderEntry libraryEntry = LibraryUtil.findLibraryEntry(file, project);
           if (libraryEntry != null) {
             if (libraryEntry instanceof ModuleExtensionWithSdkOrderEntry moduleExtensionWithSdkOrderEntry) {
-              url = url + " - [" + moduleExtensionWithSdkOrderEntry.getSdkName() + "]";
+              url = url + " - [" + moduleExtensionWithSdkOrderEntry.getPresentableName() + "]";
             }
             else {
               url = url + " - [" + libraryEntry.getPresentableName() + "]";

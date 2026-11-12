@@ -36,12 +36,11 @@ import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
-import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -73,19 +72,17 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
         return in
             // Create directories + temp project
             .then(CodeExecution.<VirtualFile, Object>apply((virtualFile, continuation) -> {
-                String projectFilePath = virtualFile.getPath();
+                Path projectDir = virtualFile.toNioPath();
                 String projectName = virtualFile.getName();
 
-                File projectDir = new File(projectFilePath);
                 try {
-                    FileUtil.ensureExists(projectDir);
-                    FileUtil.ensureExists(new File(projectDir, Project.DIRECTORY_STORE_FOLDER));
+                    Files.createDirectories(projectDir.resolve(Project.DIRECTORY_STORE_FOLDER));
                 }
                 catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
-                Project newProject = ProjectManager.getInstance().createProject(projectName, projectFilePath, uiAccess);
+                Project newProject = ProjectManager.getInstance().createProject(projectName, projectDir, uiAccess);
 
                 if (newProject == null) {
                     throw new IllegalStateException("Project not initialized");
@@ -103,7 +100,7 @@ public class FolderProjectOpenProcessor extends ProjectOpenProcessor {
                 VirtualFile virtualFile = c.getCopyableUserData(VIRTUAL_FILE);
 
                 ModifiableModuleModel modifiableModel = ModuleManager.getInstance(project).getModifiableModel();
-                Module newModule = modifiableModel.newModule(virtualFile.getName(), virtualFile.getPath());
+                Module newModule = modifiableModel.newModule(virtualFile.getName(), virtualFile);
 
                 ModifiableRootModel modifiableModelForModule = ModuleRootManager.getInstance(newModule).getModifiableModel();
                 ContentEntry contentEntry = modifiableModelForModule.addContentEntry(virtualFile);

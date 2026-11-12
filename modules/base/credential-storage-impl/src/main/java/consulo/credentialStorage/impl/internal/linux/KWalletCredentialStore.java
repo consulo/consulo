@@ -110,6 +110,15 @@ public class KWalletCredentialStore implements CredentialStore, Closeable {
             }
             // readPasswordList returns a Map<String, Variant<String>>
             Map<String, Variant<String>> passwords = kWallet.readPasswordList(walletId, attributes.getServiceName(), userName, appId);
+            if ((passwords == null || passwords.isEmpty()) && "*".equals(userName)) {
+                // kwalletd6 matches no key by the * pattern - take the entries of the folder one by one
+                List<String> keys = kWallet.entryList(walletId, attributes.getServiceName(), appId);
+                if (keys != null && !keys.isEmpty()) {
+                    String key = keys.get(0);
+                    resultHolder[0] = new Credentials(key, kWallet.readPassword(walletId, attributes.getServiceName(), key, appId));
+                    return;
+                }
+            }
             if (passwords == null || passwords.isEmpty()) {
                 resultHolder[0] = null;
                 return;

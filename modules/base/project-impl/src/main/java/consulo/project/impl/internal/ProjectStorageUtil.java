@@ -30,7 +30,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 public class ProjectStorageUtil {
@@ -38,7 +38,7 @@ public class ProjectStorageUtil {
         private Project myProject;
         private final List<String> myFileNames;
 
-        private UnableToSaveProjectNotification(Project project, Collection<File> readOnlyFiles) {
+        private UnableToSaveProjectNotification(Project project, Collection<Path> readOnlyFiles) {
             super(
                 NotificationService.getInstance()
                     .newError(ProjectNotificationGroups.Project)
@@ -58,7 +58,7 @@ public class ProjectStorageUtil {
             );
 
             myProject = project;
-            myFileNames = ContainerUtil.map(readOnlyFiles, File::getPath);
+            myFileNames = ContainerUtil.map(readOnlyFiles, Path::toString);
         }
 
         public List<String> getFileNames() {
@@ -134,7 +134,7 @@ public class ProjectStorageUtil {
         return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
     }
 
-    public static void dropUnableToSaveProjectNotification(Project project, Collection<File> readOnlyFiles) {
+    public static void dropUnableToSaveProjectNotification(Project project, Collection<Path> readOnlyFiles) {
         List<UnableToSaveProjectNotification> notifications = NotificationService.getInstance().getNotificationsOfType(UnableToSaveProjectNotification.class, project);
         if (notifications.isEmpty()) {
             NotificationService.getInstance().notify(new UnableToSaveProjectNotification(project, readOnlyFiles), project);

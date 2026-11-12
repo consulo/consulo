@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.content.platform;
+package consulo.application.platform;
 
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;

@@ -18,6 +18,7 @@ package consulo.platform;
 import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -47,4 +48,27 @@ public interface PlatformFileSystem {
     Path getPath(String path);
 
     Path getPath(String path, String... more);
+
+    /**
+     * A new empty temporary file of this machine - for a file a process of it reads, like an argument file of a tool.
+     * The caller deletes it once it is not needed.
+     */
+    Path createTempFile(String prefix, @Nullable String suffix) throws IOException;
+
+    /**
+     * A new empty temporary directory of this machine. The caller deletes it once it is not needed.
+     */
+    Path createTempDirectory(String prefix) throws IOException;
+
+    /**
+     * The name separator of this platform's file system - "\" on Windows, "/" elsewhere (and on remote unix machines).
+     */
+    default String getSeparator() {
+        return getPath("").getFileSystem().getSeparator();
+    }
+
+    /**
+     * The separator of the paths of a path list of this platform (a class path, PATH) - ";" on Windows, ":" elsewhere.
+     */
+    String getPathListSeparator();
 }

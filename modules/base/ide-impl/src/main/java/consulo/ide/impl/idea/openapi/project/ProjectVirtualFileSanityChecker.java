@@ -51,6 +51,10 @@ public class ProjectVirtualFileSanityChecker implements BackgroundStartupActivit
 
     @Override
     public void runActivity(Project project, UIAccess uiAccess) {
+        if (project.getPlatformTargetId() != null) {
+            // checks the local file system against the IDE setting - a remote project's files are not on it
+            return;
+        }
         try {
             String path = project.getBasePath();
             if (path == null || FileUtil.isAncestor(ContainerPathManager.get().getConfigPath(), path, true)) {

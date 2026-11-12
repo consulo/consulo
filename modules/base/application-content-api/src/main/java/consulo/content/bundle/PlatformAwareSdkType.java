@@ -16,8 +16,8 @@
 package consulo.content.bundle;
 
 import consulo.application.Application;
-import consulo.content.platform.PlatformTarget;
-import consulo.content.platform.PlatformTargetManager;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;

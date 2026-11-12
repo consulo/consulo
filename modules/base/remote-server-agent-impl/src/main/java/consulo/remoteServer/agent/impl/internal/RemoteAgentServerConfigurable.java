@@ -19,7 +19,9 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.remoteServer.RemoteServerConfigurable;
+import consulo.remoteServer.platformAware.PredefinedBundlesMode;
 import consulo.ui.CheckBox;
+import consulo.ui.ComboBox;
 import consulo.ui.Component;
 import consulo.ui.PasswordBox;
 import consulo.ui.TextBox;
@@ -39,6 +41,7 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
     private @Nullable CheckBox myTlsBox;
     private @Nullable TextBox myFingerprintField;
     private @Nullable PasswordBox myTokenField;
+    private @Nullable ComboBox<PredefinedBundlesMode> myPredefinedBundlesBox;
     private String myStoredToken = "";
 
     RemoteAgentServerConfigurable(RemoteAgentServerConfiguration configuration, RemoteAgentCredentials credentials) {
@@ -56,6 +59,9 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
         fingerprintField.setPlaceholder(LocalizeValue.localizeTODO("SHA-256 printed by the agent, empty for a CA-signed certificate"));
         PasswordBox tokenField = PasswordBox.create();
         tlsBox.addValueListener(event -> fingerprintField.setEnabled(Boolean.TRUE.equals(event.getValue())));
+        ComboBox<PredefinedBundlesMode> predefinedBundlesBox = ComboBox.create(PredefinedBundlesMode.values());
+        predefinedBundlesBox.setTextRenderer(value -> value == null ? LocalizeValue.empty() : value.getText());
+        myPredefinedBundlesBox = predefinedBundlesBox;
 
         myHostField = hostField;
         myPortField = portField;
@@ -70,6 +76,7 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
             .addLabeled(LocalizeValue.localizeTODO("Transport:"), tlsBox)
             .addLabeled(LocalizeValue.localizeTODO("Certificate fingerprint:"), fingerprintField)
             .addLabeled(LocalizeValue.localizeTODO("Token:"), tokenField)
+            .addLabeled(LocalizeValue.localizeTODO("Detect SDKs:"), predefinedBundlesBox)
             .build();
     }
 
@@ -83,7 +90,8 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
             || !text(myPortField).equals(String.valueOf(myConfiguration.getPort()))
             || myTlsBox.getValueOrError() != myConfiguration.isUseTls()
             || !text(myFingerprintField).equals(myConfiguration.getCertificateFingerprint())
-            || !StringUtil.notNullize(myTokenField.getValue()).equals(myStoredToken);
+            || !StringUtil.notNullize(myTokenField.getValue()).equals(myStoredToken)
+            || (myPredefinedBundlesBox != null && myPredefinedBundlesBox.getValue() != myConfiguration.getPredefinedBundlesMode());
     }
 
     @RequiredUIAccess
@@ -108,6 +116,9 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
         myConfiguration.setPort(port);
         myConfiguration.setUseTls(myTlsBox.getValueOrError());
         myConfiguration.setCertificateFingerprint(text(myFingerprintField));
+        if (myPredefinedBundlesBox != null && myPredefinedBundlesBox.getValue() != null) {
+            myConfiguration.setPredefinedBundlesMode(myPredefinedBundlesBox.getValue());
+        }
 
         String newToken = StringUtil.notNullize(myTokenField.getValue());
         if (!newToken.equals(myStoredToken)) {
@@ -127,6 +138,9 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
         myTlsBox.setValue(myConfiguration.isUseTls());
         myFingerprintField.setValue(myConfiguration.getCertificateFingerprint());
         myFingerprintField.setEnabled(myConfiguration.isUseTls());
+        if (myPredefinedBundlesBox != null) {
+            myPredefinedBundlesBox.setValue(myConfiguration.getPredefinedBundlesMode());
+        }
 
         PasswordBox tokenField = myTokenField;
         myCredentials.getTokenAsync(myConfiguration).whenCompleteAsync((token, error) -> {

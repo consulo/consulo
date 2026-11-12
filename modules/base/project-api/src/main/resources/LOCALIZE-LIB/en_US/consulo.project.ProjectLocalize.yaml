@@ -932,6 +932,10 @@ platform.target.label:
     text: 'Platform:'
 error.platform.target.missing:
     text: The platform {0} no longer exists
+error.platform.target.connect.failed:
+    text: 'Cannot connect to {0}: {1}'
+error.platform.target.unavailable:
+    text: The platform {0} is not available
 error.platform.target.connecting:
     text: '{0} is not connected. Connecting now - try again once it is connected'
 welcome.reuse.frame:

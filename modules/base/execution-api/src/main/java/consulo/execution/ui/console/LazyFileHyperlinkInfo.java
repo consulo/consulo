@@ -19,8 +19,11 @@ import consulo.project.Project;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -34,6 +37,14 @@ public class LazyFileHyperlinkInfo extends FileHyperlinkInfoBase {
   public LazyFileHyperlinkInfo(Project project, String filePath, int line, int column) {
     super(project, line, column);
     myFile = LazyValue.nullable(() -> LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath));
+  }
+
+  /**
+   * @param path a path of any machine - a remote platform's file is found through its file system
+   */
+  public LazyFileHyperlinkInfo(Project project, Path path, int line, int column) {
+    super(project, line, column);
+    myFile = LazyValue.nullable(() -> VirtualFileManager.getInstance().refreshAndFindFileByNioPath(path));
   }
 
   @Override

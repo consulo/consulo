@@ -15,6 +15,8 @@
  */
 package consulo.welcomeScreen.impl.internal;
 
+import consulo.application.Application;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.UiDataProvider;
 import consulo.ide.impl.idea.ide.PopupProjectGroupActionGroup;
@@ -84,6 +86,7 @@ public class RecentProjectsList {
         listSelect.setRenderer(new RecentProjectItemRenderer(
             myRecentProjectsManager,
             RecentProjectsChecker.getInstance(),
+            Application.get().getInstance(PlatformTargetManager.class),
             (action, event) -> performAction(listSelect, action, event),
             (action, event) -> showRecentProjectMenu(listSelect, action, event)
         ));
