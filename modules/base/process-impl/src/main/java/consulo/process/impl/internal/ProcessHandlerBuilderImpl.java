@@ -172,7 +172,7 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     throws ExecutionException {
     String platformName = line.getPlatform().getName();
     if (myBinary) {
-      throw new ExecutionException("Binary process handler is not supported at " + platformName);
+      return factory.createBinaryProcessHandler(line);
     }
     if (myConsoleType == ProcessConsoleType.EXTERNAL) {
       throw new ExecutionException("Can't create process with EXTERNAL console at " + platformName);

@@ -18,6 +18,7 @@ package consulo.process.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.platform.Platform;
+import consulo.process.BinaryProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -33,5 +34,12 @@ public interface PlatformProcessHandlerFactory {
      */
     default KillableProcessHandler createProcessHandler(GeneralCommandLine commandLine, boolean colored) throws ExecutionException {
         return createProcessHandler(commandLine);
+    }
+
+    /**
+     * A handler of a process which output is collected as is - see {@link BinaryProcessHandler}; its error output is reported as text.
+     */
+    default BinaryProcessHandler createBinaryProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
+        throw new ExecutionException("Binary process handler is not supported at " + commandLine.getPlatform().getName());
     }
 }

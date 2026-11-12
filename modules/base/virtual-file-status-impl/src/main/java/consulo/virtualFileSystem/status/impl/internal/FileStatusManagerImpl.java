@@ -97,7 +97,7 @@ public class FileStatusManagerImpl implements FileStatusManagerInternal, Disposa
             return fileStatus;
         }
 
-        if (virtualFile.isInLocalFileSystem() && myFileStatusProvider != null) {
+        if (virtualFile.isInLocalLikeFileSystem() && myFileStatusProvider != null) {
             return myFileStatusProvider.getFileStatus(virtualFile);
         }
 

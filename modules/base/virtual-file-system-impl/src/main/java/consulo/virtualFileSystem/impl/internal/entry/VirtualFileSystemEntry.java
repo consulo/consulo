@@ -329,6 +329,12 @@ public abstract class VirtualFileSystemEntry extends InternalNewVirtualFile {
     return getFileSystem() instanceof LocalFileSystem;
   }
 
+  @Override
+  public boolean isInLocalLikeFileSystem() {
+    VirtualFileSystem fileSystem = getFileSystem();
+    return fileSystem instanceof LocalFileSystem || fileSystem instanceof PlatformPathVirtualFileSystem;
+  }
+
   public void invalidate() {
     mySegment.vfsData.invalidateFile(myId);
   }

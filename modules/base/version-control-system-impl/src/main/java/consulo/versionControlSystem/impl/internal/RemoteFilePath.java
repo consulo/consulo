@@ -31,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 public class RemoteFilePath implements FilePath {
 
@@ -59,6 +60,12 @@ public class RemoteFilePath implements FilePath {
   @Override
   public File getIOFile() {
     return new File(myPath);
+  }
+
+  @Override
+  public @Nullable Path getNioPath() {
+    // not a path of a file system
+    return null;
   }
 
   

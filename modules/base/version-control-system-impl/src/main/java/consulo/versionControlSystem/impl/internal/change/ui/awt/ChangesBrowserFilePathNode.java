@@ -100,8 +100,10 @@ public class ChangesBrowserFilePathNode extends ChangesBrowserNode<FilePath> {
         boolean caseSensitive = isLocal && Platform.current().fs().isCaseSensitive();
         String result = parent != null ? FileUtil.getRelativePath(parent.getPath(), child.getPath(), '/', caseSensitive) : null;
 
-        result = result == null ? child.getPath() : result;
-
+        if (result == null) {
+            // the path as it is on its machine
+            return child.getPresentableUrl();
+        }
         return isLocal ? FileUtil.toSystemDependentName(result) : result;
     }
 

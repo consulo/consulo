@@ -46,7 +46,7 @@ public class IgnoredFileStatusProvider implements FileStatusProvider {
     @Nullable
     @Override
     public FileStatus getFileStatus(VirtualFile virtualFile) {
-        if (!virtualFile.isInLocalFileSystem()) {
+        if (!virtualFile.isInLocalLikeFileSystem()) {
             return null;
         }
         var fp = VcsUtil.getFilePath(virtualFile);

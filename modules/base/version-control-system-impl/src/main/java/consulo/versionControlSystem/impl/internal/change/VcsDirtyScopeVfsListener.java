@@ -73,7 +73,7 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
       boolean isDirectory;
       switch (event) {
         case VFileCreateEvent ce -> {
-          if (!ce.getParent().isInLocalFileSystem()) {
+          if (!ce.getParent().isInLocalLikeFileSystem()) {
             continue;
           }
           isDirectory = ce.isDirectory();
@@ -81,7 +81,7 @@ public class VcsDirtyScopeVfsListener implements AsyncVfsEventsListener, Disposa
 
         case VFileExistingFileEvent efe -> {
           VirtualFile file = efe.getFile();
-          if (!file.isInLocalFileSystem()) {
+          if (!file.isInLocalLikeFileSystem()) {
             continue;
           }
           isDirectory = file.isDirectory();

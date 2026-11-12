@@ -27,10 +27,15 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.internal.VcsContextWrapper;
 import consulo.versionControlSystem.impl.internal.change.LocalChangeListImpl;
 import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.platform.PlatformNioFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.internal.PlatformPathVirtualFileSystem;
 import jakarta.inject.Singleton;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Function;
 
 @Singleton
@@ -48,12 +53,33 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   public FilePath createFilePathOn(VirtualFile virtualFile) {
+    if (virtualFile.getFileSystem() instanceof PlatformPathVirtualFileSystem) {
+      return new PlatformFilePath(virtualFile.getPath(), virtualFile.isDirectory());
+    }
     return createFilePath(virtualFile.getPath(), virtualFile.isDirectory());
+  }
+
+  @Override
+  public FilePath createFilePath(Path path, boolean isDirectory) {
+    if (path.getFileSystem() instanceof PlatformNioFileSystem) {
+      PlatformPathVirtualFileSystem fileSystem = PlatformFilePath.getFileSystem();
+      if (fileSystem != null) {
+        return new PlatformFilePath(fileSystem.toVfsPath(path), isDirectory);
+      }
+    }
+    return createFilePath(path.toString(), isDirectory);
   }
 
   @Override
   public FilePath createFilePathOn(File file) {
     String path = file.getPath();
+    PlatformPathVirtualFileSystem platformFileSystem = PlatformFilePath.getFileSystem();
+    if (!file.isAbsolute() && platformFileSystem != null && platformFileSystem.isPlatformPath(FileUtil.toSystemIndependentName(path))) {
+      // not a file - a path of a file of a platform, as its virtual file answers it
+      String vfsPath = FileUtil.toSystemIndependentName(path);
+      VirtualFile vf = ((VirtualFileSystem) platformFileSystem).findFileByPath(vfsPath);
+      return new PlatformFilePath(vfsPath, vf != null && vf.isDirectory());
+    }
     VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(path);
     return createFilePath(path, vf != null ? vf.isDirectory() : file.isDirectory());
   }
@@ -89,6 +115,9 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   public FilePath createFilePath(VirtualFile parent, String fileName, boolean isDirectory) {
+    if (parent.getFileSystem() instanceof PlatformPathVirtualFileSystem) {
+      return new PlatformFilePath(parent.getPath() + "/" + fileName, isDirectory);
+    }
     return createFilePath(parent.getPath() + "/" + fileName, isDirectory);
   }
 
@@ -99,6 +128,11 @@ public class VcsContextFactoryImpl implements VcsContextFactory {
 
   @Override
   public FilePath createFilePath(String path, boolean isDirectory) {
+    // a path of a file of a platform, as its virtual file answers it - stored or built from a virtual file path
+    PlatformPathVirtualFileSystem fileSystem = path.isEmpty() || path.charAt(0) == '/' ? null : PlatformFilePath.getFileSystem();
+    if (fileSystem != null && fileSystem.isPlatformPath(path)) {
+      return new PlatformFilePath(path, isDirectory);
+    }
     return new LocalFilePath(path, isDirectory);
   }
 }

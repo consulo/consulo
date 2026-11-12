@@ -127,12 +127,16 @@ public class RemoteAgentProcessHandler extends BaseProcessHandler implements Kil
     private void onEvent(ExecEvent event) {
         switch (event.getEventCase()) {
             case STARTED -> myStarted.complete(event.getStarted());
-            case STDOUT -> notifyLines(myStdoutLines, myStdoutDecoder.decode(event.getStdout().toByteArray()), ProcessOutputType.STDOUT);
+            case STDOUT -> onStdout(event.getStdout().toByteArray());
             case STDERR -> notifyLines(myStderrLines, myStderrDecoder.decode(event.getStderr().toByteArray()), ProcessOutputType.STDERR);
             case EXITED -> myExitCode = exitCodeOf(event.getExited());
             case EVENT_NOT_SET -> {
             }
         }
+    }
+
+    protected void onStdout(byte[] data) {
+        notifyLines(myStdoutLines, myStdoutDecoder.decode(data), ProcessOutputType.STDOUT);
     }
 
     private void onFinished(@Nullable Throwable error) {

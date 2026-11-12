@@ -22,8 +22,10 @@ import consulo.platform.PlatformNioFileSystem;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.ManagingFS;
+import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.RefreshQueue;
+import consulo.virtualFileSystem.RefreshableFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.BatchingFileSystem;
@@ -70,7 +72,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @ExtensionImpl
 public class PlatformVirtualFileSystem extends NewVirtualFileSystem
-    implements PlatformPathVirtualFileSystem, BatchingFileSystem, UnavailabilityAwareFileSystem {
+    implements PlatformPathVirtualFileSystem, RefreshableFileSystem, BatchingFileSystem, UnavailabilityAwareFileSystem {
     private static final Logger LOG = Logger.getInstance(PlatformVirtualFileSystem.class);
 
     private static final char SEPARATOR = '/';
@@ -149,6 +151,18 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
     }
 
     /**
+     * Nothing watches the files of other machines - a refresh by the user rescans all that is known of them.
+     */
+    @Override
+    public void refreshWithoutFileWatcher(boolean asynchronous) {
+        VirtualFile[] roots = ManagingFS.getInstance().getRoots(this);
+        for (VirtualFile root : roots) {
+            ((NewVirtualFile) root).markDirtyRecursively();
+        }
+        RefreshQueue.getInstance().refresh(asynchronous, true, null, roots);
+    }
+
+    /**
      * The root of a platform is named by its id alone - a root name must not contain a separator - and stands for the
      * {@code /} of that platform.
      * <p>
@@ -188,11 +202,29 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
         }
     }
 
-    private Path toNioPath(VirtualFile file) throws FileSystemUnavailableException {
-        return toNioPath(file.getPath());
+    @Override
+    public @Nullable Path toNioPath(String vfsPath) {
+        if (!isPlatformPath(vfsPath)) {
+            return null;
+        }
+        try {
+            return toNioPathOrThrow(vfsPath);
+        }
+        catch (FileSystemUnavailableException e) {
+            return null;
+        }
     }
 
-    private Path toNioPath(String vfsPath) throws FileSystemUnavailableException {
+    @Override
+    public boolean isPlatformPath(String vfsPath) {
+        return !vfsPath.isEmpty() && myFileSystems.containsKey(extractRootPath(vfsPath));
+    }
+
+    private Path toNioPath(VirtualFile file) throws FileSystemUnavailableException {
+        return toNioPathOrThrow(file.getPath());
+    }
+
+    private Path toNioPathOrThrow(String vfsPath) throws FileSystemUnavailableException {
         int separator = vfsPath.indexOf(SEPARATOR);
         String platformId = separator < 0 ? vfsPath : vfsPath.substring(0, separator);
         FileSystem fileSystem = myFileSystems.get(platformId);

@@ -16,10 +16,10 @@
 package consulo.remoteServer.agent.impl.internal.process;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.remoteServer.agent.impl.internal.RemoteAgentConnection;
 import consulo.remoteServer.agent.impl.internal.platform.RemotePlatform;
 import consulo.platform.Platform;
 import consulo.remoteServer.agent.impl.internal.protocol.ExecStart;
+import consulo.process.BinaryProcessHandler;
 import consulo.process.ExecutionException;
 import consulo.process.KillableProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
@@ -45,8 +45,22 @@ public class RemoteAgentProcessHandlerFactory implements PlatformProcessHandlerF
     @Override
     public KillableProcessHandler createProcessHandler(GeneralCommandLine commandLine, boolean colored) throws ExecutionException {
         RemotePlatform platform = (RemotePlatform) commandLine.getPlatform();
-        RemoteAgentConnection connection = platform.getConnection();
+        RemoteAgentProcessHandler handler =
+            new RemoteAgentProcessHandler(platform.getConnection(), commandLine.getCommandLineString(), platform.getConsoleCharset(), colored);
+        start(handler, commandLine);
+        return handler;
+    }
 
+    @Override
+    public BinaryProcessHandler createBinaryProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
+        RemotePlatform platform = (RemotePlatform) commandLine.getPlatform();
+        RemoteAgentBinaryProcessHandler handler =
+            new RemoteAgentBinaryProcessHandler(platform.getConnection(), commandLine.getCommandLineString(), platform.getConsoleCharset());
+        start(handler, commandLine);
+        return handler;
+    }
+
+    private static void start(RemoteAgentProcessHandler handler, GeneralCommandLine commandLine) throws ExecutionException {
         Path executable = commandLine.getExecutable();
         if (executable == null) {
             throw new ExecutionException("Executable is not specified");
@@ -64,9 +78,6 @@ public class RemoteAgentProcessHandlerFactory implements PlatformProcessHandlerF
             .putAllEnvironment(environment)
             .build();
 
-        RemoteAgentProcessHandler handler =
-            new RemoteAgentProcessHandler(connection, commandLine.getCommandLineString(), platform.getConsoleCharset(), colored);
         handler.start(start);
-        return handler;
     }
 }

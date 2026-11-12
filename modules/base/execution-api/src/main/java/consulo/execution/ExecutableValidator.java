@@ -99,9 +99,13 @@ public abstract class ExecutableValidator {
         return doCheckExecutable(executable, Collections.<String>emptyList());
     }
 
-    protected static boolean doCheckExecutable(String executable, List<String> processParameters) {
+    /**
+     * Runs the executable on the machine of the project - the local one, or the platform of a remote project.
+     */
+    protected boolean doCheckExecutable(String executable, List<String> processParameters) {
         try {
             GeneralCommandLine commandLine = new GeneralCommandLine();
+            commandLine.withPlatform(myProject.getPlatform());
             commandLine.setExePath(executable);
             commandLine.addParameters(processParameters);
             commandLine.setCharset(CharsetToolkit.getDefaultSystemCharset());

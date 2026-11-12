@@ -73,7 +73,7 @@ public class ChangesBrowserChangeNode extends ChangesBrowserNode<Change> impleme
             FilePath parentPath = filePath.getParentPath();
             if (parentPath != null) {
                 renderer.append(
-                    spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPath()),
+                    spaceAndThinSpace() + UserHomeFileUtil.getLocationRelativeToUserHome(parentPath.getPresentableUrl()),
                     SimpleTextAttributes.GRAYED_ATTRIBUTES
                 );
             }

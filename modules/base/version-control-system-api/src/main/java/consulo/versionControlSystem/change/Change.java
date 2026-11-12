@@ -25,7 +25,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -194,11 +193,11 @@ public class Change {
         return rev == null ? 0 : rev.getFile().hashCode();
     }
 
-    public boolean affectsFile(File ioFile) {
-        if (myBeforeRevision != null && myBeforeRevision.getFile().getIOFile().equals(ioFile)) {
+    public boolean affectsFile(FilePath filePath) {
+        if (myBeforeRevision != null && myBeforeRevision.getFile().getPath().equals(filePath.getPath())) {
             return true;
         }
-        if (myAfterRevision != null && myAfterRevision.getFile().getIOFile().equals(ioFile)) {
+        if (myAfterRevision != null && myAfterRevision.getFile().getPath().equals(filePath.getPath())) {
             return true;
         }
         return false;
@@ -237,9 +236,7 @@ public class Change {
     }
 
     private boolean revisionPathsSame() {
-        String path1 = myBeforeRevision.getFile().getIOFile().getAbsolutePath();
-        String path2 = myAfterRevision.getFile().getIOFile().getAbsolutePath();
-        return path1.equals(path2);
+        return myBeforeRevision.getFile().getPath().equals(myAfterRevision.getFile().getPath());
     }
 
     @Override

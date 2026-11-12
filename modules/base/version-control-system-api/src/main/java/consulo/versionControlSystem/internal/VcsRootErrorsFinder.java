@@ -48,7 +48,7 @@ public class VcsRootErrorsFinder {
       if (virtualFileFromRoot == null) {
         continue;
       }
-      String vcsPath = virtualFileFromRoot.getPath();
+      String vcsPath = VcsMappingResolver.toMappingPath(virtualFileFromRoot);
       if (!mappedPaths.contains(vcsPath) && root.getVcs() != null) {
         errors.add(new VcsRootErrorImpl(VcsRootError.Type.UNREGISTERED_ROOT, new VcsDirectoryMapping(vcsPath, root.getVcs().getName())));
       }
@@ -121,6 +121,10 @@ public class VcsRootErrorsFinder {
   private boolean isRoot(VcsDirectoryMapping mapping) {
     List<VcsRootChecker> checkers = VcsRootChecker.EXTENSION_POINT_NAME.getExtensionList();
     String pathToCheck = mapping.isDefaultMapping() ? myProject.getBasePath() : mapping.getDirectory();
-    return ContainerUtil.find(checkers, checker -> checker.getSupportedVcs().getName().equalsIgnoreCase(mapping.getVcs()) && checker.validateRoot(pathToCheck)) != null;
+    VirtualFile directory = pathToCheck == null ? null : VcsMappingResolver.findDirectory(myProject, pathToCheck, false);
+    if (directory == null) {
+      return false;
+    }
+    return ContainerUtil.find(checkers, checker -> checker.getSupportedVcs().getName().equalsIgnoreCase(mapping.getVcs()) && checker.validateRoot(directory)) != null;
   }
 }

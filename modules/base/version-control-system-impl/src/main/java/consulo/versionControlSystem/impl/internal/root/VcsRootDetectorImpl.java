@@ -153,7 +153,7 @@ public class VcsRootDetectorImpl implements VcsRootDetector {
   private List<AbstractVcs> getVcsListFor(VirtualFile dir) {
     List<AbstractVcs> vcsList = new ArrayList<AbstractVcs>();
     for (VcsRootChecker checker : myCheckers) {
-      if (checker.isRoot(dir.getPath())) {
+      if (checker.isRoot(dir)) {
         vcsList.add(myVcsManager.findVcsByName(checker.getSupportedVcs().getName()));
       }
     }

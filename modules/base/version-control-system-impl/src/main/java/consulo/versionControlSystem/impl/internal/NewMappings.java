@@ -48,15 +48,14 @@ import consulo.versionControlSystem.impl.internal.util.DisposableUpdate;
 import consulo.versionControlSystem.impl.internal.util.FilePathMapping;
 import consulo.versionControlSystem.impl.internal.util.VirtualFileMapping;
 import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
+import consulo.versionControlSystem.internal.VcsMappingResolver;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
@@ -401,7 +400,7 @@ public final class NewMappings implements Disposable {
 
     List<String> oldMappings = VcsDirectoryMappingCache.getInstance(myProject).getMappings(defaultMapping.getVcs());
     return ContainerUtil.mapNotNull(oldMappings, path -> {
-      VirtualFile root = LocalFileSystem.getInstance().findFileByPath(path);
+      VirtualFile root = VcsMappingResolver.findDirectory(myProject, path, false);
       return root != null ? new MappedRoot(vcs, defaultMapping, root) : null;
     });
   }
@@ -482,9 +481,9 @@ public final class NewMappings implements Disposable {
     String rootPath = mapping.getDirectory();
 
     return ReadAction.compute(() -> {
-      VirtualFilePointerManager.getInstance().create(VirtualFileUtil.pathToUrl(rootPath), pointerDisposable, myFilePointerListener);
+      VirtualFilePointerManager.getInstance().create(VcsMappingResolver.toUrl(myProject, rootPath), pointerDisposable, myFilePointerListener);
 
-      VirtualFile vcsRoot = LocalFileSystem.getInstance().findFileByPath(rootPath);
+      VirtualFile vcsRoot = VcsMappingResolver.findDirectory(myProject, rootPath, false);
       if (vcsRoot == null || !vcsRoot.isDirectory()) {
         return null;
       }
@@ -638,7 +637,7 @@ public final class NewMappings implements Disposable {
   }
 
   public @Nullable MappedRoot getMappedRootFor(@Nullable VirtualFile file) {
-    if (file == null || !file.isInLocalFileSystem()) return null;
+    if (file == null || !file.isInLocalLikeFileSystem()) return null;
     if (myMappedRoots.isEmpty()) return null;
 
     return myMappedRootsMapping.getRootFor(file);
@@ -724,8 +723,6 @@ public final class NewMappings implements Disposable {
   }
 
   public void cleanupMappings() {
-    LocalFileSystem lfs = LocalFileSystem.getInstance();
-
     List<VcsDirectoryMapping> oldMappings = new ArrayList<>(getDirectoryMappings());
 
     List<VcsDirectoryMapping> filteredMappings = new ArrayList<>();
@@ -746,7 +743,7 @@ public final class NewMappings implements Disposable {
       Collection<VcsDirectoryMapping> mappings = entry.getValue();
 
       List<Pair<VirtualFile, VcsDirectoryMapping>> objects = ContainerUtil.mapNotNull(mappings, dm -> {
-        VirtualFile vf = lfs.refreshAndFindFileByPath(dm.getDirectory());
+        VirtualFile vf = VcsMappingResolver.findDirectory(myProject, dm.getDirectory(), true);
         return vf == null ? null : Pair.create(vf, dm);
       });
 

@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.util;
 
+import consulo.versionControlSystem.internal.VcsMappingResolver;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressManager;
@@ -53,6 +54,7 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
@@ -288,6 +290,13 @@ public class VcsUtil {
 
     public static FilePath getFilePath(File file) {
         return VcsContextFactory.getInstance().createFilePathOn(file);
+    }
+
+    /**
+     * A path of a file of any machine - the local one, or the platform of a remote project.
+     */
+    public static FilePath getFilePath(Path path, boolean isDirectory) {
+        return VcsContextFactory.getInstance().createFilePath(path, isDirectory);
     }
 
     public static FilePath getFilePath(String path, boolean isDirectory) {
@@ -580,7 +589,7 @@ public class VcsUtil {
             VirtualFile vFile = vcsRoot.getPath();
             AbstractVcs rootVcs = vcsRoot.getVcs();
             if (rootVcs != null && vFile != null) {
-                result.add(new VcsDirectoryMapping(vFile.getPath(), rootVcs.getName()));
+                result.add(new VcsDirectoryMapping(VcsMappingResolver.toMappingPath(vFile), rootVcs.getName()));
             }
         }
         return result;

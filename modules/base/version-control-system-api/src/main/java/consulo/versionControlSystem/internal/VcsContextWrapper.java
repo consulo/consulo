@@ -97,11 +97,11 @@ public class VcsContextWrapper implements VcsContext {
     public VirtualFile[] getSelectedFiles() {
         VirtualFile[] fileArray = myContext.getData(VirtualFile.KEY_OF_ARRAY);
         if (fileArray != null) {
-            return Stream.of(fileArray).filter(VirtualFile::isInLocalFileSystem).toArray(VirtualFile[]::new);
+            return Stream.of(fileArray).filter(VirtualFile::isInLocalLikeFileSystem).toArray(VirtualFile[]::new);
         }
 
         VirtualFile file = myContext.getData(VirtualFile.KEY);
-        return file != null && file.isInLocalFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
+        return file != null && file.isInLocalLikeFileSystem() ? new VirtualFile[]{file} : VirtualFile.EMPTY_ARRAY;
     }
 
     @Override

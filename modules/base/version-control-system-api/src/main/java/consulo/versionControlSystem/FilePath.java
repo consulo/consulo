@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.diff.DiffFilePath;
 import consulo.document.Document;
 import consulo.project.Project;
@@ -24,6 +25,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 /**
  * Represents a path to a (possibly non-existing) file on disk or in a VCS repository.
@@ -43,7 +45,15 @@ public interface FilePath extends DiffFilePath {
    * @return the {@link File} that corresponds to the path. The path might be non-existent or not local.
    * @see #isNonLocal()
    */
+  @Deprecated
+  @DeprecationInfo("A java.io.File is always of this machine - a file of a remote project has none. Use #getNioPath()")
   File getIOFile();
+
+  /**
+   * @return the path of the file on its machine - the local one, or a remote one; null when the path is not of a file system
+   * (non-local)
+   */
+  @Nullable Path getNioPath();
 
   /**
    * @return the file name (without directory component)

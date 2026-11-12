@@ -53,16 +53,17 @@ import consulo.versionControlSystem.distributed.repository.Repository;
 import consulo.versionControlSystem.distributed.repository.RepositoryManager;
 import consulo.versionControlSystem.log.TimedVcsCommit;
 import consulo.versionControlSystem.log.VcsFullCommitDetails;
-import consulo.versionControlSystem.update.RefreshVFsSynchronously;
 import consulo.versionControlSystem.util.VcsUtil;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import consulo.virtualFileSystem.event.BatchFileChangeListener;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -108,9 +109,9 @@ public class DvcsUtil {
         return ContainerUtil.sorted(virtualFiles, VIRTUAL_FILE_PRESENTATION_COMPARATOR);
     }
 
-    public static List<VirtualFile> findVirtualFilesWithRefresh(List<File> files) {
-        RefreshVFsSynchronously.refreshFiles(files);
-        return ContainerUtil.mapNotNull(files, file -> VirtualFileUtil.findFileByIoFile(file, false));
+    public static List<VirtualFile> findVirtualFilesWithRefresh(List<Path> files) {
+        VirtualFileManager manager = VirtualFileManager.getInstance();
+        return ContainerUtil.mapNotNull(files, manager::refreshAndFindFileByNioPath);
     }
 
     /**
@@ -283,40 +284,35 @@ public class DvcsUtil {
 
     public static final Comparator<Repository> REPOSITORY_COMPARATOR = Comparator.comparing(Repository::getPresentableUrl);
 
-    public static void assertFileExists(File file, String message) throws IllegalStateException {
-        if (!file.exists()) {
+    public static void assertFileExists(Path file, String message) throws IllegalStateException {
+        if (!Files.exists(file)) {
             throw new IllegalStateException(message);
         }
     }
 
     /**
-     * Loads the file content.
+     * Loads the file content - of any machine, through its {@link Path}.
      * Tries 3 times, then a {@link RepoStateException} is thrown.
      * Content is then trimmed and line separators get converted.
-     *
-     * @param file File to read.
-     * @return file content.
      */
-    public static String tryLoadFile(File file) throws RepoStateException {
+    public static String tryLoadFile(Path file) throws RepoStateException {
         return tryLoadFile(file, null);
     }
 
-    public static String tryLoadFile(File file, @Nullable Charset encoding) throws RepoStateException {
+    public static String tryLoadFile(Path file, @Nullable Charset encoding) throws RepoStateException {
         return tryOrThrow(
-            () -> StringUtil.convertLineSeparators(
-                RawFileLoader.getInstance().loadFileText(file, encoding == null ? StandardCharsets.UTF_8 : encoding)
-            ).trim(),
+            () -> StringUtil.convertLineSeparators(new String(Files.readAllBytes(file), encoding == null ? StandardCharsets.UTF_8 : encoding)).trim(),
             file
         );
     }
 
     @Contract("_ , !null -> !null")
-    public static @Nullable String tryLoadFileOrReturn(File file, @Nullable String defaultValue) {
+    public static @Nullable String tryLoadFileOrReturn(Path file, @Nullable String defaultValue) {
         return tryLoadFileOrReturn(file, defaultValue, null);
     }
 
     @Contract("_ , !null, _ -> !null")
-    public static @Nullable String tryLoadFileOrReturn(File file, @Nullable String defaultValue, @Nullable Charset encoding) {
+    public static @Nullable String tryLoadFileOrReturn(Path file, @Nullable String defaultValue, @Nullable Charset encoding) {
         try {
             return tryLoadFile(file, encoding);
         }
@@ -332,7 +328,7 @@ public class DvcsUtil {
      * If an other exception happens, rethrows it as a {@link RepoStateException}.
      * In the case of success returns the result of the task execution.
      */
-    private static <T> T tryOrThrow(Callable<T> actionToTry, File fileToLoad) throws RepoStateException {
+    private static <T> T tryOrThrow(Callable<T> actionToTry, Path fileToLoad) throws RepoStateException {
         IOException cause = null;
         for (int i = 0; i < IO_RETRIES; i++) {
             try {

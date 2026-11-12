@@ -409,13 +409,8 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return myDefault == null ? null : myDefault.getName();
   }
 
-  public List<File> getAffectedPaths() {
-    SortedSet<FilePath> set = myIdx.getAffectedPaths();
-    List<File> result = new ArrayList<>(set.size());
-    for (FilePath path : set) {
-      result.add(path.getIOFile());
-    }
-    return result;
+  public List<FilePath> getAffectedPaths() {
+    return new ArrayList<>(myIdx.getAffectedPaths());
   }
 
   

@@ -224,7 +224,8 @@ public class VcsFileUtil {
    * @throws IllegalArgumentException if path is not under root.
    */
   public static String relativePath(VirtualFile root, FilePath path) {
-    return relativePath(VirtualFileUtil.virtualToIoFile(root), path.getIOFile());
+    // by the paths of the virtual file system - of any machine, as the virtual files of it answer them
+    return relativeVfsPath(root.getPath(), path.getPath());
   }
 
   /**
@@ -260,7 +261,21 @@ public class VcsFileUtil {
    * @throws IllegalArgumentException if path is not under root.
    */
   public static String relativePath(VirtualFile root, VirtualFile file) {
-    return relativePath(VirtualFileUtil.virtualToIoFile(root), VirtualFileUtil.virtualToIoFile(file));
+    return relativeVfsPath(root.getPath(), file.getPath());
+  }
+
+  /**
+   * Get relative path of a path to a root - both as the virtual file system names them ({@link VirtualFile#getPath()},
+   * {@link FilePath#getPath()}), of any machine
+   *
+   * @throws IllegalArgumentException if path is not under root.
+   */
+  public static String relativeVfsPath(String root, String path) {
+    String rc = FileUtil.getRelativePath(root, path, '/');
+    if (rc == null) {
+      throw new IllegalArgumentException("The file " + path + " cannot be made relative to " + root);
+    }
+    return rc;
   }
 
   /**
@@ -275,7 +290,7 @@ public class VcsFileUtil {
     if (root == null) {
       file.getPath();
     }
-    return relativePath(VirtualFileUtil.virtualToIoFile(root), VirtualFileUtil.virtualToIoFile(file));
+    return relativePath(root, file);
   }
 
   /**

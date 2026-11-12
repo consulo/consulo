@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangeListManager;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.versionControlSystem.util.VcsUtil;
 
 import java.util.Collection;
 
@@ -40,7 +40,7 @@ public class ChangeListTodosTreeStructure extends TodoTreeStructure {
     boolean isAffected = false;
     Collection<Change> changes = ChangeListManager.getInstance(myProject).getDefaultChangeList().getChanges();
     for (Change change : changes) {
-      if (change.affectsFile(VirtualFileUtil.virtualToIoFile(psiFile.getVirtualFile()))) {
+      if (change.affectsFile(VcsUtil.getFilePath(psiFile.getVirtualFile()))) {
         isAffected = true;
         break;
       }

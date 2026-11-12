@@ -12,14 +12,16 @@ import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.versionControlSystem.util.VcsUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -105,9 +107,19 @@ public final class ContentRevisionCache {
     }
 
     private static void checkLocalFileSize(FilePath path) throws VcsException {
-        File ioFile = path.getIOFile();
-        if (ioFile.exists()) {
-            checkContentsSize(ioFile.getPath(), ioFile.length());
+        // the virtual file knows its size - a file of another machine is not asked again
+        VirtualFile file = path.getVirtualFile();
+        if (file != null) {
+            checkContentsSize(path.getPresentableUrl(), file.getLength());
+            return;
+        }
+        Path nioPath = path.getNioPath();
+        if (nioPath != null && Files.isRegularFile(nioPath)) {
+            try {
+                checkContentsSize(path.getPresentableUrl(), Files.size(nioPath));
+            }
+            catch (IOException ignored) {
+            }
         }
     }
 

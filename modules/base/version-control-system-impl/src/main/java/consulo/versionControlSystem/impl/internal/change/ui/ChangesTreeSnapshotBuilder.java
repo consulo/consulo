@@ -102,7 +102,9 @@ public final class ChangesTreeSnapshotBuilder implements ChangesViewModelBuilder
         myGroupByModule = grouping.contains(ChangesGroupingSupport.MODULE_GROUPING);
         myGroupByRepository = grouping.contains(ChangesGroupingSupport.REPOSITORY_GROUPING);
         myFlatten = !myGroupByDirectory && !myGroupByModule && !myGroupByRepository;
-        myBasePath = project.getBasePath();
+        // as the virtual file system names paths - the paths of the changes are compared with it
+        VirtualFile baseDir = project.getBaseDir();
+        myBasePath = baseDir != null ? baseDir.getPath() : project.getBasePath();
         myFileIndex = project.isDefault() ? null : ProjectFileIndex.getInstance(project);
         myVcsManager = project.isDefault() ? null : ProjectLevelVcsManager.getInstance(project);
     }
@@ -430,7 +432,9 @@ public final class ChangesTreeSnapshotBuilder implements ChangesViewModelBuilder
             }
             return FileUtil.toSystemDependentName(path.substring(basePath.length() + 1));
         }
-        return Objects.requireNonNullElse(UserHomeFileUtil.getLocationRelativeToUserHome(path), path);
+        // the path as it is on its machine
+        String presentable = VcsUtil.getFilePath(path, true).getPresentableUrl();
+        return Objects.requireNonNullElse(UserHomeFileUtil.getLocationRelativeToUserHome(presentable), presentable);
     }
 
     private Directory directoryOf(Directory root, FilePath path, @Nullable String basePath) {

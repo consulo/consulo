@@ -34,6 +34,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 public class FilePathImpl implements FilePath {
   private VirtualFile myVirtualFile;
@@ -215,6 +216,11 @@ public class FilePathImpl implements FilePath {
   
   public File getIOFile() {
     return myFile;
+  }
+
+  @Override
+  public Path getNioPath() {
+    return myFile.toPath();
   }
 
   @Override

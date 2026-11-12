@@ -47,6 +47,7 @@ import consulo.versionControlSystem.internal.ProjectLevelVcsManagerEx;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.update.UpdatedFiles;
+import consulo.versionControlSystem.util.VcsUtil;
 import consulo.versionControlSystem.versionBrowser.ChangeBrowserSettings;
 import consulo.versionControlSystem.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
@@ -55,7 +56,6 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1104,10 +1104,10 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
 
   public @Nullable Pair<CommittedChangeList, Change> getIncomingChangeList(VirtualFile file) {
     if (myCachedIncomingChangeLists != null) {
-      File ioFile = new File(file.getPath());
+      FilePath filePath = VcsUtil.getFilePath(file);
       for (CommittedChangeList changeList : myCachedIncomingChangeLists) {
         for (Change change : changeList.getChanges()) {
-          if (change.affectsFile(ioFile)) {
+          if (change.affectsFile(filePath)) {
             return Pair.create(changeList, change);
           }
         }

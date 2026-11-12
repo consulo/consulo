@@ -38,4 +38,20 @@ public interface PlatformPathVirtualFileSystem {
      * The platform becomes known to this file system by it.
      */
     String toVfsPath(Path path);
+
+    /**
+     * The path on its platform of a path as {@link VirtualFile#getPath()} answers it - null while that platform is not reachable,
+     * or when the path is not of a known platform.
+     */
+    @Nullable Path toNioPath(String vfsPath);
+
+    /**
+     * True for a path of a platform known to this file system, as {@link VirtualFile#getPath()} answers it.
+     */
+    boolean isPlatformPath(String vfsPath);
+
+    /**
+     * The path as it is on its machine.
+     */
+    String extractPresentableUrl(String vfsPath);
 }

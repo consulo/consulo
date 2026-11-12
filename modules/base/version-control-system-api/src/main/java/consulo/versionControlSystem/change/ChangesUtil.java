@@ -345,7 +345,7 @@ public class ChangesUtil {
     public static void processFilePathsByVcs(Project project,
                                              Collection<FilePath> files,
                                              PerVcsProcessor<FilePath> processor) {
-        processItemsByVcs(files, filePath -> getVcsForFile(filePath.getIOFile(), project), processor);
+        processItemsByVcs(files, filePath -> ProjectLevelVcsManager.getInstance(project).getVcsFor(filePath), processor);
     }
 
 

@@ -36,12 +36,12 @@ public class ChangesBrowserUtil {
         // todo!!! further improvements needed
         if (beforeRev != null) {
             String beforeName = beforeRev.getFile().getName();
-            String beforeAbsolutePath = beforeRev.getFile().getIOFile().getAbsolutePath();
+            String beforePath = beforeRev.getFile().getPath();
             for (Change oldChange : changes) {
                 ContentRevision rev = oldChange.getAfterRevision();
                 // first compare name, which is many times faster - to remove 99% not matching
                 if (rev != null && (rev.getFile().getName().equals(beforeName))
-                    && rev.getFile().getIOFile().getAbsolutePath().equals(beforeAbsolutePath)) {
+                    && rev.getFile().getPath().equals(beforePath)) {
                     changes.remove(oldChange);
                     if (oldChange.getBeforeRevision() != null || c.getAfterRevision() != null) {
                         changes.add(new Change(oldChange.getBeforeRevision(), c.getAfterRevision()));

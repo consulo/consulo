@@ -80,7 +80,7 @@ public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
         }
         for (Module module : ModuleManager.getInstance(myProject).getModules()) {
             for (VirtualFile file : ModuleRootManager.getInstance(module).getContentRoots()) {
-                if (file.isInLocalFileSystem() && file.isDirectory()) {
+                if (file.isInLocalLikeFileSystem() && file.isDirectory()) {
                     result.add(file);
                 }
             }

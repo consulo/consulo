@@ -53,14 +53,6 @@ import java.util.function.Predicate;
  * Extract part of consulo.ide.impl.idea.openapi.vfs.VfsUtilCore
  */
 public final class VirtualFileUtil {
-    /**
-     * True for a file of the file system of some machine - the local one, or a remote platform's (a project may live
-     * there) - as opposed to an archive entry or a non-physical file.
-     */
-    public static boolean isInLocalOrPlatformFileSystem(VirtualFile file) {
-        return file.isInLocalFileSystem() || StandardFileSystems.PLATFORM_PROTOCOL.equals(file.getFileSystem().getProtocol());
-    }
-
     private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
 
     public static final char VFS_SEPARATOR_CHAR = '/';

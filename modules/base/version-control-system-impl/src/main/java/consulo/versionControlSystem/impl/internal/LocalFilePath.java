@@ -31,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 public class LocalFilePath implements FilePath {
   
@@ -114,6 +115,11 @@ public class LocalFilePath implements FilePath {
   
   public File getIOFile() {
     return new File(myPath);
+  }
+
+  @Override
+  public Path getNioPath() {
+    return Path.of(myPath);
   }
 
   

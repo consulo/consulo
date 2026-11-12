@@ -15,6 +15,7 @@
  */
 package consulo.versionControlSystem.root;
 
+import consulo.versionControlSystem.internal.VcsMappingResolver;
 import consulo.application.Application;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -26,7 +27,6 @@ import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsDirectoryMapping;
 import consulo.versionControlSystem.VcsNotifier;
 import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
@@ -105,7 +105,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
 
         for (VirtualFile root : roots) {
             if (!currentVcsRoots.contains(root)) {
-                mappings.add(new VcsDirectoryMapping(root.getPath(), myVcs.getName()));
+                mappings.add(new VcsDirectoryMapping(VcsMappingResolver.toMappingPath(root), myVcs.getName()));
             }
         }
         vcsManager.setDirectoryMappings(mappings);
@@ -114,7 +114,7 @@ public abstract class VcsIntegrationEnabler<VcsT extends AbstractVcs> {
     protected static void refreshVcsDir(final VirtualFile projectDir, final String vcsDirName) {
         Application application = Application.get();
         Runnable refresh = () -> application.runWriteAction((Runnable) () -> {
-            LocalFileSystem.getInstance().refreshAndFindFileByPath(projectDir.getPath() + "/" + vcsDirName);
+            projectDir.getFileSystem().refreshAndFindFileByPath(projectDir.getPath() + "/" + vcsDirName);
         });
         if (application.isDispatchThread()) {
             refresh.run();

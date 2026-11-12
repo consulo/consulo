@@ -27,6 +27,7 @@ import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Function;
 
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -117,6 +118,11 @@ public interface VcsContextFactory {
 
 
     FilePath createFilePath(String path, boolean isDirectory);
+
+    /**
+     * A path of a file of any machine - the local one, or the platform of a remote project.
+     */
+    FilePath createFilePath(Path path, boolean isDirectory);
 
     static VcsContextFactory getInstance() {
         return Application.get().getInstance(VcsContextFactory.class);

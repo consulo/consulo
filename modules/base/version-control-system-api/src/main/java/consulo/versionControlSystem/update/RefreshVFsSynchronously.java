@@ -18,12 +18,13 @@ package consulo.versionControlSystem.update;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.versionControlSystem.change.Change;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import org.jspecify.annotations.Nullable;
-import java.io.File;
+
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -41,9 +42,9 @@ public class RefreshVFsSynchronously {
   }
 
   
-  public static Collection<VirtualFile> refreshFiles(Collection<File> files) {
+  public static Collection<VirtualFile> refreshFiles(Collection<Path> files) {
     Collection<VirtualFile> filesToRefresh = new HashSet<>();
-    for (File file : files) {
+    for (Path file : files) {
       VirtualFile vf = findFirstValidVirtualParent(file);
       if (vf != null) {
         filesToRefresh.add(vf);
@@ -53,10 +54,10 @@ public class RefreshVFsSynchronously {
     return filesToRefresh;
   }
 
-  private static void refreshDeletedOrReplaced(Collection<File> deletedOrReplaced) {
+  private static void refreshDeletedOrReplaced(Collection<Path> deletedOrReplaced) {
     Collection<VirtualFile> filesToRefresh = new HashSet<>();
-    for (File file : deletedOrReplaced) {
-      File parent = file.getParentFile();
+    for (Path file : deletedOrReplaced) {
+      Path parent = file.getParent();
       VirtualFile vf = findFirstValidVirtualParent(parent);
       if (vf != null) {
         filesToRefresh.add(vf);
@@ -65,12 +66,15 @@ public class RefreshVFsSynchronously {
     VirtualFileUtil.markDirtyAndRefresh(false, true, false, ArrayUtil.toObjectArray(filesToRefresh, VirtualFile.class));
   }
 
-  private static @Nullable VirtualFile findFirstValidVirtualParent(@Nullable File file) {
-    LocalFileSystem lfs = LocalFileSystem.getInstance();
+  /**
+   * The path is of the machine of the file - the local one, or a remote one.
+   */
+  private static @Nullable VirtualFile findFirstValidVirtualParent(@Nullable Path file) {
+    VirtualFileManager manager = VirtualFileManager.getInstance();
     VirtualFile vf = null;
     while (file != null && (vf == null || !vf.isValid())) {
-      vf = lfs.findFileByIoFile(file);
-      file = file.getParentFile();
+      vf = manager.findFileByNioPath(file);
+      file = file.getParent();
     }
     return vf == null || !vf.isValid() ? null : vf;
   }
@@ -84,8 +88,8 @@ public class RefreshVFsSynchronously {
   }
 
   private static void updateChangesImpl(Collection<Change> changes, ChangeWrapper wrapper) {
-    Collection<File> deletedOrReplaced = new HashSet<>();
-    Collection<File> toRefresh = new HashSet<>();
+    Collection<Path> deletedOrReplaced = new HashSet<>();
+    Collection<Path> toRefresh = new HashSet<>();
     for (Change change : changes) {
       if ((! wrapper.beforeNull(change)) && (wrapper.movedOrRenamedOrReplaced(change) || (wrapper.afterNull(change)))) {
         deletedOrReplaced.add(wrapper.getBeforeFile(change));
@@ -99,6 +103,9 @@ public class RefreshVFsSynchronously {
       }
     }
 
+    // a path not of a file system has nothing to refresh
+    toRefresh.remove(null);
+    deletedOrReplaced.remove(null);
     refreshFiles(toRefresh);
     refreshDeletedOrReplaced(deletedOrReplaced);
   }
@@ -117,13 +124,13 @@ public class RefreshVFsSynchronously {
     }
 
     @Override
-    public File getBeforeFile(Change change) {
-      return beforeNull(change) ? null : change.getAfterRevision().getFile().getIOFile();
+    public @Nullable Path getBeforeFile(Change change) {
+      return beforeNull(change) ? null : change.getAfterRevision().getFile().getNioPath();
     }
 
     @Override
-    public File getAfterFile(Change change) {
-      return afterNull(change) ? null : change.getBeforeRevision().getFile().getIOFile();
+    public @Nullable Path getAfterFile(Change change) {
+      return afterNull(change) ? null : change.getBeforeRevision().getFile().getNioPath();
     }
 
     @Override
@@ -146,13 +153,13 @@ public class RefreshVFsSynchronously {
     }
 
     @Override
-    public @Nullable File getBeforeFile(Change change) {
-      return beforeNull(change) ? null : change.getBeforeRevision().getFile().getIOFile();
+    public @Nullable Path getBeforeFile(Change change) {
+      return beforeNull(change) ? null : change.getBeforeRevision().getFile().getNioPath();
     }
 
     @Override
-    public @Nullable File getAfterFile(Change change) {
-      return afterNull(change) ? null : change.getAfterRevision().getFile().getIOFile();
+    public @Nullable Path getAfterFile(Change change) {
+      return afterNull(change) ? null : change.getAfterRevision().getFile().getNioPath();
     }
 
     @Override
@@ -164,18 +171,18 @@ public class RefreshVFsSynchronously {
   private interface ChangeWrapper {
     boolean beforeNull(Change change);
     boolean afterNull(Change change);
-    @Nullable File getBeforeFile(Change change);
-    @Nullable File getAfterFile(Change change);
+    @Nullable Path getBeforeFile(Change change);
+    @Nullable Path getAfterFile(Change change);
     boolean movedOrRenamedOrReplaced(Change change);
   }
 
   private static class FilesToRefreshCollector implements UpdateFilesHelper.Callback {
-    private final Collection<File> myToRefresh = new HashSet<File>();
-    private final Collection<File> myToRefreshDeletedOrReplaced = new HashSet<File>();
+    private final Collection<Path> myToRefresh = new HashSet<>();
+    private final Collection<Path> myToRefreshDeletedOrReplaced = new HashSet<>();
 
     @Override
     public void onFile(String filePath, String groupId) {
-      File file = new File(filePath);
+      Path file = Path.of(filePath);
       if (FileGroup.REMOVED_FROM_REPOSITORY_ID.equals(groupId) || FileGroup.MERGED_WITH_TREE_CONFLICT.endsWith(groupId)) {
         myToRefreshDeletedOrReplaced.add(file);
       }
@@ -185,12 +192,12 @@ public class RefreshVFsSynchronously {
     }
 
     
-    public Collection<File> getToRefresh() {
+    public Collection<Path> getToRefresh() {
       return myToRefresh;
     }
 
     
-    public Collection<File> getToRefreshDeletedOrReplaced() {
+    public Collection<Path> getToRefreshDeletedOrReplaced() {
       return myToRefreshDeletedOrReplaced;
     }
   }

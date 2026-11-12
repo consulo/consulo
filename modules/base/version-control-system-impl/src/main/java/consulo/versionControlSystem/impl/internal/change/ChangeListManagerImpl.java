@@ -63,8 +63,8 @@ import consulo.versionControlSystem.root.VcsRoot;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.versionControlSystem.util.VcsRootIterator;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -74,7 +74,7 @@ import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -839,7 +839,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
     }
 
     @Override
-    public List<File> getAffectedPaths() {
+    public List<FilePath> getAffectedPaths() {
         synchronized (myDataLock) {
             return myWorker.getAffectedPaths();
         }
@@ -1711,8 +1711,9 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Change
         private @Nullable VcsKey findVcs(FilePath path) {
             // does not matter directory or not
             VirtualFile vf = path.getVirtualFile();
-            if (vf == null) {
-                vf = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(path.getIOFile());
+            Path nioPath = vf == null ? path.getNioPath() : null;
+            if (nioPath != null) {
+                vf = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(nioPath);
             }
             if (vf == null) {
                 return null;

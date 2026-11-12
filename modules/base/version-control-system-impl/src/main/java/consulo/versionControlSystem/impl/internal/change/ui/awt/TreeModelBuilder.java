@@ -258,7 +258,7 @@ public class TreeModelBuilder {
                 ? new StaticFilePath(false, path, null)
                 : new StaticFilePath(
                 false,
-                new File(file.getIOFile().getPath().replace('\\', '/')).getAbsolutePath(),
+                new File(path.replace('\\', '/')).getAbsolutePath(),
                 file.getVirtualFile()
             );
             ChangesBrowserNode oldNode = getFolderCache(subtreeRoot).get(pathKey.getKey());
@@ -412,12 +412,13 @@ public class TreeModelBuilder {
 
     private static StaticFilePath staticFrom(FilePath fp) {
         String path = fp.getPath();
-        if (fp.isNonLocal() && (!FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path))) {
-            return new StaticFilePath(fp.isDirectory(), fp.getIOFile().getPath().replace('\\', '/'), fp.getVirtualFile());
+        // a path of a file of another machine is not absolute here - it is kept as the virtual file system names it
+        if (!FileUtil.isAbsolute(path) || VcsUtil.isPathRemote(path)) {
+            return new StaticFilePath(fp.isDirectory(), path.replace('\\', '/'), fp.getVirtualFile());
         }
         return new StaticFilePath(
             fp.isDirectory(),
-            new File(fp.getIOFile().getPath().replace('\\', '/')).getAbsolutePath(),
+            new File(path.replace('\\', '/')).getAbsolutePath(),
             fp.getVirtualFile()
         );
     }

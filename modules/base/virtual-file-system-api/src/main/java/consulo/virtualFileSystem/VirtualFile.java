@@ -703,6 +703,13 @@ public interface VirtualFile extends CopyableUserDataHolder, ModificationTracker
   }
 
   /**
+   * True for a file of the local file system or of a remote one.
+   */
+  default boolean isInLocalLikeFileSystem() {
+    return isInLocalFileSystem();
+  }
+
+  /**
    * @deprecated use {@link VirtualFileSystem#isValidName(String)} (to be removed in IDEA 18)
    */
   @SuppressWarnings("unused")

@@ -29,7 +29,6 @@ import consulo.virtualFileSystem.status.FileStatus;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -89,7 +88,7 @@ public abstract class ChangeListManager {
 
     public abstract List<LocalChangeList> getChangeLists(VirtualFile file);
 
-    public abstract List<File> getAffectedPaths();
+    public abstract List<FilePath> getAffectedPaths();
 
     public abstract List<VirtualFile> getAffectedFiles();
 

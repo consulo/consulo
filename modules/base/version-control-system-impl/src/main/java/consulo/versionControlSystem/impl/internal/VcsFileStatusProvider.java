@@ -278,7 +278,7 @@ public class VcsFileStatusProvider implements FileStatusFacade, Disposable {
     }
 
     private boolean isHandledByVcs(VirtualFile file) {
-        return file.isInLocalFileSystem() && myVcsManager.get().getVcsFor(file) != null;
+        return file.isInLocalLikeFileSystem() && myVcsManager.get().getVcsFor(file) != null;
     }
 
     private class BaseContentImpl implements VcsBaseContentProvider.BaseContent {

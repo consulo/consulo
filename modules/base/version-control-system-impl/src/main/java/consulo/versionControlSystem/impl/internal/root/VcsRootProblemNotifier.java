@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.versionControlSystem.impl.internal.root;
 
+import consulo.versionControlSystem.internal.VcsMappingResolver;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.internal.BackgroundTaskUtil;
@@ -26,7 +27,6 @@ import consulo.versionControlSystem.internal.VcsRootErrorsFinder;
 import consulo.versionControlSystem.impl.internal.configurable.VcsDirectoryMappingsConfigurable;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -210,7 +210,7 @@ public final class VcsRootProblemNotifier {
         if (mapping.isDefaultMapping()) {
             return false;
         }
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(mapping.getDirectory());
+        VirtualFile file = VcsMappingResolver.findDirectory(myProject, mapping.getDirectory(), false);
         return file != null && (myChangeListManager.isIgnoredFile(file) || ReadAction.compute(() -> myProjectFileIndex.isExcluded(file)));
     }
 

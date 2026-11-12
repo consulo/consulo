@@ -25,7 +25,6 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.util.collection.ArrayUtil;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -45,7 +44,7 @@ public class NonProjectFilesScope extends NamedScope {
                     return false;
                 }
                 // archive entries are never project files - files of a remote platform are, when the project lives there
-                if (!VirtualFileUtil.isInLocalOrPlatformFileSystem(file)) {
+                if (!file.isInLocalLikeFileSystem()) {
                     return true;
                 }
                 if (ScratchUtil.isScratch(file)) {
