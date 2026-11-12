@@ -25,7 +25,8 @@ import java.util.List;
  * The check boxes of a settings page, to be switched without opening it - from Find Action, as {@code Page: Option}.
  * <p/>
  * Generated at compile time, as {@code <Configurable>_BooleanOptions}, for the check boxes a configurable binds to an
- * application service with a getter and a setter.
+ * application service with a getter and a setter - the ones bound to a project service are
+ * {@link ProjectSearchableBooleanOptions}.
  *
  * @author VISTALL
  * @since 2026-11-11

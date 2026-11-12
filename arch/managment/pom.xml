@@ -78,7 +78,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
-        <compiler.apt.version>4.6</compiler.apt.version>
+        <compiler.apt.version>4.7</compiler.apt.version>
 
         <dsl.json.version>3.0.7</dsl.json.version>
 
