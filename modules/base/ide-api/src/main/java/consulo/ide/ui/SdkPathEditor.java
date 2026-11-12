@@ -15,6 +15,7 @@
  */
 package consulo.ide.ui;
 
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.Application;
 import consulo.application.concurrent.coroutine.ReadLock;
 import consulo.content.OrderRootType;
@@ -25,7 +26,6 @@ import consulo.application.platform.PlatformTargetManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
-import consulo.project.localize.ProjectLocalize;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -70,7 +70,7 @@ public class SdkPathEditor extends PathEditor {
     }
     PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTarget(targetId);
     if (target == null) {
-      return CompletableFuture.failedFuture(new IllegalStateException(ProjectLocalize.errorPlatformTargetMissing(targetId).get()));
+      return CompletableFuture.failedFuture(new IllegalStateException(ApplicationLocalize.errorPlatformTargetMissing(targetId).get()));
     }
     return target.connect();
   }

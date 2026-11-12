@@ -1482,3 +1482,7 @@ wrapping.wrap.on.typing.no.wrap:
     text: 'No'
 wrapping.wrap.on.typing.wrap:
     text: 'Yes'
+platform.target.missing:
+    text: '{0} (missing)'
+error.platform.target.missing:
+    text: The platform {0} no longer exists

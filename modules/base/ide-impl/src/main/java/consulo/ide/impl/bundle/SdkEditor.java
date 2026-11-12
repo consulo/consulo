@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.bundle;
 
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.Application;
 import consulo.application.content.impl.internal.bundle.SdkImpl;
 import consulo.configurable.ConfigurationException;
@@ -169,7 +170,7 @@ public class SdkEditor implements UnnamedConfigurable {
         if (mySdk.getSdkType() instanceof PlatformAwareSdkType) {
             PlatformTarget target = findPlatformTarget();
             Label platformLabel = Label.create(
-                target == null ? ProjectLocalize.platformTargetMissing(mySdk.getPlatformTargetId()) : target.getDisplayName()
+                target == null ? ApplicationLocalize.platformTargetMissing(mySdk.getPlatformTargetId()) : target.getDisplayName()
             );
             platformLabel.setImage(target == null ? null : target.getIcon());
             formBuilder.addLabeled(ProjectLocalize.platformTargetLabel(), platformLabel);
@@ -376,7 +377,7 @@ public class SdkEditor implements UnnamedConfigurable {
             PlatformTarget target = findPlatformTarget();
             CompletableFuture<Platform> platform = target == null
                 ? CompletableFuture.failedFuture(new IllegalStateException(
-                    ProjectLocalize.errorPlatformTargetMissing(mySdk.getPlatformTargetId()).get()
+                    ApplicationLocalize.errorPlatformTargetMissing(mySdk.getPlatformTargetId()).get()
                 ))
                 : target.connect();
             platform.whenCompleteAsync((connected, error) -> {

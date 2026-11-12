@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.application.localize.ApplicationLocalize;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
@@ -609,7 +610,7 @@ public class RecentProjectsManagerImpl implements RecentProjectsManager, Persist
         if (target == null) {
             Messages.showErrorDialog(
                 projectToClose,
-                ProjectLocalize.errorPlatformTargetMissing(platformTargetId).get(),
+                ApplicationLocalize.errorPlatformTargetMissing(platformTargetId).get(),
                 IdeLocalize.titleOpenProject().get()
             );
             return;

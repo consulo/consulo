@@ -15,6 +15,7 @@
  */
 package consulo.welcomeScreen.impl.internal;
 
+import consulo.application.localize.ApplicationLocalize;
 import consulo.application.util.UserHomeFileUtil;
 import consulo.application.platform.PlatformTarget;
 import consulo.application.platform.PlatformTargetManager;
@@ -158,7 +159,7 @@ public class RecentProjectItemRenderer implements ComponentItemRenderer<AnAction
         boolean connected = target != null && target.getPlatform() != null;
 
         Label label = Label.create(target == null
-            ? ProjectLocalize.platformTargetMissing(platformTargetId)
+            ? ApplicationLocalize.platformTargetMissing(platformTargetId)
             : target.getDisplayName());
         label.setImage(connected ? PlatformIconGroup.generalInspectionsok() : PlatformIconGroup.generalError());
         label.setForegroundColor(ComponentColors.DISABLED_TEXT);
