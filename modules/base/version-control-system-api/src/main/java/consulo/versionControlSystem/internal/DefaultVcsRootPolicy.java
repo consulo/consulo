@@ -20,8 +20,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.util.io.PathUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -30,18 +30,21 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.PROJECT)
 public abstract class DefaultVcsRootPolicy {
+  protected final Project myProject;
+
+  protected DefaultVcsRootPolicy(Project project) {
+    myProject = project;
+  }
+
   public static DefaultVcsRootPolicy getInstance(Project project) {
     return project.getInstance(DefaultVcsRootPolicy.class);
   }
 
-  
-  public abstract Collection<VirtualFile> getDefaultVcsRoots(VcsMapping mappingList, String vcsName);
-
-  public abstract boolean matchesDefaultMapping(VirtualFile file, Object matchContext);
-
-  public abstract @Nullable Object getMatchContext(VirtualFile file);
-
-  public abstract @Nullable VirtualFile getVcsRootFor(VirtualFile file);
+  /**
+   * Return roots that belong to the project (ex: all content roots).
+   * If 'Project' mapping is configured, all vcs roots for these roots will be put to the mappings.
+   */
+  public abstract Collection<VirtualFile> getDefaultVcsRoots();
 
   public String getProjectConfigurationMessage(Project project) {
     boolean isDirectoryBased = ProjectCoreUtil.isDirectoryBased(project);
@@ -58,5 +61,12 @@ public abstract class DefaultVcsRootPolicy {
       sb.append(PathUtil.getFileName(ProjectCoreUtil.getDirectoryStoreFile(project).getPresentableUrl())).append(" directory contents");
     }
     return sb.toString();
+  }
+
+  protected void scheduleMappedRootsUpdate() {
+    ProjectLevelVcsManagerEx vcsManager = ProjectLevelVcsManagerEx.getInstanceEx(myProject);
+    if (!StringUtil.isEmpty(vcsManager.haveDefaultMapping())) {
+      vcsManager.scheduleMappedRootsUpdate();
+    }
   }
 }

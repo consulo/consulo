@@ -186,6 +186,14 @@ public abstract class ProjectLevelVcsManager {
 
     public abstract boolean hasAnyMappings();
 
+    /**
+     * Whether vcs mappings were already processed after opening the project.
+     * ie: if true, one can assume that {@link #hasActiveVcss()} and {@link #hasAnyMappings()} match if the mappings are correct.
+     */
+    public boolean areVcsesActivated() {
+        return false;
+    }
+
     @Deprecated(forRemoval = true)
     public void addMessageToConsoleWindow(String message, TextAttributes attributes) {
         addMessageToConsoleWindow(message, new ConsoleViewContentType("", attributes));
@@ -268,6 +276,8 @@ public abstract class ProjectLevelVcsManager {
     
     public abstract LocalizeValue getConsolidatedVcsName();
 
+    public abstract String getShortNameForVcsRoot(VirtualFile file);
+
     public abstract List<VcsDirectoryMapping> getDirectoryMappings();
 
     public abstract List<VcsDirectoryMapping> getDirectoryMappings(AbstractVcs vcs);
@@ -291,6 +301,8 @@ public abstract class ProjectLevelVcsManager {
 
     public abstract @Nullable AbstractVcs findVersioningVcs(VirtualFile file);
 
+    public abstract VcsRootChecker getRootChecker(AbstractVcs vcs);
+
     public abstract VcsHistoryCache getVcsHistoryCache();
 
     public abstract ContentRevisionCache getContentRevisionCache();
@@ -298,6 +310,23 @@ public abstract class ProjectLevelVcsManager {
     public abstract boolean isFileInContent(VirtualFile vf);
 
     public abstract boolean isIgnored(VirtualFile vf);
+
+    /**
+     * Checks if VCS shall not work with a file. It is not related to the '.ignore' status in the VCS.
+     * <p>
+     * Prefer using {@link #isIgnoredUnderRoot} if the VCS root is known.
+     */
+    public abstract boolean isIgnored(FilePath filePath);
+
+    /**
+     * Checks if VCS shall not work with a file. It is not related to the '.ignore' status in the VCS.
+     */
+    public abstract boolean isIgnoredUnderRoot(VirtualFile vcsRoot, VirtualFile file);
+
+    /**
+     * Checks if VCS shall not work with a file. It is not related to the '.ignore' status in the VCS.
+     */
+    public abstract boolean isIgnoredUnderRoot(VirtualFile vcsRoot, FilePath filePath);
 
     
     public abstract VcsAnnotationLocalChangesListener getAnnotationLocalChangesListener();

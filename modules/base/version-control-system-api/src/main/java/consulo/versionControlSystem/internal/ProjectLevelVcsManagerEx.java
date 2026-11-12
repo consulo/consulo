@@ -46,6 +46,8 @@ public abstract class ProjectLevelVcsManagerEx extends ProjectLevelVcsManager {
 
     public abstract String haveDefaultMapping();
 
+    public abstract void scheduleMappedRootsUpdate();
+
     public abstract void addInitializationRequest(VcsInitObject vcsInitObject, Runnable runnable);
 
     public boolean isBackgroundTaskRunning(Object... keys) {

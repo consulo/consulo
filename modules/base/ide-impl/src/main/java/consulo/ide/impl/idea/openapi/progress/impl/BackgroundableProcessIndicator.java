@@ -21,6 +21,7 @@ import consulo.application.progress.DumbModeAction;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
@@ -30,13 +31,18 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.TimeUnit;
+
 public class BackgroundableProcessIndicator extends ProgressWindow {
     protected StatusBarEx myStatusBar;
 
     private PerformInBackgroundOption myOption;
     private TaskInfo myInfo;
 
-    private boolean myDisposed;
+    private static final int DEFAULT_PROGRESS_DELAY_MILLIS = 300;
+
+    private volatile boolean myDisposed;
+
     private DumbModeAction myDumbModeAction = DumbModeAction.NOTHING;
 
     public BackgroundableProcessIndicator(Task.Backgroundable task) {
@@ -66,7 +72,11 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
         myStatusBar = frame != null ? (StatusBarEx) frame.getStatusBar() : null;
         myBackgrounded = shouldStartInBackground();
         if (myBackgrounded) {
-            doBackground();
+            AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+                if (!myDisposed && isRunning()) {
+                    doBackground();
+                }
+            }, DEFAULT_PROGRESS_DELAY_MILLIS, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -140,8 +150,10 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
     }
 
     private void doBackground() {
-        if (myStatusBar != null) { //not welcome screen
-            myStatusBar.addProgress(this, myInfo);
+        StatusBarEx statusBar = myStatusBar;
+        TaskInfo info = myInfo;
+        if (statusBar != null && info != null) { //not welcome screen
+            statusBar.addProgress(this, info);
         }
     }
 

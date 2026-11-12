@@ -30,11 +30,11 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
+import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsConfiguration;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.*;
 import consulo.versionControlSystem.impl.internal.change.ChangeListManagerImpl;
-import consulo.versionControlSystem.impl.internal.change.VcsGuess;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.DefaultRollbackEnvironment;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
@@ -211,8 +211,8 @@ public class RollbackWorker {
                     LocalizeValue.localizeTODO(myLocalHistoryActionName == null ? myOperationName : myLocalHistoryActionName),
                     -1
                 );
-                VcsDirtyScopeManager manager = project.getComponent(VcsDirtyScopeManager.class);
-                VcsGuess vcsGuess = new VcsGuess(myProject);
+                VcsDirtyScopeManager manager = VcsDirtyScopeManager.getInstance(myProject);
+                ProjectLevelVcsManager vcsManager = ProjectLevelVcsManager.getInstance(myProject);
 
                 for (Change change : changesToRefresh) {
                     ContentRevision beforeRevision = change.getBeforeRevision();
@@ -221,8 +221,8 @@ public class RollbackWorker {
                         manager.fileDirty(beforeRevision.getFile());
                     }
                     else {
-                        markDirty(manager, vcsGuess, beforeRevision);
-                        markDirty(manager, vcsGuess, afterRevision);
+                        markDirty(manager, vcsManager, beforeRevision);
+                        markDirty(manager, vcsManager, afterRevision);
                     }
                 }
 
@@ -234,10 +234,12 @@ public class RollbackWorker {
             WaitForProgressToShow.runOrInvokeLaterAboveProgress(forAwtThread, null, project);
         }
 
-        private void markDirty(VcsDirtyScopeManager manager, VcsGuess vcsGuess, @Nullable ContentRevision revision) {
+        private void markDirty(VcsDirtyScopeManager manager,
+                               ProjectLevelVcsManager vcsManager,
+                               @Nullable ContentRevision revision) {
             if (revision != null) {
                 FilePath parent = revision.getFile().getParentPath();
-                if (parent != null && couldBeMarkedDirty(vcsGuess, parent)) {
+                if (parent != null && couldBeMarkedDirty(vcsManager, parent)) {
                     manager.dirDirtyRecursively(parent);
                 }
                 else {
@@ -246,8 +248,8 @@ public class RollbackWorker {
             }
         }
 
-        private boolean couldBeMarkedDirty(VcsGuess vcsGuess, FilePath path) {
-            return vcsGuess.getVcsForDirty(path) != null;
+        private boolean couldBeMarkedDirty(ProjectLevelVcsManager vcsGuess, FilePath path) {
+            return vcsGuess.getVcsFor(path) != null;
         }
 
         private void deleteAddedFilesLocally(List<Change> changes) {

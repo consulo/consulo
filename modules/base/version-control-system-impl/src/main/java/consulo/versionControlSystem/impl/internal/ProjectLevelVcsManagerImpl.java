@@ -32,6 +32,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.language.content.FileIndexFacade;
+import consulo.language.file.FileTypeManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -51,8 +52,8 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.layout.DockLayout;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.text.StringTokenizer;
 import consulo.versionControlSystem.*;
-import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.checkout.CheckoutCallback;
@@ -60,6 +61,7 @@ import consulo.versionControlSystem.history.VcsHistoryCache;
 import consulo.versionControlSystem.impl.internal.change.VcsAnnotationLocalChangesListenerImpl;
 import consulo.versionControlSystem.impl.internal.checkout.CompositeCheckoutCallback;
 import consulo.versionControlSystem.impl.internal.checkout.OpenProjectCheckoutCallback;
+import consulo.versionControlSystem.impl.internal.NewMappings.MappedRoot;
 import consulo.versionControlSystem.impl.internal.update.UpdateInfoTreeImpl;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -68,7 +70,6 @@ import consulo.versionControlSystem.ui.ViewUpdateInfoNotification;
 import consulo.versionControlSystem.update.ActionInfo;
 import consulo.versionControlSystem.update.UpdatedFiles;
 import consulo.versionControlSystem.util.VcsRootIterator;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -77,6 +78,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
+import java.io.File;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -93,7 +95,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     private final NewMappings myMappings;
     private final Project myProject;
-    private final MappingsToRoots myMappingsToRoots;
 
     private ContentManager myContentManager;
     private ConsoleView myConsole;
@@ -110,7 +111,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     private boolean myMappingsLoaded;
     private boolean myHaveLegacyVcsConfiguration;
-    private final DefaultVcsRootPolicy myDefaultVcsRootPolicy;
 
     private volatile int myBackgroundOperationCounter;
 
@@ -127,16 +127,13 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     public ProjectLevelVcsManagerImpl(
         Project project,
         FileStatusManager manager,
-        FileIndexFacade excludedFileIndex,
-        DefaultVcsRootPolicy defaultVcsRootPolicy
+        FileIndexFacade excludedFileIndex
     ) {
         myProject = project;
         mySerialization = new ProjectLevelVcsManagerSerialization();
         myOptionsAndConfirmations = new OptionsAndConfirmations();
 
-        myDefaultVcsRootPolicy = defaultVcsRootPolicy;
         myMappings = new NewMappings(myProject, this, manager);
-        myMappingsToRoots = new MappingsToRoots(myMappings, myProject);
 
         myVcsHistoryCache = new VcsHistoryCache();
         myContentRevisionCache = new ContentRevisionCache();
@@ -193,7 +190,6 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     @Override
     public void dispose() {
         releaseConsole();
-        myMappings.disposeMe();
         Disposer.dispose(myAnnotationLocalChangesListener);
         myContentManager = null;
     }
@@ -218,86 +214,66 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     }
 
     @Override
-    public @Nullable AbstractVcs getVcsFor(VirtualFile file) {
-        String vcsName = myMappings.getVcsFor(file);
-        if (vcsName == null || vcsName.isEmpty()) {
-            return null;
+    public String getShortNameForVcsRoot(VirtualFile file) {
+        String shortName = myMappings.getShortNameFor(file);
+        if (shortName != null) {
+            return shortName;
         }
-        return AllVcses.getInstance(myProject).getByName(vcsName);
+        VirtualFile baseDir = myProject.getBaseDir();
+        if (baseDir != null) {
+            String relativePath = VirtualFileUtil.getRelativePath(file, baseDir, File.separatorChar);
+            if (relativePath != null) {
+                return relativePath.isEmpty() ? file.getName() : relativePath;
+            }
+        }
+        return file.getPresentableName();
     }
 
     @Override
-    public @Nullable AbstractVcs getVcsFor(FilePath file) {
-        VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
-        ThrowableComputable<AbstractVcs, RuntimeException> action = () -> {
-            if (!myProject.getApplication().isUnitTestMode() && !myProject.isInitialized()) {
-                return null;
-            }
-            if (myProject.isDisposed()) {
-                throw new ProcessCanceledException();
-            }
-            if (vFile != null) {
-                return getVcsFor(vFile);
-            }
-            return null;
-        };
-        return ReadAction.compute(action);
+    public @Nullable AbstractVcs getVcsFor(@Nullable VirtualFile file) {
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? root.vcs : null;
+    }
+
+    @Override
+    public @Nullable AbstractVcs getVcsFor(@Nullable FilePath file) {
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? root.vcs : null;
     }
 
     @Override
     public @Nullable VirtualFile getVcsRootFor(@Nullable VirtualFile file) {
-        if (file == null) {
-            return null;
-        }
-        VcsDirectoryMapping mapping = myMappings.getMappingFor(file);
-        if (mapping == null) {
-            return null;
-        }
-        String directory = mapping.getDirectory();
-        if (directory.isEmpty()) {
-            return myDefaultVcsRootPolicy.getVcsRootFor(file);
-        }
-        return LocalFileSystem.getInstance().findFileByPath(directory);
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? root.root : null;
     }
 
     @Override
-    public @Nullable VcsRoot getVcsRootObjectFor(VirtualFile file) {
-        VcsDirectoryMapping mapping = myMappings.getMappingFor(file);
-        if (mapping == null) {
-            return null;
-        }
-        String directory = mapping.getDirectory();
-        AbstractVcs vcs = findVcsByName(mapping.getVcs());
-        if (directory.isEmpty()) {
-            VirtualFile root = myDefaultVcsRootPolicy.getVcsRootFor(file);
-            return root != null ? new VcsRoot(vcs, root) : null;
-        }
-        VirtualFile path = LocalFileSystem.getInstance().findFileByPath(directory);
-        return path != null ? new VcsRoot(vcs, path) : null;
+    public @Nullable VcsRoot getVcsRootObjectFor(@Nullable VirtualFile file) {
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? new VcsRoot(root.vcs, root.root) : null;
     }
 
     @Override
-    public @Nullable VirtualFile getVcsRootFor(FilePath file) {
-        if (myProject.isDisposed()) {
-            return null;
-        }
-        VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
-        if (vFile != null) {
-            return getVcsRootFor(vFile);
-        }
-        return null;
+    public @Nullable VirtualFile getVcsRootFor(@Nullable FilePath file) {
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? root.root : null;
     }
 
     @Override
-    public VcsRoot getVcsRootObjectFor(FilePath file) {
-        if (myProject.isDisposed()) {
-            return null;
+    public @Nullable VcsRoot getVcsRootObjectFor(@Nullable FilePath file) {
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? new VcsRoot(root.vcs, root.root) : null;
+    }
+
+    public List<VcsRoot> getVcsRootObjectsForDefaultMapping() {
+        List<VcsRoot> result = new ArrayList<>();
+        for (MappedRoot root : myMappings.getAllMappedRoots()) {
+            AbstractVcs vcs = root.vcs;
+            if (root.mapping.isDefaultMapping() && vcs != null && vcs.getCustomConvertor() == null) {
+                result.add(new VcsRoot(vcs, root.root));
+            }
         }
-        VirtualFile vFile = ChangesUtil.findValidParentAccurately(file);
-        if (vFile != null) {
-            return getVcsRootObjectFor(vFile);
-        }
-        return null;
+        return result;
     }
 
     @Override
@@ -339,6 +315,11 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     @Override
     public boolean hasActiveVcss() {
         return myMappings.hasActiveVcss();
+    }
+
+    @Override
+    public boolean areVcsesActivated() {
+        return myMappings.isActivated();
     }
 
     @Override
@@ -483,15 +464,45 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     @Override
     public @Nullable VcsDirectoryMapping getDirectoryMappingFor(FilePath path) {
-        VirtualFile vFile = ChangesUtil.findValidParentAccurately(path);
-        if (vFile != null) {
-            return myMappings.getMappingFor(vFile);
+        MappedRoot root = getMappedRootFor(path);
+        return root != null ? root.mapping : null;
+    }
+
+    private @Nullable VcsDirectoryMapping getDirectoryMappingFor(VirtualFile file) {
+        MappedRoot root = getMappedRootFor(file);
+        return root != null ? root.mapping : null;
+    }
+
+    private @Nullable MappedRoot getMappedRootFor(@Nullable FilePath file) {
+        if (file == null) {
+            return null;
         }
-        return null;
+        MappedRoot root = myMappings.getMappedRootFor(file);
+        if (root == null) {
+            return null;
+        }
+        if (isIgnoredUnderRoot(root.root, file)) {
+            return null;
+        }
+        return root;
+    }
+
+    private @Nullable MappedRoot getMappedRootFor(@Nullable VirtualFile file) {
+        if (file == null) {
+            return null;
+        }
+        MappedRoot root = myMappings.getMappedRootFor(file);
+        if (root == null) {
+            return null;
+        }
+        if (isIgnoredUnderRoot(root.root, file)) {
+            return null;
+        }
+        return root;
     }
 
     private boolean hasExplicitMapping(VirtualFile vFile) {
-        VcsDirectoryMapping mapping = myMappings.getMappingFor(vFile);
+        VcsDirectoryMapping mapping = getDirectoryMappingFor(vFile);
         return mapping != null && !mapping.isDefaultMapping();
     }
 
@@ -514,6 +525,15 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     public void removeDirectoryMapping(VcsDirectoryMapping mapping) {
         myMappings.removeDirectoryMapping(mapping);
+    }
+
+    @Override
+    public void scheduleMappedRootsUpdate() {
+        myMappings.scheduleMappedRootsUpdate();
+    }
+
+    public void updateMappedVcsesImmediately() {
+        myMappings.updateMappedVcsesImmediately();
     }
 
     @Override
@@ -610,12 +630,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     @Override
     
     public VirtualFile[] getRootsUnderVcs(AbstractVcs vcs) {
-        return myMappingsToRoots.getRootsUnderVcs(vcs);
+        return MappingsToRoots.getRootsUnderVcs(myProject, myMappings, vcs);
     }
 
     @Override
     public List<VirtualFile> getDetailedVcsMappings(AbstractVcs vcs) {
-        return myMappingsToRoots.getDetailedVcsMappings(vcs);
+        return MappingsToRoots.getDetailedVcsMappings(myProject, myMappings, vcs);
     }
 
     @Override
@@ -672,7 +692,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         if (haveNonEmptyMappings || !state.defaultProject) {
             myMappingsLoaded = true;
         }
-        myMappings.setDirectoryMappings(mappingsList);
+        myMappings.setDirectoryMappingsFromConfig(mappingsList);
     }
 
     void writeDirectoryMappings(VcsDirectoryMappingsState state) {
@@ -699,17 +719,40 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
      */
     @Override
     public @Nullable AbstractVcs findVersioningVcs(VirtualFile file) {
-        VcsDescriptor[] vcsDescriptors = getAllVcss();
-        VcsDescriptor probableVcs = null;
-        for (VcsDescriptor vcsDescriptor : vcsDescriptors) {
+        Set<String> checkedVcses = new HashSet<>();
+
+        VcsRootChecker rootChecker = VcsRootChecker.EXTENSION_POINT_NAME.findFirstSafe(checker -> {
+            checkedVcses.add(checker.getSupportedVcs().getName());
+            return checker.isRoot(file);
+        });
+        if (rootChecker != null) {
+            return findVcsByName(rootChecker.getSupportedVcs().getName());
+        }
+
+        String foundVcs = null;
+        for (VcsDescriptor vcsDescriptor : getAllVcss()) {
+            String vcsName = vcsDescriptor.getId();
+            if (checkedVcses.contains(vcsName)) {
+                continue;
+            }
+
             if (vcsDescriptor.probablyUnderVcs(file)) {
-                if (probableVcs != null) {
+                if (foundVcs != null) {
                     return null;
                 }
-                probableVcs = vcsDescriptor;
+                foundVcs = vcsName;
             }
         }
-        return probableVcs == null ? null : findVcsByName(probableVcs.getId());
+        return foundVcs == null ? null : findVcsByName(foundVcs);
+    }
+
+    @Override
+    public VcsRootChecker getRootChecker(AbstractVcs vcs) {
+        VcsRootChecker checker = VcsRootChecker.EXTENSION_POINT_NAME.findFirstSafe(it -> it.getSupportedVcs().equals(vcs.getKeyInstanceMethod()));
+        if (checker != null) {
+            return checker;
+        }
+        return new DefaultVcsRootChecker(vcs, getDescriptor(vcs.getId()));
     }
 
     @Override
@@ -723,7 +766,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     @Override
     public void fireDirectoryMappingsChanged() {
         if (myProject.isOpen() && !myProject.isDisposed()) {
-            myMappings.mappingsChanged();
+            myMappings.notifyMappingsChanged();
         }
     }
 
@@ -777,6 +820,75 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
     @Override
     public boolean isIgnored(VirtualFile vf) {
         return Registry.is("ide.hide.excluded.files") ? myExcludedIndex.isExcludedFile(vf) : myExcludedIndex.isUnderIgnored(vf);
+    }
+
+    @Override
+    public boolean isIgnored(FilePath filePath) {
+        return isIgnoredFilePath(filePath.getPath());
+    }
+
+    public boolean isIgnoredFileRoot(VirtualFile file) {
+        if (myProject.getApplication().isDispatchThread()) {
+            return ReadAction.compute(() -> computeIsIgnoredFileRoot(file));
+        }
+        else {
+            return ReadAction.nonBlocking(() -> computeIsIgnoredFileRoot(file)).executeSynchronously();
+        }
+    }
+
+    private boolean computeIsIgnoredFileRoot(VirtualFile file) {
+        if (myProject.isDisposed() || myProject.isDefault()) {
+            return false;
+        }
+        if (!file.isValid()) {
+            return false;
+        }
+        return myExcludedIndex.isUnderIgnored(file);
+    }
+
+    @Override
+    public boolean isIgnoredUnderRoot(VirtualFile vcsRoot, FilePath filePath) {
+        StringTokenizer tokenizer = new StringTokenizer(filePath.getPath(), "/");
+        tokenizer.resetCurrentPosition(vcsRoot.getPath().length());
+        return isIgnoredFileName(tokenizer);
+    }
+
+    @Override
+    public boolean isIgnoredUnderRoot(VirtualFile vcsRoot, VirtualFile file) {
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+
+        VirtualFile curr = file;
+        while (curr != null && !curr.equals(vcsRoot)) {
+            String name = curr.getName();
+            if (fileTypeManager.isFileIgnored(name)) {
+                return true;
+            }
+
+            curr = curr.getParent();
+        }
+        return false;
+    }
+
+    private boolean isIgnoredFilePath(String path) {
+        StringTokenizer tokenizer = new StringTokenizer(path, "/");
+        return isIgnoredFileName(tokenizer);
+    }
+
+    /**
+     * WARN: might differ from {@link FileIndexFacade#isUnderIgnored}
+     */
+    private boolean isIgnoredFileName(StringTokenizer tokenizer) {
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        while (tokenizer.hasMoreTokens()) {
+            String name = tokenizer.nextToken();
+            if (name.isEmpty()) {
+                continue;
+            }
+            if (fileTypeManager.isFileIgnored(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isInDirectoryBasedRoot(VirtualFile file) {

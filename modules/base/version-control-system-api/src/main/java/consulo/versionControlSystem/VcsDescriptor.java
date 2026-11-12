@@ -38,6 +38,10 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
     myCrawlUpToCheckUnderVcs = crawlUpToCheckUnderVcs;
   }
 
+  public boolean areChildrenValidMappings() {
+    return myCrawlUpToCheckUnderVcs;
+  }
+
   public boolean probablyUnderVcs(VirtualFile file) {
     if (file == null || (!file.isDirectory()) || (!file.isValid())) return false;
     if (myAdministrativePattern == null) return false;
@@ -65,7 +69,18 @@ public class VcsDescriptor implements Comparable<VcsDescriptor> {
     });
   }
 
-  
+  public boolean hasVcsDirPattern() {
+    return myAdministrativePattern != null;
+  }
+
+  public boolean matchesVcsDirPattern(String dirName) {
+    if (myAdministrativePattern == null) return false;
+    for (String pattern : myAdministrativePattern.split(",")) {
+      if (pattern.trim().equals(dirName)) return true;
+    }
+    return false;
+  }
+
   public LocalizeValue getDisplayName() {
     return myDisplayName;
   }

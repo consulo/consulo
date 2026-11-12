@@ -454,12 +454,49 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
         return null;
     }
 
+    /**
+     * Overrides the list of VCS roots that is returned by {@link ProjectLevelVcsManager#getRootsUnderVcs(AbstractVcs)}.
+     * <p>
+     * This breaks {@link ProjectLevelVcsManager#getRootsUnderVcs(AbstractVcs)} vs {@link ProjectLevelVcsManager#getVcsFor)} symmetry,
+     * and should be avoided whenever possible.
+     * Consider implementing other means of automatic VCS root detection,
+     * such as {@link VcsRootChecker#detectProjectMappings(Project, java.util.Collection, java.util.Set)} or
+     * {@link VcsRootChecker#isRoot(VirtualFile)}.
+     */
     public @Nullable RootsConvertor getCustomConvertor() {
         return null;
     }
 
     public interface RootsConvertor {
         List<VirtualFile> convertRoots(List<VirtualFile> result);
+    }
+
+    /**
+     * This switch disables platform support for "default mapping" aka "&lt;Project&gt;".
+     * <p/>
+     * If enabled, platform will do nothing. All roots from {@link consulo.versionControlSystem.internal.DefaultVcsRootPolicy} will be registered as vcs root.
+     * Vcs can try using {@link RootsConvertor} to process roots itself.
+     * <p/>
+     * If disabled, the platform will use {@link VcsRootChecker} or {@link VcsFactory#getAdministrativeAreaName()} to find actual vcs roots.
+     * If vcs does not implement these EP, no vcs roots will be registered for "default mapping".
+     *
+     * @see ProjectLevelVcsManager
+     */
+    public boolean needsLegacyDefaultMappings() {
+        if (getCustomConvertor() != null) {
+            return true;
+        }
+
+        if (VcsRootChecker.EXTENSION_POINT_NAME.findFirstSafe(checker -> checker.getSupportedVcs().equals(getKeyInstanceMethod())) != null) {
+            return false;
+        }
+
+        VcsDescriptor descriptor = AllVcses.getInstance(myProject).getDescriptor(getId());
+        if (descriptor != null && descriptor.hasVcsDirPattern()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -1,21 +1,7 @@
-/*
- * Copyright 2000-2009 JetBrains s.r.o.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.versionControlSystem.impl.internal;
 
-import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.language.content.FileIndexFacade;
 import consulo.project.Project;
 import consulo.versionControlSystem.AbstractVcs;
@@ -25,59 +11,60 @@ import consulo.versionControlSystem.internal.DefaultVcsRootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MappingsToRoots {
-  private final NewMappings myMappings;
-  private final Project myProject;
-
-  public MappingsToRoots(NewMappings mappings, Project project) {
-    myMappings = mappings;
-    myProject = project;
+public final class MappingsToRoots {
+  private MappingsToRoots() {
   }
 
-  
-  public VirtualFile[] getRootsUnderVcs(AbstractVcs vcs) {
-    List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
+  public static VirtualFile[] getRootsUnderVcs(Project project,
+                                               NewMappings newMappings,
+                                               AbstractVcs vcs) {
+    List<VirtualFile> mappings = newMappings.getMappingsAsFilesUnderVcs(vcs);
 
-    AbstractVcs.RootsConvertor converter = vcs.getCustomConvertor();
-    if (converter != null) {
-      result = converter.convertRoots(result);
+    AbstractVcs.RootsConvertor convertor = vcs.getCustomConvertor();
+    List<VirtualFile> result = convertor != null ? convertor.convertRoots(new ArrayList<>(mappings)) : mappings;
+
+    return filterAllowedRoots(project, result, vcs);
+  }
+
+  public static VirtualFile[] filterAllowedRoots(Project project,
+                                                 List<VirtualFile> mappings,
+                                                 AbstractVcs vcs) {
+    if (vcs.allowsNestedRoots()) {
+      return VirtualFileUtil.toVirtualFileArray(mappings);
     }
 
-    Collections.sort(result, FilePathComparator.getInstance());
-    if (! vcs.allowsNestedRoots()) {
-      FileIndexFacade facade = myProject.getInstance(FileIndexFacade.class);
-      List<VirtualFile> finalResult = result;
-      Application.get().runReadAction(() -> {
-        int i=1;
-        while(i < finalResult.size()) {
-          VirtualFile previous = finalResult.get(i - 1);
-          VirtualFile current = finalResult.get(i);
-          if (facade.isValidAncestor(previous, current)) {
-            finalResult.remove(i);
-          }
-          else {
-            i++;
-          }
+    List<VirtualFile> result = new ArrayList<>(mappings);
+    result.sort(FilePathComparator.getInstance());
+
+    ReadAction.run(() -> {
+      FileIndexFacade facade = FileIndexFacade.getInstance(project);
+      int i = 1;
+      while (i < result.size()) {
+        VirtualFile previous = result.get(i - 1);
+        VirtualFile current = result.get(i);
+        if (facade.isValidAncestor(previous, current)) {
+          result.remove(i);
         }
-      });
-    }
-    result.removeIf(file -> !file.isDirectory());
+        else {
+          i++;
+        }
+      }
+    });
     return VirtualFileUtil.toVirtualFileArray(result);
   }
 
   // not only set mappings, but include all modules inside: modules might have different settings
-  public List<VirtualFile> getDetailedVcsMappings(AbstractVcs vcs) {
+  public static List<VirtualFile> getDetailedVcsMappings(Project project, NewMappings newMappings, AbstractVcs vcs) {
     // same as above, but no compression
-    List<VirtualFile> result = myMappings.getMappingsAsFilesUnderVcs(vcs);
+    List<VirtualFile> result = new ArrayList<>(newMappings.getMappingsAsFilesUnderVcs(vcs));
 
     boolean addInnerModules = true;
     String vcsName = vcs.getId();
-    List<VcsDirectoryMapping> directoryMappings = myMappings.getDirectoryMappings(vcsName);
+    List<VcsDirectoryMapping> directoryMappings = newMappings.getDirectoryMappings(vcsName);
     for (VcsDirectoryMapping directoryMapping : directoryMappings) {
       if (directoryMapping.isDefaultMapping()) {
         addInnerModules = false;
@@ -85,11 +72,11 @@ public class MappingsToRoots {
       }
     }
 
-    Collections.sort(result, FilePathComparator.getInstance());
+    result.sort(FilePathComparator.getInstance());
     if (addInnerModules) {
-      FileIndexFacade facade = myProject.getService(FileIndexFacade.class);
-      Collection<VirtualFile> modules = DefaultVcsRootPolicy.getInstance(myProject).getDefaultVcsRoots(myMappings, vcsName);
-      Application.get().runReadAction(() -> {
+      FileIndexFacade facade = FileIndexFacade.getInstance(project);
+      List<VirtualFile> modules = new ArrayList<>(DefaultVcsRootPolicy.getInstance(project).getDefaultVcsRoots());
+      ReadAction.run(() -> {
         Iterator<VirtualFile> iterator = modules.iterator();
         while (iterator.hasNext()) {
           VirtualFile module = iterator.next();
@@ -100,7 +87,7 @@ public class MappingsToRoots {
               break;
             }
           }
-          if (! included) {
+          if (!included) {
             iterator.remove();
           }
         }
