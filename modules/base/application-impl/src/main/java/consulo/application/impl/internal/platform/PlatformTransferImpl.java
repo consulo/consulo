@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class PlatformTransferImpl implements PlatformTransfer {
         if (!Files.exists(marker)) {
             LOG.info("Transferring " + localPath + " to " + target + " of " + platform.getName());
             Files.createDirectories(directory);
-            copy(localPath, target);
+            copy(localPath, target, !platform.os().isWindows());
             Files.writeString(marker, localPath.toString(), StandardCharsets.UTF_8);
         }
         myTransferred.put(key, target);
@@ -91,9 +92,9 @@ public class PlatformTransferImpl implements PlatformTransfer {
         return platform.user().homePath().resolve(".cache").resolve("consulo").resolve("transfer");
     }
 
-    private static void copy(Path source, Path target) throws IOException {
+    private static void copy(Path source, Path target, boolean posix) throws IOException {
         if (!Files.isDirectory(source)) {
-            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+            copyFile(source, target, posix);
             return;
         }
         Files.walkFileTree(source, new SimpleFileVisitor<>() {
@@ -105,10 +106,20 @@ public class PlatformTransferImpl implements PlatformTransfer {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.copy(file, resolve(target, source.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
+                copyFile(file, resolve(target, source.relativize(file)), posix);
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    /**
+     * An executable stays executable - a tool started on that machine.
+     */
+    private static void copyFile(Path source, Path target, boolean posix) throws IOException {
+        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+        if (posix && Files.isExecutable(source)) {
+            Files.setAttribute(target, "posix:permissions", PosixFilePermissions.fromString("rwxr-xr-x"));
+        }
     }
 
     /**

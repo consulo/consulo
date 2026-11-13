@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.configurable;
 
+import consulo.application.Application;
 import consulo.annotation.component.ServiceImpl;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
@@ -59,11 +60,12 @@ public class UnifiedShowSettingsUtil extends BaseProjectStructureShowSettingsUti
 
     @Inject
     public UnifiedShowSettingsUtil(
+        Application application,
         DefaultProjectFactory defaultProjectFactory,
         Provider<SdkTable> sdkTableProvider,
         Provider<DialogService> dialogService
     ) {
-        super(sdkTableProvider);
+        super(application, sdkTableProvider);
         myDefaultProjectFactory = defaultProjectFactory;
         myDialogService = dialogService;
     }

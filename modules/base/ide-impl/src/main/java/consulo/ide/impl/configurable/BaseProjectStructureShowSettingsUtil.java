@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.configurable;
 
+import consulo.application.Application;
 import consulo.configurable.ConfigurableSession;
 import consulo.configurable.internal.ConfigurableSessionHolder;
+import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkTable;
+import consulo.content.bundle.event.SdkTableListener;
 import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
@@ -38,9 +41,23 @@ public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSetti
     private @Nullable ModulesConfiguratorImpl myModulesConfigurator;
     private @Nullable LibrariesConfigurator myLibrariesConfigurator;
 
-    protected BaseProjectStructureShowSettingsUtil(Provider<SdkTable> sdkTableProvider) {
+    protected BaseProjectStructureShowSettingsUtil(Application application, Provider<SdkTable> sdkTableProvider) {
         mySdkTableProvider = sdkTableProvider;
         mySdksModel = new DefaultSdksModel(sdkTableProvider);
+
+        // the shared model follows the table - bundles come later too, e.g. of a machine connected later; also while a modal dialog
+        // (a wizard) shows them
+        application.getMessageBus().connect().subscribe(SdkTableListener.class, new SdkTableListener() {
+            @Override
+            public void sdkAdded(Sdk sdk) {
+                application.invokeLater(() -> mySdksModel.tableSdkAdded(sdk), application.getAnyModalityState());
+            }
+
+            @Override
+            public void sdkRemoved(Sdk sdk) {
+                application.invokeLater(() -> mySdksModel.tableSdkRemoved(sdk), application.getAnyModalityState());
+            }
+        });
     }
 
     @Override

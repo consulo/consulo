@@ -28,6 +28,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -327,7 +328,32 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
 
     @Override
     public void setAttribute(Path path, String attribute, Object value, LinkOption... options) throws IOException {
-        throw new UnsupportedOperationException("setAttribute not supported on remote file systems");
+        // only the mode - an executable copied to the machine has to be runnable there
+        if (!"posix:permissions".equals(attribute) || !(value instanceof Set<?> permissions)) {
+            throw new UnsupportedOperationException("Only posix:permissions can be set on remote file systems: " + attribute);
+        }
+        RemotePath remotePath = toRemotePath(path);
+        RemoteNioFileSystem fs = (RemoteNioFileSystem) remotePath.getFileSystem();
+        int mode = 0;
+        for (Object permission : permissions) {
+            mode |= switch ((PosixFilePermission) permission) {
+                case OWNER_READ -> 0400;
+                case OWNER_WRITE -> 0200;
+                case OWNER_EXECUTE -> 0100;
+                case GROUP_READ -> 040;
+                case GROUP_WRITE -> 020;
+                case GROUP_EXECUTE -> 010;
+                case OTHERS_READ -> 04;
+                case OTHERS_WRITE -> 02;
+                case OTHERS_EXECUTE -> 01;
+            };
+        }
+        try {
+            fs.getConnection().setPermissions(remotePath.getPathString(), mode);
+        }
+        catch (RemoteAgentException e) {
+            throw toIOException(e);
+        }
     }
 
     @Override

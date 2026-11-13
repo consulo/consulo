@@ -390,4 +390,30 @@ public class DefaultSdksModel implements SdkModel, SettingsSdksModel {
     public boolean isInitialized() {
         return myInitialized;
     }
+
+    /**
+     * A bundle added to the table outside of this model - e.g. detected on a machine connected later.
+     */
+    @RequiredUIAccess
+    public void tableSdkAdded(Sdk sdk) {
+        if (!myInitialized || mySdks.containsKey(sdk)) {
+            return;
+        }
+        try {
+            Sdk copy = (Sdk) sdk.clone();
+            mySdks.put(sdk, copy);
+            mySdkEventsDispatcher.getMulticaster().sdkAdded(copy);
+        }
+        catch (CloneNotSupportedException e) {
+            LOG.error(e);
+        }
+    }
+
+    @RequiredUIAccess
+    public void tableSdkRemoved(Sdk sdk) {
+        Sdk copy = mySdks.remove(sdk);
+        if (copy != null) {
+            mySdkEventsDispatcher.getMulticaster().sdkRemove(copy);
+        }
+    }
 }

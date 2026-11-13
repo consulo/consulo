@@ -26,6 +26,7 @@ import consulo.module.creation.NewModuleWizardContext;
 import consulo.module.creation.localize.ModuleCreationLocalize;
 import consulo.module.ui.BundleBox;
 import consulo.platform.Platform;
+import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.UIAccess;
@@ -41,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -58,11 +60,15 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   private boolean myPathChosen;
   // the machine of the project - chosen for a new project
   private Platform myPlatform;
+  // the target of the platform, null for the local machine - known without a connection
+  private @Nullable String myPlatformTargetId;
   private final List<Consumer<Platform>> myPlatformListeners = new ArrayList<>();
 
   public UnifiedProjectOrModuleNameStep(C context) {
     myContext = context;
     myPlatform = context.getPlatform();
+    Project project = context.getProject();
+    myPlatformTargetId = project != null ? project.getPlatformTargetId() : null;
   }
 
   @RequiredUIAccess
@@ -175,7 +181,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
             location = findNonexistent(baseDir, "untitled");
           }
           Path newLocation = location;
-          uiAccess.give(() -> setPlatform(platform, newLocation));
+          uiAccess.give(() -> setPlatform(platform, targetId, newLocation));
         });
       });
       // a path chosen on another machine - that machine is the target
@@ -237,7 +243,11 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
    */
   @RequiredUIAccess
   public void bindBundleBox(BundleBox bundleBox) {
-    Consumer<Platform> filter = platform -> bundleBox.setBundleFilter(sdk -> sdk.getPlatform().getId().equals(platform.getId()));
+    // by the target - the platform of a bundle is not known while its machine is not connected
+    Consumer<Platform> filter = platform -> {
+      String targetId = myPlatformTargetId;
+      bundleBox.setBundleFilter(sdk -> Objects.equals(sdk.getPlatformTargetId(), targetId));
+    };
     filter.accept(myPlatform);
     addPlatformListener(filter);
   }
@@ -254,7 +264,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
    * @param location the new project of that machine, null to keep the entered one
    */
   @RequiredUIAccess
-  private void setPlatform(Platform platform, @Nullable Path location) {
+  private void setPlatform(Platform platform, @Nullable String targetId, @Nullable Path location) {
     if (location != null) {
       myNameTextBox.setValue(location.getFileName().toString(), false);
       myFileChooserController.setValue(location.toString(), false);
@@ -266,6 +276,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
       return;
     }
     myPlatform = platform;
+    myPlatformTargetId = targetId;
     myFileChooserController.setFileSystem(platform == Platform.current() ? null : platform.fs().getPath("/").getFileSystem());
 
     for (Consumer<Platform> listener : myPlatformListeners) {

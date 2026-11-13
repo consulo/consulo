@@ -438,8 +438,18 @@ public class BundleBox implements PseudoComponent {
             if (listModel.getSize() > 0) {
                 myOriginalComboBox.setValueByIndex(0);
             }
+            else {
+                // nothing is offered - e.g. no bundle on the chosen machine
+                myOriginalComboBox.setValue(null);
+            }
         }
-        else if (selectedItem == null || selectedItem instanceof NullBundleBoxItem) {
+        else if (selectedItem == null) {
+            // nothing was offered before - the first bundle which came, e.g. detected on the chosen machine
+            if (listModel.getSize() > 0) {
+                myOriginalComboBox.setValueByIndex(0);
+            }
+        }
+        else if (selectedItem instanceof NullBundleBoxItem) {
             setSelectedNoneBundle();
         }
         else {

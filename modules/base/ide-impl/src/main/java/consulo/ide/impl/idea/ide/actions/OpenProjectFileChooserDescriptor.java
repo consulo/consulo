@@ -73,7 +73,8 @@ public class OpenProjectFileChooserDescriptor extends FileChooserDescriptor {
         if (!showHiddenFiles && FileElement.isFileHidden(file)) {
             return false;
         }
-        return canOpen(file) || super.isFileVisible(file, showHiddenFiles) && file.isDirectory();
+        // a directory is shown anyway - asking the import providers lists it, which on another machine is a remote call per node
+        return super.isFileVisible(file, showHiddenFiles) && file.isDirectory() || canOpen(file);
     }
 
     /**

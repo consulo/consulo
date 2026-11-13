@@ -42,6 +42,8 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     private volatile ConnectionStatus myStatus = ConnectionStatus.DISCONNECTED;
     private volatile LocalizeValue myStatusText = LocalizeValue.empty();
     private volatile ServerRuntimeInstance<D> myRuntimeInstance;
+    // the callers waiting for the running connect - it is started once for all of them
+    private final List<ServerConnector.ConnectionCallback<D>> myPendingCallbacks = new ArrayList<>();
     private final Map<Project, LogManagersForProject> myPerProjectLogManagers = new ConcurrentHashMap<>();
     private final MyDeployments myAllDeployments;
 
@@ -308,6 +310,18 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     @Override
     public void connectIfNeeded(final ServerConnector.ConnectionCallback<D> callback) {
         ServerRuntimeInstance<D> instance = myRuntimeInstance;
+        if (instance == null) {
+            synchronized (myPendingCallbacks) {
+                instance = myRuntimeInstance;
+                if (instance == null) {
+                    myPendingCallbacks.add(callback);
+                    if (myPendingCallbacks.size() > 1) {
+                        // a connect is running - its result comes to this caller too
+                        return;
+                    }
+                }
+            }
+        }
         if (instance != null) {
             callback.connected(instance);
             return;
@@ -317,19 +331,32 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         myConnector.connect(new ServerConnector.ConnectionCallback<>() {
             @Override
             public void connected(ServerRuntimeInstance<D> instance) {
-                setStatus(ConnectionStatus.CONNECTED);
+                // the instance is there before anyone sees the connected status
                 myRuntimeInstance = instance;
+                setStatus(ConnectionStatus.CONNECTED);
                 setupProjectListener();
-                callback.connected(instance);
+                for (ServerConnector.ConnectionCallback<D> pending : takePendingCallbacks()) {
+                    pending.connected(instance);
+                }
             }
 
             @Override
             public void errorOccurred(LocalizeValue errorMessage) {
-                setStatus(ConnectionStatus.DISCONNECTED, errorMessage);
                 myRuntimeInstance = null;
-                callback.errorOccurred(errorMessage);
+                setStatus(ConnectionStatus.DISCONNECTED, errorMessage);
+                for (ServerConnector.ConnectionCallback<D> pending : takePendingCallbacks()) {
+                    pending.errorOccurred(errorMessage);
+                }
             }
         });
+    }
+
+    private List<ServerConnector.ConnectionCallback<D>> takePendingCallbacks() {
+        synchronized (myPendingCallbacks) {
+            List<ServerConnector.ConnectionCallback<D>> callbacks = new ArrayList<>(myPendingCallbacks);
+            myPendingCallbacks.clear();
+            return callbacks;
+        }
     }
 
     private void setStatus(ConnectionStatus status) {

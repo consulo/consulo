@@ -105,7 +105,8 @@ public class PlatformPredefinedBundlesImpl implements PlatformPredefinedBundles 
                 result.add(bundle);
             }
         }
-        LOG.info("Detected " + detected.size() + " bundle(s) of " + target.getId() + ", " + result.size() + " new");
+        LOG.info("Detected " + detected.size() + " bundle(s) of " + target.getId() + ", " + result.size() + " new: "
+            + result.stream().map(Sdk::getName).toList());
         return result;
     }
 

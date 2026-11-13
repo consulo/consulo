@@ -42,6 +42,7 @@ public class RemotePlatformNetwork implements PlatformNetwork {
     private static final Logger LOG = Logger.getInstance(RemotePlatformNetwork.class);
 
     private static final int BUFFER_SIZE = 64 * 1024;
+    private static final long CONNECT_RETRY_MS = 10_000;
 
     private final RemoteAgentConnection myConnection;
 
@@ -92,6 +93,33 @@ public class RemotePlatformNetwork implements PlatformNetwork {
             return myServerSocket.getLocalPort();
         }
 
+        /**
+         * The forwarded port accepts at once, the process behind it may still be starting (a debugger) - a refused connection
+         * is tried again for a while, a client of a loopback port does not expect it.
+         */
+        private PlatformSocket connectWhenListening() throws IOException {
+            long deadline = System.currentTimeMillis() + CONNECT_RETRY_MS;
+            while (true) {
+                try {
+                    return connect(myRemoteHost, myRemotePort);
+                }
+                catch (IOException e) {
+                    String message = e.getMessage();
+                    boolean refused = message != null && message.contains("refused");
+                    if (!refused || myServerSocket.isClosed() || System.currentTimeMillis() > deadline) {
+                        throw e;
+                    }
+                }
+                try {
+                    Thread.sleep(200);
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException(e);
+                }
+            }
+        }
+
         private void acceptLoop() {
             while (!myServerSocket.isClosed()) {
                 Socket socket;
@@ -112,7 +140,7 @@ public class RemotePlatformNetwork implements PlatformNetwork {
             PlatformSocket remote;
             try {
                 socket.setTcpNoDelay(true);
-                remote = connect(myRemoteHost, myRemotePort);
+                remote = connectWhenListening();
             }
             catch (IOException e) {
                 LOG.info("Cannot connect to " + myRemoteHost + ":" + myRemotePort + ": " + e.getMessage());

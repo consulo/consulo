@@ -21,6 +21,7 @@ import consulo.application.platform.PlatformTarget;
 import consulo.application.platform.PlatformTargetManager;
 import consulo.application.platform.PlatformTargetProvider;
 import consulo.platform.Platform;
+import consulo.platform.PlatformNioFileSystem;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -86,9 +87,14 @@ public class PlatformTargetManagerImpl implements PlatformTargetManager {
 
     @Override
     public @Nullable PlatformTarget findTargetOf(Path path) {
+        // by the id - a reconnected machine has a new file system
+        String platformId = path.getFileSystem() instanceof PlatformNioFileSystem nioFileSystem ? nioFileSystem.getPlatformId() : null;
         for (PlatformTarget target : getTargets()) {
             Platform platform = target.getPlatform();
-            if (platform != null && platform.user().homePath().getFileSystem() == path.getFileSystem()) {
+            if (platform == null) {
+                continue;
+            }
+            if (platformId != null ? platformId.equals(platform.getId()) : platform.user().homePath().getFileSystem() == path.getFileSystem()) {
                 return target;
             }
         }
