@@ -2,7 +2,6 @@
 package consulo.remoteServer.impl.internal.runtime;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.ApplicationManager;
 import consulo.remoteServer.configuration.RemoteServer;
 import consulo.remoteServer.configuration.RemoteServerListener;
 import consulo.remoteServer.configuration.ServerConfiguration;
@@ -53,7 +52,7 @@ public class ServerConnectionManagerImpl extends ServerConnectionManager {
     }
 
     void removeConnection(RemoteServer<?> server) {
-        ApplicationManager.getApplication().assertWriteAccessAllowed();
+        // a concurrent map - a disconnect may come from any thread, also from a background one
         myConnections.remove(server);
     }
 

@@ -67,15 +67,32 @@ class RemoteAgentServerConnector extends ServerConnector<DeploymentConfiguration
     }
 
     private void connect(ConnectionCallback<DeploymentConfiguration> callback, @Nullable String token) {
-        RemoteAgentConnection connection = new RemoteAgentConnection(
-            myPlatformId,
+        connect(myPlatformId,
             myConfiguration.getHost(),
             myConfiguration.getPort(),
             myConfiguration.isUseTls(),
             myConfiguration.getCertificateFingerprint(),
             token,
-            myExecutor
-        );
+            null,
+            myExecutor,
+            callback);
+    }
+
+    /**
+     * Connects to the agent and creates the remote platform. Blocking - call on a background thread.
+     *
+     * @param lease closed after the platform disconnects, or right away when connecting fails
+     */
+    static void connect(String platformId,
+                        String host,
+                        int port,
+                        boolean useTls,
+                        String certificateFingerprint,
+                        @Nullable String token,
+                        @Nullable AutoCloseable lease,
+                        Executor executor,
+                        ConnectionCallback<DeploymentConfiguration> callback) {
+        RemoteAgentConnection connection = new RemoteAgentConnection(platformId, host, port, useTls, certificateFingerprint, token, executor);
         try {
             connection.connect();
 
@@ -87,17 +104,31 @@ class RemoteAgentServerConnector extends ServerConnector<DeploymentConfiguration
                 VirtualFileManager.getInstance().findFileByNioPath(root);
             }
 
-            callback.connected(new RemoteAgentServerRuntimeInstance(connection, platform, nioFileSystem));
+            callback.connected(new RemoteAgentServerRuntimeInstance(connection, platform, nioFileSystem, lease));
         }
         catch (RemoteAgentException e) {
             connection.close();
+            closeLease(lease);
             LOG.warn(e.getMessage(), e);
             callback.errorOccurred(LocalizeValue.localizeTODO(e.getMessage()));
         }
         catch (Throwable e) {
             connection.close();
+            closeLease(lease);
             LOG.error(e);
             callback.errorOccurred(LocalizeValue.localizeTODO(String.valueOf(e.getMessage())));
+        }
+    }
+
+    static void closeLease(@Nullable AutoCloseable lease) {
+        if (lease == null) {
+            return;
+        }
+        try {
+            lease.close();
+        }
+        catch (Exception e) {
+            LOG.warn("Cannot stop the launched remote agent", e);
         }
     }
 }

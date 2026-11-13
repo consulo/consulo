@@ -25,6 +25,8 @@ import consulo.remoteServer.runtime.deployment.DeploymentLogManager;
 import consulo.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.remoteServer.runtime.deployment.ServerRuntimeInstance;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -38,13 +40,19 @@ class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstanc
     private final RemoteAgentConnection myConnection;
     private final RemotePlatform myPlatform;
     private final RemoteNioFileSystem myNioFileSystem;
+    private final @Nullable AutoCloseable myLease;
 
+    /**
+     * @param lease the launched agent, stopped after the connection is closed; {@code null} for a configured agent
+     */
     RemoteAgentServerRuntimeInstance(RemoteAgentConnection connection,
                                      RemotePlatform platform,
-                                     RemoteNioFileSystem nioFileSystem) {
+                                     RemoteNioFileSystem nioFileSystem,
+                                     @Nullable AutoCloseable lease) {
         myConnection = connection;
         myPlatform = platform;
         myNioFileSystem = nioFileSystem;
+        myLease = lease;
     }
 
     @Override
@@ -67,7 +75,14 @@ class RemoteAgentServerRuntimeInstance extends PlatformAwareServerRuntimeInstanc
         }
         catch (IOException ignored) {
         }
-        myConnection.close();
+        finally {
+            try {
+                myConnection.close();
+            }
+            finally {
+                RemoteAgentServerConnector.closeLease(myLease);
+            }
+        }
     }
 
     public RemoteAgentConnection getConnection() {

@@ -30,6 +30,8 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * NIO FileSystemProvider for remote agent connections.
@@ -46,8 +48,17 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
         return "remote-agent";
     }
 
+    // one file system per platform for the whole session: what was opened from it before a disconnect works again after
+    // the next connect
+    private static final ConcurrentMap<String, RemoteNioFileSystem> ourFileSystems = new ConcurrentHashMap<>();
+
     public RemoteNioFileSystem newFileSystem(RemoteAgentConnection connection) {
-        return new RemoteNioFileSystem(connection, this);
+        RemoteNioFileSystem fileSystem = ourFileSystems.computeIfAbsent(connection.getPlatformId(),
+            platformId -> new RemoteNioFileSystem(connection, this));
+        if (fileSystem.getConnection() != connection) {
+            fileSystem.reconnect(connection);
+        }
+        return fileSystem;
     }
 
     @Override

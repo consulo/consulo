@@ -34,18 +34,31 @@ import java.util.*;
  * @since 2026-03-17
  */
 public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSystem {
-    private final RemoteAgentConnection myConnection;
+    private final String myPlatformId;
     private final RemoteFileSystemProvider myProvider;
-    private final String myWorkspacePath;
+    // replaced on every reconnect: paths (and so open projects, settings, the VFS) keep this file system for good
+    private volatile RemoteAgentConnection myConnection;
+    private volatile String myWorkspacePath;
     // directory listings carry the attributes of every child - kept briefly, so a listing followed by the stat of each
     // child (what a VFS refresh or an indexing scan does) costs one round trip, not one per child
     private final RemoteFileMetadataCache myMetadataCache = new RemoteFileMetadataCache();
     private volatile boolean myOpen = true;
 
     RemoteNioFileSystem(RemoteAgentConnection connection, RemoteFileSystemProvider provider) {
+        myPlatformId = connection.getPlatformId();
         myConnection = connection;
         myProvider = provider;
         myWorkspacePath = connection.getWorkspacePath();
+    }
+
+    /**
+     * Binds this file system of the platform to a new connection of the same platform, and opens it again.
+     */
+    void reconnect(RemoteAgentConnection connection) {
+        myWorkspacePath = connection.getWorkspacePath();
+        myConnection = connection;
+        myMetadataCache.invalidateAll();
+        myOpen = true;
     }
 
     @Override
@@ -138,7 +151,7 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
 
     @Override
     public String getPlatformId() {
-        return myConnection.getPlatformId();
+        return myPlatformId;
     }
 
     String getWorkspacePath() {
