@@ -13,31 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.impl.internal.local;
+package consulo.virtualFileSystem.impl.internal.watcher;
 
 import consulo.localize.LocalizeValue;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 /**
- * @author dslomov
+ * Where a {@link PluggableFileWatcher} reports - the paths are of the file systems the watcher is applicable to.
  */
 public interface FileWatcherNotificationSink {
-  void notifyManualWatchRoots(Collection<String> roots);
+  void notifyManualWatchRoots(Collection<Path> roots);
 
-  void notifyMapping(Collection<? extends Pair<String, String>> mapping);
+  void notifyMapping(Collection<? extends Pair<Path, Path>> mapping);
 
-  void notifyDirtyPath(String path);
+  void notifyDirtyPath(Path path);
 
-  void notifyPathCreatedOrDeleted(String path);
+  void notifyPathCreatedOrDeleted(Path path);
 
-  void notifyDirtyDirectory(String path);
+  void notifyDirtyDirectory(Path path);
 
-  void notifyDirtyPathRecursive(String path);
+  void notifyDirtyPathRecursive(Path path);
 
-  void notifyReset(@Nullable String path);
+  /**
+   * Changes under the path were lost - or under every root of the watcher, when the path is null.
+   */
+  void notifyReset(@Nullable Path path);
 
   void notifyUserOnFailure(LocalizeValue cause);
 }

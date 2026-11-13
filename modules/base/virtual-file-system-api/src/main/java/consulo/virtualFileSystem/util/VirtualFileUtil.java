@@ -28,6 +28,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.io.*;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
@@ -914,7 +915,7 @@ public final class VirtualFileUtil {
         if (list.isEmpty()) {
             return;
         }
-        LocalFileSystem.getInstance().refreshFiles(list, async, recursive, null);
+        RefreshQueue.getInstance().refresh(async, recursive, null, list);
     }
 
     public static String getUrlForLibraryRoot(File libraryRoot) {

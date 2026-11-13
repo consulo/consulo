@@ -27,10 +27,12 @@ import consulo.externalSystem.impl.internal.util.cache.AsyncLocalCache;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -201,9 +203,9 @@ public class AutoImportProjectSettingsFilesTracker {
         }
         mySettingsAsyncSupplier.supply(settingsPaths -> {
             if (isRefreshVfs) {
-                List<File> settingsFiles = settingsPaths.stream().map(File::new).toList();
+                List<Path> settingsFiles = settingsPaths.stream().map(Path::of).toList();
                 if (!settingsFiles.isEmpty()) {
-                    LocalFileSystem.getInstance().refreshIoFiles(settingsFiles);
+                    RefreshQueue.getInstance().refreshPaths(false, false, null, settingsFiles);
                 }
             }
             callback.accept(settingsPaths);

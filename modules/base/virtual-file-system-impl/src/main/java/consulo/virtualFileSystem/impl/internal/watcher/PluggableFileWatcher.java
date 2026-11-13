@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.virtualFileSystem.impl.internal.local;
+package consulo.virtualFileSystem.impl.internal.watcher;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
@@ -21,6 +21,8 @@ import consulo.virtualFileSystem.ManagingFS;
 import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -28,6 +30,11 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PluggableFileWatcher {
+  /**
+   * True for a file system this watcher watches - roots of other file systems are never given to it.
+   */
+  public abstract boolean isApplicable(FileSystem fileSystem);
+
   public abstract void initialize(ManagingFS managingFS, FileWatcherNotificationSink notificationSink);
 
   public abstract void dispose();
@@ -39,7 +46,7 @@ public abstract class PluggableFileWatcher {
   /**
    * The inputs to this method must be absolute and free of symbolic links.
    */
-  public abstract void setWatchRoots(List<String> recursive, List<String> flat);
+  public abstract void setWatchRoots(List<Path> recursive, List<Path> flat);
 
   public void resetChangedPaths() {
   }

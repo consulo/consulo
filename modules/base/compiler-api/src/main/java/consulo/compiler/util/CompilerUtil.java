@@ -15,15 +15,6 @@
  */
 package consulo.compiler.util;
 
-import org.jspecify.annotations.Nullable;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFile;
-import java.util.stream.Stream;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.FileVisitResult;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.FileSystems;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.util.AsyncFileService;
@@ -40,19 +31,21 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.function.ThrowableRunnable;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * @author Jeka
@@ -114,93 +107,21 @@ public class CompilerUtil {
     }
 
     /**
-     * must not be called inside ReadAction
+     * Refreshes files of any machine. Must not be called inside ReadAction.
      */
-    public static void refreshIOFiles(Collection<File> files) {
+    public static void refreshFiles(Collection<Path> files) {
         if (!files.isEmpty()) {
-            LocalFileSystem.getInstance().refreshIoFiles(files);
-        }
-    }
-
-    public static void refreshIODirectories(Collection<File> files) {
-        if (!files.isEmpty()) {
-            LocalFileSystem.getInstance().refreshIoFiles(files, false, true, null);
+            RefreshQueue.getInstance().refreshPaths(false, false, null, files);
         }
     }
 
     /**
-     * Refreshes output directories of any machine - a directory of a remote platform through its virtual file system.
+     * Refreshes directories of any machine with their content. Must not be called inside ReadAction.
      */
     public static void refreshDirectories(Collection<Path> directories) {
-        List<File> localFiles = new ArrayList<>();
-        for (Path directory : directories) {
-            if (directory.getFileSystem() == FileSystems.getDefault()) {
-                localFiles.add(directory.toFile());
-            }
-            else {
-                VirtualFile file = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(directory);
-                if (file != null) {
-                    file.refresh(false, true);
-                }
-            }
+        if (!directories.isEmpty()) {
+            RefreshQueue.getInstance().refreshPaths(false, true, null, directories);
         }
-        refreshIODirectories(localFiles);
-    }
-
-    /**
-     * {@link #clearOutputDirectories} for output directories of any machine - the content goes, the directories stay.
-     */
-    public static void clearOutputDirectoryPaths(Collection<Path> outputDirectories) {
-        List<File> localDirectories = new ArrayList<>();
-        List<Path> remoteDirectories = new ArrayList<>();
-        for (Path directory : outputDirectories) {
-            if (directory.getFileSystem() == FileSystems.getDefault()) {
-                localDirectories.add(directory.toFile());
-            }
-            else {
-                remoteDirectories.add(directory);
-            }
-        }
-        clearOutputDirectories(localDirectories);
-
-        if (remoteDirectories.isEmpty()) {
-            return;
-        }
-        for (Path directory : remoteDirectories) {
-            try (Stream<Path> children = Files.list(directory)) {
-                for (Path child : (Iterable<Path>) children::iterator) {
-                    deleteRecursively(child);
-                }
-            }
-            catch (NoSuchFileException ignored) {
-            }
-            catch (IOException e) {
-                LOG.warn("Cannot clear " + directory, e);
-            }
-            try {
-                Files.createDirectories(directory);
-            }
-            catch (IOException e) {
-                LOG.warn("Cannot create " + directory, e);
-            }
-        }
-        refreshDirectories(remoteDirectories);
-    }
-
-    private static void deleteRecursively(Path path) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.deleteIfExists(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException exc) throws IOException {
-                Files.deleteIfExists(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
     }
 
     public static void addLocaleOptions(List<String> commandLine, boolean launcherUsed) {
@@ -248,32 +169,45 @@ public class CompilerUtil {
         LOG.info(activityName + " took " + duration + " ms: " + duration / 60000 + " min " + (duration % 60000) / 1000 + "sec");
     }
 
-    public static void clearOutputDirectories(Collection<File> outputDirectories) {
+    /**
+     * Clears output directories of any machine - the content goes, the directories stay (or we'll get rootsChanged() otherwise).
+     */
+    public static void clearOutputDirectories(Collection<Path> outputDirectories) {
         long start = System.currentTimeMillis();
-        // do not delete directories themselves, or we'll get rootsChanged() otherwise
-        Collection<File> filesToDelete = new ArrayList<>(outputDirectories.size() * 2);
-        for (File outputDirectory : outputDirectories) {
-            File[] files = outputDirectory.listFiles();
-            if (files != null) {
-                ContainerUtil.addAll(filesToDelete, files);
+        List<Path> pathsToDelete = new ArrayList<>(outputDirectories.size() * 2);
+        for (Path outputDirectory : outputDirectories) {
+            try (Stream<Path> children = Files.list(outputDirectory)) {
+                children.forEach(pathsToDelete::add);
+            }
+            catch (NoSuchFileException | NotDirectoryException ignored) {
+            }
+            catch (IOException e) {
+                LOG.warn("Cannot list " + outputDirectory, e);
             }
         }
-        if (filesToDelete.size() > 0) {
-            Application.get().getInstance(AsyncFileService.class).asyncDelete(filesToDelete);
-
-            // ensure output directories exist
-            for (File file : outputDirectories) {
-                file.mkdirs();
-            }
-            long clearStop = System.currentTimeMillis();
-
-            refreshIODirectories(outputDirectories);
-
-            long refreshStop = System.currentTimeMillis();
-
-            logDuration("Clearing output dirs", clearStop - start);
-            logDuration("Refreshing output directories", refreshStop - clearStop);
+        if (pathsToDelete.isEmpty()) {
+            return;
         }
+
+        Application.get().getInstance(AsyncFileService.class).asyncDelete(pathsToDelete.toArray(Path[]::new));
+
+        // ensure output directories exist
+        for (Path outputDirectory : outputDirectories) {
+            try {
+                Files.createDirectories(outputDirectory);
+            }
+            catch (IOException e) {
+                LOG.warn("Cannot create " + outputDirectory, e);
+            }
+        }
+        long clearStop = System.currentTimeMillis();
+
+        refreshDirectories(outputDirectories);
+
+        long refreshStop = System.currentTimeMillis();
+
+        logDuration("Clearing output dirs", clearStop - start);
+        logDuration("Refreshing output directories", refreshStop - clearStop);
     }
 
     @RequiredReadAction

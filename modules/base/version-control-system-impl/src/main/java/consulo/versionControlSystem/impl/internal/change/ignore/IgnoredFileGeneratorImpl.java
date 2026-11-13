@@ -19,6 +19,7 @@ import consulo.versionControlSystem.change.IgnoredFileGenerator;
 import consulo.versionControlSystem.change.IgnoredFileProvider;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.util.VcsImplUtil;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
@@ -147,7 +148,7 @@ public class IgnoredFileGeneratorImpl implements IgnoredFileGenerator {
         }
 
         markIgnoreFileRootAsGenerated(myProject, ignoreFile.getParent());
-        LocalFileSystem.getInstance().refreshIoFiles(List.of(ignoreFile), true, false, null);
+        RefreshQueue.getInstance().refreshPaths(true, false, null, List.of(ignoreFile.toPath()));
 
         if (openFile) {
             openFile(ignoreFile);

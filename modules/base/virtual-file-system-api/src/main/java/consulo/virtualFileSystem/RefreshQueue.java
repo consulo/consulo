@@ -22,6 +22,7 @@ import consulo.ui.ModalityState;
 import consulo.virtualFileSystem.event.VFileEvent;
 
 import org.jspecify.annotations.Nullable;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
@@ -61,6 +62,11 @@ public abstract class RefreshQueue {
     session.addAllFiles(files);
     session.launch();
   }
+
+  /**
+   * Refreshes the files of the paths - of any machine; a path the virtual file system does not know yet is found first.
+   */
+  public abstract void refreshPaths(boolean async, boolean recursive, @Nullable Runnable finishRunnable, Collection<Path> paths);
 
   public abstract void processSingleEvent(VFileEvent event);
 

@@ -35,6 +35,7 @@ import consulo.util.collection.Sets;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.ref.SimpleReference;
 
+import java.nio.file.Path;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -247,17 +248,17 @@ public class GenericCompilerRunner {
         }
 
         final List<Item> processedItems = new ArrayList<>();
-        final List<File> filesToRefresh = new ArrayList<>();
-        final List<File> dirsToRefresh = new ArrayList<>();
+        final List<Path> filesToRefresh = new ArrayList<>();
+        final List<Path> dirsToRefresh = new ArrayList<>();
         instance.processItems(target, toProcess, obsoleteItems, new GenericCompilerInstance.OutputConsumer<>() {
             @Override
             public void addFileToRefresh(File file) {
-                filesToRefresh.add(file);
+                filesToRefresh.add(file.toPath());
             }
 
             @Override
             public void addDirectoryToRefresh(File dir) {
-                dirsToRefresh.add(dir);
+                dirsToRefresh.add(dir.toPath());
             }
 
             @Override
@@ -274,8 +275,8 @@ public class GenericCompilerRunner {
                 for (Key key : toRemove) {
                     cache.remove(targetId, key);
                 }
-                CompilerUtil.refreshIOFiles(filesToRefresh);
-                CompilerUtil.refreshIODirectories(dirsToRefresh);
+                CompilerUtil.refreshFiles(filesToRefresh);
+                CompilerUtil.refreshDirectories(dirsToRefresh);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("refreshed " + filesToRefresh.size() + " files and " + dirsToRefresh.size() + " dirs");
                     for (int i = 0; i < getItemsCountToShowInLog(filesToRefresh.size()); i++) {

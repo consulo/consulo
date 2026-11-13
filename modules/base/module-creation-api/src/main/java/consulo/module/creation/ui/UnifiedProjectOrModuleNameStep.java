@@ -15,10 +15,15 @@
  */
 package consulo.module.creation.ui;
 
+import consulo.application.Application;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.creation.NewModuleWizardContext;
 import consulo.module.creation.localize.ModuleCreationLocalize;
+import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -28,7 +33,8 @@ import consulo.ui.ex.wizard.WizardStep;
 import consulo.ui.util.FormBuilder;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -85,7 +91,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
           myUserPathEntered = true;
 
           if (!myUserNameEntered) {
-            int lastSeparatorIndex = path.lastIndexOf(File.separator);
+            int lastSeparatorIndex = lastSeparatorIndex(path);
             if (lastSeparatorIndex >= 0 && (lastSeparatorIndex + 1) < path.length()) {
               myNameTextBox.setValue(path.substring(lastSeparatorIndex + 1), false);
             }
@@ -94,7 +100,9 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
       }
     });
 
-    builder.fileChooserDescriptor(FileChooserDescriptorFactory.createSingleFolderDescriptor());
+    // a new project may be created on any machine - a module is of the machine of its project
+    FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+    builder.fileChooserDescriptor(myContext.isNewProject() ? descriptor.withAnyPlatform() : descriptor.withPlatform(myContext.getPlatform()));
 
     myFileChooserController = builder.build();
 
@@ -113,7 +121,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
 
       String name = myNameTextBox.getValue();
       String path = myFileChooserController.getValue().trim();
-      int lastSeparatorIndex = path.lastIndexOf(File.separator);
+      int lastSeparatorIndex = lastSeparatorIndex(path);
 
       if (lastSeparatorIndex >= 0) {
         String newPath = path.substring(0, lastSeparatorIndex + 1) + name;
@@ -130,6 +138,11 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
     return formBuilder.build();
   }
 
+  private static int lastSeparatorIndex(String path) {
+    // a path of any machine
+    return Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+  }
+
   @RequiredUIAccess
   protected void extend(FormBuilder builder, Disposable uiDisposable) {
     // for plugins
@@ -139,11 +152,26 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   public void onStepLeave(C c) {
     c.setName(getName());
     c.setPath(getPath());
+    c.setPlatform(getPlatform());
   }
 
   @RequiredUIAccess
   public String getPath() {
     return myFileChooserController.getValue();
+  }
+
+  /**
+   * The machine of the chosen location - the location may be chosen on any machine for a new project.
+   */
+  @RequiredUIAccess
+  public Platform getPlatform() {
+    Path path = myFileChooserController.getPathValue();
+    if (path == null || path.getFileSystem() == FileSystems.getDefault()) {
+      return myContext.isNewProject() ? Platform.current() : myContext.getPlatform();
+    }
+    PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTargetOf(path);
+    Platform platform = target != null ? target.getPlatform() : null;
+    return platform != null ? platform : myContext.getPlatform();
   }
 
   public String getName() {

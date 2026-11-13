@@ -204,7 +204,7 @@ public final class VfsAwareMapIndexStorage<Key, Value> extends MapIndexStorage<K
 
                 if (hashMaskSet == null) {
                     if (useCachedHashIds && myLastScannedId != 0) {
-                        Application.get().getInstance(AsyncFileService.class).asyncDelete(fileWithCaches);
+                        Application.get().getInstance(AsyncFileService.class).asyncDelete(fileWithCaches.toPath());
                     }
 
                     hashMaskSet = new TIntHashSet(1000);

@@ -186,50 +186,6 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
     }
 
     @Override
-    public void refreshIoFiles(Iterable<? extends File> files) {
-        refreshIoFiles(files, false, false, null);
-    }
-
-    @Override
-    public void refreshIoFiles(Iterable<? extends File> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
-        VirtualFileManagerEx manager = (VirtualFileManagerEx) VirtualFileManager.getInstance();
-
-        Application app = Application.get();
-        boolean fireCommonRefreshSession = app.isDispatchThread() || app.isWriteAccessAllowed();
-        if (fireCommonRefreshSession) {
-            manager.fireBeforeRefreshStart(false);
-        }
-
-        try {
-            List<VirtualFile> filesToRefresh = new ArrayList<>();
-
-            for (File file : files) {
-                VirtualFile virtualFile = refreshAndFindFileByIoFile(file);
-                if (virtualFile != null) {
-                    filesToRefresh.add(virtualFile);
-                }
-            }
-
-            RefreshQueue.getInstance().refresh(async, recursive, onFinish, filesToRefresh);
-        }
-        finally {
-            if (fireCommonRefreshSession) {
-                manager.fireAfterRefreshFinish(false);
-            }
-        }
-    }
-
-    @Override
-    public void refreshFiles(Iterable<? extends VirtualFile> files) {
-        refreshFiles(files, false, false, null);
-    }
-
-    @Override
-    public void refreshFiles(Iterable<? extends VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
-        RefreshQueue.getInstance().refresh(async, recursive, onFinish, ContainerUtil.toCollection(files));
-    }
-
-    @Override
     public void registerAuxiliaryFileOperationsHandler(LocalFileOperationsHandler handler) {
         if (myHandlers.contains(handler)) {
             LOG.error("Handler " + handler + " already registered.");

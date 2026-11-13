@@ -17,10 +17,13 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.ManagingFS;
-import consulo.virtualFileSystem.impl.internal.local.FileWatcherNotificationSink;
-import consulo.virtualFileSystem.impl.internal.local.PluggableFileWatcher;
+import consulo.virtualFileSystem.impl.internal.watcher.FileWatcherNotificationSink;
+import consulo.virtualFileSystem.impl.internal.watcher.PluggableFileWatcher;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -35,8 +38,8 @@ import java.util.List;
 public class HeadlessFileWatcher extends PluggableFileWatcher {
     private static volatile boolean ourEnabled;
     private static volatile @Nullable FileWatcherNotificationSink ourSink;
-    private static volatile List<String> ourRecursiveRoots = List.of();
-    private static volatile List<String> ourFlatRoots = List.of();
+    private static volatile List<Path> ourRecursiveRoots = List.of();
+    private static volatile List<Path> ourFlatRoots = List.of();
 
     /**
      * Makes the watcher operational. The roots registered after this call are watched.
@@ -51,40 +54,40 @@ public class HeadlessFileWatcher extends PluggableFileWatcher {
         ourFlatRoots = List.of();
     }
 
-    public static List<String> getRecursiveRoots() {
+    public static List<Path> getRecursiveRoots() {
         return ourRecursiveRoots;
     }
 
-    public static List<String> getFlatRoots() {
+    public static List<Path> getFlatRoots() {
         return ourFlatRoots;
     }
 
     /**
      * The content or the attributes of the file at the path changed.
      */
-    public static void notifyDirtyPath(String path) {
+    public static void notifyDirtyPath(Path path) {
         sink().notifyDirtyPath(path);
     }
 
     /**
      * A file was created or deleted at the path.
      */
-    public static void notifyPathCreatedOrDeleted(String path) {
+    public static void notifyPathCreatedOrDeleted(Path path) {
         sink().notifyPathCreatedOrDeleted(path);
     }
 
-    public static void notifyDirtyDirectory(String path) {
+    public static void notifyDirtyDirectory(Path path) {
         sink().notifyDirtyDirectory(path);
     }
 
-    public static void notifyDirtyPathRecursive(String path) {
+    public static void notifyDirtyPathRecursive(Path path) {
         sink().notifyDirtyPathRecursive(path);
     }
 
     /**
      * The watcher lost events (e.g. the event queue overflowed) and everything under the path, or every root, may be stale.
      */
-    public static void notifyReset(@Nullable String path) {
+    public static void notifyReset(@Nullable Path path) {
         sink().notifyReset(path);
     }
 
@@ -94,6 +97,11 @@ public class HeadlessFileWatcher extends PluggableFileWatcher {
             throw new IllegalStateException("The headless file watcher is not enabled");
         }
         return sink;
+    }
+
+    @Override
+    public boolean isApplicable(FileSystem fileSystem) {
+        return fileSystem == FileSystems.getDefault();
     }
 
     @Override
@@ -117,7 +125,7 @@ public class HeadlessFileWatcher extends PluggableFileWatcher {
     }
 
     @Override
-    public void setWatchRoots(List<String> recursive, List<String> flat) {
+    public void setWatchRoots(List<Path> recursive, List<Path> flat) {
         if (!isOperational()) {
             return;
         }

@@ -1,0 +1,44 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.test.light.impl;
+
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.virtualFileSystem.FileWatchService;
+import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+
+/**
+ * Nothing is watched - the light file system reads the disk directly.
+ *
+ * @author VISTALL
+ * @since 2026-11-13
+ */
+@Singleton
+@ServiceImpl(profiles = ComponentProfiles.LIGHT_TEST)
+public class LightFileWatchService implements FileWatchService {
+    @Override
+    public Set<WatchRequest> replaceWatchedRoots(Collection<WatchRequest> watchRequests,
+                                                 @Nullable Collection<Path> recursiveRoots,
+                                                 @Nullable Collection<Path> flatRoots) {
+        return Collections.emptySet();
+    }
+}

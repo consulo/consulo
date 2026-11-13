@@ -39,13 +39,15 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.FileWatchService;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -72,7 +74,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       return myModificationCount;
     }
   };
-  private final Map<String, LocalFileSystem.WatchRequest> myWatchedOutputs = new HashMap<>();
+  private final Map<String, FileWatchService.WatchRequest> myWatchedOutputs = new HashMap<>();
 
   @Inject
   public ArtifactManagerImpl(Project project, PackagingElementFactory packagingElementFactory, VirtualFileManager virtualFileManager) {
@@ -267,7 +269,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
   @Override
   public void dispose() {
-    LocalFileSystem.getInstance().removeWatchedRoots(myWatchedOutputs.values());
+    FileWatchService.getInstance().removeWatchedRoots(myWatchedOutputs.values());
   }
 
   private void updateWatchedRoots() {
@@ -283,15 +285,29 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
       }
     }
 
-    List<LocalFileSystem.WatchRequest> requestsToRemove = new ArrayList<>();
+    List<FileWatchService.WatchRequest> requestsToRemove = new ArrayList<>();
     for (String path : pathsToRemove) {
-      LocalFileSystem.WatchRequest request = myWatchedOutputs.remove(path);
+      FileWatchService.WatchRequest request = myWatchedOutputs.remove(path);
       ContainerUtil.addIfNotNull(requestsToRemove, request);
     }
 
-    Set<LocalFileSystem.WatchRequest> newRequests = LocalFileSystem.getInstance().replaceWatchedRoots(requestsToRemove, toAdd, null);
-    for (LocalFileSystem.WatchRequest request : newRequests) {
-      myWatchedOutputs.put(request.getRootPath(), request);
+    // the output paths are of the machine of the project
+    Map<Path, String> outputByRoot = new HashMap<>();
+    for (String path : toAdd) {
+      try {
+        outputByRoot.put(myProject.getPlatform().fs().getPath(path).normalize(), path);
+      }
+      catch (InvalidPathException e) {
+        LOG.debug(e);
+      }
+    }
+
+    Set<FileWatchService.WatchRequest> newRequests = FileWatchService.getInstance().replaceWatchedRoots(requestsToRemove, outputByRoot.keySet(), null);
+    for (FileWatchService.WatchRequest request : newRequests) {
+      String path = outputByRoot.get(request.getRoot());
+      if (path != null) {
+        myWatchedOutputs.put(path, request);
+      }
     }
   }
 

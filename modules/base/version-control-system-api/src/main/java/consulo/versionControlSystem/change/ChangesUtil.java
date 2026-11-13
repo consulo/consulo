@@ -349,10 +349,6 @@ public class ChangesUtil {
     }
 
 
-    public static List<File> filePathsToFiles(Collection<FilePath> filePaths) {
-        return filePaths.stream().map(FilePath::getIOFile).collect(toList());
-    }
-
     public static boolean hasFileChanges(Collection<Change> changes) {
         return changes.stream().map(ChangesUtil::getFilePath).anyMatch(path -> !path.isDirectory());
     }

@@ -21,8 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.ui.UIAccess;
-import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.FileWatchService;
 
 import java.io.File;
 import java.util.Collections;
@@ -39,10 +38,11 @@ public class CompilerBackgroundActivity implements BackgroundStartupActivity {
         File projectGeneratedSrcRoot = CompilerPaths.getGeneratedDataDirectory(project);
         projectGeneratedSrcRoot.mkdirs();
 
-        LocalFileSystem lfs = LocalFileSystem.getInstance();
+        FileWatchService watchService = FileWatchService.getInstance();
 
-        Set<LocalFileSystem.WatchRequest> myWatchRoots = lfs.addRootsToWatch(Collections.singletonList(FileUtil.toCanonicalPath(projectGeneratedSrcRoot.getPath())), true);
+        Set<FileWatchService.WatchRequest> myWatchRoots =
+            watchService.addRootsToWatch(Collections.singletonList(projectGeneratedSrcRoot.toPath().toAbsolutePath().normalize()), true);
 
-        Disposer.register(project, () -> lfs.removeWatchedRoots(myWatchRoots));
+        Disposer.register(project, () -> watchService.removeWatchedRoots(myWatchRoots));
     }
 }

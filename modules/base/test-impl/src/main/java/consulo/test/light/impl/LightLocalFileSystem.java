@@ -33,10 +33,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Read-only {@link LocalFileSystem} which reads the disk directly, without persistent caches, refresh or file watching.
@@ -74,37 +71,6 @@ public class LightLocalFileSystem extends LocalFileSystem {
 
     @Override
     public void refresh(boolean asynchronous) {
-    }
-
-    @Override
-    public void refreshIoFiles(Iterable<? extends File> files) {
-    }
-
-    @Override
-    public void refreshIoFiles(Iterable<? extends File> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
-        if (onFinish != null) {
-            onFinish.run();
-        }
-    }
-
-    @Override
-    public void refreshFiles(Iterable<? extends VirtualFile> files) {
-    }
-
-    @Override
-    public void refreshFiles(Iterable<? extends VirtualFile> files, boolean async, boolean recursive, @Nullable Runnable onFinish) {
-        if (onFinish != null) {
-            onFinish.run();
-        }
-    }
-
-    @Override
-    public Set<WatchRequest> replaceWatchedRoots(
-        Collection<WatchRequest> watchRequests,
-        @Nullable Collection<String> recursiveRoots,
-        @Nullable Collection<String> flatRoots
-    ) {
-        return Collections.emptySet();
     }
 
     @Override

@@ -140,7 +140,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
             }
         });
 
-        List<File> filesToRefresh = new ArrayList<>();
+        List<Path> filesToRefresh = new ArrayList<>();
         // do actual copy outside of read action to reduce the time the application is locked on it
         while (!copyCommands.isEmpty()) {
             CopyCommand command = copyCommands.removeFirst();
@@ -162,7 +162,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
         }
 
         if (!filesToRefresh.isEmpty()) {
-            CompilerUtil.refreshIOFiles(filesToRefresh);
+            CompilerUtil.refreshFiles(filesToRefresh);
             filesToRefresh.clear();
         }
 
@@ -220,7 +220,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
             mySourceFile = sourceFile;
         }
 
-        public OutputItem copy(List<File> filesToRefresh) throws IOException {
+        public OutputItem copy(List<Path> filesToRefresh) throws IOException {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Copying " + myFromPath + " to " + myToPath);
             }
@@ -230,7 +230,7 @@ public class ResourceCompilerImpl implements ResourceCompiler {
                 Files.createDirectories(parent);
             }
             Files.copy(mySourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
-            filesToRefresh.add(targetFile.toFile());
+            filesToRefresh.add(targetFile);
             return new OutputItem(myToPath, mySourceFile);
         }
 

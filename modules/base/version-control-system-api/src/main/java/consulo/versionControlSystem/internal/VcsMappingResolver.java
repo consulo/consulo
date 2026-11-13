@@ -81,6 +81,25 @@ public final class VcsMappingResolver {
     }
 
     /**
+     * The path of the directory of a mapping on its machine - for watching it.
+     */
+    public static @Nullable Path toNioPath(Project project, String path) {
+        if (path.isEmpty()) {
+            return null;
+        }
+        PlatformPathVirtualFileSystem platformFileSystem = getPlatformFileSystem();
+        if (platformFileSystem != null && path.charAt(0) != '/' && platformFileSystem.isPlatformPath(path)) {
+            return platformFileSystem.toNioPath(path);
+        }
+        try {
+            return project.isDefault() ? Path.of(path) : project.getPlatform().fs().getPath(path);
+        }
+        catch (InvalidPathException e) {
+            return null;
+        }
+    }
+
+    /**
      * The url of the directory of a mapping, for a pointer - without resolving it.
      */
     public static String toUrl(Project project, String path) {

@@ -1,5 +1,5 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.virtualFileSystem.impl.internal.local;
+package consulo.virtualFileSystem.impl.internal.watcher;
 
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -14,8 +14,12 @@ import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import java.io.File;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -24,15 +28,18 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
+ * Watches roots of any file system - each root goes to the {@link PluggableFileWatcher pluggable watchers} applicable to its
+ * file system, their changes are collected as dirty paths.
+ *
  * @author max
  */
 public class FileWatcher {
     private static final Logger LOG = Logger.getInstance(FileWatcher.class);
 
     static class DirtyPaths {
-        final Set<String> dirtyPaths = new HashSet<>();
-        final Set<String> dirtyPathsRecursive = new HashSet<>();
-        final Set<String> dirtyDirectories = new HashSet<>();
+        final Set<Path> dirtyPaths = new HashSet<>();
+        final Set<Path> dirtyPathsRecursive = new HashSet<>();
+        final Set<Path> dirtyDirectories = new HashSet<>();
 
         static final DirtyPaths EMPTY = new DirtyPaths();
 
@@ -40,39 +47,40 @@ public class FileWatcher {
             return dirtyPaths.isEmpty() && dirtyPathsRecursive.isEmpty() && dirtyDirectories.isEmpty();
         }
 
-        private void addDirtyPath(String path) {
+        private void addDirtyPath(Path path) {
             if (!dirtyPathsRecursive.contains(path)) {
                 dirtyPaths.add(path);
             }
         }
 
-        private void addDirtyPathRecursive(String path) {
+        private void addDirtyPathRecursive(Path path) {
             dirtyPaths.remove(path);
             dirtyPathsRecursive.add(path);
         }
     }
 
     private final ManagingFS myManagingFS;
-    private final MyFileWatcherNotificationSink myNotificationSink;
     private final ExtensionPoint<PluggableFileWatcher> myWatchers;
+    // every watcher reports to its own sink - the manual roots and the failures are of that watcher
+    private final Map<PluggableFileWatcher, MyFileWatcherNotificationSink> mySinks = new ConcurrentHashMap<>();
     private final AtomicBoolean myFailureShown = new AtomicBoolean(false);
     private final ExecutorService myFileWatcherExecutor = AppExecutorUtil.createBoundedApplicationPoolExecutor("File Watcher", 1);
     private final AtomicReference<Future<?>> myLastTask = new AtomicReference<>(null);
 
+    private final Object myLock = new Object();
+    private DirtyPaths myDirtyPaths = new DirtyPaths();
     private volatile CanonicalPathMap myPathMap = new CanonicalPathMap();
-    private volatile List<Collection<String>> myManualWatchRoots = Collections.emptyList();
 
     FileWatcher(Application application, ManagingFS managingFS) {
         myManagingFS = managingFS;
-        myNotificationSink = new MyFileWatcherNotificationSink();
         myWatchers = application.getExtensionPoint(PluggableFileWatcher.class);
 
         myFileWatcherExecutor.execute(() -> {
-            myWatchers.forEach(pluggableFileWatcher -> {
-                for (PluggableFileWatcher watcher : myWatchers) {
-                    watcher.initialize(myManagingFS, myNotificationSink);
-                }
-            });
+            for (PluggableFileWatcher watcher : myWatchers) {
+                MyFileWatcherNotificationSink sink = new MyFileWatcherNotificationSink(watcher);
+                mySinks.put(watcher, sink);
+                watcher.initialize(myManagingFS, sink);
+            }
         });
     }
 
@@ -103,6 +111,18 @@ public class FileWatcher {
         return false;
     }
 
+    /**
+     * True when the changes of the file system are watched.
+     */
+    public boolean isOperational(FileSystem fileSystem) {
+        for (PluggableFileWatcher watcher : myWatchers) {
+            if (watcher.isApplicable(fileSystem) && watcher.isOperational()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isSettingRoots() {
         Future<?> lastTask = myLastTask.get();  // a new task may come after the read, but this seem to be an acceptable race
         if (lastTask != null && !lastTask.isDone()) {
@@ -116,41 +136,50 @@ public class FileWatcher {
         return false;
     }
 
-    
     DirtyPaths getDirtyPaths() {
-        return myNotificationSink.getDirtyPaths();
-    }
+        DirtyPaths dirtyPaths = DirtyPaths.EMPTY;
 
-    
-    public Collection<String> getManualWatchRoots() {
-        List<Collection<String>> manualWatchRoots = myManualWatchRoots;
-
-        Set<String> result = null;
-        for (Collection<String> roots : manualWatchRoots) {
-            if (result == null) {
-                result = new HashSet<>(roots);
-            }
-            else {
-                result.retainAll(roots);
+        synchronized (myLock) {
+            if (!myDirtyPaths.isEmpty()) {
+                dirtyPaths = myDirtyPaths;
+                myDirtyPaths = new DirtyPaths();
             }
         }
 
-        return result != null ? result : Collections.emptyList();
+        myWatchers.forEach(PluggableFileWatcher::resetChangedPaths);
+
+        return dirtyPaths;
+    }
+
+    /**
+     * The roots no watcher can watch - they are refreshed by scanning. Every watcher reports the roots of its file systems.
+     */
+    public Collection<Path> getManualWatchRoots() {
+        Set<Path> result = new HashSet<>();
+        for (MyFileWatcherNotificationSink sink : mySinks.values()) {
+            result.addAll(sink.getManualWatchRoots());
+        }
+        return result;
     }
 
     /**
      * Clients should take care of not calling this method in parallel.
      */
-    void setWatchRoots(List<String> recursive, List<String> flat) {
+    void setWatchRoots(List<Path> recursive, List<Path> flat) {
         Future<?> prevTask = myLastTask.getAndSet(myFileWatcherExecutor.submit(() -> {
             try {
                 CanonicalPathMap pathMap = new CanonicalPathMap(recursive, flat);
 
                 myPathMap = pathMap;
-                myManualWatchRoots = Lists.newLockFreeCopyOnWriteList();
+                for (MyFileWatcherNotificationSink sink : mySinks.values()) {
+                    sink.resetManualWatchRoots();
+                }
 
                 for (PluggableFileWatcher watcher : myWatchers) {
-                    watcher.setWatchRoots(pathMap.getCanonicalRecursiveWatchRoots(), pathMap.getCanonicalFlatWatchRoots());
+                    watcher.setWatchRoots(
+                        applicableRoots(watcher, pathMap.getCanonicalRecursiveWatchRoots()),
+                        applicableRoots(watcher, pathMap.getCanonicalFlatWatchRoots())
+                    );
                 }
             }
             catch (RuntimeException | Error e) {
@@ -162,6 +191,16 @@ public class FileWatcher {
         }
     }
 
+    private static List<Path> applicableRoots(PluggableFileWatcher watcher, List<Path> roots) {
+        List<Path> result = new ArrayList<>(roots.size());
+        for (Path root : roots) {
+            if (watcher.isApplicable(root.getFileSystem())) {
+                result.add(root);
+            }
+        }
+        return result;
+    }
+
     public void notifyOnFailure(LocalizeValue cause) {
         LOG.warn(cause.get());
 
@@ -171,33 +210,38 @@ public class FileWatcher {
     }
 
     private class MyFileWatcherNotificationSink implements FileWatcherNotificationSink {
-        private final Object myLock = new Object();
-        private DirtyPaths myDirtyPaths = new DirtyPaths();
+        private final PluggableFileWatcher myWatcher;
+        private volatile List<Collection<Path>> myManualWatchRoots = Collections.emptyList();
 
-        
-        DirtyPaths getDirtyPaths() {
-            DirtyPaths dirtyPaths = DirtyPaths.EMPTY;
+        private MyFileWatcherNotificationSink(PluggableFileWatcher watcher) {
+            myWatcher = watcher;
+        }
 
-            synchronized (myLock) {
-                if (!myDirtyPaths.isEmpty()) {
-                    dirtyPaths = myDirtyPaths;
-                    myDirtyPaths = new DirtyPaths();
+        void resetManualWatchRoots() {
+            myManualWatchRoots = Lists.newLockFreeCopyOnWriteList();
+        }
+
+        Collection<Path> getManualWatchRoots() {
+            Set<Path> result = null;
+            for (Collection<Path> roots : myManualWatchRoots) {
+                if (result == null) {
+                    result = new HashSet<>(roots);
+                }
+                else {
+                    result.retainAll(roots);
                 }
             }
-
-            myWatchers.forEach(PluggableFileWatcher::resetChangedPaths);
-
-            return dirtyPaths;
+            return result != null ? result : Collections.emptyList();
         }
 
         @Override
-        public void notifyManualWatchRoots(Collection<String> roots) {
+        public void notifyManualWatchRoots(Collection<Path> roots) {
             myManualWatchRoots.add(roots.isEmpty() ? Collections.emptySet() : new HashSet<>(roots));
             notifyOnEvent(OTHER);
         }
 
         @Override
-        public void notifyMapping(Collection<? extends Pair<String, String>> mapping) {
+        public void notifyMapping(Collection<? extends Pair<Path, Path>> mapping) {
             if (!mapping.isEmpty()) {
                 myPathMap.addMapping(mapping);
             }
@@ -205,71 +249,87 @@ public class FileWatcher {
         }
 
         @Override
-        public void notifyDirtyPath(String path) {
-            Collection<String> paths = myPathMap.getWatchedPaths(path, true);
+        public void notifyDirtyPath(Path path) {
+            Collection<Path> paths = myPathMap.getWatchedPaths(path, true);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
-                    for (String eachPath : paths) {
+                    for (Path eachPath : paths) {
                         myDirtyPaths.addDirtyPath(eachPath);
                     }
                 }
             }
-            notifyOnEvent(path);
+            notifyOnEvent(path.toString());
         }
 
         @Override
-        public void notifyPathCreatedOrDeleted(String path) {
-            Collection<String> paths = myPathMap.getWatchedPaths(path, true);
+        public void notifyPathCreatedOrDeleted(Path path) {
+            Collection<Path> paths = myPathMap.getWatchedPaths(path, true);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
-                    for (String p : paths) {
+                    for (Path p : paths) {
                         myDirtyPaths.addDirtyPathRecursive(p);
-                        String parentPath = new File(p).getParent();
+                        Path parentPath = p.getParent();
                         if (parentPath != null) {
                             myDirtyPaths.addDirtyPath(parentPath);
                         }
                     }
                 }
             }
-            notifyOnEvent(path);
+            notifyOnEvent(path.toString());
         }
 
         @Override
-        public void notifyDirtyDirectory(String path) {
-            Collection<String> paths = myPathMap.getWatchedPaths(path, false);
+        public void notifyDirtyDirectory(Path path) {
+            Collection<Path> paths = myPathMap.getWatchedPaths(path, false);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
                     myDirtyPaths.dirtyDirectories.addAll(paths);
                 }
             }
-            notifyOnEvent(path);
+            notifyOnEvent(path.toString());
         }
 
         @Override
-        public void notifyDirtyPathRecursive(String path) {
-            Collection<String> paths = myPathMap.getWatchedPaths(path, false);
+        public void notifyDirtyPathRecursive(Path path) {
+            Collection<Path> paths = myPathMap.getWatchedPaths(path, false);
             if (!paths.isEmpty()) {
                 synchronized (myLock) {
-                    for (String each : paths) {
+                    for (Path each : paths) {
                         myDirtyPaths.addDirtyPathRecursive(each);
                     }
                 }
             }
-            notifyOnEvent(path);
+            notifyOnEvent(path.toString());
         }
 
         @Override
-        public void notifyReset(@Nullable String path) {
+        public void notifyReset(@Nullable Path path) {
             if (path != null) {
                 synchronized (myLock) {
                     myDirtyPaths.addDirtyPathRecursive(path);
                 }
             }
             else {
-                VirtualFile[] roots = myManagingFS.getLocalRoots();
+                List<Path> roots = new ArrayList<>();
+                if (myWatcher.isApplicable(FileSystems.getDefault())) {
+                    // every local root - as the native watcher may have missed anything
+                    for (VirtualFile root : myManagingFS.getLocalRoots()) {
+                        try {
+                            roots.add(Path.of(root.getPresentableUrl()));
+                        }
+                        catch (InvalidPathException e) {
+                            LOG.debug(e);
+                        }
+                    }
+                }
+                for (Path root : myPathMap.getRecursiveWatchRoots()) {
+                    if (myWatcher.isApplicable(root.getFileSystem()) && root.getFileSystem() != FileSystems.getDefault()) {
+                        roots.add(root);
+                    }
+                }
                 synchronized (myLock) {
-                    for (VirtualFile root : roots) {
-                        myDirtyPaths.addDirtyPathRecursive(root.getPresentableUrl());
+                    for (Path root : roots) {
+                        myDirtyPaths.addDirtyPathRecursive(root);
                     }
                 }
             }

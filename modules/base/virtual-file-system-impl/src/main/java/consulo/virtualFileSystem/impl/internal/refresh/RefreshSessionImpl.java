@@ -16,7 +16,7 @@ import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.impl.internal.AsyncEventSupport;
 import consulo.virtualFileSystem.impl.internal.VfsThreadingUtil;
-import consulo.virtualFileSystem.impl.internal.local.LocalFileSystemImpl;
+import consulo.virtualFileSystem.impl.internal.watcher.FileWatchServiceImpl;
 import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.virtualFileSystem.internal.VirtualFileSystemInternalHelper;
 import org.jspecify.annotations.Nullable;
@@ -129,9 +129,9 @@ public class RefreshSessionImpl extends RefreshSession {
     }
     boolean forceRefresh = !myIsRecursive && !myIsAsync;  // shallow sync refresh (e.g., project config files on open)
 
-    LocalFileSystem fs = LocalFileSystem.getInstance();
-    if (!forceRefresh && fs instanceof LocalFileSystemImpl localFileSystem) {
-      localFileSystem.markSuspiciousFilesDirty(workQueue);
+    FileWatchServiceImpl watchService = FileWatchServiceImpl.getInstanceIfImpl();
+    if (!forceRefresh && watchService != null) {
+      watchService.markSuspiciousFilesDirty(workQueue);
     }
 
     if (LOG.isTraceEnabled()) {

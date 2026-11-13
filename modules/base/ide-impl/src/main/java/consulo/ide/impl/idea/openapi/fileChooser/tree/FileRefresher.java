@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser.tree;
 
+import consulo.virtualFileSystem.FileWatchService;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposable;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import java.nio.file.Path;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -75,9 +77,10 @@ public class FileRefresher implements Disposable {
    * @return an object that allows to stop watching the specified file
    */
   protected Object watch(VirtualFile file, boolean recursive) {
-    VirtualFileSystem fs = file.getFileSystem();
-    if (fs instanceof LocalFileSystem) {
-      return LocalFileSystem.getInstance().addRootToWatch(file.getPath(), recursive);
+    // a file of any machine - the watch service passes it to the watcher of its file system
+    Path path = file.getFileSystem().getNioPath(file);
+    if (path != null) {
+      return FileWatchService.getInstance().addRootToWatch(path, recursive);
     }
     return null;
   }
@@ -88,8 +91,8 @@ public class FileRefresher implements Disposable {
    * @param watcher an object that allows to stop watching a file
    */
   protected void unwatch(Object watcher) {
-    if (watcher instanceof LocalFileSystem.WatchRequest) {
-      LocalFileSystem.getInstance().removeWatchedRoot((LocalFileSystem.WatchRequest)watcher);
+    if (watcher instanceof FileWatchService.WatchRequest watchRequest) {
+      FileWatchService.getInstance().removeWatchedRoot(watchRequest);
     }
   }
 

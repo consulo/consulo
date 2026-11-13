@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposer;
 import consulo.project.Project;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.FileWatchService;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Future;
@@ -16,11 +16,7 @@ public class FileWatchRequestsManager {
   private volatile boolean myDisposed;
 
   public FileWatchRequestsManager(Project project, NewMappings newMappings) {
-    this(project, newMappings, LocalFileSystem.getInstance());
-  }
-
-  public FileWatchRequestsManager(Project project, NewMappings newMappings, LocalFileSystem localFileSystem) {
-    myModifier = new FileWatchRequestModifier(project, newMappings, localFileSystem);
+    myModifier = new FileWatchRequestModifier(project, newMappings, FileWatchService.getInstance());
     Disposer.register(newMappings, () -> {
       myDisposed = true;
       cancel();

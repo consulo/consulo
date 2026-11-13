@@ -18,6 +18,7 @@ package consulo.it.vfs;
 import consulo.it.HeadlessApplicationExtension;
 import consulo.it.internal.HeadlessFileWatcher;
 import consulo.ui.ModalityState;
+import consulo.virtualFileSystem.FileWatchService;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
@@ -62,7 +63,7 @@ public class WatcherDrivenRefreshTest {
     private static final long TIMEOUT_SECONDS = 30;
 
     private final AtomicLong myEditCounter = new AtomicLong();
-    private LocalFileSystem.@Nullable WatchRequest myWatchRequest;
+    private FileWatchService.@Nullable WatchRequest myWatchRequest;
 
     @BeforeEach
     public void setUp() {
@@ -72,9 +73,9 @@ public class WatcherDrivenRefreshTest {
     @AfterEach
     public void tearDown() {
         RefreshWorker.setTestListener(null);
-        LocalFileSystem.WatchRequest request = myWatchRequest;
+        FileWatchService.WatchRequest request = myWatchRequest;
         if (request != null) {
-            LocalFileSystem.getInstance().removeWatchedRoot(request);
+            FileWatchService.getInstance().removeWatchedRoot(request);
         }
         HeadlessFileWatcher.disable();
     }
@@ -91,7 +92,7 @@ public class WatcherDrivenRefreshTest {
             .as("with a running watcher a refresh only visits what the watcher reported")
             .isFalse();
 
-        HeadlessFileWatcher.notifyDirtyPath(path.toString());
+        HeadlessFileWatcher.notifyDirtyPath(path);
         refresh(root);
         assertThat(isUpToDate(root, path)).as("the change the watcher reported must be refreshed").isTrue();
     }
@@ -175,19 +176,18 @@ public class WatcherDrivenRefreshTest {
         refresh(root);
         assertAllUpToDate(root, directory);
 
-        LocalFileSystem.WatchRequest request = myWatchRequest;
+        FileWatchService.WatchRequest request = myWatchRequest;
         if (request != null) {
-            LocalFileSystem.getInstance().removeWatchedRoot(request);
+            FileWatchService.getInstance().removeWatchedRoot(request);
             myWatchRequest = null;
         }
         return checks.get();
     }
 
     private VirtualFile watchAndLoad(Path directory) throws Exception {
-        String rootPath = directory.toString();
-        myWatchRequest = LocalFileSystem.getInstance().addRootToWatch(rootPath, true);
+        myWatchRequest = FileWatchService.getInstance().addRootToWatch(directory, true);
         assertThat(myWatchRequest).isNotNull();
-        waitFor(() -> HeadlessFileWatcher.getRecursiveRoots().contains(rootPath));
+        waitFor(() -> HeadlessFileWatcher.getRecursiveRoots().contains(directory));
 
         VirtualFile root = LocalFileSystem.getInstance().refreshAndFindFileByNioFile(directory);
         assertThat(root).isNotNull();
@@ -218,7 +218,7 @@ public class WatcherDrivenRefreshTest {
             throw new IllegalStateException(e);
         }
         if (report) {
-            HeadlessFileWatcher.notifyDirtyPath(path.toString());
+            HeadlessFileWatcher.notifyDirtyPath(path);
         }
     }
 

@@ -22,12 +22,12 @@ import consulo.localize.LocalizeValue;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.change.ChangesUtil;
 import consulo.versionControlSystem.impl.internal.change.action.AbstractMissingFilesAction;
 import consulo.versionControlSystem.impl.internal.change.ui.RollbackProgressModifier;
 import consulo.versionControlSystem.localize.VcsLocalize;
 import consulo.versionControlSystem.rollback.RollbackEnvironment;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.RefreshQueue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +55,7 @@ public class RollbackDeletionAction extends AbstractMissingFilesAction {
         catch (ProcessCanceledException e) {
             // for files refresh
         }
-        LocalFileSystem.getInstance().refreshIoFiles(ChangesUtil.filePathsToFiles(files));
+        RefreshQueue.getInstance().refreshPaths(false, false, null, ContainerUtil.mapNotNull(files, FilePath::getNioPath));
         return result;
     }
 

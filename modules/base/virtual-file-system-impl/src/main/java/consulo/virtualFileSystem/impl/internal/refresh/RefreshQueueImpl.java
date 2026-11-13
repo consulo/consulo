@@ -24,6 +24,8 @@ import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.internal.VirtualFileManagerEx;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -32,6 +34,9 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -268,6 +273,33 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   @Override
   public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, ModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, state);
+  }
+
+  @Override
+  public void refreshPaths(boolean async, boolean recursive, @Nullable Runnable finishRunnable, Collection<Path> paths) {
+    VirtualFileManagerEx manager = (VirtualFileManagerEx)VirtualFileManager.getInstance();
+
+    boolean fireCommonRefreshSession = myApplication.isDispatchThread() || myApplication.isWriteAccessAllowed();
+    if (fireCommonRefreshSession) {
+      manager.fireBeforeRefreshStart(false);
+    }
+
+    try {
+      List<VirtualFile> filesToRefresh = new ArrayList<>();
+      for (Path path : paths) {
+        VirtualFile virtualFile = manager.refreshAndFindFileByNioPath(path);
+        if (virtualFile != null) {
+          filesToRefresh.add(virtualFile);
+        }
+      }
+
+      refresh(async, recursive, finishRunnable, filesToRefresh);
+    }
+    finally {
+      if (fireCommonRefreshSession) {
+        manager.fireAfterRefreshFinish(false);
+      }
+    }
   }
 
   @Override

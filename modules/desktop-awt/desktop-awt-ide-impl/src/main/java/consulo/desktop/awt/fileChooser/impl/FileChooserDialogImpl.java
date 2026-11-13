@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
+import consulo.virtualFileSystem.FileWatchService;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.SaveAndSyncHandler;
@@ -283,7 +284,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileLookup {
 
     @Override
     public final void dispose() {
-        LocalFileSystem.getInstance().removeWatchedRoots(myRequests.values());
+        FileWatchService.getInstance().removeWatchedRoots(myRequests.values());
         super.dispose();
     }
 
@@ -407,7 +408,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileLookup {
         return myFileSystemTree.getSelectedFiles();
     }
 
-    private final Map<String, LocalFileSystem.WatchRequest> myRequests = new HashMap<>();
+    private final Map<String, FileWatchService.WatchRequest> myRequests = new HashMap<>();
 
     private static boolean isToShowTextField() {
         return ApplicationPropertiesComponent.getInstance().getBoolean(FILE_CHOOSER_SHOW_PATH_PROPERTY, true);
@@ -427,9 +428,12 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileLookup {
                 VirtualFile file = fileNodeDescriptor.getElement().getFile();
                 if (file != null && file.isDirectory()) {
                     String rootPath = file.getPath();
-                    if (myRequests.get(rootPath) == null) {
-                        LocalFileSystem.WatchRequest watchRequest = LocalFileSystem.getInstance().addRootToWatch(rootPath, true);
-                        myRequests.put(rootPath, watchRequest);
+                    Path nioPath = file.getFileSystem().getNioPath(file);
+                    if (nioPath != null && myRequests.get(rootPath) == null) {
+                        FileWatchService.WatchRequest watchRequest = FileWatchService.getInstance().addRootToWatch(nioPath, true);
+                        if (watchRequest != null) {
+                            myRequests.put(rootPath, watchRequest);
+                        }
                     }
                 }
             }

@@ -48,12 +48,14 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 
 import javax.swing.*;
+import java.nio.file.Path;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.*;
@@ -233,7 +235,7 @@ public class BuildArtifactAction extends LegacyDumbAwareAction {
             new Task.Backgroundable(myProject, CompilerLocalize.taskCleaningArtifactsTitle(), true) {
                 @Override
                 public void run(ProgressIndicator indicator) {
-                    List<File> deleted = new ArrayList<>();
+                    List<Path> deleted = new ArrayList<>();
                     for (Pair<File, Artifact> pair : toClean) {
                         indicator.checkCanceled();
                         File file = pair.getFirst();
@@ -244,10 +246,10 @@ public class BuildArtifactAction extends LegacyDumbAwareAction {
                                 .notify((Project) myProject);
                         }
                         else {
-                            deleted.add(file);
+                            deleted.add(file.toPath());
                         }
                     }
-                    LocalFileSystem.getInstance().refreshIoFiles(deleted, true, true, null);
+                    RefreshQueue.getInstance().refreshPaths(true, true, null, deleted);
                 }
             }.queue();
         }

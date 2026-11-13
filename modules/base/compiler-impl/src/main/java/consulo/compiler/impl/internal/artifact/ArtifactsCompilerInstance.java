@@ -44,6 +44,7 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
+import java.nio.file.Path;
 import java.io.*;
 import java.util.*;
 
@@ -344,7 +345,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
         }
 
         int notDeletedFilesCount = 0;
-        List<File> filesToRefresh = new ArrayList<>();
+        List<Path> filesToRefresh = new ArrayList<>();
 
         for (String fullPath : pathToDelete) {
             int end = fullPath.indexOf(URLUtil.ARCHIVE_SEPARATOR);
@@ -360,7 +361,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
 
             File file = new File(FileUtil.toSystemDependentName(filePath));
             if (!deleted) {
-                filesToRefresh.add(file);
+                filesToRefresh.add(file.toPath());
                 deleted = FileUtil.delete(file);
             }
 
@@ -389,7 +390,7 @@ public class ArtifactsCompilerInstance extends GenericCompilerInstance<ArtifactB
             }
         }
 
-        CompilerUtil.refreshIOFiles(filesToRefresh);
+        CompilerUtil.refreshFiles(filesToRefresh);
         return deletedJars;
     }
 

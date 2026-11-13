@@ -1,17 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.virtualFileSystem.impl.internal.local;
+package consulo.virtualFileSystem.impl.internal.watcher;
 
 import consulo.logging.Logger;
-import consulo.util.collection.Maps;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.internal.FileSystemUtil;
+import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
@@ -19,23 +19,23 @@ import java.util.stream.Stream;
 class CanonicalPathMap {
   private static final Logger LOG = Logger.getInstance(FileWatcher.class);
 
-  private final List<String> myRecursiveWatchRoots;
-  private final List<String> myFlatWatchRoots;
-  private final List<String> myCanonicalRecursiveWatchRoots;
-  private final List<String> myCanonicalFlatWatchRoots;
-  private final MultiMap<String, String> myPathMapping;
+  private final List<Path> myRecursiveWatchRoots;
+  private final List<Path> myFlatWatchRoots;
+  private final List<Path> myCanonicalRecursiveWatchRoots;
+  private final List<Path> myCanonicalFlatWatchRoots;
+  private final MultiMap<Path, Path> myPathMapping;
 
   CanonicalPathMap() {
     myRecursiveWatchRoots = myCanonicalRecursiveWatchRoots = myFlatWatchRoots = myCanonicalFlatWatchRoots = Collections.emptyList();
     myPathMapping = MultiMap.empty();
   }
 
-  CanonicalPathMap(List<String> recursive, List<String> flat) {
+  CanonicalPathMap(List<Path> recursive, List<Path> flat) {
     myRecursiveWatchRoots = new ArrayList<>(recursive);
     myFlatWatchRoots = new ArrayList<>(flat);
 
-    List<Pair<String, String>> mapping = new SmartList<>();
-    Map<String, String> resolvedPaths = resolvePaths(recursive, flat);
+    List<Pair<Path, Path>> mapping = new SmartList<>();
+    Map<Path, Path> resolvedPaths = resolvePaths(recursive, flat);
     myCanonicalRecursiveWatchRoots = mapPaths(resolvedPaths, recursive, mapping);
     myCanonicalFlatWatchRoots = mapPaths(resolvedPaths, flat, mapping);
 
@@ -43,23 +43,42 @@ class CanonicalPathMap {
     addMapping(mapping);
   }
 
-  
-  private static Map<String, String> resolvePaths(Collection<String> recursiveRoots, Collection<String> flatRoots) {
-    Map<String, String> result = new ConcurrentHashMap<>();
-    Stream.concat(recursiveRoots.stream(), flatRoots.stream()).parallel().forEach(root -> Maps.putIfNotNull(root, FileSystemUtil.resolveSymLink(root), result));
+  private static Map<Path, Path> resolvePaths(Collection<Path> recursiveRoots, Collection<Path> flatRoots) {
+    Map<Path, Path> result = new ConcurrentHashMap<>();
+    Stream.concat(recursiveRoots.stream(), flatRoots.stream()).parallel().forEach(root -> {
+      Path resolved = resolveSymLink(root);
+      if (resolved != null) {
+        result.put(root, resolved);
+      }
+    });
     return result;
   }
 
-  
-  private static List<String> mapPaths(
-    Map<String, String> resolvedPaths,
-    List<String> paths,
-    Collection<? super Pair<String, String>> mapping
-  ) {
-    List<String> canonicalPaths = new ArrayList<>(paths);
+  /**
+   * Symbolic links are resolved for the paths of this machine only - a watcher of another machine reports the paths as they were
+   * given to it.
+   */
+  private static @Nullable Path resolveSymLink(Path root) {
+    if (root.getFileSystem() != FileSystems.getDefault()) {
+      return null;
+    }
+    String resolved = FileSystemUtil.resolveSymLink(root.toString());
+    if (resolved == null) {
+      return null;
+    }
+    try {
+      return Path.of(resolved);
+    }
+    catch (InvalidPathException e) {
+      return null;
+    }
+  }
+
+  private static List<Path> mapPaths(Map<Path, Path> resolvedPaths, List<Path> paths, Collection<? super Pair<Path, Path>> mapping) {
+    List<Path> canonicalPaths = new ArrayList<>(paths);
     for (int i = 0; i < paths.size(); i++) {
-      String path = paths.get(i);
-      String canonicalPath = resolvedPaths.get(path);
+      Path path = paths.get(i);
+      Path canonicalPath = resolvedPaths.get(path);
       if (canonicalPath != null && !path.equals(canonicalPath)) {
         canonicalPaths.set(i, canonicalPath);
         mapping.add(Couple.of(canonicalPath, path));
@@ -68,30 +87,32 @@ class CanonicalPathMap {
     return canonicalPaths;
   }
 
-  
-  List<String> getCanonicalRecursiveWatchRoots() {
+  List<Path> getCanonicalRecursiveWatchRoots() {
     return myCanonicalRecursiveWatchRoots;
   }
 
-  
-  List<String> getCanonicalFlatWatchRoots() {
+  List<Path> getCanonicalFlatWatchRoots() {
     return myCanonicalFlatWatchRoots;
   }
 
-  public void addMapping(Collection<? extends Pair<String, String>> mapping) {
-    for (Pair<String, String> pair : mapping) {
+  List<Path> getRecursiveWatchRoots() {
+    return myRecursiveWatchRoots;
+  }
+
+  public void addMapping(Collection<? extends Pair<Path, Path>> mapping) {
+    for (Pair<Path, Path> pair : mapping) {
       // See if we are adding a mapping that itself should be mapped to a different path
       // Example: /foo/real_path -> /foo/symlink, /foo/remapped_path -> /foo/real_path
       // In this case, if the file watcher returns /foo/remapped_path/file.txt, we want to report /foo/symlink/file.txt back to IntelliJ.
-      Collection<String> preRemapPathToWatchedPaths = myPathMapping.get(pair.second);
-      for (String realWatchedPath : preRemapPathToWatchedPaths) {
-        Collection<String> remappedPathMappings = myPathMapping.getModifiable(pair.first);
+      Collection<Path> preRemapPathToWatchedPaths = myPathMapping.get(pair.second);
+      for (Path realWatchedPath : preRemapPathToWatchedPaths) {
+        Collection<Path> remappedPathMappings = myPathMapping.getModifiable(pair.first);
         remappedPathMappings.add(realWatchedPath);
       }
 
       // Since there can be more than one file watcher and REMAPPING is an implementation detail of the native file watcher,
       // add the mapping as usual even if we added data above.
-      Collection<String> symLinksToCanonicalPath = myPathMapping.getModifiable(pair.first);
+      Collection<Path> symLinksToCanonicalPath = myPathMapping.getModifiable(pair.first);
       symLinksToCanonicalPath.add(pair.second);
     }
   }
@@ -108,36 +129,36 @@ class CanonicalPathMap {
    * For recursive roots, if the path given to us is already the parent of the actual dirty path, we need to compare the path to the parent
    * of the recursive root because if the root itself was changed, we need to know about it.
    */
-  Collection<String> getWatchedPaths(String reportedPath, boolean isExact) {
+  Collection<Path> getWatchedPaths(Path reportedPath, boolean isExact) {
     if (myFlatWatchRoots.isEmpty() && myRecursiveWatchRoots.isEmpty()) return Collections.emptyList();
 
-    Collection<String> affectedPaths = applyMapping(reportedPath);
-    Collection<String> changedPaths = new SmartList<>();
+    Collection<Path> affectedPaths = applyMapping(reportedPath);
+    Collection<Path> changedPaths = new SmartList<>();
 
     ext:
-    for (String path : affectedPaths) {
-      for (String root : myFlatWatchRoots) {
-        if (FileUtil.namesEqual(path, root)) {
+    for (Path path : affectedPaths) {
+      for (Path root : myFlatWatchRoots) {
+        if (path.equals(root)) {
           changedPaths.add(path);
           continue ext;
         }
         if (isExact) {
-          if (isApproxParent(path, root)) {
+          if (isParent(path, root)) {
             changedPaths.add(path);
             continue ext;
           }
         }
-        else if (isApproxParent(root, path)) {
+        else if (isParent(root, path)) {
           changedPaths.add(root);
         }
       }
 
-      for (String root : myRecursiveWatchRoots) {
-        if (FileUtil.startsWith(path, root)) {
+      for (Path root : myRecursiveWatchRoots) {
+        if (path.startsWith(root)) {
           changedPaths.add(path);
           continue ext;
         }
-        if (!isExact && isApproxParent(root, path)) {
+        if (!isExact && isParent(root, path)) {
           changedPaths.add(root);
         }
       }
@@ -150,34 +171,24 @@ class CanonicalPathMap {
     return changedPaths;
   }
 
-  // doesn't care about drive or UNC
-  private static boolean isApproxParent(String path, String parent) {
-    return path.lastIndexOf(File.separatorChar) == parent.length() && FileUtil.startsWith(path, parent);
+  private static boolean isParent(Path path, Path parent) {
+    return parent.equals(path.getParent());
   }
 
-  
-  private Collection<String> applyMapping(String reportedPath) {
+  private Collection<Path> applyMapping(Path reportedPath) {
     if (myPathMapping.isEmpty()) {
       return Collections.singletonList(reportedPath);
     }
 
-    List<String> results = new SmartList<>(reportedPath);
-    List<String> pathComponents = FileUtil.splitPath(reportedPath);
-
-    File runningPath = null;
-    for (int i = 0; i < pathComponents.size(); ++i) {
-      String currentPathComponent = pathComponents.get(i);
-      if (runningPath == null) {
-        runningPath = new File(currentPathComponent.isEmpty() ? "/" : currentPathComponent);
-      }
-      else {
-        runningPath = new File(runningPath, currentPathComponent);
-      }
-      Collection<String> mappedPaths = myPathMapping.get(runningPath.getPath());
-      for (String mappedPath : mappedPaths) {
+    List<Path> results = new SmartList<>(reportedPath);
+    Path root = reportedPath.getRoot();
+    int nameCount = reportedPath.getNameCount();
+    for (int i = root != null ? -1 : 0; i < nameCount; ++i) {
+      Path runningPath = i < 0 ? root : root != null ? root.resolve(reportedPath.subpath(0, i + 1)) : reportedPath.subpath(0, i + 1);
+      Collection<Path> mappedPaths = myPathMapping.get(runningPath);
+      for (Path mappedPath : mappedPaths) {
         // Append the specific file suffix to the mapped watch root.
-        String fileSuffix = StringUtil.join(pathComponents.subList(i + 1, pathComponents.size()), File.separator);
-        results.add(new File(mappedPath, fileSuffix).getPath());
+        results.add(i + 1 < nameCount ? mappedPath.resolve(reportedPath.subpath(i + 1, nameCount).toString()) : mappedPath);
       }
     }
 

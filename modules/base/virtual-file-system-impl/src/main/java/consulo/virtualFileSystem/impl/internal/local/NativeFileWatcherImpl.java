@@ -17,7 +17,10 @@ import consulo.process.io.BaseOutputReader;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.*;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.ManagingFS;
+import consulo.virtualFileSystem.impl.internal.watcher.FileWatcherNotificationSink;
+import consulo.virtualFileSystem.impl.internal.watcher.PluggableFileWatcher;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -28,7 +31,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.text.Normalizer;
 import java.util.*;
@@ -116,8 +122,13 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   }
 
   @Override
-  public void setWatchRoots(List<String> recursive, List<String> flat) {
-    setWatchRoots(recursive, flat, false);
+  public boolean isApplicable(FileSystem fileSystem) {
+    return fileSystem == FileSystems.getDefault();
+  }
+
+  @Override
+  public void setWatchRoots(List<Path> recursive, List<Path> flat) {
+    setWatchRoots(ContainerUtil.map(recursive, Path::toString), ContainerUtil.map(flat, Path::toString), false);
   }
 
   /**
@@ -398,20 +409,29 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
 
     private void processRemap() {
-      Set<Couple<String>> pairs = new HashSet<>();
+      Set<Couple<Path>> pairs = new HashSet<>();
       for (int i = 0; i < myLines.size() - 1; i += 2) {
-        pairs.add(Couple.of(myLines.get(i), myLines.get(i + 1)));
+        Path from = toPath(myLines.get(i));
+        Path to = toPath(myLines.get(i + 1));
+        if (from != null && to != null) {
+          pairs.add(Couple.of(from, to));
+        }
       }
       myNotificationSink.notifyMapping(pairs);
     }
 
     private void processUnwatchable() {
-      myNotificationSink.notifyManualWatchRoots(myLines);
+      myNotificationSink.notifyManualWatchRoots(ContainerUtil.mapNotNull(myLines, NativeFileWatcherImpl::toPath));
     }
 
-    private void processChange(String path, WatcherOp op) {
+    private void processChange(String pathString, WatcherOp op) {
+      String path = pathString;
+      Path nioPath = toPath(path);
+      if (nioPath == null) {
+        return;
+      }
       if (Platform.current().os().isWindows() && op == WatcherOp.RECDIRTY) {
-        myNotificationSink.notifyReset(path);
+        myNotificationSink.notifyReset(nioPath);
         return;
       }
 
@@ -422,25 +442,29 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
 
       if (Platform.current().os().isMac()) {
         path = Normalizer.normalize(path, Normalizer.Form.NFC);
+        nioPath = toPath(path);
+        if (nioPath == null) {
+          return;
+        }
       }
 
       switch (op) {
         case STATS:
         case CHANGE:
-          myNotificationSink.notifyDirtyPath(path);
+          myNotificationSink.notifyDirtyPath(nioPath);
           break;
 
         case CREATE:
         case DELETE:
-          myNotificationSink.notifyPathCreatedOrDeleted(path);
+          myNotificationSink.notifyPathCreatedOrDeleted(nioPath);
           break;
 
         case DIRTY:
-          myNotificationSink.notifyDirtyDirectory(path);
+          myNotificationSink.notifyDirtyDirectory(nioPath);
           break;
 
         case RECDIRTY:
-          myNotificationSink.notifyDirtyPathRecursive(path);
+          myNotificationSink.notifyDirtyPathRecursive(nioPath);
           break;
 
         default:
@@ -492,6 +516,19 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
         }
         TimeoutUtil.sleep(100);
       }
+    }
+  }
+
+  /**
+   * A path the native watcher reports - of this machine.
+   */
+  private static @Nullable Path toPath(String path) {
+    try {
+      return Path.of(path);
+    }
+    catch (InvalidPathException e) {
+      LOG.debug(e);
+      return null;
     }
   }
 }

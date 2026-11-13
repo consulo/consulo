@@ -17,11 +17,11 @@ package consulo.versionControlSystem.impl.internal;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.collection.Maps;
-import consulo.util.io.FileUtil;
 import consulo.versionControlSystem.VcsDirectoryMapping;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.versionControlSystem.internal.VcsMappingResolver;
+import consulo.virtualFileSystem.FileWatchService;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -32,11 +32,11 @@ public class FileWatchRequestModifier implements Runnable {
 
   private final Project myProject;
   private final NewMappings myNewMappings;
-  private final Map<VcsDirectoryMapping, LocalFileSystem.WatchRequest> myDirectoryMappingWatches;
-  private final LocalFileSystem myLfs;
+  private final Map<VcsDirectoryMapping, FileWatchService.WatchRequest> myDirectoryMappingWatches;
+  private final FileWatchService myWatchService;
 
-  public FileWatchRequestModifier(Project project, NewMappings newMappings, LocalFileSystem localFileSystem) {
-    myLfs = localFileSystem;
+  public FileWatchRequestModifier(Project project, NewMappings newMappings, FileWatchService watchService) {
+    myWatchService = watchService;
     myProject = project;
     myNewMappings = newMappings;
     myDirectoryMappingWatches = new HashMap<>();
@@ -53,30 +53,34 @@ public class FileWatchRequestModifier implements Runnable {
     List<VcsDirectoryMapping> deleted = new ArrayList<>(myDirectoryMappingWatches.keySet());
     deleted.removeAll(copy);
 
-    Map<String, VcsDirectoryMapping> toAdd = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
+    // the directories are of the machine of the project
+    Map<Path, VcsDirectoryMapping> toAdd = new HashMap<>();
     for (VcsDirectoryMapping mapping : added) {
       if (!mapping.isDefaultMapping()) {
-        toAdd.put(FileUtil.toCanonicalPath(mapping.getDirectory()), mapping);
+        Path directory = VcsMappingResolver.toNioPath(myProject, mapping.getDirectory());
+        if (directory != null) {
+          toAdd.put(directory.normalize(), mapping);
+        }
       }
     }
 
-    Collection<LocalFileSystem.WatchRequest> toRemove = new LinkedList<>();
+    Collection<FileWatchService.WatchRequest> toRemove = new LinkedList<>();
     for (VcsDirectoryMapping mapping : deleted) {
       if (mapping.isDefaultMapping()) continue;
-      LocalFileSystem.WatchRequest removed = myDirectoryMappingWatches.remove(mapping);
+      FileWatchService.WatchRequest removed = myDirectoryMappingWatches.remove(mapping);
       if (removed != null) {
         toRemove.add(removed);
       }
     }
 
-    Set<LocalFileSystem.WatchRequest> requests = myLfs.replaceWatchedRoots(toRemove, toAdd.keySet(), null);
-    for (LocalFileSystem.WatchRequest request : requests) {
-      VcsDirectoryMapping mapping = toAdd.get(request.getRootPath());
+    Set<FileWatchService.WatchRequest> requests = myWatchService.replaceWatchedRoots(toRemove, toAdd.keySet(), null);
+    for (FileWatchService.WatchRequest request : requests) {
+      VcsDirectoryMapping mapping = toAdd.get(request.getRoot());
       if (mapping != null) {
         myDirectoryMappingWatches.put(mapping, request);
       }
       else {
-        LOG.error("root=" + request.getRootPath() + " toAdd=" + toAdd.keySet());
+        LOG.error("root=" + request.getRoot() + " toAdd=" + toAdd.keySet());
       }
     }
   }

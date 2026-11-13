@@ -31,6 +31,7 @@ module consulo.virtual.file.system.impl {
         consulo.ide.impl,
         consulo.it;
     exports consulo.virtualFileSystem.impl.internal.local to consulo.it;
+    exports consulo.virtualFileSystem.impl.internal.watcher to consulo.it;
 
     // FIXME used by AtomicFieldUpdater - maybe replace it?
     opens consulo.virtualFileSystem.impl.internal.entry to consulo.util.concurrent;

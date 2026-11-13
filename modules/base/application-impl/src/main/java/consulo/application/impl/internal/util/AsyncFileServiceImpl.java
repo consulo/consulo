@@ -18,28 +18,32 @@ package consulo.application.impl.internal.util;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.AsyncFileService;
-import consulo.platform.Platform;
+import consulo.logging.Logger;
 import consulo.util.io.FileUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
-/**
- * @author VISTALL
- * @since 15/10/2022
- */
 @Singleton
 @ServiceImpl
 public class AsyncFileServiceImpl implements AsyncFileService {
+  private static final Logger LOG = Logger.getInstance(AsyncFileServiceImpl.class);
+
   public static final String ASYNC_DELETE_EXTENSION = ".__del__";
 
   private final Application myApplication;
@@ -50,73 +54,88 @@ public class AsyncFileServiceImpl implements AsyncFileService {
   }
 
   @Override
-  
-  public Future<Void> asyncDelete(Collection<File> files) {
-    List<File> tempFiles = new ArrayList<>();
-    for (File file : files) {
-      File tempFile = renameToTempFileOrDelete(file);
-      if (tempFile != null) {
-        tempFiles.add(tempFile);
+  public Future<Void> asyncDelete(Path... paths) {
+    List<Path> movedAside = new ArrayList<>();
+    for (Path path : paths) {
+      Path moved = moveAsideOrDelete(path);
+      if (moved != null) {
+        movedAside.add(moved);
       }
     }
-    if (!tempFiles.isEmpty()) {
-      return startDeletionThread(tempFiles.toArray(new File[tempFiles.size()]));
+    if (movedAside.isEmpty()) {
+      return CompletableFuture.completedFuture(null);
     }
-    return CompletableFuture.completedFuture(null);
+    return startDeletion(movedAside);
   }
 
-  private Future<Void> startDeletionThread(final File... tempFiles) {
-    RunnableFuture<Void> deleteFilesTask = new FutureTask<>(new Runnable() {
-      @Override
-      public void run() {
-        Thread currentThread = Thread.currentThread();
-        int priority = currentThread.getPriority();
-        currentThread.setPriority(Thread.MIN_PRIORITY);
-        try {
-          for (File tempFile : tempFiles) {
-            FileUtil.delete(tempFile);
-          }
+  private Future<Void> startDeletion(List<Path> paths) {
+    RunnableFuture<Void> deleteTask = new FutureTask<>(() -> {
+      Thread currentThread = Thread.currentThread();
+      int priority = currentThread.getPriority();
+      currentThread.setPriority(Thread.MIN_PRIORITY);
+      try {
+        for (Path path : paths) {
+          FileUtil.delete(path);
         }
-        finally {
-          currentThread.setPriority(priority);
-        }
+      }
+      finally {
+        currentThread.setPriority(priority);
       }
     }, null);
 
-    myApplication.executeOnPooledThread(deleteFilesTask);
+    myApplication.executeOnPooledThread(deleteTask);
 
-    return deleteFilesTask;
+    return deleteTask;
   }
 
-  private static @Nullable File renameToTempFileOrDelete(File file) {
-    String tempDir = FileUtil.getTempDirectory();
-    boolean isSameDrive = true;
-    if (Platform.current().os().isWindows()) {
-      String tempDirDrive = tempDir.substring(0, 2);
-      String fileDrive = file.getAbsolutePath().substring(0, 2);
-      isSameDrive = tempDirDrive.equalsIgnoreCase(fileDrive);
+  /**
+   * Frees the path at once - by an atomic move: into the temp directory when it is of the same disk, or next to the file (of any
+   * machine; such a name is ignored by the IDE). A file which cannot be moved is deleted now.
+   */
+  private static @Nullable Path moveAsideOrDelete(Path path) {
+    if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
+      return null;
     }
 
-    if (isSameDrive) {
-      // the optimization is reasonable only if destination dir is located on the same drive
-      String originalFileName = file.getName();
-      File tempFile = getTempFile(originalFileName, tempDir);
-      if (file.renameTo(tempFile)) {
-        return tempFile;
+    String name = path.getFileName() == null ? "root" : path.getFileName().toString();
+    List<Path> trashDirectories = new ArrayList<>(2);
+    if (path.getFileSystem() == FileSystems.getDefault()) {
+      trashDirectories.add(Path.of(FileUtil.getTempDirectory()));
+    }
+    if (path.getParent() != null) {
+      trashDirectories.add(path.getParent());
+    }
+
+    for (Path trashDirectory : trashDirectories) {
+      Path moved = moveInto(path, name, trashDirectory);
+      if (moved != null) {
+        return moved;
       }
     }
 
-    FileUtil.delete(file);
-
+    FileUtil.delete(path);
     return null;
   }
 
-  private static File getTempFile(String originalFileName, String parent) {
-    int randomSuffix = (int)(System.currentTimeMillis() % 1000);
-    for (int i = randomSuffix; ; i++) {
-      String name = "___" + originalFileName + i + ASYNC_DELETE_EXTENSION;
-      File tempFile = new File(parent, name);
-      if (!tempFile.exists()) return tempFile;
+  private static @Nullable Path moveInto(Path path, String name, Path directory) {
+    int randomSuffix = (int) (System.currentTimeMillis() % 1000);
+    for (int i = randomSuffix; i < randomSuffix + 100; i++) {
+      Path target = directory.resolve("___" + name + i + ASYNC_DELETE_EXTENSION);
+      try {
+        return Files.move(path, target, StandardCopyOption.ATOMIC_MOVE);
+      }
+      catch (FileAlreadyExistsException e) {
+        // the next name
+      }
+      catch (AtomicMoveNotSupportedException e) {
+        // another disk - not this directory
+        return null;
+      }
+      catch (IOException | UnsupportedOperationException e) {
+        LOG.debug(e);
+        return null;
+      }
     }
+    return null;
   }
 }

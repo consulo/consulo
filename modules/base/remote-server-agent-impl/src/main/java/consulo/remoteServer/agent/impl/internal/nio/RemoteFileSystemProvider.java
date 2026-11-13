@@ -203,6 +203,12 @@ public class RemoteFileSystemProvider extends FileSystemProvider {
 
     @Override
     public void move(Path source, Path target, CopyOption... options) throws IOException {
+        // the agent has no rename - a move is a copy and a delete, never atomic
+        for (CopyOption option : options) {
+            if (option == StandardCopyOption.ATOMIC_MOVE) {
+                throw new AtomicMoveNotSupportedException(source.toString(), target.toString(), "The agent cannot rename files");
+            }
+        }
         copy(source, target, options);
         delete(source);
     }

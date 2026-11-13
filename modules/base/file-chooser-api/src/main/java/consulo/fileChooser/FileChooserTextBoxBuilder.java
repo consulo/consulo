@@ -31,6 +31,10 @@ import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,14 +65,20 @@ public final class FileChooserTextBoxBuilder {
             fileChooserDescriptor.withDescription(myController.myDialogDescription);
 
             String text = myController.myAccessor.getValue(myController.myTextBox);
+            FileSystem chosenFileSystem = myController.myChosenFileSystem;
+            Path toSelect = chosenFileSystem == null || chosenFileSystem == FileSystems.getDefault()
+                ? FileChooserUtil.findExistingPathOrParent(text)
+                : myController.getPathValue();
 
             FileChooserFactory.getInstance()
                 .newBuilder(fileChooserDescriptor)
                 .project(myController.myProject)
-                .toSelect(FileChooserUtil.findExistingPathOrParent(text))
+                .toSelect(toSelect)
                 .showSingle()
                 .whenComplete((path, error) -> {
                     if (error == null) {
+                        // the machine of the path - a chooser of any machine may give a path of another one
+                        myController.myChosenFileSystem = path.getFileSystem();
                         myController.myAccessor.setValue(myController.myTextBox, path.toString());
                     }
                 });
@@ -82,6 +92,7 @@ public final class FileChooserTextBoxBuilder {
         private final FileChooserDescriptor myFileChooserDescriptor;
         private final LocalizeValue myDialogTitle;
         private final LocalizeValue myDialogDescription;
+        private @Nullable FileSystem myChosenFileSystem;
 
         public Controller(FileChooserTextBoxBuilder builder) {
             myAccessor = builder.myTextBoxAccessor;
@@ -125,6 +136,25 @@ public final class FileChooserTextBoxBuilder {
         @RequiredUIAccess
         public String getValue() {
             return StringUtil.notNullize(myAccessor.getValue(myTextBox));
+        }
+
+        /**
+         * The path of the text - on the machine of the path chosen last (the local one when nothing was chosen),
+         * null when the text is not a path there.
+         */
+        @RequiredUIAccess
+        public @Nullable Path getPathValue() {
+            String text = getValue().trim();
+            if (text.isEmpty()) {
+                return null;
+            }
+            FileSystem fileSystem = myChosenFileSystem != null ? myChosenFileSystem : FileSystems.getDefault();
+            try {
+                return fileSystem.getPath(text);
+            }
+            catch (InvalidPathException e) {
+                return null;
+            }
         }
 
         @RequiredUIAccess

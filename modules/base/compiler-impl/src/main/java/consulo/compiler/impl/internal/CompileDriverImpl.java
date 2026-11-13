@@ -836,7 +836,7 @@ public class CompileDriverImpl implements CompileDriver {
             CompilerUtil.runInContext(
                 context,
                 CompilerLocalize.progressClearingOutput(),
-                () -> CompilerUtil.clearOutputDirectoryPaths(scopeOutputs)
+                () -> CompilerUtil.clearOutputDirectories(scopeOutputs)
             );
         }
     }
@@ -884,7 +884,7 @@ public class CompileDriverImpl implements CompileDriver {
             CompilerLocalize.progressClearingOutput(),
             () -> {
                 if (myShouldClearOutputDirectory) {
-                    CompilerUtil.clearOutputDirectoryPaths(myAllOutputDirectories);
+                    CompilerUtil.clearOutputDirectories(myAllOutputDirectories);
                 }
                 else { // refresh is still required
                     try {

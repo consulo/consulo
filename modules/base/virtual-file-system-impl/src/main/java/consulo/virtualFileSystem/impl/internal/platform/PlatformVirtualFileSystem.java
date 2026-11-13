@@ -21,7 +21,6 @@ import consulo.logging.Logger;
 import consulo.platform.PlatformNioFileSystem;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
@@ -32,6 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.BatchingFileSystem;
 import consulo.virtualFileSystem.impl.internal.FileSystemUnavailableException;
 import consulo.virtualFileSystem.impl.internal.UnavailabilityAwareFileSystem;
+import consulo.virtualFileSystem.impl.internal.watcher.WatchedFileSystem;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;
 import consulo.virtualFileSystem.internal.PlatformPathVirtualFileSystem;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
@@ -54,7 +54,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,13 +73,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @ExtensionImpl
 public class PlatformVirtualFileSystem extends NewVirtualFileSystem
-    implements PlatformPathVirtualFileSystem, RefreshableFileSystem, BatchingFileSystem, UnavailabilityAwareFileSystem {
+    implements PlatformPathVirtualFileSystem, RefreshableFileSystem, BatchingFileSystem, UnavailabilityAwareFileSystem, WatchedFileSystem {
     private static final Logger LOG = Logger.getInstance(PlatformVirtualFileSystem.class);
 
     private static final char SEPARATOR = '/';
 
     private final Map<String, FileSystem> myFileSystems = new ConcurrentHashMap<>();
-    private final PlatformFileWatcher myWatcher = new PlatformFileWatcher(this);
 
     @Override
     public String getProtocol() {
@@ -129,7 +127,6 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
             if (VirtualFilePointerManager.getInstance() instanceof SimpleModificationTracker tracker) {
                 tracker.incModificationCount();
             }
-            myWatcher.fileSystemRegistered();
         }
         return platformFileSystem.getPlatformId() + (filePath.startsWith("/") ? filePath : SEPARATOR + filePath);
     }
@@ -206,18 +203,22 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
         }
     }
 
-    /**
-     * Watch requests of the {@link consulo.virtualFileSystem.LocalFileSystem} for paths of this file system.
-     */
-    public Set<LocalFileSystem.WatchRequest> replaceWatchedRoots(Collection<? extends LocalFileSystem.WatchRequest> toRemove,
-                                                                 Collection<String> recursiveRoots,
-                                                                 Collection<String> flatRoots) {
-        return myWatcher.replaceWatchedRoots(toRemove, recursiveRoots, flatRoots);
+    // region watching
+
+    @Override
+    public boolean isWatchedPath(Path path) {
+        return path.getFileSystem() instanceof PlatformNioFileSystem;
     }
 
-    @Nullable FileSystem getRegisteredFileSystem(String platformId) {
-        return myFileSystems.get(platformId);
+    /**
+     * Nothing refreshes the files of other machines on its own - the changes the watcher reported are refreshed now.
+     */
+    @Override
+    public void dirtyFilesMarked() {
+        refresh(true);
     }
+
+    // endregion
 
     @Override
     public @Nullable Path toNioPath(String vfsPath) {

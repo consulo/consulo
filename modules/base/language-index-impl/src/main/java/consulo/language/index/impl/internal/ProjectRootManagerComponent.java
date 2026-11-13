@@ -48,6 +48,7 @@ import consulo.project.RootsChangeRescanningInfo;
 import consulo.project.content.WatchedRootsProvider;
 import consulo.util.collection.Sets;
 import consulo.util.io.FileUtil;
+import consulo.util.io.NioFiles;
 import consulo.util.lang.Couple;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.*;
@@ -62,6 +63,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -79,7 +81,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     private boolean myPointerChangesDetected = false;
     private int myInsideWriteAction = 0;
 
-    private Set<LocalFileSystem.WatchRequest> myRootsToWatch = new HashSet<>();
+    private Set<FileWatchService.WatchRequest> myRootsToWatch = new HashSet<>();
     private final boolean myDoLogCachesUpdate;
 
     @Inject
@@ -135,7 +137,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
     @Override
     public void dispose() {
-        LocalFileSystem.getInstance().removeWatchedRoots(myRootsToWatch);
+        FileWatchService.getInstance().removeWatchedRoots(myRootsToWatch);
     }
 
     @Override
@@ -145,7 +147,24 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         if (roots == null) {
             return;
         }
-        myRootsToWatch = LocalFileSystem.getInstance().replaceWatchedRoots(myRootsToWatch, roots.first, roots.second);
+        myRootsToWatch = FileWatchService.getInstance().replaceWatchedRoots(myRootsToWatch, toPaths(roots.first), toPaths(roots.second));
+    }
+
+    /**
+     * The roots are paths of this machine, or of other ones as the virtual file system names them.
+     */
+    private static List<Path> toPaths(Collection<String> paths) {
+        VirtualFileSystem platformFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL);
+        List<Path> result = new ArrayList<>(paths.size());
+        for (String path : paths) {
+            Path nioPath = platformFileSystem instanceof PlatformPathVirtualFileSystem platformPathFileSystem && platformPathFileSystem.isPlatformPath(path)
+                ? platformPathFileSystem.toNioPath(path)
+                : NioFiles.toPath(path);
+            if (nioPath != null) {
+                result.add(nioPath);
+            }
+        }
+        return result;
     }
 
     @RequiredWriteAction

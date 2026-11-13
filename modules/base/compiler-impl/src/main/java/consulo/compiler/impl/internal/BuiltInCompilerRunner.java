@@ -614,7 +614,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
         DependencyCache dependencyCache = context.getDependencyCache();
         boolean isTestMode = Application.get().isUnitTestMode();
 
-        List<File> filesToRefresh = new ArrayList<>();
+        List<Path> filesToRefresh = new ArrayList<>();
         boolean[] wereFilesDeleted = {false};
         CompilerUtil.runInContext(
             context,
@@ -626,7 +626,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                         File outputPath = trinity.getFirst();
                         context.getProgressIndicator().checkCanceled();
                         context.getProgressIndicator().setText2(LocalizeValue.ofNullable(outputPath.getPath()));
-                        filesToRefresh.add(outputPath);
+                        filesToRefresh.add(outputPath.toPath());
                         if (isTestMode) {
                             LOG.assertTrue(outputPath.exists());
                         }
@@ -641,7 +641,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                 }
                 finally {
                     CompilerUtil.logDuration("Sync output directory", System.currentTimeMillis() - start);
-                    CompilerUtil.refreshIOFiles(filesToRefresh);
+                    CompilerUtil.refreshFiles(filesToRefresh);
                 }
             }
         );
@@ -725,7 +725,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
     ) throws ExitException {
         GeneratingCompiler.GenerationItem[] allItems = compiler.getGenerationItems(context);
         List<GeneratingCompiler.GenerationItem> toGenerate = new ArrayList<>();
-        List<File> filesToRefresh = new ArrayList<>();
+        List<Path> filesToRefresh = new ArrayList<>();
         List<File> generatedFiles = new ArrayList<>();
         List<Module> affectedModules = new ArrayList<>();
         try {
@@ -780,7 +780,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                             boolean deleted = compileDriver.deleteFile(file);
                             if (deleted) {
                                 cache.remove(path);
-                                filesToRefresh.add(file);
+                                filesToRefresh.add(file.toPath());
                             }
                         }
                     }
@@ -818,7 +818,7 @@ public class BuiltInCompilerRunner implements CompilerRunner {
                                         String path = itemToOutputPathMap.get(item);
                                         File file = new File(path);
                                         cache.update(path, item.getValidityState());
-                                        filesToRefresh.add(file);
+                                        filesToRefresh.add(file.toPath());
                                         generatedFiles.add(file);
                                         context.getProgressIndicator().setText2(LocalizeValue.ofNullable(path));
                                     }

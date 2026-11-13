@@ -18,22 +18,14 @@ package consulo.application.util;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
+import java.nio.file.Path;
 import java.util.concurrent.Future;
 
 /**
- * @author VISTALL
- * @since 15/10/2022
+ * Deletes files without waiting for it - a file is moved aside at once (so its path is free), then deleted in background.
+ * The files are of any machine.
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface AsyncFileService {
-  
-  default Future<Void> asyncDelete(File file) {
-    return asyncDelete(List.of(file));
-  }
-
-  
-  Future<Void> asyncDelete(Collection<File> files);
+  Future<Void> asyncDelete(Path... paths);
 }

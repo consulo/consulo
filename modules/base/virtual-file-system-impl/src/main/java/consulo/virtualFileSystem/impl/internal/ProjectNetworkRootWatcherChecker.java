@@ -17,8 +17,8 @@ package consulo.virtualFileSystem.impl.internal;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.virtualFileSystem.impl.internal.local.FileWatcher;
-import consulo.virtualFileSystem.impl.internal.local.LocalFileSystemImpl;
+import consulo.virtualFileSystem.impl.internal.watcher.FileWatchServiceImpl;
+import consulo.virtualFileSystem.impl.internal.watcher.FileWatcher;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
@@ -26,11 +26,10 @@ import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.ui.UIAccess;
 import consulo.util.collection.SmartList;
-import consulo.util.io.FileUtil;
 import consulo.util.lang.TimeoutUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
@@ -49,11 +48,11 @@ public class ProjectNetworkRootWatcherChecker implements BackgroundStartupActivi
             return;
         }
 
-        LocalFileSystem fs = LocalFileSystem.getInstance();
-        if (!(fs instanceof LocalFileSystemImpl)) {
+        FileWatchServiceImpl watchService = FileWatchServiceImpl.getInstanceIfImpl();
+        if (watchService == null) {
             return;
         }
-        FileWatcher watcher = ((LocalFileSystemImpl) fs).getFileWatcher();
+        FileWatcher watcher = watchService.getFileWatcher();
         if (!watcher.isOperational()) {
             //ProjectFsStatsCollector.watchedRoots(myProject, -1);
             return;
@@ -72,18 +71,18 @@ public class ProjectNetworkRootWatcherChecker implements BackgroundStartupActivi
             }
             LOG.debug("FW/roots waiting finished");
 
-            Collection<String> manualWatchRoots = watcher.getManualWatchRoots();
+            Collection<Path> manualWatchRoots = watcher.getManualWatchRoots();
             int pctNonWatched = 0;
             if (!manualWatchRoots.isEmpty()) {
                 List<String> nonWatched = new SmartList<>();
                 for (VirtualFile root : roots) {
-                    if (!(root.getFileSystem() instanceof LocalFileSystem)) {
+                    Path rootPath = root.getFileSystem().getNioPath(root);
+                    if (rootPath == null) {
                         continue;
                     }
-                    String rootPath = root.getPath();
-                    for (String manualWatchRoot : manualWatchRoots) {
-                        if (FileUtil.isAncestor(manualWatchRoot, rootPath, false)) {
-                            nonWatched.add(rootPath);
+                    for (Path manualWatchRoot : manualWatchRoots) {
+                        if (rootPath.startsWith(manualWatchRoot)) {
+                            nonWatched.add(rootPath.toString());
                         }
                     }
                 }
