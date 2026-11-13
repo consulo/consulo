@@ -30,6 +30,7 @@ import consulo.disposer.Disposable;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.LibraryScopeCache;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
@@ -41,6 +42,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
 import consulo.project.ProjectType;
 import consulo.project.RootsChangeRescanningInfo;
 import consulo.project.content.WatchedRootsProvider;
@@ -169,7 +171,12 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
         String projectFilePath = myProject.getProjectFilePath();
         File projectDirFile = new File(projectFilePath).getParentFile();
-        if (projectDirFile != null && projectDirFile.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
+        VirtualFile projectStoreDir = myProject.getPlatform() == Platform.current() ? null : ProjectCoreUtil.getDirectoryStoreFile(myProject);
+        if (projectStoreDir != null) {
+            // the store of a project of another machine - by its path in the virtual file system
+            recursive.add(projectStoreDir.getPath());
+        }
+        else if (projectDirFile != null && projectDirFile.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
             recursive.add(projectDirFile.getAbsolutePath());
         }
         else {
@@ -217,6 +224,10 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
                 if (protocol == null || LocalFileSystem.PROTOCOL.equals(protocol)) {
                     recursive.add(ProjectRootManagerEx.extractLocalPath(url));
                 }
+                else if (StandardFileSystems.PLATFORM_PROTOCOL.equals(protocol)) {
+                    // a root of another machine - the local file system passes it to the file system of that machine
+                    recursive.add(VirtualFileManager.extractPath(url));
+                }
                 else {
                     VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(protocol);
                     if (fileSystem instanceof ArchiveFileSystem) {
@@ -246,9 +257,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         addRootsFromModules(false, paths, paths);
 
         LocalFileSystem fs = LocalFileSystem.getInstance();
+        VirtualFileSystem platformFileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL);
         List<VirtualFile> roots = new ArrayList<>();
         for (String path : paths) {
             VirtualFile root = fs.findFileByPath(path);
+            if (root == null && platformFileSystem != null) {
+                root = platformFileSystem.findFileByPath(path);
+            }
             if (root != null) {
                 roots.add(root);
                 if (root instanceof NewVirtualFile newVirtualFile) {

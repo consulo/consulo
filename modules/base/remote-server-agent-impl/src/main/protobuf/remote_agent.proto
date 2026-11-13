@@ -337,6 +337,50 @@ message TunnelEvent {
 }
 
 // ============================================================
+// Watch - changes of files of this machine
+// ============================================================
+
+// A path watched for changes - with all its subtree when recursive.
+message WatchRoot {
+    string path = 1;
+    bool recursive = 2;
+}
+
+// Every message replaces the watched roots. The end of the request stream stops watching.
+message WatchInput {
+    repeated WatchRoot roots = 1;
+}
+
+message WatchChange {
+    enum Kind {
+        CHANGED = 0;
+        CREATED = 1;
+        DELETED = 2;
+    }
+    string path = 1;
+    Kind kind = 2;
+}
+
+message WatchChanges {
+    repeated WatchChange changes = 1;
+}
+
+message WatchRootFailed {
+    string path = 1;
+    string message = 2;
+}
+
+// changes come in batches; overflow names a root under which changes were lost - it has to be rescanned;
+// failed - a root which cannot be watched (missing, or the limit of watches of the machine is reached and polling failed too)
+message WatchEvent {
+    oneof event {
+        WatchChanges changes = 1;
+        string overflow = 2;
+        WatchRootFailed failed = 3;
+    }
+}
+
+// ============================================================
 // Service
 // ============================================================
 
@@ -373,4 +417,6 @@ service RemoteAgentService {
 
     rpc Tunnel(stream TunnelInput) returns (stream TunnelEvent);
     rpc Listen(ListenRequest) returns (stream ListenEvent);
+
+    rpc Watch(stream WatchInput) returns (stream WatchEvent);
 }

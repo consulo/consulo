@@ -185,6 +185,13 @@ public class RemoteAgentConnection implements AutoCloseable {
         RemoteAgentServiceGrpc.newStub(channel()).listen(ListenRequest.newBuilder().setHost(host).setPort(port).build(), events);
     }
 
+    /**
+     * Watches files of the agent's machine - every input replaces the roots, the events: their changes.
+     */
+    public StreamObserver<WatchInput> watch(StreamObserver<WatchEvent> events) {
+        return RemoteAgentServiceGrpc.newStub(channel()).watch(events);
+    }
+
     public byte[] readFile(String path) {
         return call(stub -> stub.readFile(pathRequest(path))).getData().toByteArray();
     }

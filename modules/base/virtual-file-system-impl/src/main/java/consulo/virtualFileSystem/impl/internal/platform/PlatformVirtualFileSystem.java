@@ -21,6 +21,7 @@ import consulo.logging.Logger;
 import consulo.platform.PlatformNioFileSystem;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
@@ -53,6 +54,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +80,7 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
     private static final char SEPARATOR = '/';
 
     private final Map<String, FileSystem> myFileSystems = new ConcurrentHashMap<>();
+    private final PlatformFileWatcher myWatcher = new PlatformFileWatcher(this);
 
     @Override
     public String getProtocol() {
@@ -126,6 +129,7 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
             if (VirtualFilePointerManager.getInstance() instanceof SimpleModificationTracker tracker) {
                 tracker.incModificationCount();
             }
+            myWatcher.fileSystemRegistered();
         }
         return platformFileSystem.getPlatformId() + (filePath.startsWith("/") ? filePath : SEPARATOR + filePath);
     }
@@ -200,6 +204,19 @@ public class PlatformVirtualFileSystem extends NewVirtualFileSystem
         catch (FileSystemUnavailableException e) {
             return null;
         }
+    }
+
+    /**
+     * Watch requests of the {@link consulo.virtualFileSystem.LocalFileSystem} for paths of this file system.
+     */
+    public Set<LocalFileSystem.WatchRequest> replaceWatchedRoots(Collection<? extends LocalFileSystem.WatchRequest> toRemove,
+                                                                 Collection<String> recursiveRoots,
+                                                                 Collection<String> flatRoots) {
+        return myWatcher.replaceWatchedRoots(toRemove, recursiveRoots, flatRoots);
+    }
+
+    @Nullable FileSystem getRegisteredFileSystem(String platformId) {
+        return myFileSystems.get(platformId);
     }
 
     @Override

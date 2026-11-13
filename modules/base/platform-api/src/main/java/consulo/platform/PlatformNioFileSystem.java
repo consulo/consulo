@@ -24,4 +24,14 @@ package consulo.platform;
  */
 public interface PlatformNioFileSystem {
     String getPlatformId();
+
+    /**
+     * Starts watching files of the machine - the roots are given by {@link PlatformFileWatch#setRoots}, the changes come to the
+     * listener until the watch is closed.
+     *
+     * @throws UnsupportedOperationException if the machine cannot report changes of its files
+     */
+    default PlatformFileWatch watch(PlatformFileWatchListener listener) {
+        throw new UnsupportedOperationException("Watching files is not supported on " + getPlatformId());
+    }
 }

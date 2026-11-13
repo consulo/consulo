@@ -31,6 +31,7 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.impl.internal.BatchingFileSystem;
+import consulo.virtualFileSystem.impl.internal.platform.PlatformVirtualFileSystem;
 import consulo.virtualFileSystem.internal.DiskQueryRelay;
 import consulo.virtualFileSystem.internal.VfsImplUtil;
 import consulo.virtualFileSystem.internal.PersistentFS;
@@ -346,6 +347,21 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase
         flatRoots = ObjectUtil.notNull(flatRoots, Collections.emptyList());
 
         Set<WatchRequest> result = new HashSet<>();
+
+        // roots of other machines are watched by their file system - their paths are of it
+        PlatformVirtualFileSystem platformFileSystem = getPlatformFileSystem();
+        if (platformFileSystem != null) {
+            List<WatchRequest> platformToRemove = new ArrayList<>();
+            List<String> platformRecursive = new ArrayList<>();
+            List<String> platformFlat = new ArrayList<>();
+            watchRequests = splitPlatformRequests(watchRequests, platformToRemove);
+            recursiveRoots = splitPlatformRoots(platformFileSystem, recursiveRoots, platformRecursive);
+            flatRoots = splitPlatformRoots(platformFileSystem, flatRoots, platformFlat);
+            if (!platformToRemove.isEmpty() || !platformRecursive.isEmpty() || !platformFlat.isEmpty()) {
+                result.addAll(platformFileSystem.replaceWatchedRoots(platformToRemove, platformRecursive, platformFlat));
+            }
+        }
+
         synchronized (myLock) {
             boolean update = doAddRootsToWatch(recursiveRoots, flatRoots, result) |
                 doRemoveWatchedRoots(watchRequests);
@@ -355,6 +371,36 @@ public final class LocalFileSystemImpl extends LocalFileSystemBase
             }
         }
         return result;
+    }
+
+    private static @Nullable PlatformVirtualFileSystem getPlatformFileSystem() {
+        VirtualFileSystem fileSystem = VirtualFileManager.getInstance().getFileSystem(StandardFileSystems.PLATFORM_PROTOCOL);
+        return fileSystem instanceof PlatformVirtualFileSystem platformFileSystem ? platformFileSystem : null;
+    }
+
+    private static Collection<WatchRequest> splitPlatformRequests(Collection<WatchRequest> requests, List<WatchRequest> platformRequests) {
+        List<WatchRequest> local = new ArrayList<>(requests.size());
+        for (WatchRequest request : requests) {
+            (request instanceof WatchRequestImpl ? local : platformRequests).add(request);
+        }
+        return local;
+    }
+
+    private static Collection<String> splitPlatformRoots(PlatformVirtualFileSystem platformFileSystem,
+                                                        Collection<String> roots,
+                                                        List<String> platformRoots) {
+        List<String> local = new ArrayList<>(roots.size());
+        for (String root : roots) {
+            int index = root.indexOf(URLUtil.ARCHIVE_SEPARATOR);
+            String rootPath = index >= 0 ? root.substring(0, index) : root;
+            if (platformFileSystem.isPlatformPath(rootPath)) {
+                platformRoots.add(rootPath);
+            }
+            else {
+                local.add(root);
+            }
+        }
+        return local;
     }
 
     private boolean doAddRootsToWatch(Collection<String> recursiveRoots, Collection<String> flatRoots, Set<WatchRequest> results) {

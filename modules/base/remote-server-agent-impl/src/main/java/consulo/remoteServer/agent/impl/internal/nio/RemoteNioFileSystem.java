@@ -15,6 +15,8 @@
  */
 package consulo.remoteServer.agent.impl.internal.nio;
 
+import consulo.platform.PlatformFileWatch;
+import consulo.platform.PlatformFileWatchListener;
 import consulo.platform.PlatformNioFileSystem;
 import consulo.remoteServer.agent.impl.internal.RemoteAgentConnection;
 import consulo.remoteServer.agent.impl.internal.protocol.FileInfo;
@@ -119,6 +121,11 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
     @Override
     public WatchService newWatchService() throws IOException {
         throw new UnsupportedOperationException("File watching not supported on remote file systems");
+    }
+
+    @Override
+    public PlatformFileWatch watch(PlatformFileWatchListener listener) {
+        return new RemoteFileWatch(this, listener);
     }
 
     public RemoteFileMetadataCache getMetadataCache() {
