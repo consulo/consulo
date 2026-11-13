@@ -54,6 +54,7 @@ import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
+import consulo.virtualFileSystem.internal.PlatformPathVirtualFileSystem;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import org.jspecify.annotations.Nullable;
@@ -261,7 +262,10 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
         List<VirtualFile> roots = new ArrayList<>();
         for (String path : paths) {
             VirtualFile root = fs.findFileByPath(path);
-            if (root == null && platformFileSystem != null) {
+            // a path of another machine - a missing local root is not one
+            if (root == null
+                && platformFileSystem instanceof PlatformPathVirtualFileSystem platformPathFileSystem
+                && platformPathFileSystem.isPlatformPath(path)) {
                 root = platformFileSystem.findFileByPath(path);
             }
             if (root != null) {
