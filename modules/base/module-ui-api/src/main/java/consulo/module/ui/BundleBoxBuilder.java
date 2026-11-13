@@ -19,15 +19,12 @@ import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.project.localize.ProjectLocalize;
-import consulo.ui.ComboBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
-import consulo.ui.model.MutableFlatDataModel;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -165,38 +162,7 @@ public final class BundleBoxBuilder {
 
         @RequiredUIAccess
         private void sdkChangedImpl() {
-          ComboBox<BundleBox.BundleBoxItem> component = box.getComponent();
-
-          MutableFlatDataModel<BundleBox.BundleBoxItem> listModel = (MutableFlatDataModel<BundleBox.BundleBoxItem>)component.getDataModel();
-
-          BundleBox.BundleBoxItem bundleBoxItem = component.getValue();
-
-          List<BundleBox.BundleBoxItem> newItems = BundleBox.buildItems(sdkModel, mySdkFilter, myBundleFilter, myWithNoneItem);
-
-          List<BundleBox.BundleBoxItem> bundleBoxItems = listModel.replaceAll(newItems);
-          for (BundleBox.BundleBoxItem boxItem : bundleBoxItems) {
-            if (boxItem instanceof BundleBox.CustomBundleBoxItem || boxItem instanceof BundleBox.ModuleExtensionBundleBoxItem) {
-              listModel.add(boxItem);
-            }
-          }
-
-          boolean selected = false;
-          for (BundleBox.BundleBoxItem newItem : newItems) {
-            if (newItem.equals(bundleBoxItem)) {
-              component.setValue(newItem);
-              selected = true;
-              break;
-            }
-          }
-
-          if (!selected) {
-            if(bundleBoxItem == null || bundleBoxItem instanceof BundleBox.NullBundleBoxItem) {
-              box.setSelectedNoneBundle();
-            }
-            else {
-              box.setSelectedBundle(bundleBoxItem.getBundleName());
-            }
-          }
+          box.refreshItems(false);
         }
       }, myUIDisposable);
     }

@@ -15,6 +15,9 @@
  */
 package consulo.module.creation;
 
+import consulo.platform.Platform;
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author VISTALL
  * @since 2019-08-20
@@ -22,6 +25,7 @@ package consulo.module.creation;
 public class NewModuleWizardContextBase implements NewModuleWizardContext {
   private String myName;
   private String myPath;
+  private @Nullable Platform myPlatform;
 
   private final boolean myIsNewProject;
 
@@ -49,6 +53,16 @@ public class NewModuleWizardContextBase implements NewModuleWizardContext {
   @Override
   public String getPath() {
     return myPath;
+  }
+
+  @Override
+  public Platform getPlatform() {
+    return myPlatform != null ? myPlatform : NewModuleWizardContext.super.getPlatform();
+  }
+
+  @Override
+  public void setPlatform(Platform platform) {
+    myPlatform = platform;
   }
 
   @Override

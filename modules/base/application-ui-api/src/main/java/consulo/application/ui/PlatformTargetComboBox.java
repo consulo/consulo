@@ -79,11 +79,8 @@ public final class PlatformTargetComboBox {
 
     @RequiredUIAccess
     public void setTargetId(@Nullable String id) {
-        PlatformTarget target = myManager.findTarget(id);
-        if (target == null && id != null) {
-            target = findOrAddMissing(id);
-        }
-        myComboBox.setValue(target);
+        // the targets of the manager are new on each call - the one of the model is chosen
+        myComboBox.setValue(id == null ? myManager.getLocalTarget() : findOrAddMissing(id));
     }
 
     /**

@@ -6,6 +6,8 @@ label.project.files.location:
     text: 'Project &location:'
 label.project.name:
     text: 'Project n&ame:'
+label.project.target:
+    text: '&Target:'
 project.new.wizard.module.identification:
     text: module
 project.new.wizard.project.identification:

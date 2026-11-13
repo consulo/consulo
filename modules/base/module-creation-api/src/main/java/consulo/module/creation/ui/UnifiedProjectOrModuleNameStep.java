@@ -18,14 +18,17 @@ package consulo.module.creation.ui;
 import consulo.application.Application;
 import consulo.application.platform.PlatformTarget;
 import consulo.application.platform.PlatformTargetManager;
+import consulo.application.ui.PlatformTargetComboBox;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.module.creation.NewModuleWizardContext;
 import consulo.module.creation.localize.ModuleCreationLocalize;
+import consulo.module.ui.BundleBox;
 import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooserTextBoxBuilder;
 import consulo.ui.ex.TextComponentAccessor;
@@ -34,7 +37,11 @@ import consulo.ui.util.FormBuilder;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -48,9 +55,14 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   private FileChooserTextBoxBuilder.Controller myFileChooserController;
   private boolean myUserPathEntered;
   private boolean myUserNameEntered;
+  private boolean myPathChosen;
+  // the machine of the project - chosen for a new project
+  private Platform myPlatform;
+  private final List<Consumer<Platform>> myPlatformListeners = new ArrayList<>();
 
   public UnifiedProjectOrModuleNameStep(C context) {
     myContext = context;
+    myPlatform = context.getPlatform();
   }
 
   @RequiredUIAccess
@@ -72,6 +84,13 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
     myNameTextBox = TextBox.create();
 
     formBuilder.addLabeled(myContext.isNewProject() ? ModuleCreationLocalize.labelProjectName() : ModuleCreationLocalize.labelModuleName(), myNameTextBox);
+
+    PlatformTargetComboBox targetComboBox = null;
+    if (myContext.isNewProject()) {
+      // a new project may be created on any machine - a module is of the machine of its project
+      targetComboBox = new PlatformTargetComboBox(Application.get().getInstance(PlatformTargetManager.class));
+      formBuilder.addLabeled(ModuleCreationLocalize.labelProjectTarget(), targetComboBox.getComponent());
+    }
 
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myContext.getProject());
     builder.uiDisposable(uiDisposable);
@@ -133,6 +152,45 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
       }
     });
 
+    if (targetComboBox != null) {
+      PlatformTargetComboBox comboBox = targetComboBox;
+      PlatformTargetManager targetManager = Application.get().getInstance(PlatformTargetManager.class);
+      UIAccess uiAccess = UIAccess.current();
+      Path localBaseDir = Path.of(projectOrModulePath).getParent();
+      comboBox.addListener(targetId -> {
+        PlatformTarget target = targetManager.findTarget(targetId);
+        if (target == null) {
+          return;
+        }
+        // a target of a chosen path keeps that path
+        boolean reinitialize = !myPathChosen;
+        target.connect().whenComplete((platform, error) -> {
+          if (platform == null) {
+            return;
+          }
+          // the new project of that machine - looked up there, not in the UI thread
+          Path location = null;
+          if (reinitialize) {
+            Path baseDir = platform == Platform.current() && localBaseDir != null ? localBaseDir : platform.user().homePath();
+            location = findNonexistent(baseDir, "untitled");
+          }
+          Path newLocation = location;
+          uiAccess.give(() -> setPlatform(platform, newLocation));
+        });
+      });
+      // a path chosen on another machine - that machine is the target
+      myFileChooserController.addPathChosenListener(path -> {
+        PlatformTarget target = path.getFileSystem() == FileSystems.getDefault() ? null : targetManager.findTargetOf(path);
+        myPathChosen = true;
+        try {
+          comboBox.setTargetId(target == null ? null : target.getId());
+        }
+        finally {
+          myPathChosen = false;
+        }
+      });
+    }
+
     extend(formBuilder, uiDisposable);
 
     return formBuilder.build();
@@ -161,17 +219,58 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   }
 
   /**
-   * The machine of the chosen location - the location may be chosen on any machine for a new project.
+   * The machine of the project or module.
+   */
+  public Platform getPlatform() {
+    return myPlatform;
+  }
+
+  /**
+   * Called when another machine is chosen for a new project.
+   */
+  public void addPlatformListener(Consumer<Platform> listener) {
+    myPlatformListeners.add(listener);
+  }
+
+  /**
+   * Offers the bundles of the machine of the project - the local ones by default, the ones of another machine when it is chosen.
    */
   @RequiredUIAccess
-  public Platform getPlatform() {
-    Path path = myFileChooserController.getPathValue();
-    if (path == null || path.getFileSystem() == FileSystems.getDefault()) {
-      return myContext.isNewProject() ? Platform.current() : myContext.getPlatform();
+  public void bindBundleBox(BundleBox bundleBox) {
+    Consumer<Platform> filter = platform -> bundleBox.setBundleFilter(sdk -> sdk.getPlatform().getId().equals(platform.getId()));
+    filter.accept(myPlatform);
+    addPlatformListener(filter);
+  }
+
+  private static Path findNonexistent(Path baseDir, String prefix) {
+    Path candidate = baseDir.resolve(prefix);
+    for (int postfix = 1; Files.exists(candidate); postfix++) {
+      candidate = baseDir.resolve(prefix + postfix);
     }
-    PlatformTarget target = Application.get().getInstance(PlatformTargetManager.class).findTargetOf(path);
-    Platform platform = target != null ? target.getPlatform() : null;
-    return platform != null ? platform : myContext.getPlatform();
+    return candidate;
+  }
+
+  /**
+   * @param location the new project of that machine, null to keep the entered one
+   */
+  @RequiredUIAccess
+  private void setPlatform(Platform platform, @Nullable Path location) {
+    if (location != null) {
+      myNameTextBox.setValue(location.getFileName().toString(), false);
+      myFileChooserController.setValue(location.toString(), false);
+      myUserNameEntered = false;
+      myUserPathEntered = false;
+    }
+
+    if (platform == myPlatform) {
+      return;
+    }
+    myPlatform = platform;
+    myFileChooserController.setFileSystem(platform == Platform.current() ? null : platform.fs().getPath("/").getFileSystem());
+
+    for (Consumer<Platform> listener : myPlatformListeners) {
+      listener.accept(platform);
+    }
   }
 
   public String getName() {

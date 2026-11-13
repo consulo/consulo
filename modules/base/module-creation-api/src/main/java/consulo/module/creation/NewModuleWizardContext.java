@@ -16,6 +16,7 @@
 package consulo.module.creation;
 
 import consulo.module.creation.localize.ModuleCreationLocalize;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
@@ -33,6 +34,17 @@ public interface NewModuleWizardContext {
     String getName();
 
     String getPath();
+
+    /**
+     * The machine the project or module is created on - of the project, or chosen for a new project.
+     */
+    default Platform getPlatform() {
+        Project project = getProject();
+        return project != null ? project.getPlatform() : Platform.current();
+    }
+
+    default void setPlatform(Platform platform) {
+    }
 
     default String getTargetId() {
         return isNewProject()

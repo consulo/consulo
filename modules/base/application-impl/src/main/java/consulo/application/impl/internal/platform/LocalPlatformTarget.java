@@ -43,7 +43,7 @@ final class LocalPlatformTarget implements PlatformTarget {
 
     @Override
     public Image getIcon() {
-        return PlatformIconGroup.nodesDesktop();
+        return PlatformIconGroup.nodesHomefolder();
     }
 
     @Override

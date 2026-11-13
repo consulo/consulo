@@ -37,6 +37,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Builder for {@link TextBox} with browse button. On click show file chooser dialog
@@ -80,6 +81,9 @@ public final class FileChooserTextBoxBuilder {
                         // the machine of the path - a chooser of any machine may give a path of another one
                         myController.myChosenFileSystem = path.getFileSystem();
                         myController.myAccessor.setValue(myController.myTextBox, path.toString());
+                        for (Consumer<Path> listener : myController.myPathListeners) {
+                            listener.accept(path);
+                        }
                     }
                 });
         }
@@ -93,6 +97,7 @@ public final class FileChooserTextBoxBuilder {
         private final LocalizeValue myDialogTitle;
         private final LocalizeValue myDialogDescription;
         private @Nullable FileSystem myChosenFileSystem;
+        private final List<Consumer<Path>> myPathListeners = new ArrayList<>();
 
         public Controller(FileChooserTextBoxBuilder builder) {
             myAccessor = builder.myTextBoxAccessor;
@@ -136,6 +141,20 @@ public final class FileChooserTextBoxBuilder {
         @RequiredUIAccess
         public String getValue() {
             return StringUtil.notNullize(myAccessor.getValue(myTextBox));
+        }
+
+        /**
+         * The machine the text is a path of - null for the local one.
+         */
+        public void setFileSystem(@Nullable FileSystem fileSystem) {
+            myChosenFileSystem = fileSystem;
+        }
+
+        /**
+         * Called with every path chosen in the dialog - a path of any machine, when the descriptor allows it.
+         */
+        public void addPathChosenListener(Consumer<Path> listener) {
+            myPathListeners.add(listener);
         }
 
         /**

@@ -17,7 +17,6 @@ package consulo.ide.impl.newProject.actions;
 
 import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
-import consulo.application.WriteAction;
 import consulo.module.creation.impl.internal.NewProjectDialogDescriptor;
 import consulo.module.creation.impl.internal.NewProjectWizardData;
 import consulo.localize.LocalizeValue;
@@ -38,13 +37,22 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.image.Image;
-import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.platform.Platform;
+import consulo.ui.UIAction;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 /**
  * @author VISTALL
@@ -93,54 +101,102 @@ public class NewProjectAction extends DumbAwareAction {
         generateProjectAsync(projectPanel);
     }
 
+    /**
+     * The location of the project, created on its machine.
+     *
+     * @param baseDir  the directory, null when it cannot be created or found
+     * @param notEmpty the directory had files before
+     */
+    private record PreparedLocation(Path location, @Nullable VirtualFile baseDir, boolean notEmpty, @Nullable String error) {
+    }
+
     @RequiredUIAccess
     private static void generateProjectAsync(NewProjectWizardData panel) {
         // leave current step
         panel.finish();
 
         NewModuleWizardContext context = panel.getWizardContext();
+        Platform platform = context.getPlatform();
 
-        File location = new File(context.getPath());
-        int childCount = location.exists() ? location.list().length : 0;
-        if (!location.exists() && !location.mkdirs()) {
-            MessageBoxes.okError(LocalizeValue.localizeTODO("Cannot create directory '" + location + "'")).showAsync();
+        Path location;
+        try {
+            // a path of the machine of the project - the local one, or a remote one
+            location = platform.fs().getPath(context.getPath());
+        }
+        catch (InvalidPathException e) {
+            MessageBoxes.okError(LocalizeValue.localizeTODO("Invalid project location '" + context.getPath() + "'")).showAsync();
             return;
         }
 
-        WriteAction.run(() -> LocalFileSystem.getInstance().refreshIoFiles(List.of(location), false, true, null));
+        CoroutineScope scope = CoroutineScope.of(Application.get().coroutineContext());
+        scope.putCopyableUserData(UIAccess.KEY, UIAccess.current());
 
-        VirtualFile baseDir = LocalFileSystem.getInstance().findFileByIoFile(location);
+        Coroutine
+            .first(CodeExecution.<Object, PreparedLocation>apply(ignored -> prepareLocation(location)))
+            .then(UIAction.<PreparedLocation, PreparedLocation>apply(prepared -> {
+                VirtualFile baseDir = prepared.baseDir();
+                if (baseDir == null) {
+                    MessageBoxes.okError(LocalizeValue.localizeTODO(prepared.error())).showAsync();
+                }
+                else if (prepared.notEmpty()) {
+                    MessageBoxes.yesNo()
+                        .text(LocalizeValue.localizeTODO("The directory '" + location + "' is not empty. Continue?"))
+                        .showAsync()
+                        .whenComplete((confirmed, error) -> {
+                            if (Boolean.TRUE.equals(confirmed)) {
+                                openProject(panel, platform, location, baseDir);
+                            }
+                        });
+                }
+                else {
+                    openProject(panel, platform, location, baseDir);
+                }
+                return prepared;
+            }))
+            .runAsync(scope, ObjectUtil.NULL);
+    }
+
+    /**
+     * Creates the directory where it is - not in the UI thread, as a remote machine answers by network.
+     */
+    private static PreparedLocation prepareLocation(Path location) {
+        boolean notEmpty = false;
+        try {
+            if (Files.isDirectory(location)) {
+                try (Stream<Path> children = Files.list(location)) {
+                    notEmpty = children.findAny().isPresent();
+                }
+            }
+            else {
+                Files.createDirectories(location);
+            }
+        }
+        catch (IOException e) {
+            LOG.info(e);
+            return new PreparedLocation(location, null, false, "Cannot create directory '" + location + "'");
+        }
+
+        VirtualFile baseDir = VirtualFileManager.getInstance().refreshAndFindFileByNioPath(location);
         if (baseDir == null) {
-            MessageBoxes.okError(LocalizeValue.localizeTODO("Directory '" + location + "' is not resolved.")).showAsync();
-            return;
+            return new PreparedLocation(location, null, false, "Directory '" + location + "' is not resolved.");
         }
-
         baseDir.refresh(false, true);
-
-        if (childCount > 0) {
-            MessageBoxes.yesNo()
-                .text(LocalizeValue.localizeTODO("The directory '" + location + "' is not empty. Continue?"))
-                .showAsync()
-                .whenComplete((confirmed, error) -> {
-                    if (Boolean.TRUE.equals(confirmed)) {
-                        openProject(panel, location, baseDir);
-                    }
-                });
-            return;
-        }
-
-        openProject(panel, location, baseDir);
+        return new PreparedLocation(location, baseDir, notEmpty, null);
     }
 
     @RequiredUIAccess
-    private static void openProject(NewProjectWizardData panel, File location, VirtualFile baseDir) {
-        RecentProjectsManager.getInstance().setLastProjectCreationLocation(location.getParent());
+    private static void openProject(NewProjectWizardData panel, Platform platform, Path location, VirtualFile baseDir) {
+        Path parent = location.getParent();
+        if (platform == Platform.current() && parent != null) {
+            // the default location of the next new project - of this machine
+            RecentProjectsManager.getInstance().setLastProjectCreationLocation(parent.toString());
+        }
 
         UIAccess uiAccess = UIAccess.current();
         ProjectOpenContext openContext = new ProjectOpenContext();
         openContext.putUserData(ProjectOpenContext.FORCE_OPEN_IN_NEW_FRAME, true);
         Application.get().getInstance(ProjectOpenService.class)
-            .openProjectAsync(baseDir.toNioPath(), uiAccess, openContext)
+            .openProjectAsync(location, uiAccess, openContext)
             .whenComplete((openedProject, error) -> {
                 if (error == null && openedProject != null) {
                     uiAccess.give(() -> NewOrImportModuleUtil.doCreate(

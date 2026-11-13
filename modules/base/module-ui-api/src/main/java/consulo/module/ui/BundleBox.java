@@ -260,6 +260,10 @@ public class BundleBox implements PseudoComponent {
     }
 
     private final ComboBox<BundleBoxItem> myOriginalComboBox;
+    private final BundleHolder myBundleHolder;
+    private final @Nullable Predicate<SdkTypeId> myTypeFilter;
+    private final boolean myWithNullItem;
+    private @Nullable Predicate<Sdk> myBundleFilter;
 
     @RequiredUIAccess
     public BundleBox() {
@@ -302,6 +306,10 @@ public class BundleBox implements PseudoComponent {
         @Nullable Image nullIcon,
         @Nullable Predicate<Sdk> bundleFilter
     ) {
+        myBundleHolder = bundleHolder;
+        myTypeFilter = filter;
+        myWithNullItem = nullItemName.isNotEmpty();
+        myBundleFilter = bundleFilter;
         myOriginalComboBox = ComboBox.create(model(bundleHolder, filter, bundleFilter, nullItemName));
 
         myOriginalComboBox.setRenderer((renderer, renderItem) -> {
@@ -387,6 +395,56 @@ public class BundleBox implements PseudoComponent {
         LocalizeValue nullItemName
     ) {
         return FlatDataModel.of(buildItems(holder, filter, bundleFilter, nullItemName.isNotEmpty()));
+    }
+
+    /**
+     * Changes which bundles are offered - e.g. the ones of another machine. The selection stays when it is still offered,
+     * otherwise the first bundle is selected.
+     */
+    @RequiredUIAccess
+    public void setBundleFilter(@Nullable Predicate<Sdk> bundleFilter) {
+        myBundleFilter = bundleFilter;
+        refreshItems(true);
+    }
+
+    /**
+     * Builds the items again - the bundles changed, or the filter.
+     *
+     * @param selectFirst select the first bundle when the selected one is not offered any more
+     */
+    @RequiredUIAccess
+    void refreshItems(boolean selectFirst) {
+        MutableFlatDataModel<BundleBoxItem> listModel = (MutableFlatDataModel<BundleBoxItem>) myOriginalComboBox.getDataModel();
+
+        BundleBoxItem selectedItem = myOriginalComboBox.getValue();
+
+        List<BundleBoxItem> newItems = buildItems(myBundleHolder, myTypeFilter, myBundleFilter, myWithNullItem);
+
+        List<BundleBoxItem> oldItems = listModel.replaceAll(newItems);
+        for (BundleBoxItem oldItem : oldItems) {
+            if (oldItem instanceof CustomBundleBoxItem || oldItem instanceof ModuleExtensionBundleBoxItem) {
+                listModel.add(oldItem);
+            }
+        }
+
+        for (BundleBoxItem newItem : newItems) {
+            if (newItem.equals(selectedItem)) {
+                myOriginalComboBox.setValue(newItem);
+                return;
+            }
+        }
+
+        if (selectFirst) {
+            if (listModel.getSize() > 0) {
+                myOriginalComboBox.setValueByIndex(0);
+            }
+        }
+        else if (selectedItem == null || selectedItem instanceof NullBundleBoxItem) {
+            setSelectedNoneBundle();
+        }
+        else {
+            setSelectedBundle(selectedItem.getBundleName());
+        }
     }
 
     @RequiredUIAccess
