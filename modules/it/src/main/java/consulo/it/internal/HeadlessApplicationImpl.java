@@ -84,9 +84,19 @@ public class HeadlessApplicationImpl extends UnifiedApplication {
         return super.getProfiles() | ComponentProfiles.INTEGRATION_TEST;
     }
 
+    /**
+     * Cached as the IDE's application caches it: every lexer step of every parse checks for cancellation through it, and
+     * a lookup in the container each time is most of the cost of indexing a large library.
+     */
+    private volatile ProgressManager myProgressManager;
+
     @Override
     public ProgressManager getProgressManager() {
-        return getInstance(ProgressManager.class);
+        ProgressManager progressManager = myProgressManager;
+        if (progressManager == null) {
+            myProgressManager = progressManager = getInstance(ProgressManager.class);
+        }
+        return progressManager;
     }
 
     @Override
