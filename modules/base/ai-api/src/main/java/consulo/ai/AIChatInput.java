@@ -71,4 +71,10 @@ public interface AIChatInput {
      * What is written in the box now.
      */
     String getText();
+
+    /**
+     * Asks for a box as wide as the given number of characters of its font.
+     */
+    @RequiredUIAccess
+    void setVisibleLength(int columns);
 }

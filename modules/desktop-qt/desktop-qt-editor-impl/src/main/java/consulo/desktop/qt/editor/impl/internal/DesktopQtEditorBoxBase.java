@@ -34,7 +34,9 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ValueComponentEvent;
 import consulo.virtualFileSystem.fileType.FileType;
 import io.qt.core.Qt;
+import io.qt.core.QMargins;
 import io.qt.gui.QFontInfo;
+import io.qt.gui.QFontMetrics;
 import io.qt.widgets.QHBoxLayout;
 import io.qt.widgets.QScrollBar;
 import io.qt.widgets.QWidget;
@@ -47,6 +49,8 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
     private @Nullable Component mySuffixComponent;
 
     private boolean myFireListeners = true;
+
+    private int myVisibleLength;
 
     protected DesktopQtEditorBoxBase(EditorBoxOptions options, EditorFactory editorFactory, ProjectManager projectManager) {
         mySupport = new EditorBoxSupport(options, editorFactory, projectManager, this::valueChanged, this::editorReleasing);
@@ -72,6 +76,7 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
         super.initialize(component);
 
         attachEditor(component);
+        applyVisibleLength(component);
 
         Component suffixComponent = mySuffixComponent;
         if (suffixComponent != null) {
@@ -214,6 +219,25 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
     @Override
     public void selectAll() {
         mySupport.selectAll();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setVisibleLength(int columns) {
+        myVisibleLength = columns;
+
+        W frame = myComponent;
+        if (frame != null && !frame.isDisposed()) {
+            applyVisibleLength(frame);
+        }
+    }
+
+    private void applyVisibleLength(W frame) {
+        if (myVisibleLength <= 0) {
+            return;
+        }
+        QMargins margins = frame.contentsMargins();
+        frame.setMinimumWidth(new QFontMetrics(frame.font()).horizontalAdvance("m") * myVisibleLength + margins.left() + margins.right());
     }
 
     @RequiredUIAccess

@@ -89,6 +89,10 @@ public class CommentForAIFieldAction extends DumbAwareAction implements CustomUI
     public Component createCustomComponent(Presentation presentation, String place) {
         TextBox box = TextBox.create();
         presentation.putClientProperty(BOX, box);
+        Editor owner = presentation.getClientProperty(EDITOR);
+        if (owner != null) {
+            owner.putUserData(FIELD, box);
+        }
         box.addDetachListener(event -> {
             Editor editor = presentation.getClientProperty(EDITOR);
             if (editor != null && editor.getUserData(FIELD) == box) {

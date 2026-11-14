@@ -160,6 +160,12 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
 
     @RequiredUIAccess
     @Override
+    public void setVisibleLength(int columns) {
+        toVaadinComponent().getStyle().set("width", columns + "ch");
+    }
+
+    @RequiredUIAccess
+    @Override
     public void setEnabled(boolean value) {
         super.setEnabled(value);
 

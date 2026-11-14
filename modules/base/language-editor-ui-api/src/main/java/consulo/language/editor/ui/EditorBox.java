@@ -47,4 +47,11 @@ public interface EditorBox extends ValueComponent<String>, HasFocus, HasSize, Ha
 
     @RequiredUIAccess
     void selectAll();
+
+    /**
+     * Asks for a box as wide as the given number of characters of its font.
+     */
+    @RequiredUIAccess
+    default void setVisibleLength(int columns) {
+    }
 }

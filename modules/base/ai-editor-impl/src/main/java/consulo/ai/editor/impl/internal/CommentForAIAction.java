@@ -64,7 +64,7 @@ import java.util.function.Consumer;
     }
 )
 public class CommentForAIAction extends DumbAwareAction implements AnActionWithSyncUpdate {
-    private static final int WIDTH = 480;
+    private static final int COLUMNS = 60;
 
     public static final String ID = "AI.CommentForAI";
 
@@ -120,9 +120,8 @@ public class CommentForAIAction extends DumbAwareAction implements AnActionWithS
         content.paddingBuilder().allSet(Space.MEDIUM).apply();
         Label title = Label.create(AIEditorLocalize.labelCommentOn(target.where()));
         title.addStyle(LabelStyle.FONT_SMALL);
-        // the line of the title sets the width of the box - its height stays the one of the text written in it
-        title.setWidth(WIDTH);
         content.add(title);
+        input.setVisibleLength(COLUMNS);
         content.add(input.getComponent());
 
         JBPopup[] popup = new JBPopup[1];

@@ -464,6 +464,12 @@ final class AIChatInputImpl implements AIChatInput {
     }
 
     @RequiredUIAccess
+    @Override
+    public void setVisibleLength(int columns) {
+        myEditorBox.setVisibleLength(columns);
+    }
+
+    @RequiredUIAccess
     private void show(String text) {
         myEditorBox.setValue(text);
         Editor editor = myEditorBox.getEditor();

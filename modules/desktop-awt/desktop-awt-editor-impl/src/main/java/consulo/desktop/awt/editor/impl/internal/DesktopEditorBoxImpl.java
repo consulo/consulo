@@ -41,6 +41,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.function.Consumer;
@@ -80,6 +81,10 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
         @Override
         public Dimension getPreferredSize() {
             Dimension size = super.getPreferredSize();
+            if (myVisibleLength > 0 && !isPreferredSizeSet()) {
+                Insets insets = getInsets();
+                size = new Dimension(getFontMetrics(getFont()).charWidth('m') * myVisibleLength + insets.left + insets.right, size.height);
+            }
             if (myOptions.oneLine() || isPreferredSizeSet() || !(getEditor() instanceof EditorEx editor)) {
                 return size;
             }
@@ -111,6 +116,8 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
     private @Nullable Component mySuffixComponent;
 
     private boolean myFireListeners = true;
+
+    private int myVisibleLength;
 
     DesktopEditorBoxImpl(EditorBoxOptions options) {
         myOptions = options;
@@ -164,6 +171,13 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
     @Override
     public void selectAll() {
         toAWTComponent().selectAll();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void setVisibleLength(int columns) {
+        myVisibleLength = columns;
+        toAWTComponent().revalidate();
     }
 
     @Override
