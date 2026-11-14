@@ -148,10 +148,10 @@ final class AIChatToolCallView {
     private void updateHeader() {
         AIContent.ToolCall toolCall = myToolCall;
         myStatus.setImage(myStopped ? PlatformIconGroup.runconfigurationsTestterminated() : statusImage(toolCall.status()));
-        myTitle.setText(LocalizeValue.of(relative(toolCall.title())));
+        myTitle.setText(AIChatTexts.plain(relative(toolCall.title())));
 
         myFilePath = filePath(toolCall);
-        myFile.setText(myFilePath == null ? LocalizeValue.empty() : LocalizeValue.of(Path.of(myFilePath).getFileName().toString()));
+        myFile.setText(myFilePath == null ? LocalizeValue.empty() : AIChatTexts.plain(Path.of(myFilePath).getFileName().toString()));
         myFile.setToolTipText(myFilePath == null ? LocalizeValue.empty() : LocalizeValue.of(myFilePath));
         myFile.setVisible(myFilePath != null && !toolCall.title().contains(Path.of(myFilePath).getFileName().toString()));
 

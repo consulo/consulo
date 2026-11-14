@@ -59,9 +59,9 @@ final class AIChatQuestionPrompt extends AIChatPrompt<Map<String, String>> {
         Map<String, Supplier<String>> answers = new LinkedHashMap<>();
         for (AIQuestion question : questions) {
             if (!question.header().isBlank()) {
-                myRoot.add(title(LocalizeValue.of(question.header())));
+                myRoot.add(title(AIChatTexts.plain(question.header())));
             }
-            myRoot.add(Label.create(LocalizeValue.of(question.question())));
+            myRoot.add(Label.create(AIChatTexts.plain(question.question())));
 
             VerticalLayout options = VerticalLayout.create();
             options.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
@@ -101,7 +101,7 @@ final class AIChatQuestionPrompt extends AIChatPrompt<Map<String, String>> {
     private static Supplier<List<String>> radioButtons(AIQuestion question, VerticalLayout layout) {
         RadioGroup<AIQuestionOption> group = RadioGroup.create();
         for (AIQuestionOption option : question.options()) {
-            RadioButton button = group.newButton(LocalizeValue.of(option.label()), option);
+            RadioButton button = group.newButton(AIChatTexts.plain(option.label()), option);
             layout.add(button);
             description(layout, option);
         }
@@ -115,7 +115,7 @@ final class AIChatQuestionPrompt extends AIChatPrompt<Map<String, String>> {
     private static Supplier<List<String>> checkBoxes(AIQuestion question, VerticalLayout layout) {
         Map<AIQuestionOption, CheckBox> boxes = new LinkedHashMap<>();
         for (AIQuestionOption option : question.options()) {
-            CheckBox box = CheckBox.create(LocalizeValue.of(option.label()));
+            CheckBox box = CheckBox.create(AIChatTexts.plain(option.label()));
             box.addStyle(CheckBoxStyle.TRANSPARENT_BACKGROUND);
             boxes.put(option, box);
             layout.add(box);
@@ -137,7 +137,7 @@ final class AIChatQuestionPrompt extends AIChatPrompt<Map<String, String>> {
         if (option.description().isBlank()) {
             return;
         }
-        Label label = Label.create(LocalizeValue.of(option.description()));
+        Label label = Label.create(AIChatTexts.plain(option.description()));
         label.addStyle(LabelStyle.FONT_SMALL);
         label.setForegroundColor(ComponentColors.INFO_FOREGROUND);
         label.paddingBuilder().leftSet(Space.XX_LARGE).apply();

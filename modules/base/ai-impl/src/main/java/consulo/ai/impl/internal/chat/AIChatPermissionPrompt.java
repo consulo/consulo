@@ -69,15 +69,15 @@ final class AIChatPermissionPrompt extends AIChatPrompt<AIToolPermissionDecision
         super(result);
 
         myRoot.add(title(request.interactive()
-            ? AILocalize.labelPermissionQuestion(request.displayName())
-            : AILocalize.labelPermissionTitle(request.displayName())));
+            ? AILocalize.labelPermissionQuestion(AIChatTexts.escape(request.displayName()))
+            : AILocalize.labelPermissionTitle(AIChatTexts.escape(request.displayName()))));
         String description = request.description();
         if (description != null && !description.isBlank()) {
-            myRoot.add(Label.create(LocalizeValue.of(description)));
+            myRoot.add(Label.create(AIChatTexts.plain(description)));
         }
         for (AIToolCallContent content : request.content()) {
             if (content instanceof AIToolCallContent.Text text && !text.text().isBlank()) {
-                myRoot.add(Label.create(LocalizeValue.of(text.text().strip())));
+                myRoot.add(Label.create(AIChatTexts.plain(text.text().strip())));
             }
         }
 
@@ -122,7 +122,7 @@ final class AIChatPermissionPrompt extends AIChatPrompt<AIToolPermissionDecision
             VerticalLayout answers = VerticalLayout.create();
             answers.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
             for (AIToolPermissionOption option : request.options()) {
-                answers.add(Button.create(LocalizeValue.of(option.name()), event -> result.complete(AIToolPermissionDecision.option(option))));
+                answers.add(Button.create(AIChatTexts.plain(option.name()), event -> result.complete(AIToolPermissionDecision.option(option))));
             }
             myRoot.add(answers);
             return;
@@ -177,12 +177,12 @@ final class AIChatPermissionPrompt extends AIChatPrompt<AIToolPermissionDecision
         }
         AIToolPermissionOption main = options.getFirst();
         if (options.size() == 1) {
-            return Button.create(LocalizeValue.of(main.name()), event -> result.complete(AIToolPermissionDecision.option(main)));
+            return Button.create(AIChatTexts.plain(main.name()), event -> result.complete(AIToolPermissionDecision.option(main)));
         }
-        OptionButton button = OptionButton.create(LocalizeValue.of(main.name()), event -> result.complete(AIToolPermissionDecision.option(main)));
+        OptionButton button = OptionButton.create(AIChatTexts.plain(main.name()), event -> result.complete(AIToolPermissionDecision.option(main)));
         List<OptionButtonItem> items = new ArrayList<>();
         for (AIToolPermissionOption option : options.subList(1, options.size())) {
-            items.add(OptionButtonItem.of(LocalizeValue.of(option.name()), event -> result.complete(AIToolPermissionDecision.option(option))));
+            items.add(OptionButtonItem.of(AIChatTexts.plain(option.name()), event -> result.complete(AIToolPermissionDecision.option(option))));
         }
         button.setOptions(items);
         return button;

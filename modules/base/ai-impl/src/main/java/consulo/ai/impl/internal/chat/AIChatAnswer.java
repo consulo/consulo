@@ -386,7 +386,7 @@ final class AIChatAnswer {
         for (int i = 0; i < changes.size(); i++) {
             int index = i;
             AIToolCallContent.Diff change = changes.get(i);
-            Hyperlink file = Hyperlink.create(LocalizeValue.of(relative(change.path())),
+            Hyperlink file = Hyperlink.create(AIChatTexts.plain(relative(change.path())),
                 event -> AIChangesViewer.getInstance().show(myProject, changes, index, myFeedback));
             Label count = Label.create(AIChatToolCallView.changeCount(List.of(change)));
             count.addStyle(LabelStyle.FONT_SMALL);
