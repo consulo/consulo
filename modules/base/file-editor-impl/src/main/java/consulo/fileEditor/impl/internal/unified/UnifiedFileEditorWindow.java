@@ -214,7 +214,11 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
             for (TabInfo tabInfo : myTabs) {
                 if (tabInfo.myTab == event.getTab()) {
                     mySelectedEditor = tabInfo.myComposite;
-                    makeCurrent();
+                    // another tab of the current window is a selection change as well - the manager tells it only
+                    // when the window is made current again
+                    if (!isDisposed() && myOwner.containsWindow(this)) {
+                        myOwner.setCurrentWindow(this, false);
+                    }
                     return;
                 }
             }

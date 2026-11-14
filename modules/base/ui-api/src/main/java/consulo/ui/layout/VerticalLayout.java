@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.HorizontalAlignment;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Space;
@@ -27,7 +28,7 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 2016-06-11
  */
-public interface VerticalLayout extends Layout<LayoutConstraint> {
+public interface VerticalLayout extends Layout<LayoutConstraint>, HasComponentStyle<LayoutStyle> {
     static VerticalLayout create() {
         return create(Space.MEDIUM);
     }

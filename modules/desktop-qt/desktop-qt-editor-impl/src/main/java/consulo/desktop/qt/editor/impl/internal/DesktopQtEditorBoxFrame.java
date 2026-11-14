@@ -41,6 +41,7 @@ final class DesktopQtEditorBoxFrame extends QFrame implements DesktopQtEditorHos
     private final QLineEdit myMetricsLineEdit;
 
     private boolean myOneLine;
+    private boolean myInplace;
 
     private @Nullable Runnable myPaletteListener;
 
@@ -91,6 +92,12 @@ final class DesktopQtEditorBoxFrame extends QFrame implements DesktopQtEditorHos
     @Override
     public void setPaletteListener(@Nullable Runnable listener) {
         myPaletteListener = listener;
+    }
+
+    @Override
+    public void setInplace(boolean inplace) {
+        myInplace = inplace;
+        update();
     }
 
     @Override
@@ -165,7 +172,12 @@ final class DesktopQtEditorBoxFrame extends QFrame implements DesktopQtEditorHos
     protected void paintEvent(QPaintEvent event) {
         QPainter painter = new QPainter(this);
         try {
-            style().drawPrimitive(QStyle.PrimitiveElement.PE_PanelLineEdit, createStyleOption(), painter, this);
+            if (myInplace) {
+                painter.fillRect(rect(), getBaseColor());
+            }
+            else {
+                style().drawPrimitive(QStyle.PrimitiveElement.PE_PanelLineEdit, createStyleOption(), painter, this);
+            }
         }
         finally {
             painter.end();

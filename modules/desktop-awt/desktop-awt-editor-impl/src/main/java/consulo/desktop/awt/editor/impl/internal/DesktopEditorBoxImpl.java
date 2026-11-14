@@ -25,6 +25,8 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.language.editor.ui.EditorBox;
+import consulo.language.editor.ui.EditorBoxStyle;
+import consulo.ui.ex.awt.JBUI;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.internal.EditorBoxOptions;
@@ -167,6 +169,14 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
     @Override
     public void setPlaceholder(LocalizeValue text) {
         toAWTComponent().setPlaceholder(text.getNullIfEmpty());
+    }
+
+    @Override
+    public void addStyle(EditorBoxStyle style) {
+        switch (style) {
+            // a border of its own stays - the look and feel puts its frame only in place of none or of its own
+            case INPLACE -> toAWTComponent().setBorder(JBUI.Borders.empty());
+        }
     }
 
     @Override

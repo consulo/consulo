@@ -24,6 +24,7 @@ import consulo.desktop.awt.ui.impl.facade.FromSwingComponentWrapper;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.language.editor.ui.EditorBoxStyle;
 import consulo.language.editor.ui.EditorComboBox;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.language.editor.ui.awt.ComboboxEditorTextField;
@@ -243,6 +244,10 @@ class DesktopEditorComboBoxImpl extends SwingComponentDelegate<DesktopEditorComb
     @Override
     public void setPlaceholder(LocalizeValue text) {
         myTextField.setPlaceholder(text.getNullIfEmpty());
+    }
+
+    @Override
+    public void addStyle(EditorBoxStyle style) {
     }
 
     @Override

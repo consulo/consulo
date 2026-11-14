@@ -17,6 +17,7 @@ package consulo.web.ui.impl.internal;
 
 import consulo.ui.Space;
 import consulo.ui.layout.FlowLayout;
+import consulo.ui.layout.LayoutStyle;
 
 /**
  * @author VISTALL
@@ -25,5 +26,9 @@ import consulo.ui.layout.FlowLayout;
 public class WebFlowLayoutImpl extends WebTileLayoutBase implements FlowLayout {
     public WebFlowLayoutImpl(Space gap) {
         super("web-flow-layout", gap);
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

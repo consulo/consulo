@@ -30,4 +30,10 @@ interface DesktopQtEditorHost {
     void setPaletteListener(@Nullable Runnable listener);
 
     QColor getBaseColor();
+
+    /**
+     * Without the frame of an input - the host only fills its background.
+     */
+    default void setInplace(boolean inplace) {
+    }
 }

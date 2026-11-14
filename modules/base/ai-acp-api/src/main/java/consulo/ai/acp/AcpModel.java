@@ -15,20 +15,31 @@
  */
 package consulo.ai.acp;
 
+import consulo.ai.AIEffortLevel;
 import consulo.ai.AIModel;
 import consulo.ai.AIModelCapability;
 import consulo.localize.LocalizeValue;
 
+import java.util.List;
 import java.util.Set;
 
 /**
- * The model of an agent as the agent itself chose it - an agent of the protocol picks its model on its side.
+ * A model of an agent - the one the agent picks itself, or a value of the model option of its sessions. The efforts
+ * are the levels the agent offered while the model was the current one of a session.
  *
  * @author VISTALL
  * @since 2026-11-10
  */
-public record AcpModel(String id, LocalizeValue displayName, String providerTypeId) implements AIModel {
+public record AcpModel(String id,
+                       LocalizeValue displayName,
+                       LocalizeValue description,
+                       String providerTypeId,
+                       List<AIEffortLevel> effortLevels) implements AIModel {
     public static final String DEFAULT_ID = "default";
+
+    public AcpModel(String id, LocalizeValue displayName, String providerTypeId) {
+        this(id, displayName, LocalizeValue.empty(), providerTypeId, List.of());
+    }
 
     @Override
     public String getId() {
@@ -46,6 +57,11 @@ public record AcpModel(String id, LocalizeValue displayName, String providerType
     }
 
     @Override
+    public LocalizeValue getDescription() {
+        return description;
+    }
+
+    @Override
     public int getContextWindow() {
         return -1;
     }
@@ -53,5 +69,10 @@ public record AcpModel(String id, LocalizeValue displayName, String providerType
     @Override
     public Set<AIModelCapability> getCapabilities() {
         return Set.of(AIModelCapability.STREAMING, AIModelCapability.THINKING);
+    }
+
+    @Override
+    public List<AIEffortLevel> getEffortLevels() {
+        return effortLevels;
     }
 }

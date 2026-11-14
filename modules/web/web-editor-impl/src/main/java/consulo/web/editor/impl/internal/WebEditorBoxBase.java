@@ -15,6 +15,7 @@
  */
 package consulo.web.editor.impl.internal;
 
+import consulo.language.editor.ui.EditorBoxStyle;
 import com.vaadin.flow.dom.Element;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -196,6 +197,13 @@ abstract class WebEditorBoxBase<V extends com.vaadin.flow.component.Component & 
         }
         finally {
             myFireListeners = true;
+        }
+    }
+
+    @Override
+    public void addStyle(EditorBoxStyle style) {
+        switch (style) {
+            case INPLACE -> toVaadinComponent().getElement().getClassList().add("consulo-editor-box-inplace");
         }
     }
 }

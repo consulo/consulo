@@ -32,4 +32,9 @@ public class AISettingsState {
     public List<ProviderEntry> PROVIDERS = new ArrayList<>();
     public String DEFAULT_PROVIDER_NAME = "";
     public String DEFAULT_MODEL_ID = "";
+    /**
+     * Rules every agent follows - sent in front of each prompt of every chat.
+     */
+    public String USER_RULES = "";
+    public boolean USER_RULES_ENABLED = true;
 }

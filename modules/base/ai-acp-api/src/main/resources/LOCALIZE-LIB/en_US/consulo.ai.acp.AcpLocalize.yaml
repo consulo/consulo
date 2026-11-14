@@ -1,2 +1,6 @@
 model.agent.default:
     text: Agent default
+status.tool.running:
+    text: '{0} is running for {1} s'
+status.context.exhausted:
+    text: The conversation is too long for the model - it goes on in a new session

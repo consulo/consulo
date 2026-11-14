@@ -18,10 +18,16 @@ package consulo.desktop.awt.ui.impl.clipboard;
 import consulo.logging.Logger;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
+import org.jspecify.annotations.Nullable;
 
+import javax.imageio.ImageIO;
+
+import java.awt.Graphics2D;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,7 +117,49 @@ public final class DesktopAWTDataTransfers {
                 LOG.warn(e);
             }
         }
+        if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+            byte[] png = readImage(transferable);
+            if (png != null) {
+                builder.put(DataTransferType.IMAGE, png);
+            }
+        }
         return builder.build();
+    }
+
+    /**
+     * The image of the clipboard as png - a screenshot, a copied picture.
+     */
+    private static byte @Nullable [] readImage(Transferable transferable) {
+        try {
+            if (!(transferable.getTransferData(DataFlavor.imageFlavor) instanceof java.awt.Image image)) {
+                return null;
+            }
+            BufferedImage buffered;
+            if (image instanceof BufferedImage value) {
+                buffered = value;
+            }
+            else {
+                int width = image.getWidth(null);
+                int height = image.getHeight(null);
+                if (width <= 0 || height <= 0) {
+                    return null;
+                }
+                buffered = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D graphics = buffered.createGraphics();
+                try {
+                    graphics.drawImage(image, 0, 0, null);
+                }
+                finally {
+                    graphics.dispose();
+                }
+            }
+            ByteArrayOutputStream png = new ByteArrayOutputStream();
+            return ImageIO.write(buffered, "png", png) ? png.toByteArray() : null;
+        }
+        catch (Exception e) {
+            LOG.warn(e);
+            return null;
+        }
     }
 
     private static <T> void readInto(DataTransfer.Builder builder, Transferable transferable, DataTransferType<T> type, Class<T> valueClass) {

@@ -57,7 +57,7 @@ public final class WebFocusTracker {
     /** one report per interaction is enough, and it keeps a drag from flooding the server */
     private static final int DEBOUNCE_MS = 100;
 
-    private static final String[] ACTIVITY_EVENTS = {"mousedown", "focusin", "keydown"};
+    private static final String[] ACTIVITY_EVENTS = {"mousedown", "keydown"};
 
     /**
      * Held on the vaadin ui, not statically - a browser frontend serves several uis at once, and the focus of one
@@ -135,8 +135,15 @@ public final class WebFocusTracker {
      * below the frame root.
      */
     public static void installRoot(Element element) {
-        // not debounced: a focus change is one event, and a query right after it must already see where the focus went
-        element.addEventListener("focusin", event -> setFocusedElement(event.getEventTarget().orElse(null)))
+        // not debounced: a focus change is one event, and a query right after it must already see where the focus went.
+        // one listener for the scope too - next to a debounced listener of the same event this one is never called
+        element.addEventListener("focusin", event -> {
+                ActivityTracker.getInstance().inc();
+
+                setFocusedElement(event.getEventTarget().orElse(null));
+                setFocusedScope(event.getEventData().path(SCOPE_OF_EVENT).asString(""));
+            })
+            .addEventData(SCOPE_OF_EVENT)
             .mapEventTargetElement();
         // focus moving to another element of the page arrives as the focusin above; only leaving the page clears it
         element.addEventListener("focusout", event -> setFocusedElement(null))

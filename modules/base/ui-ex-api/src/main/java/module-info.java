@@ -60,6 +60,7 @@ module consulo.ui.ex.api {
 
     exports consulo.ui.ex.internal.actionholder;
     exports consulo.ui.ex.internal to
+        consulo.ai.editor.impl,
         consulo.code.editor.api,
         consulo.code.editor.impl,
         consulo.desktop.awt.editor.impl,

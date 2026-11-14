@@ -22,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.CheckBox;
+import consulo.ui.CheckBoxStyle;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.RadioButton;
@@ -29,10 +30,11 @@ import consulo.ui.RadioGroup;
 import consulo.ui.Space;
 import consulo.ui.TextBox;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.style.ComponentColors;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
+import consulo.ui.style.ComponentColors;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -62,11 +64,14 @@ final class AIChatQuestionPrompt extends AIChatPrompt<Map<String, String>> {
             myRoot.add(Label.create(LocalizeValue.of(question.question())));
 
             VerticalLayout options = VerticalLayout.create();
+            options.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
             Supplier<List<String>> chosen = question.multiSelect() ? checkBoxes(question, options) : radioButtons(question, options);
             myRoot.add(options);
 
             TextBox other = TextBox.create();
-            myRoot.add(DockLayout.create().left(Label.create(AILocalize.labelQuestionOther())).center(other));
+            DockLayout otherRow = DockLayout.create();
+            otherRow.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+            myRoot.add(otherRow.left(Label.create(AILocalize.labelQuestionOther())).center(other));
 
             answers.put(question.question(), () -> {
                 List<String> parts = new ArrayList<>(chosen.get());
@@ -111,6 +116,7 @@ final class AIChatQuestionPrompt extends AIChatPrompt<Map<String, String>> {
         Map<AIQuestionOption, CheckBox> boxes = new LinkedHashMap<>();
         for (AIQuestionOption option : question.options()) {
             CheckBox box = CheckBox.create(LocalizeValue.of(option.label()));
+            box.addStyle(CheckBoxStyle.TRANSPARENT_BACKGROUND);
             boxes.put(option, box);
             layout.add(box);
             description(layout, option);

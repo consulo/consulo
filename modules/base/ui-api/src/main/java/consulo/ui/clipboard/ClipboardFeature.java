@@ -50,5 +50,13 @@ public enum ClipboardFeature {
      * AWT, Qt. Not web, which needs transient user activation, and not android, which needs input
      * focus or the default ime role.
      */
-    UNRESTRICTED_READ
+    UNRESTRICTED_READ,
+    /**
+     * {@link Clipboard#addPasteListener} hears the payload of a paste gesture as it happens - what was pasted, an
+     * image included, before any action of the application takes it.
+     * <p>
+     * Web, where a paste gesture is the one moment a page sees the clipboard. A desktop frontend pastes through the
+     * paste action, which reads the clipboard itself.
+     */
+    PASTE_LISTENER
 }

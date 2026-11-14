@@ -22,6 +22,8 @@ import consulo.ui.LabelStyle;
 import consulo.ui.Space;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.layout.HorizontalLayoutStyle;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 
 import java.util.concurrent.CompletableFuture;
@@ -38,7 +40,8 @@ abstract class AIChatPrompt<T> {
 
     protected AIChatPrompt(CompletableFuture<T> result) {
         myResult = result;
-        myRoot.paddingBuilder().allSet(Space.MEDIUM).apply();
+        myRoot.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+        myRoot.paddingBuilder().topSet(Space.SMALL).bottomSet(Space.SMALL).apply();
     }
 
     Component getComponent() {
@@ -58,6 +61,8 @@ abstract class AIChatPrompt<T> {
 
     @RequiredUIAccess
     protected static HorizontalLayout buttonRow() {
-        return HorizontalLayout.create(Space.SMALL);
+        HorizontalLayout row = HorizontalLayout.create(Space.SMALL);
+        row.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
+        return row;
     }
 }

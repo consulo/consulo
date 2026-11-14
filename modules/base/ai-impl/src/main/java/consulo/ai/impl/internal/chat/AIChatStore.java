@@ -248,7 +248,7 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
         fireChanged();
         AIProvider provider = findProvider(chat);
         if (provider != null && provider.getType() instanceof AIProviderTypeWithChats withChats) {
-            return withChats.renameChat(provider, myProject, chat.ID, title);
+            return withChats.renameChat(provider, myProject, sessionId(chat), title);
         }
         return CompletableFuture.completedFuture(null);
     }
@@ -257,7 +257,8 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
      * A title which is not the user's - the first line sent, or one the provider generated. A name the user gave wins.
      */
     public void suggestTitle(AIChatEntry chat, String title) {
-        if (chat.NAMED_BY_USER || title.isBlank() || title.equals(chat.TITLE)) {
+        // a chat which moved to another session is named after what it was before - the new one sees only the carryover
+        if (chat.NAMED_BY_USER || !chat.SESSION_ID.isEmpty() || title.isBlank() || title.equals(chat.TITLE)) {
             return;
         }
         chat.TITLE = title;
@@ -269,7 +270,8 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
      */
     public CompletableFuture<?> refreshTitle(AIChatEntry chat, UIAccess uiAccess) {
         AIProvider provider = findProvider(chat);
-        if (chat.NAMED_BY_USER || provider == null || !(provider.getType() instanceof AIProviderTypeWithChats withChats)) {
+        // a chat which moved to another session keeps its title - the new session is named after the carryover
+        if (chat.NAMED_BY_USER || !chat.SESSION_ID.isEmpty() || provider == null || !(provider.getType() instanceof AIProviderTypeWithChats withChats)) {
             return CompletableFuture.completedFuture(null);
         }
         return withChats.getChat(provider, myProject, chat.ID).thenAcceptAsync(info -> {
@@ -277,6 +279,36 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
                 suggestTitle(chat, info.title());
             }
         }, uiAccess);
+    }
+
+    /**
+     * The session of the provider the chat talks to - the chat itself, unless it moved to another one.
+     */
+    public static String sessionId(AIChatEntry chat) {
+        return chat.SESSION_ID.isEmpty() ? chat.ID : chat.SESSION_ID;
+    }
+
+    /**
+     * The chat goes on in another session of the provider from now on.
+     */
+    public void moveToSession(AIChatEntry chat, String sessionId) {
+        if (sessionId.equals(sessionId(chat))) {
+            return;
+        }
+        chat.SESSION_ID = sessionId.equals(chat.ID) ? "" : sessionId;
+        fireChanged();
+    }
+
+    /**
+     * Whether a chat of the store goes on in the session - the session is shown as that chat, not as one of its own.
+     */
+    public boolean isSessionOfChat(String sessionId) {
+        for (AIChatEntry chat : myState.CHATS) {
+            if (sessionId.equals(chat.SESSION_ID)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void changed(AIChatEntry chat) {
@@ -293,7 +325,7 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
 
         AIProvider provider = findProvider(chat);
         CompletableFuture<?> providerDelete = provider != null && provider.getType() instanceof AIProviderTypeWithChats withChats
-            ? withChats.deleteChat(provider, myProject, chat.ID)
+            ? deleteSessions(withChats, provider, chat)
             : CompletableFuture.completedFuture(null);
         // our transcript goes either way - the provider may not have kept the chat while it was written
         return providerDelete.thenRunAsync(() -> {
@@ -304,6 +336,14 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
                 LOG.warn("Cannot delete the transcript of the chat " + chat.ID, e);
             }
         }, myApplicationConcurrency.executor());
+    }
+
+    private CompletableFuture<?> deleteSessions(AIProviderTypeWithChats withChats, AIProvider provider, AIChatEntry chat) {
+        CompletableFuture<?> chatDelete = withChats.deleteChat(provider, myProject, chat.ID);
+        if (chat.SESSION_ID.isEmpty()) {
+            return chatDelete;
+        }
+        return CompletableFuture.allOf(chatDelete, withChats.deleteChat(provider, myProject, chat.SESSION_ID));
     }
 
     public @Nullable AIProvider findProvider(AIChatEntry chat) {
@@ -318,16 +358,16 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
 
     // region transcripts
 
-    public static boolean keepsOwnChats(AIProvider provider) {
-        return provider.getType() instanceof AIProviderTypeWithChats withChats && withChats.keepsChats(provider);
-    }
-
     /**
      * The history of the chat - from the provider when it keeps chats, from our file otherwise and whenever the
      * provider has nothing for the chat: it may keep only some chats, or not have kept this one when it was written.
      */
     public CompletableFuture<List<AIMessage>> loadTranscript(AIChatEntry chat, AIProvider provider) {
         // a provider may keep some chats - the ones it started itself - and leave the others to us
+        // the session a chat moved to replays only what was said in it - the whole chat is ours
+        if (!chat.SESSION_ID.isEmpty()) {
+            return readTranscript(chat.ID);
+        }
         if (provider.getType() instanceof AIProviderTypeWithChats withChats) {
             return withChats.loadChat(provider, myProject, chat.ID)
                 .exceptionally(error -> {
@@ -356,12 +396,10 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
     }
 
     /**
-     * Keeps the history of the chat, unless the provider keeps it itself.
+     * Keeps the history of the chat - also of a provider which keeps its chats: the chat may move to another session
+     * of it, which knows only what was said there.
      */
     public CompletableFuture<?> saveTranscript(AIChatEntry chat, AIProvider provider, List<AIMessage> messages) {
-        if (keepsOwnChats(provider)) {
-            return CompletableFuture.completedFuture(null);
-        }
         String id = chat.ID;
         List<AIMessage> copy = List.copyOf(messages);
         return CompletableFuture.runAsync(() -> {

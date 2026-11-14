@@ -46,4 +46,27 @@ public class AISettings implements PersistentStateComponent<AISettingsState> {
     public void loadState(AISettingsState state) {
         myState = state;
     }
+
+    public String getUserRules() {
+        return myState.USER_RULES;
+    }
+
+    public void setUserRules(String rules) {
+        myState.USER_RULES = rules;
+    }
+
+    public boolean isUserRulesEnabled() {
+        return myState.USER_RULES_ENABLED;
+    }
+
+    public void setUserRulesEnabled(boolean enabled) {
+        myState.USER_RULES_ENABLED = enabled;
+    }
+
+    /**
+     * The rules to send with a prompt - empty while they are off.
+     */
+    public String getActiveUserRules() {
+        return myState.USER_RULES_ENABLED ? myState.USER_RULES : "";
+    }
 }

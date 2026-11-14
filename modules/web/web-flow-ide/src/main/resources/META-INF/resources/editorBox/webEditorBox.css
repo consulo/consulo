@@ -82,3 +82,23 @@ vaadin-select.consulo-editor-combo-box > .consulo-editor-combo-box-suffix {
 vaadin-select.consulo-editor-combo-box .arquill-editor:not(:focus-within) .arquill-caret {
     visibility: hidden;
 }
+
+/* without a frame of its own - what holds the box draws the separation */
+vaadin-input-container.consulo-editor-box-inplace {
+    --vaadin-input-field-border-width: 0;
+    border: none;
+    box-shadow: none !important;
+    background: transparent;
+    border-radius: 0;
+    outline: none !important;
+    --vaadin-focus-ring-width: 0;
+}
+
+vaadin-input-container.consulo-editor-box-inplace::before,
+vaadin-input-container.consulo-editor-box-inplace::after {
+    display: none;
+}
+
+vaadin-input-container.consulo-editor-box-inplace.consulo-editor-box-multiline {
+    min-height: 3.5em;
+}

@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * System clipboard of a single {@link consulo.ui.UIAccess}.
@@ -53,6 +54,15 @@ public interface Clipboard {
      * copied needs the old one to undecorate it.
      */
     Disposable addContentListener(BiConsumer<DataTransfer, DataTransfer> listener);
+
+    /**
+     * Told what a paste gesture handed over, where the frontend {@linkplain ClipboardFeature#PASTE_LISTENER sees
+     * one}; elsewhere the listener is never told.
+     */
+    default Disposable addPasteListener(Consumer<DataTransfer> listener) {
+        return () -> {
+        };
+    }
 
     default CompletableFuture<@Nullable String> getText() {
         return getContents().<@Nullable String>thenApply(transfer -> transfer.get(DataTransferType.TEXT));

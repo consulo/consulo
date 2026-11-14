@@ -15,6 +15,7 @@
  */
 package consulo.it.internal.editor;
 
+import consulo.language.editor.ui.EditorBoxStyle;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.it.internal.ui.HeadlessComponentBase;
@@ -130,5 +131,9 @@ public class HeadlessEditorBox extends HeadlessComponentBase implements EditorBo
     @Override
     public boolean isFocusable() {
         return false;
+    }
+
+    @Override
+    public void addStyle(EditorBoxStyle style) {
     }
 }

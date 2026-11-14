@@ -30,6 +30,9 @@
     width: 100%;
     box-sizing: border-box;
     white-space: normal;
+    /* a long line in a component part - the title of a command - is cut instead of widening the list */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .consulo-message-list vaadin-message > :not([slot="avatar"]) + :not([slot="avatar"]) {
@@ -83,4 +86,15 @@ vaadin-message[theme~="consulo-anonymous"]::part(name) {
 
 .consulo-message-list .consulo-message-writing-dots {
     display: inline-flex;
+}
+
+/* a long line of code scrolls in its own block instead of widening the message and the list with it */
+.consulo-message-list vaadin-message,
+.consulo-message-list vaadin-message::part(content) {
+    min-width: 0;
+}
+
+.consulo-message-list vaadin-markdown pre {
+    max-width: 100%;
+    overflow-x: auto;
 }

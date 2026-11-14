@@ -15,25 +15,33 @@
  */
 package consulo.ai;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * The user's answer to an {@link AIToolPermissionRequest}.
  *
  * @param allowed  whether the tool may run
  * @param always   allowed, and the same tool may run again in this conversation without asking
  * @param message  why it was denied, told to the model so it can change course
+ * @param optionId the option of the request the user chose, when the request offered its own
  * @author VISTALL
  * @since 2026-10-13
  */
-public record AIToolPermissionDecision(boolean allowed, boolean always, String message) {
+public record AIToolPermissionDecision(boolean allowed, boolean always, String message, @Nullable String optionId) {
     public static AIToolPermissionDecision allow() {
-        return new AIToolPermissionDecision(true, false, "");
+        return new AIToolPermissionDecision(true, false, "", null);
     }
 
     public static AIToolPermissionDecision allowAlways() {
-        return new AIToolPermissionDecision(true, true, "");
+        return new AIToolPermissionDecision(true, true, "", null);
     }
 
     public static AIToolPermissionDecision deny(String message) {
-        return new AIToolPermissionDecision(false, false, message);
+        return new AIToolPermissionDecision(false, false, message, null);
+    }
+
+    public static AIToolPermissionDecision option(AIToolPermissionOption option) {
+        AIToolPermissionOptionKind kind = option.kind();
+        return new AIToolPermissionDecision(!kind.isReject(), kind == AIToolPermissionOptionKind.ALLOW_ALWAYS, "", option.id());
     }
 }

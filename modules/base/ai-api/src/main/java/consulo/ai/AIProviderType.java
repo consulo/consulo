@@ -162,4 +162,44 @@ public interface AIProviderType extends TypeExtension {
      */
     default void closeSession(AIProvider provider, String sessionId) {
     }
+
+    /**
+     * The conversation goes on without what the provider remembers of it - the history was edited, or grew too long
+     * for the model. The next request starts afresh from the messages it carries. A type which keeps no state of its
+     * own does nothing.
+     *
+     * @param history the messages the conversation keeps - a type which can copy its session up to a point goes on
+     *                from there
+     */
+    default void startOver(AIProvider provider, String sessionId, List<AIMessage> history) {
+    }
+
+    /**
+     * The settings the session offers - its mode, its context size - as the provider last told them. Empty while the
+     * session did not start, or when it offers none.
+     */
+    default List<AISessionOption> getSessionOptions(AIProvider provider, String sessionId) {
+        return List.of();
+    }
+
+    /**
+     * Sets a setting of the session and answers all of its settings as they are now - a setting may bring others, or
+     * drop them.
+     */
+    default CompletableFuture<List<AISessionOption>> setSessionOption(AIProvider provider, String sessionId, String optionId, String value) {
+        return CompletableFuture.failedFuture(new UnsupportedOperationException("The provider has no settings of a session"));
+    }
+
+    /**
+     * The commands the user can type as {@code /name} in the session.
+     */
+    default List<AICommand> getCommands(AIProvider provider, String sessionId) {
+        return List.of();
+    }
+
+    /**
+     * Tells the listener when the settings or the commands of the session change, until the disposable is disposed.
+     */
+    default void addSessionListener(AIProvider provider, String sessionId, AIChatSessionListener listener, Disposable parentDisposable) {
+    }
 }

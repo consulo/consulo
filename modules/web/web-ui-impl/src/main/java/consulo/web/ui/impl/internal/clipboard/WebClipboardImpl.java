@@ -16,15 +16,20 @@
 package consulo.web.ui.impl.internal.clipboard;
 
 import com.vaadin.flow.component.UI;
+import consulo.disposer.Disposable;
 import consulo.ui.clipboard.ClipboardAccessException;
 import consulo.ui.clipboard.ClipboardFeature;
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
 import consulo.ui.impl.clipboard.BaseClipboard;
 
+import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -36,8 +41,31 @@ public class WebClipboardImpl extends BaseClipboard {
 
     private final UI myUI;
 
+    /**
+     * An image of a paste gesture is read in the browser and comes back as an event of its own - the paste event
+     * carries only what can be read at once.
+     */
+    private static final String IMAGE_PASTE_SCRIPT = """
+        if (!window.__consuloImagePaste) {
+            window.__consuloImagePaste = true;
+            document.addEventListener('paste', event => {
+                const items = event.clipboardData ? event.clipboardData.items : [];
+                for (const item of items) {
+                    if (item.kind === 'file' && item.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = () => document.body.dispatchEvent(new CustomEvent('consulo-image-paste', {detail: reader.result}));
+                        reader.readAsDataURL(item.getAsFile());
+                        break;
+                    }
+                }
+            }, true);
+        }
+        """;
+    private static final String PASTED_IMAGE = "event.detail";
+
     // a paste gesture is the only payload a browser hands over without a permission prompt
     private volatile DataTransfer myPasted = DataTransfer.EMPTY;
+    private final List<Consumer<DataTransfer>> myPasteListeners = new CopyOnWriteArrayList<>();
 
     public WebClipboardImpl(UI ui) {
         myUI = ui;
@@ -49,6 +77,42 @@ public class WebClipboardImpl extends BaseClipboard {
             ))
             .addEventData(PASTED_TEXT)
             .addEventData(PASTED_HTML);
+        ui.getElement()
+            .addEventListener("consulo-image-paste", event -> stageImage(event.getEventData().path(PASTED_IMAGE).asString("")))
+            .addEventData(PASTED_IMAGE);
+        ui.getPage().executeJs(IMAGE_PASTE_SCRIPT);
+    }
+
+    /**
+     * An image pasted in the browser, as a data url - what the paste handed over, an image only.
+     */
+    private void stageImage(String dataUrl) {
+        int comma = dataUrl.indexOf(',');
+        if (!dataUrl.startsWith("data:image/") || comma < 0) {
+            return;
+        }
+        byte[] png;
+        try {
+            png = Base64.getDecoder().decode(dataUrl.substring(comma + 1));
+        }
+        catch (IllegalArgumentException e) {
+            return;
+        }
+        DataTransfer pasted = DataTransfer.builder().put(DataTransferType.IMAGE, png).build();
+        myPasted = pasted;
+        firePasted(pasted);
+    }
+
+    private void firePasted(DataTransfer pasted) {
+        for (Consumer<DataTransfer> listener : myPasteListeners) {
+            listener.accept(pasted);
+        }
+    }
+
+    @Override
+    public Disposable addPasteListener(Consumer<DataTransfer> listener) {
+        myPasteListeners.add(listener);
+        return () -> myPasteListeners.remove(listener);
     }
 
     /**
@@ -81,7 +145,7 @@ public class WebClipboardImpl extends BaseClipboard {
 
     @Override
     public boolean isSupported(ClipboardFeature feature) {
-        return false;
+        return feature == ClipboardFeature.PASTE_LISTENER;
     }
 
     /**

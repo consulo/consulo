@@ -15,6 +15,7 @@
  */
 package consulo.it.internal.editor;
 
+import consulo.language.editor.ui.EditorBoxStyle;
 import consulo.document.Document;
 import consulo.language.editor.ui.EditorComboBox;
 import consulo.localize.LocalizeValue;
@@ -53,5 +54,9 @@ public class HeadlessEditorComboBox extends HeadlessEditorBox implements EditorC
     @Override
     public void setSelectedItem(@Nullable String item) {
         setValue(item);
+    }
+
+    @Override
+    public void addStyle(EditorBoxStyle style) {
     }
 }

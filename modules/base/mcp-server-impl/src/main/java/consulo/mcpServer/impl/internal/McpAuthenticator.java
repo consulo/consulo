@@ -51,6 +51,10 @@ public class McpAuthenticator {
             return CompletableFuture.completedFuture(null);
         }
 
+        if (McpAuthTokenManager.matches(myTokenManager.getAgentToken(), bearer)) {
+            return CompletableFuture.completedFuture(McpPrincipal.AI_AGENT);
+        }
+
         McpOAuthClientState client = myOAuthService.findClientByAccessToken(bearer);
         if (client != null) {
             return CompletableFuture.completedFuture(McpPrincipal.oauth(client.CLIENT_ID, client.CLIENT_NAME));

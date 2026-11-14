@@ -39,6 +39,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -55,7 +56,8 @@ public final class AcpConnection {
     private static final Logger LOG = Logger.getInstance(AcpConnection.class);
 
     private static final int STDERR_TAIL = 20;
-    private static final int METHOD_NOT_FOUND = -32601;
+    public static final int METHOD_NOT_FOUND = -32601;
+    public static final int INVALID_PARAMS = -32602;
     private static final int INTERNAL_ERROR = -32603;
 
     /**
@@ -82,13 +84,14 @@ public final class AcpConnection {
     private final StringBuilder myLine = new StringBuilder();
     private final Deque<String> myStderr = new ArrayDeque<>();
     private volatile boolean myTerminated;
+    private volatile boolean myClosed;
 
     private AcpConnection(ProcessHandler handler) {
         myHandler = handler;
     }
 
     public static AcpConnection start(ProcessHandlerBuilderFactory factory, GeneralCommandLine commandLine) throws ExecutionException {
-        ProcessHandler handler = factory.newBuilder(commandLine.withCharset(StandardCharsets.UTF_8)).killable().build();
+        ProcessHandler handler = factory.newBuilder(commandLine.withCharset(StandardCharsets.UTF_8)).killable().silentReader().build();
         AcpConnection connection = new AcpConnection(handler);
         handler.addProcessListener(new ProcessListener() {
             @Override
@@ -159,6 +162,7 @@ public final class AcpConnection {
     }
 
     public void close() {
+        myClosed = true;
         if (!myHandler.isProcessTerminated()) {
             myHandler.destroyProcess();
         }
@@ -235,6 +239,14 @@ public final class AcpConnection {
             JsonObject object = error.getAsJsonObject();
             int code = object.has("code") ? object.get("code").getAsInt() : INTERNAL_ERROR;
             String text = object.has("message") ? object.get("message").getAsString() : "Error " + code;
+            JsonElement data = object.get("data");
+            // an agent may tell the reason only in the data of the error
+            if (data != null && data.isJsonObject() && data.getAsJsonObject().get("message") instanceof JsonElement detail && detail.isJsonPrimitive()) {
+                text = text + ": " + detail.getAsString();
+            }
+            else if (data != null && data.isJsonPrimitive()) {
+                text = text + ": " + data.getAsString();
+            }
             pending.completeExceptionally(new AcpException(code, text));
             return;
         }
@@ -257,7 +269,9 @@ public final class AcpConnection {
         }
         answer.whenComplete((result, error) -> {
             if (error != null) {
-                respondError(id, INTERNAL_ERROR, String.valueOf(error.getMessage()));
+                Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;
+                int code = cause instanceof AcpException acp ? acp.getCode() : INTERNAL_ERROR;
+                respondError(id, code, String.valueOf(cause.getMessage()));
                 return;
             }
             JsonObject response = new JsonObject();
@@ -300,6 +314,9 @@ public final class AcpConnection {
     }
 
     private void onTerminated(int exitCode) {
+        if (!myClosed) {
+            LOG.warn(terminatedMessage(exitCode));
+        }
         myTerminated = true;
         IOException error = new IOException(terminatedMessage(exitCode));
         for (CompletableFuture<JsonElement> pending : myPending.values()) {

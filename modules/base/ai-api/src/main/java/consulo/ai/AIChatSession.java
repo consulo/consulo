@@ -43,6 +43,7 @@ public final class AIChatSession {
     private final Project myProject;
     private final AIProvider myProvider;
     private final AIModel myModel;
+    private volatile @Nullable CompletableFuture<AIResponse> myAnswer;
     private final List<AIMessage> myMessages = new ArrayList<>();
     private final String myId;
 
@@ -112,6 +113,16 @@ public final class AIChatSession {
     }
 
     /**
+     * Goes on from the {@code history} instead of the messages so far - an edited message is sent again from the point
+     * it was written at. The provider forgets what it kept of the conversation.
+     */
+    public void startOver(List<AIMessage> history) {
+        myMessages.clear();
+        myMessages.addAll(history);
+        myProvider.getType().startOver(myProvider, myId, List.copyOf(history));
+    }
+
+    /**
      * Identifies the conversation towards the provider, which may keep state of its own for it.
      */
     public String getId() {
@@ -140,8 +151,26 @@ public final class AIChatSession {
     /**
      * Adds the message and drives the conversation until the model stops asking for tools.
      */
+    /**
+     * Stops the answer on its way - the future of {@link #send} fails with a {@link java.util.concurrent.CancellationException}.
+     */
+    public void cancel() {
+        CompletableFuture<AIResponse> answer = myAnswer;
+        if (answer != null) {
+            answer.cancel(false);
+        }
+    }
+
     public CompletableFuture<AIResponse> send(String text, @Nullable AIStreamListener listener) {
         myMessages.add(AIMessage.user(text));
+        return round(listener, 0);
+    }
+
+    /**
+     * Sends a message of more than text - the files and selections the user attached go along.
+     */
+    public CompletableFuture<AIResponse> send(List<AIContent> content, @Nullable AIStreamListener listener) {
+        myMessages.add(new AIMessage(AIRole.USER, content));
         return round(listener, 0);
     }
 
@@ -159,7 +188,9 @@ public final class AIChatSession {
             .effort(myEffort)
             .build();
 
-        return myProvider.chat(request, listener).thenCompose(response -> {
+        CompletableFuture<AIResponse> answer = myProvider.chat(request, listener);
+        myAnswer = answer;
+        return answer.thenCompose(response -> {
             myMessages.add(response.message());
 
             if (response.stopReason() != AIStopReason.TOOL_USE || response.getToolUses().isEmpty()) {

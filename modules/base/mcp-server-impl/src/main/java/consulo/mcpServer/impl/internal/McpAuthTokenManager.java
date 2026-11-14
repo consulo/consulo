@@ -51,10 +51,18 @@ public class McpAuthTokenManager {
     private final SecureRandom myRandom = new SecureRandom();
 
     private volatile @Nullable String myToken;
+    private final String myAgentToken = generate();
 
     @Inject
     public McpAuthTokenManager(PasswordSafe passwordSafe) {
         myPasswordSafe = passwordSafe;
+    }
+
+    /**
+     * The token of the agents the AI chats start - kept in memory only, a new one with every start of the IDE.
+     */
+    public String getAgentToken() {
+        return myAgentToken;
     }
 
     public CompletableFuture<String> getToken() {

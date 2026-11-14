@@ -1,0 +1,22 @@
+diff.before:
+    text: Before the agent
+diff.after:
+    text: After the agent
+diff.created:
+    text: Created by the agent
+action.add.selection.text:
+    text: Add to AI Chat
+action.add.selection.description:
+    text: Attach the selected code, or the file when nothing is selected, to the next message of the AI chat
+action.add.file.text:
+    text: Add to AI Chat
+action.add.file.description:
+    text: Attach the selected files to the next message of the AI chat
+label.selection:
+    text: '{0} (L{1}-L{2})'
+button.send:
+    text: Send
+label.pasted.image:
+    text: Pasted image
+command.agent.edit:
+    text: AI Agent Edit

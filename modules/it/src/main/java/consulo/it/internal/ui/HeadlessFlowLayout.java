@@ -20,6 +20,7 @@ import consulo.ui.Space;
 import consulo.ui.TransferHandler;
 import consulo.ui.layout.FlowLayout;
 import consulo.ui.layout.LayoutConstraint;
+import consulo.ui.layout.LayoutStyle;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -48,5 +49,9 @@ public class HeadlessFlowLayout extends HeadlessLayoutBase<LayoutConstraint> imp
     @Override
     public @Nullable TransferHandler<Component> getTransferHandler() {
         return myTransferHandler;
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

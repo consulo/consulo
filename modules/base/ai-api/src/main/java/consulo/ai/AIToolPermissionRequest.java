@@ -17,6 +17,8 @@ package consulo.ai;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * The model wants to run a tool that needs the user's consent first.
  *
@@ -25,8 +27,21 @@ import org.jspecify.annotations.Nullable;
  * @param displayName   the tool as it is shown to the user
  * @param description   what the call is about to do, when the provider can tell
  * @param argumentsJson arguments as a JSON object
+ * @param options       the choices the agent offers - empty when the client picks allow / always / deny itself
+ * @param content       what the call will do, as the agent shows it - the changes of an edit above all
+ * @param interactive   a question of the agent in the shape of a permission request - never answered automatically
  * @author VISTALL
  * @since 2026-10-13
  */
-public record AIToolPermissionRequest(String toolUseId, String toolName, String displayName, @Nullable String description, String argumentsJson) {
+public record AIToolPermissionRequest(String toolUseId,
+                                      String toolName,
+                                      String displayName,
+                                      @Nullable String description,
+                                      String argumentsJson,
+                                      List<AIToolPermissionOption> options,
+                                      List<AIToolCallContent> content,
+                                      boolean interactive) {
+    public AIToolPermissionRequest(String toolUseId, String toolName, String displayName, @Nullable String description, String argumentsJson) {
+        this(toolUseId, toolName, displayName, description, argumentsJson, List.of(), List.of(), false);
+    }
 }

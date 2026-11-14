@@ -66,6 +66,20 @@ action.add.account.ellipsis:
     text: Add Account...
 label.permission.title:
     text: Allow {0}?
+label.permission.question:
+    text: '{0}'
+link.permission.arguments.show:
+    text: Show Arguments
+link.permission.arguments.hide:
+    text: Hide Arguments
+link.permission.run.everything:
+    text: Run Everything
+link.permission.run.everything.tooltip:
+    text: Allow this call and every later one of this chat without asking
+label.permission.run.everything:
+    text: Runs everything in this chat without asking
+label.permission.answered:
+    text: 'Answered {0}'
 button.allow:
     text: Allow
 button.allow.always:
@@ -182,3 +196,151 @@ label.model:
     text: Model
 label.effort:
     text: Effort
+link.show:
+    text: Show
+link.hide:
+    text: Hide
+link.thinking:
+    text: Thinking
+link.thinking.hide:
+    text: Hide thinking
+label.terminal:
+    text: 'Terminal {0}'
+label.exit.code:
+    text: 'Exit code {0}'
+label.plan:
+    text: 'Plan - {0} of {1} done'
+label.queued:
+    text: 'Queued ({0})'
+button.send.now:
+    text: Send Now
+button.remove:
+    text: Remove
+button.stop:
+    text: Stop
+label.stopped:
+    text: Stopped
+label.usage.tokens:
+    text: '{0} in / {1} out'
+label.usage.context:
+    text: 'Context {0} / {1} ({2}%)'
+label.option.failed:
+    text: 'Could not change {0}: {1}'
+label.changed.files:
+    text: '{0} · changed files: {1}'
+button.show.changes:
+    text: Show Changes
+button.remove.attachment:
+    text: Remove from the message
+button.attach.image:
+    text: Attach Image
+dialog.attach.image.title:
+    text: Attach Images
+label.images:
+    text: Images
+label.image.refused:
+    text: '{0} is not an image of up to 10 MB'
+action.focus.chat.text:
+    text: Focus AI Chat
+action.focus.chat.description:
+    text: Put the cursor into the message box of the active AI chat
+action.open.model.picker.text:
+    text: Open AI Model Picker
+action.open.model.picker.description:
+    text: Choose the model and its options for the active AI chat
+action.cycle.effort.text:
+    text: Cycle AI Effort Level
+action.cycle.effort.description:
+    text: Switch the active AI chat to the next effort level of its model
+label.active.file.tooltip:
+    text: The file open in the editor goes with the message while ticked
+button.edit.message:
+    text: Edit and Send Again
+label.editing.message:
+    text: Editing an earlier message - sending it replaces the message and everything after it
+link.cancel.edit:
+    text: Cancel
+label.edited.resent:
+    text: The chat goes on from the edited message - what came after it is gone
+label.checkpoint:
+    text: 'AI chat before: {0}'
+button.undo.turn:
+    text: Undo the Changes of This Turn
+dialog.undo.turn.title:
+    text: Undo the Turn
+dialog.undo.turn.text:
+    text: 'Put the files under {0} back the way they were before this turn? Every change made since is lost, also your own.'
+label.undone:
+    text: The changes of the turn were undone
+label.undo.failed:
+    text: 'Cannot undo the turn: {0}'
+configurable.user.rules:
+    text: Rules
+checkbox.user.rules.enabled:
+    text: Send these rules with every prompt
+label.user.rules.hint:
+    text: Every agent gets the rules in front of each prompt of every chat; the chat does not show them.
+configurable.agent.instructions:
+    text: Agent Instructions
+label.agent.instructions.hint:
+    text: What the agents read in this project and in your home directory - edits go to the files themselves.
+label.agent.instruction.files:
+    text: Instruction files
+label.agent.rules:
+    text: Rules
+label.agent.skills:
+    text: Skills
+label.agent.instruction.global:
+    text: global
+title.agent.instruction.new.file:
+    text: New Instruction File
+title.agent.rule.new:
+    text: New Rule
+title.agent.skill.new:
+    text: New Skill
+label.agent.instruction.location:
+    text: 'Where:'
+label.agent.rule.name:
+    text: 'Name of the rule:'
+label.agent.skill.name:
+    text: 'Name of the skill:'
+title.agent.instruction.remove:
+    text: Remove
+message.agent.instruction.remove:
+    text: 'Delete {0}? This cannot be undone.'
+message.agent.instruction.exists:
+    text: '{0} already exists'
+message.agent.instruction.all.files.exist:
+    text: Every instruction file of the agents already exists in this project
+message.agent.instruction.global.remove:
+    text: '{0} belongs to your home directory, not to this project - remove it there'
+mode.debug:
+    text: Debug
+mode.debug.description:
+    text: Find a bug from runtime evidence - the agent instruments the code, you reproduce, it fixes
+prompt.debug.instructions:
+    text: 'Debug mode: Investigate this bug using runtime evidence, not guesswork. Follow this workflow: (1) Explore relevant code and generate multiple concrete hypotheses about the root cause. (2) Add temporary, clearly marked instrumentation (e.g. comments like // CONSULO_DEBUG) that appends structured one-line JSON or key=value log lines to the debug log file at {0}. If the runtime cannot write local files (browser, remote service), POST the same lines to {1}. Keep instrumentation minimal and reversible. (3) Stop and give the user exact reproduction steps; wait for them to reproduce before analyzing. (4) After reproduction, read the debug log file (and any terminal output) and identify the root cause from the captured runtime evidence. (5) Make a targeted fix that addresses that root cause - prefer a few lines over a broad rewrite. (6) After the user confirms the fix, remove all temporary instrumentation and restore the code. Prefer running reproduction through the terminal when possible so stdout/stderr is also available.'
+prompt.debug.no.endpoint:
+    text: (the HTTP endpoint is not available - use the log file only)
+prompt.plan.instructions:
+    text: 'Plan mode: If anything is ambiguous, under-specified, or could be done in multiple reasonable ways, stop and ask the user questions before you propose a detailed plan or lock in design choices. When helpful, list concrete options (A/B/...) and tradeoffs. Do not silently pick defaults or assume answers - wait for the user''s reply. Only after the user answers should you finalize or refine the implementation plan.'
+button.debug.reproduced:
+    text: I reproduced it
+button.debug.cleanup:
+    text: Clean up
+button.debug.view.logs:
+    text: View logs
+prompt.debug.reproduced:
+    text: I reproduced the issue. Read the debug log file and identify the root cause from the runtime evidence.
+prompt.debug.cleanup:
+    text: Remove all temporary debugging instrumentation you added and restore the code.
+label.debug.logs.missing:
+    text: No debug log yet - send a prompt in Debug mode first
+button.plan.build:
+    text: Build
+prompt.plan.build:
+    text: Implement the plan above.
+button.plan.view:
+    text: View Plan
+label.file.missing:
+    text: '{0} does not exist'

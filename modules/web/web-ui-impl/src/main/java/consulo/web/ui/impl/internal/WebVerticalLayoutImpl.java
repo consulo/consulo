@@ -23,6 +23,7 @@ import consulo.ui.Space;
 import consulo.ui.VerticalAlignment;
 import consulo.ui.layout.Layout;
 import consulo.ui.layout.LayoutConstraint;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 import consulo.web.ui.impl.internal.base.FromVaadinComponentWrapper;
 import consulo.web.ui.impl.internal.base.TargetVaadin;
@@ -96,5 +97,9 @@ public class WebVerticalLayoutImpl extends WebLayoutImpl<WebVerticalLayoutImpl.V
     @Override
     public WebVerticalLayoutImpl.Vaadin createVaadinComponent() {
         return new Vaadin();
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

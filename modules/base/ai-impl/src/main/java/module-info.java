@@ -9,6 +9,7 @@ import org.jspecify.annotations.NullMarked;
 module consulo.ai.impl {
     requires transitive consulo.ai.api;
     requires consulo.ai.acp.api;
+    requires consulo.builtin.web.server.api;
     requires consulo.configurable.api;
     requires consulo.project.ui.api;
     requires consulo.ui.ex.api;

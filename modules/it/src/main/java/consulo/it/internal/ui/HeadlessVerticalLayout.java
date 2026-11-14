@@ -16,6 +16,7 @@
 package consulo.it.internal.ui;
 
 import consulo.ui.layout.LayoutConstraint;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 
 /**
@@ -24,4 +25,7 @@ import consulo.ui.layout.VerticalLayout;
  * @author VISTALL
  */
 public class HeadlessVerticalLayout extends HeadlessLayoutBase<LayoutConstraint> implements VerticalLayout {
+    @Override
+    public void addStyle(LayoutStyle style) {
+    }
 }

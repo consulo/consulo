@@ -17,6 +17,7 @@ package consulo.desktop.awt.ui.impl.layout;
 
 import consulo.ui.Space;
 import consulo.ui.layout.FlowLayout;
+import consulo.ui.layout.LayoutStyle;
 
 /**
  * @author VISTALL
@@ -32,5 +33,12 @@ public class DesktopFlowLayoutImpl extends DesktopTileLayoutBase implements Flow
     @Override
     protected DesktopViewportLayoutManager createLayoutManager() {
         return new DesktopFlowLayoutManager(myGap);
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
+        if (style == LayoutStyle.TRANSPARENT_BACKGROUND) {
+            toAWTComponent().setOpaque(false);
+        }
     }
 }

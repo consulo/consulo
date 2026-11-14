@@ -15,6 +15,7 @@
  */
 package consulo.desktop.qt.editor.impl.internal;
 
+import consulo.language.editor.ui.EditorBoxStyle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
@@ -40,6 +41,7 @@ import io.qt.widgets.QWidget;
 import org.jspecify.annotations.Nullable;
 
 abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> extends QtComponentDelegate<W> implements EditorBox {
+    private boolean myInplace;
     protected final EditorBoxSupport mySupport;
 
     private @Nullable Component mySuffixComponent;
@@ -55,6 +57,7 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
     @Override
     protected W createQt(QWidget parent) {
         W frame = createHost(parent);
+        frame.setInplace(myInplace);
         frame.setOneLine(mySupport.isOneLine());
         frame.setPaletteListener(() -> updateEditorBackground(frame));
 
@@ -104,7 +107,8 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
                     surface.setFixedHeight(qtEditor.getLineHeight() + surface.frameWidth() * 2);
                     layout.setAlignment(editorWidget, Qt.AlignmentFlag.AlignVCenter);
                 }
-                else if (mySupport.isViewer()) {
+                else {
+                    // a box of several lines is as high as its text, as a viewer or while it is edited
                     fitContentHeight(qtEditor, surface);
                     surface.horizontalScrollBar().rangeChanged.connect((minimum, maximum) -> fitContentHeight(qtEditor, surface));
 
@@ -123,7 +127,7 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
     }
 
     /**
-     * A viewer of several lines shows them all, with the horizontal scroll bar under them while they are wider than it.
+     * A box of several lines shows them all, with the horizontal scroll bar under them while they are wider than it.
      */
     private static void fitContentHeight(DesktopQtEditorImpl editor, DesktopQtEditorWidget surface) {
         if (surface.isDisposed()) {
@@ -241,6 +245,19 @@ abstract class DesktopQtEditorBoxBase<W extends QWidget & DesktopQtEditorHost> e
         W frame = myComponent;
         if (suffixComponent != null && frame != null && !frame.isDisposed()) {
             attachSuffix(frame, suffixComponent);
+        }
+    }
+
+    @Override
+    public void addStyle(EditorBoxStyle style) {
+        switch (style) {
+            case INPLACE -> {
+                myInplace = true;
+                W frame = myComponent;
+                if (frame != null && !frame.isDisposed()) {
+                    frame.setInplace(true);
+                }
+            }
         }
     }
 

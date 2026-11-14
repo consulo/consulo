@@ -17,6 +17,7 @@ package consulo.language.editor.ui;
 
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.HasFocus;
 import consulo.ui.HasPlaceholder;
 import consulo.ui.HasSize;
@@ -36,7 +37,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 15-Mar-22
  */
-public interface EditorBox extends ValueComponent<String>, HasFocus, HasSize, HasSuffixComponent, HasPlaceholder {
+public interface EditorBox extends ValueComponent<String>, HasFocus, HasSize, HasSuffixComponent, HasPlaceholder, HasComponentStyle<EditorBoxStyle> {
     Document getDocument();
 
     @RequiredUIAccess

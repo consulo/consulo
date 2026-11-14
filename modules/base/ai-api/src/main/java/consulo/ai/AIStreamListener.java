@@ -15,6 +15,9 @@
  */
 package consulo.ai;
 
+import consulo.localize.LocalizeValue;
+
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
@@ -50,6 +53,43 @@ public interface AIStreamListener {
      * A complete tool request. Not streamed piecewise, since partial arguments are not parseable.
      */
     default void onToolUse(AIContent.ToolUse toolUse) {
+    }
+
+    /**
+     * An image in the answer - a picture the model drew, a screenshot it took.
+     */
+    default void onImage(AIContent.Image image) {
+    }
+
+    /**
+     * A tool the agent runs on its own side started or changed - the call with the same id replaces the one before.
+     */
+    default void onToolCall(AIContent.ToolCall toolCall) {
+    }
+
+    /**
+     * A note about the turn while it runs - a tool which has been running for a while, say. The next note or answer
+     * replaces it.
+     */
+    default void onStatus(LocalizeValue status) {
+    }
+
+    /**
+     * The plan the agent works through - the whole of it, every time it changed.
+     */
+    default void onPlan(List<AIPlanEntry> entries) {
+    }
+
+    /**
+     * The agent saved the plan of the turn to a file - the one to show when the user asks for the plan.
+     */
+    default void onPlanFile(Path file) {
+    }
+
+    /**
+     * How much of its context window the session filled.
+     */
+    default void onContextUsage(AIContextUsage usage) {
     }
 
     /**

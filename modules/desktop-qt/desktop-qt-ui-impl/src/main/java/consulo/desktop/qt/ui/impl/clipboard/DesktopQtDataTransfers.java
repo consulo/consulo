@@ -17,9 +17,13 @@ package consulo.desktop.qt.ui.impl.clipboard;
 
 import consulo.ui.clipboard.DataTransfer;
 import consulo.ui.clipboard.DataTransferType;
+import io.qt.core.QBuffer;
+import io.qt.core.QByteArray;
+import io.qt.core.QIODevice;
 import io.qt.core.QMimeData;
 import io.qt.core.QUrl;
 import io.qt.gui.QDropEvent;
+import io.qt.gui.QImage;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -76,6 +80,19 @@ public final class DesktopQtDataTransfers {
                 builder.put(DataTransferType.FILE_LIST, files);
             }
         }
+        if (mimeData.hasImage() && mimeData.imageData() instanceof QImage image && !image.isNull()) {
+            QByteArray bytes = new QByteArray();
+            QBuffer buffer = new QBuffer(bytes);
+            try {
+                if (buffer.open(QIODevice.OpenModeFlag.WriteOnly) && image.save(buffer, "PNG")) {
+                    builder.put(DataTransferType.IMAGE, bytes.toArray());
+                }
+            }
+            finally {
+                buffer.close();
+                buffer.dispose();
+            }
+        }
         return builder.build();
     }
 
@@ -93,6 +110,9 @@ public final class DesktopQtDataTransfers {
             }
             else if (format.startsWith(DataTransferType.FILE_LIST.getId())) {
                 types.add(DataTransferType.FILE_LIST);
+            }
+            else if (format.startsWith("image/")) {
+                types.add(DataTransferType.IMAGE);
             }
         }
         return types;

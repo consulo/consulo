@@ -15,6 +15,7 @@
  */
 package consulo.ai.impl.internal.chat;
 
+import consulo.ai.AIChatAttachment;
 import consulo.ai.AIChatInfo;
 import consulo.ai.AIMessage;
 import consulo.ai.AIModel;
@@ -28,6 +29,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -36,6 +39,7 @@ import consulo.ui.Component;
 import consulo.ui.InputBoxBuilder;
 import consulo.ui.Label;
 import consulo.ui.UIAccess;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.LoadingLayout;
@@ -47,6 +51,8 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -81,6 +87,18 @@ public class AIChatView {
     private final Provider<FileEditorManager> myFileEditorManager;
     private final Provider<VirtualFileManager> myVirtualFileManager;
     private final Map<String, AIChatVirtualFile> myFiles = new ConcurrentHashMap<>();
+    /**
+     * The chats open in editor tabs, the one opened last at the end.
+     */
+    private final Map<String, AIChatPanel> myPanels = new LinkedHashMap<>();
+    /**
+     * Attachments for a chat whose tab still loads.
+     */
+    private final Map<String, List<AIChatAttachment>> myPendingAttachments = new HashMap<>();
+    /**
+     * The file the user worked on last - a chat tab is not one.
+     */
+    private @Nullable VirtualFile myActiveFile;
 
     @Inject
     public AIChatView(Project project,
@@ -95,6 +113,101 @@ public class AIChatView {
         myVirtualFileManager = virtualFileManager;
 
         store.addListener(this::updateTitles, project);
+        project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
+            @Override
+            public void selectionChanged(FileEditorManagerEvent event) {
+                VirtualFile file = event.getNewFile();
+                // the tab of a chat is not what the user works on
+                if (file == null || file instanceof AIChatVirtualFile || !file.isInLocalFileSystem()) {
+                    return;
+                }
+                myActiveFile = file;
+                for (AIChatPanel panel : myPanels.values()) {
+                    panel.setActiveFile(file);
+                }
+            }
+        });
+    }
+
+    /**
+     * Attaches to the chat the user works with - the one selected in the editor, else the one opened last - or to a
+     * new chat with the default account when no chat is open.
+     */
+    @RequiredUIAccess
+    public void attach(AIChatAttachment attachment) {
+        String chatId = activeChat();
+        AIChatEntry chat = chatId == null ? null : myStore.findChat(chatId);
+        if (chat != null) {
+            openChat(chat, true);
+            attachTo(chat.ID, attachment);
+            return;
+        }
+        UIAccess uiAccess = UIAccess.current();
+        myProviderTable.get().getDefaultProvider().thenAcceptAsync(provider -> {
+            if (provider == null) {
+                return;
+            }
+            startChat(provider, null, "").thenAcceptAsync(started -> attachTo(started.ID, attachment), uiAccess);
+        }, uiAccess);
+    }
+
+    /**
+     * The chat the user works with, brought to front - the one selected in the editor, else the one opened last.
+     */
+    @RequiredUIAccess
+    public @Nullable AIChatPanel showActiveChat() {
+        String chatId = activeChat();
+        AIChatEntry chat = chatId == null ? null : myStore.findChat(chatId);
+        if (chat == null) {
+            return null;
+        }
+        openChat(chat, true);
+        return myPanels.get(chat.ID);
+    }
+
+    @RequiredUIAccess
+    private void attachTo(String chatId, AIChatAttachment attachment) {
+        AIChatPanel panel = myPanels.get(chatId);
+        if (panel != null) {
+            panel.attach(attachment);
+        }
+        else {
+            myPendingAttachments.computeIfAbsent(chatId, id -> new ArrayList<>()).add(attachment);
+        }
+    }
+
+    private @Nullable VirtualFile activeFile() {
+        VirtualFile active = myActiveFile;
+        if (active != null && active.isValid()) {
+            return active;
+        }
+        FileEditorManager fileEditorManager = myFileEditorManager.get();
+        for (VirtualFile file : fileEditorManager.getSelectedFiles()) {
+            if (!(file instanceof AIChatVirtualFile) && file.isInLocalFileSystem()) {
+                return file;
+            }
+        }
+        // the chat took the place of the file in the editor - the file opened before it is the one worked on
+        VirtualFile[] open = fileEditorManager.getOpenFiles();
+        for (int i = open.length - 1; i >= 0; i--) {
+            if (!(open[i] instanceof AIChatVirtualFile) && open[i].isInLocalFileSystem()) {
+                return open[i];
+            }
+        }
+        return null;
+    }
+
+    private @Nullable String activeChat() {
+        for (VirtualFile file : myFileEditorManager.get().getSelectedFiles()) {
+            if (file instanceof AIChatVirtualFile chatFile) {
+                return chatFile.getChatId();
+            }
+        }
+        String last = null;
+        for (String chatId : myPanels.keySet()) {
+            last = chatId;
+        }
+        return last;
     }
 
     public AIChatStore getStore() {
@@ -194,7 +307,8 @@ public class AIChatView {
             Set<String> seen = ConcurrentHashMap.newKeySet();
             for (CompletableFuture<List<ProviderChat>> future : futures) {
                 for (ProviderChat chat : future.join()) {
-                    if (myStore.findChat(chat.info().id()) == null && seen.add(chat.info().id())) {
+                    String id = chat.info().id();
+                    if (myStore.findChat(id) == null && !myStore.isSessionOfChat(id) && seen.add(id)) {
                         result.add(chat);
                     }
                 }
@@ -274,13 +388,21 @@ public class AIChatView {
                     uiAccess,
                     provider,
                     findModel(provider, chat.MODEL_ID),
-                    chat.ID,
+                    AIChatStore.sessionId(chat),
                     history == null ? List.of() : history,
                     myStore.getWorkingDirectory(chat),
                     chat.EFFORT,
                     new ChatListener(chat, provider, uiAccess)
                 );
                 Disposer.register(editor, panel);
+                myPanels.remove(chat.ID);
+                myPanels.put(chat.ID, panel);
+                panel.setActiveFile(activeFile());
+                Disposer.register(panel, () -> myPanels.remove(chat.ID, panel));
+                for (AIChatAttachment attachment : myPendingAttachments.getOrDefault(chat.ID, List.of())) {
+                    panel.attach(attachment);
+                }
+                myPendingAttachments.remove(chat.ID);
                 root.stopLoading(layout -> layout.center(panel.getComponent()));
             }
             catch (RuntimeException e) {
@@ -387,6 +509,12 @@ public class AIChatView {
         @Override
         public void titleSuggested(String title) {
             myStore.suggestTitle(myChat, title);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void sessionChanged(String sessionId) {
+            myStore.moveToSession(myChat, sessionId);
         }
     }
 }

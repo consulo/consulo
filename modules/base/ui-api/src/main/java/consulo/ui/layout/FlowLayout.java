@@ -16,6 +16,7 @@
 package consulo.ui.layout;
 
 import consulo.ui.Component;
+import consulo.ui.HasComponentStyle;
 import consulo.ui.HasTransferHandler;
 import consulo.ui.PseudoComponent;
 import consulo.ui.Space;
@@ -34,7 +35,7 @@ import consulo.ui.internal.UIInternal;
  * @author VISTALL
  * @since 2026-10-24
  */
-public interface FlowLayout extends Layout<LayoutConstraint>, HasTransferHandler<Component> {
+public interface FlowLayout extends Layout<LayoutConstraint>, HasTransferHandler<Component>, HasComponentStyle<LayoutStyle> {
     static FlowLayout create() {
         return create(Space.MEDIUM);
     }

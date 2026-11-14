@@ -26,6 +26,11 @@ import com.dslplatform.json.CompiledJson;
 @CompiledJson
 public class AIChatEntry {
     public String ID = "";
+    /**
+     * The session of the provider the chat goes on in, empty while it is the chat itself - a chat which started over,
+     * or whose session could not be opened again, continues in another one.
+     */
+    public String SESSION_ID = "";
     public String PROVIDER_NAME = "";
     public String MODEL_ID = "";
     public String TITLE = "";

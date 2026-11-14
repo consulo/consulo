@@ -21,6 +21,10 @@ package consulo.mcpServer.impl.internal;
  */
 public record McpPrincipal(String id, String displayName) {
     public static final McpPrincipal STATIC_TOKEN = new McpPrincipal("static", "Static token");
+    /**
+     * The agents the AI chats of the IDE start - they get the server with their sessions.
+     */
+    public static final McpPrincipal AI_AGENT = new McpPrincipal("ai-agent", "AI chat agent");
 
     public static String oauthId(String clientId) {
         return "oauth:" + clientId;

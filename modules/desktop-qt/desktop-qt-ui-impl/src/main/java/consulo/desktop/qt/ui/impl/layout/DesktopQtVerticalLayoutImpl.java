@@ -20,6 +20,7 @@ import consulo.ui.HorizontalAlignment;
 import consulo.ui.Space;
 import consulo.ui.VerticalAlignment;
 import consulo.ui.layout.LayoutConstraint;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
 import io.qt.core.Qt;
 import io.qt.widgets.QBoxLayout;
@@ -79,5 +80,9 @@ public class DesktopQtVerticalLayoutImpl extends DesktopQtBoxLayoutComponent<Lay
             case CENTER -> new Qt.Alignment(Qt.AlignmentFlag.AlignHCenter);
             case RIGHT -> new Qt.Alignment(Qt.AlignmentFlag.AlignRight);
         };
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }

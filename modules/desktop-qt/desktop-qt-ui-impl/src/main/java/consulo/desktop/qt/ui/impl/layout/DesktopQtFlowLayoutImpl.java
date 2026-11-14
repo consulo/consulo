@@ -18,6 +18,7 @@ package consulo.desktop.qt.ui.impl.layout;
 import consulo.desktop.qt.ui.impl.DesktopQtSpace;
 import consulo.ui.Space;
 import consulo.ui.layout.FlowLayout;
+import consulo.ui.layout.LayoutStyle;
 import io.qt.widgets.QLayout;
 import org.jspecify.annotations.Nullable;
 
@@ -35,5 +36,9 @@ public class DesktopQtFlowLayoutImpl extends DesktopQtTileLayoutBase implements 
     @Override
     protected @Nullable QLayout createLayout() {
         return new DesktopQtFlowLayout(DesktopQtSpace.toPixels(myGap));
+    }
+
+    @Override
+    public void addStyle(LayoutStyle style) {
     }
 }
