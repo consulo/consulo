@@ -21,10 +21,14 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.builtinWebServer.custom.CustomPortServerManager;
 import consulo.mcpServer.impl.internal.McpAuthTokenManager;
+import consulo.mcpServer.impl.internal.McpToolRegistry;
 import consulo.mcpServer.impl.internal.http.McpCustomPortServerManager;
 import consulo.mcpServer.impl.internal.setting.McpServerSettings;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
 
 import java.util.List;
 import java.util.Map;
@@ -42,12 +46,22 @@ public class McpAIMcpServerProvider implements AIMcpServerProvider {
     private final Application myApplication;
     private final Provider<McpServerSettings> mySettings;
     private final Provider<McpAuthTokenManager> myTokenManager;
+    private final Provider<McpToolRegistry> myToolRegistry;
 
     @Inject
-    public McpAIMcpServerProvider(Application application, Provider<McpServerSettings> settings, Provider<McpAuthTokenManager> tokenManager) {
+    public McpAIMcpServerProvider(Application application,
+                                  Provider<McpServerSettings> settings,
+                                  Provider<McpAuthTokenManager> tokenManager,
+                                  Provider<McpToolRegistry> toolRegistry) {
         myApplication = application;
         mySettings = settings;
         myTokenManager = tokenManager;
+        myToolRegistry = toolRegistry;
+    }
+
+    @Override
+    public @Nullable Path getSkillPlugin(Path workingDirectory, String agent) {
+        return McpBundledSkillDelivery.deliver(myApplication, mySettings.get(), myToolRegistry.get(), !getServers().isEmpty(), workingDirectory, agent);
     }
 
     @Override

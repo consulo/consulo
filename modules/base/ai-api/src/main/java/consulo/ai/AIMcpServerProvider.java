@@ -18,6 +18,11 @@ package consulo.ai;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 
+import consulo.application.Application;
+import org.jspecify.annotations.Nullable;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,4 +38,32 @@ public interface AIMcpServerProvider {
      * Empty while the servers do not run.
      */
     List<AIMcpServer> getServers();
+
+    /**
+     * The skills of the IDE for an agent working in the directory, as a plugin directory of this session only - the
+     * skills under {@code skills/<id>/SKILL.md} beside the manifests the agents read. Null when the agent gets none.
+     *
+     * @param agent {@value #AGENT_CLAUDE}, {@value #AGENT_CODEX}, {@value #AGENT_CURSOR} or another agent
+     */
+    default @Nullable Path getSkillPlugin(Path workingDirectory, String agent) {
+        return null;
+    }
+
+    String AGENT_CLAUDE = "claude";
+    String AGENT_CODEX = "codex";
+    String AGENT_CURSOR = "cursor";
+
+    /**
+     * The skill plugins every provider has for the agent in the directory.
+     */
+    static List<Path> skillPlugins(Path workingDirectory, String agent) {
+        List<Path> plugins = new ArrayList<>();
+        Application.get().getExtensionPoint(AIMcpServerProvider.class).forEach(provider -> {
+            Path plugin = provider.getSkillPlugin(workingDirectory, agent);
+            if (plugin != null) {
+                plugins.add(plugin);
+            }
+        });
+        return plugins;
+    }
 }
