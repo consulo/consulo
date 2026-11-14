@@ -44,11 +44,19 @@ button.plan.review.build:
     text: Build
 prompt.plan.feedback:
     text: 'Feedback on the plan {0} - revise the plan, do not implement it yet:'
-prompt.plan.feedback.lines:
+prompt.review.lines:
     text: 'Lines {0}-{1} ("{2}"):'
-prompt.plan.feedback.line:
+prompt.review.line:
     text: 'Line {0} ("{1}"):'
 action.comment.on.plan.text:
     text: Comment on Plan
 action.comment.on.plan.description:
     text: Write a review comment on the selected lines of the plan - it goes back to the agent with the other comments
+prompt.changes.feedback:
+    text: 'Review of your changes - adjust them as the comments say:'
+prompt.changes.feedback.file:
+    text: '{0}:'
+button.changes.review.send:
+    text: Send Review
+button.changes.review.send.description:
+    text: Send the comments on the changes to the agent

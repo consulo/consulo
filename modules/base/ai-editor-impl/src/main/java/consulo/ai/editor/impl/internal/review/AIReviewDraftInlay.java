@@ -13,31 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
-import consulo.review.comment.CodeReviewNewCommentViewModel;
 import consulo.review.editor.CodeReviewLineRange;
-import consulo.review.editor.CodeReviewNewCommentInlayModel;
 import consulo.review.editor.CodeReviewRangedInlayModel;
+import consulo.review.editor.CodeReviewThreadInlayModel;
+import consulo.review.timeline.thread.CodeReviewThreadViewModel;
 import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The input of a new comment on lines of a plan, under the last of them.
+ * A comment on lines of a plan, under the last of them.
  *
  * @author VISTALL
  * @since 2026-11-14
  */
-final class AIPlanNewCommentInlay implements CodeReviewNewCommentInlayModel, CodeReviewRangedInlayModel {
-    private final Object myKey = new Object();
+final class AIReviewDraftInlay implements CodeReviewThreadInlayModel, CodeReviewRangedInlayModel {
+    private final AIReviewComment myComment;
     private final CodeReviewLineRange myRange;
-    private final AIPlanNewCommentViewModel myEditor;
-    private final Runnable myCancel;
+    private final AIReviewThread myThread;
 
-    AIPlanNewCommentInlay(CodeReviewLineRange range, AIPlanNewCommentViewModel editor, Runnable cancel) {
+    AIReviewDraftInlay(AIReviewComment comment, CodeReviewLineRange range) {
+        myComment = comment;
         myRange = range;
-        myEditor = editor;
-        myCancel = cancel;
+        myThread = new AIReviewThread(comment);
+    }
+
+    AIReviewComment getComment() {
+        return myComment;
     }
 
     CodeReviewLineRange getLines() {
@@ -46,7 +49,7 @@ final class AIPlanNewCommentInlay implements CodeReviewNewCommentInlayModel, Cod
 
     @Override
     public Object getKey() {
-        return myKey;
+        return myComment.getId();
     }
 
     @Override
@@ -65,12 +68,7 @@ final class AIPlanNewCommentInlay implements CodeReviewNewCommentInlayModel, Cod
     }
 
     @Override
-    public CodeReviewNewCommentViewModel getEditor() {
-        return myEditor;
-    }
-
-    @Override
-    public void cancel() {
-        myCancel.run();
+    public CodeReviewThreadViewModel getThread() {
+        return myThread;
     }
 }

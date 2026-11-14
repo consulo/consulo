@@ -15,8 +15,8 @@
  */
 package consulo.ai.editor.impl.internal;
 
-import consulo.ai.editor.impl.internal.plan.AIPlanReviewManager;
-import consulo.ai.editor.impl.internal.plan.CommentOnPlanAction;
+import consulo.ai.editor.impl.internal.review.AIPlanReviewManager;
+import consulo.ai.editor.impl.internal.review.CommentOnPlanAction;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;

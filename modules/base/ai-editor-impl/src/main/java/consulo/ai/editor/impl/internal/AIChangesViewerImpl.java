@@ -17,11 +17,14 @@ package consulo.ai.editor.impl.internal;
 
 import consulo.ai.AIChangesViewer;
 import consulo.ai.AIToolCallContent;
+import consulo.ai.editor.impl.internal.review.AIChangesReview;
+import consulo.ai.editor.impl.internal.review.AIChangesReviewSendAction;
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.component.ServiceImpl;
 import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.chain.SimpleDiffRequestChain;
 import consulo.diff.content.DiffContent;
 import consulo.diff.request.DiffRequest;
@@ -31,10 +34,12 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * The changes of an agent as a chain of diffs - what each file was before the agent touched it against what it made
@@ -48,7 +53,8 @@ import java.util.List;
 public class AIChangesViewerImpl implements AIChangesViewer {
     @RequiredUIAccess
     @Override
-    public void show(Project project, List<AIToolCallContent.Diff> changes, int selected) {
+    public void show(Project project, List<AIToolCallContent.Diff> changes, int selected, @Nullable Consumer<String> feedback) {
+        AIChangesReview review = feedback == null ? null : new AIChangesReview(project, feedback);
         if (changes.isEmpty()) {
             return;
         }
@@ -59,13 +65,20 @@ public class AIChangesViewerImpl implements AIChangesViewer {
             String oldText = change.oldText();
             DiffContent before = oldText == null ? contentFactory.createEmpty() : contentFactory.create(project, oldText, fileType);
             DiffContent after = contentFactory.create(project, change.newText(), fileType);
-            requests.add(new SimpleDiffRequest(
+            SimpleDiffRequest request = new SimpleDiffRequest(
                 relative(project, change.path()),
                 before,
                 after,
                 oldText == null ? AIEditorLocalize.diffCreated().get() : AIEditorLocalize.diffBefore().get(),
                 AIEditorLocalize.diffAfter().get()
-            ));
+            );
+            // the changes take review comments, sent to the agent from the toolbar of the diff
+            if (review != null) {
+                request.putUserData(AIChangesReview.KEY, review);
+                request.putUserData(AIChangesReview.PATH, relative(project, change.path()));
+                request.putUserData(DiffUserDataKeys.CONTEXT_ACTIONS, List.of(new AIChangesReviewSendAction(review)));
+            }
+            requests.add(request);
         }
         SimpleDiffRequestChain chain = new SimpleDiffRequestChain(requests);
         chain.setIndex(Math.max(0, Math.min(selected, requests.size() - 1)));

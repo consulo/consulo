@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.review.list.UserPresentation;
 import consulo.review.timeline.CodeReviewCommentViewModel;
@@ -28,13 +28,13 @@ import java.util.Date;
  * @author VISTALL
  * @since 2026-11-14
  */
-final class AIPlanComment implements CodeReviewCommentViewModel {
+final class AIReviewComment implements CodeReviewCommentViewModel {
     private final String myId;
     private final String myText;
     private final Date myCreatedAt = new Date();
     private final Runnable myDelete;
 
-    AIPlanComment(String id, String text, Runnable delete) {
+    AIReviewComment(String id, String text, Runnable delete) {
         myId = id;
         myText = text;
         myDelete = delete;
@@ -51,7 +51,7 @@ final class AIPlanComment implements CodeReviewCommentViewModel {
 
     @Override
     public UserPresentation getAuthor() {
-        return AIPlanUser.INSTANCE;
+        return AIReviewUser.INSTANCE;
     }
 
     @Override

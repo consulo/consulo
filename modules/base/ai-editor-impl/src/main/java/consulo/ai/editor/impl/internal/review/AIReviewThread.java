@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.review.timeline.CodeReviewCommentViewModel;
 import consulo.review.timeline.thread.CodeReviewThreadViewModel;
@@ -28,10 +28,10 @@ import java.util.List;
  * @author VISTALL
  * @since 2026-11-14
  */
-final class AIPlanThread implements CodeReviewThreadViewModel {
-    private final AIPlanComment myComment;
+final class AIReviewThread implements CodeReviewThreadViewModel {
+    private final AIReviewComment myComment;
 
-    AIPlanThread(AIPlanComment comment) {
+    AIReviewThread(AIReviewComment comment) {
         myComment = comment;
     }
 

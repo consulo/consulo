@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.disposer.Disposable;
 import consulo.project.Project;
@@ -29,10 +29,10 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-11-14
  */
-final class AIPlanNewCommentViewModel extends CodeReviewSubmittableTextViewModelBase implements CodeReviewNewCommentViewModel {
+final class AIReviewNewCommentViewModel extends CodeReviewSubmittableTextViewModelBase implements CodeReviewNewCommentViewModel {
     private final Consumer<String> mySubmit;
 
-    AIPlanNewCommentViewModel(Project project, Disposable parentDisposable, Consumer<String> submit) {
+    AIReviewNewCommentViewModel(Project project, Disposable parentDisposable, Consumer<String> submit) {
         super(project, parentDisposable, "");
         mySubmit = submit;
     }

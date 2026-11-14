@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.ai.AIChatContextManager;
+import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
@@ -47,7 +48,7 @@ import java.util.Map;
 @ServiceImpl
 public class AIPlanReviewManager implements Disposable {
     private final Project myProject;
-    private final Map<VirtualFile, AIPlanReviewModel> myModels = new HashMap<>();
+    private final Map<VirtualFile, AIReviewModel> myModels = new HashMap<>();
 
     @Inject
     public AIPlanReviewManager(Project project) {
@@ -72,8 +73,8 @@ public class AIPlanReviewManager implements Disposable {
      */
     @RequiredUIAccess
     void install(Editor editor, VirtualFile file, Disposable editorDisposable) {
-        AIPlanReviewModel model = myModels.computeIfAbsent(file, key -> {
-            AIPlanReviewModel created = new AIPlanReviewModel(myProject, editor.getDocument(),
+        AIReviewModel model = myModels.computeIfAbsent(file, key -> {
+            AIReviewModel created = new AIReviewModel(myProject, editor.getDocument(),
                 () -> EditorNotifications.getInstance(myProject).updateNotifications(key));
             Disposer.register(this, created);
             return created;
@@ -86,7 +87,7 @@ public class AIPlanReviewManager implements Disposable {
      */
     @RequiredUIAccess
     void requestComment(VirtualFile file, CodeReviewLineRange lines) {
-        AIPlanReviewModel model = myModels.get(file);
+        AIReviewModel model = myModels.get(file);
         if (model != null) {
             model.requestNewComment(lines);
         }
@@ -97,7 +98,7 @@ public class AIPlanReviewManager implements Disposable {
     }
 
     int getDraftCount(VirtualFile file) {
-        AIPlanReviewModel model = myModels.get(file);
+        AIReviewModel model = myModels.get(file);
         return model == null ? 0 : model.getDraftCount();
     }
 
@@ -106,12 +107,16 @@ public class AIPlanReviewManager implements Disposable {
      */
     @RequiredUIAccess
     void sendFeedback(VirtualFile file) {
-        AIPlanReviewModel model = myModels.get(file);
+        AIReviewModel model = myModels.get(file);
         Path path = pathOf(file);
         if (model == null || path == null || model.getDraftCount() == 0) {
             return;
         }
-        AIChatContextManager.getInstance(myProject).revisePlan(path, model.takeFeedback(file.getName()));
+        StringBuilder feedback = new StringBuilder(AIEditorLocalize.promptPlanFeedback(file.getName()).get());
+        for (String line : model.takeFeedback()) {
+            feedback.append("\n- ").append(line);
+        }
+        AIChatContextManager.getInstance(myProject).revisePlan(path, feedback.toString());
     }
 
     @RequiredUIAccess

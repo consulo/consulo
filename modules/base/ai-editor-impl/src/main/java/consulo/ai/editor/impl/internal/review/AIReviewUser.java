@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -27,10 +27,10 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-11-14
  */
-final class AIPlanUser implements UserPresentation {
-    static final AIPlanUser INSTANCE = new AIPlanUser();
+final class AIReviewUser implements UserPresentation {
+    static final AIReviewUser INSTANCE = new AIReviewUser();
 
-    private AIPlanUser() {
+    private AIReviewUser() {
     }
 
     @Override

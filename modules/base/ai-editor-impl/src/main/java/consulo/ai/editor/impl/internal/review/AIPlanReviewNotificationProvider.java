@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.access.RequiredReadAction;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ai.editor.impl.internal.plan;
+package consulo.ai.editor.impl.internal.review;
 
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.disposer.Disposable;
@@ -25,6 +25,7 @@ import consulo.review.editor.CodeReviewEditorModel;
 import consulo.review.editor.CodeReviewInlayModel;
 import consulo.review.editor.CodeReviewLineRange;
 import consulo.review.editor.CodeReviewMultilineCommentableEditorModel;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.coroutine.MutableObservableValue;
 import consulo.util.concurrent.coroutine.ObservableValue;
@@ -43,21 +44,21 @@ import java.util.Set;
  * @author VISTALL
  * @since 2026-11-14
  */
-final class AIPlanReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>, CodeReviewMultilineCommentableEditorModel, Disposable {
+final class AIReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>, CodeReviewMultilineCommentableEditorModel, Disposable {
     private static final int MAX_QUOTE = 80;
 
     private final Project myProject;
     private final Document myDocument;
     private final Runnable myChanged;
-    private final List<AIPlanDraftInlay> myDrafts = new ArrayList<>();
+    private final List<AIReviewDraftInlay> myDrafts = new ArrayList<>();
     private final MutableObservableValue<Collection<CodeReviewInlayModel>> myInlays = MutableObservableValue.of(List.of());
     private final MutableObservableValue<@Nullable CodeReviewEditorGutterControlsState> myGutterState =
-        MutableObservableValue.of(new AIPlanGutterState(Set.of(), Set.of()));
-    private @Nullable AIPlanNewCommentInlay myNewComment;
+        MutableObservableValue.of(new AIReviewGutterState(Set.of(), Set.of()));
+    private @Nullable AIReviewNewCommentInlay myNewComment;
     private @Nullable Disposable myNewCommentDisposable;
     private int myCounter;
 
-    AIPlanReviewModel(Project project, Document document, Runnable changed) {
+    AIReviewModel(Project project, Document document, Runnable changed) {
         myProject = project;
         myDocument = document;
         myChanged = changed;
@@ -91,17 +92,18 @@ final class AIPlanReviewModel implements CodeReviewEditorModel<CodeReviewInlayMo
         dropNewComment();
         Disposable disposable = Disposable.newDisposable();
         Disposer.register(this, disposable);
-        AIPlanNewCommentViewModel editor = new AIPlanNewCommentViewModel(myProject, disposable, text -> {
+        AIReviewNewCommentViewModel editor = new AIReviewNewCommentViewModel(myProject, disposable, text -> {
             dropNewComment();
             addDraft(lineRange, text);
         });
-        myNewComment = new AIPlanNewCommentInlay(lineRange, editor, () -> {
+        myNewComment = new AIReviewNewCommentInlay(lineRange, editor, () -> {
             dropNewComment();
             update();
         });
         myNewCommentDisposable = disposable;
         update();
-        editor.requestFocus();
+        // the input exists once the editor drew the inlay - it takes the focus then
+        UIAccess.current().give(editor::requestFocus);
     }
 
     @RequiredUIAccess
@@ -121,24 +123,23 @@ final class AIPlanReviewModel implements CodeReviewEditorModel<CodeReviewInlayMo
     }
 
     /**
-     * The drafts as the feedback the agent reads - each with the lines it is about - and none of them after it.
+     * The drafts as the agent reads them - a line each, with the lines of the text it is about - and none of them after
+     * it.
      */
-    String takeFeedback(String planName) {
-        StringBuilder feedback = new StringBuilder(AIEditorLocalize.promptPlanFeedback(planName).get());
-        List<AIPlanDraftInlay> drafts = new ArrayList<>(myDrafts);
+    List<String> takeFeedback() {
+        List<AIReviewDraftInlay> drafts = new ArrayList<>(myDrafts);
         drafts.sort((left, right) -> Integer.compare(left.getLines().start(), right.getLines().start()));
-        for (AIPlanDraftInlay draft : drafts) {
+        List<String> feedback = new ArrayList<>();
+        for (AIReviewDraftInlay draft : drafts) {
             CodeReviewLineRange lines = draft.getLines();
-            feedback.append("\n- ")
-                .append((lines.start() == lines.end()
-                    ? AIEditorLocalize.promptPlanFeedbackLine(lines.start() + 1, quote(lines.start()))
-                    : AIEditorLocalize.promptPlanFeedbackLines(lines.start() + 1, lines.end() + 1, quote(lines.start()))).get())
-                .append(' ')
-                .append(draft.getComment().getText());
+            String where = (lines.start() == lines.end()
+                ? AIEditorLocalize.promptReviewLine(lines.start() + 1, quote(lines.start()))
+                : AIEditorLocalize.promptReviewLines(lines.start() + 1, lines.end() + 1, quote(lines.start()))).get();
+            feedback.add(where + " " + draft.getComment().getText());
         }
         myDrafts.clear();
         update();
-        return feedback.toString();
+        return feedback;
     }
 
     private String quote(int line) {
@@ -151,8 +152,8 @@ final class AIPlanReviewModel implements CodeReviewEditorModel<CodeReviewInlayMo
 
     private void addDraft(CodeReviewLineRange range, String text) {
         String id = "plan-comment-" + (++myCounter);
-        AIPlanDraftInlay[] draft = new AIPlanDraftInlay[1];
-        draft[0] = new AIPlanDraftInlay(new AIPlanComment(id, text, () -> {
+        AIReviewDraftInlay[] draft = new AIReviewDraftInlay[1];
+        draft[0] = new AIReviewDraftInlay(new AIReviewComment(id, text, () -> {
             myDrafts.remove(draft[0]);
             update();
         }), range);
@@ -172,17 +173,17 @@ final class AIPlanReviewModel implements CodeReviewEditorModel<CodeReviewInlayMo
     private void update() {
         List<CodeReviewInlayModel> inlays = new ArrayList<>(myDrafts);
         Set<Integer> commented = new LinkedHashSet<>();
-        for (AIPlanDraftInlay draft : myDrafts) {
+        for (AIReviewDraftInlay draft : myDrafts) {
             commented.add(draft.getLines().end());
         }
         Set<Integer> newComments = new LinkedHashSet<>();
-        AIPlanNewCommentInlay newComment = myNewComment;
+        AIReviewNewCommentInlay newComment = myNewComment;
         if (newComment != null) {
             inlays.add(newComment);
             newComments.add(newComment.getLines().end());
         }
         myInlays.set(inlays);
-        myGutterState.set(new AIPlanGutterState(commented, newComments));
+        myGutterState.set(new AIReviewGutterState(commented, newComments));
         myChanged.run();
     }
 

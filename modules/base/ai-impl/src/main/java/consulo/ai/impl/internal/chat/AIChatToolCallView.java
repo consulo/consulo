@@ -45,6 +45,7 @@ import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A tool call of an agent in its answer: a header line - how far the call is, what it does, the file it works on and
@@ -58,6 +59,7 @@ final class AIChatToolCallView {
     private static final int MAX_OUTPUT_CHARS = 20_000;
 
     private final Project myProject;
+    private final Consumer<String> myFeedback;
     private final Runnable myChanged;
     private final HorizontalLayout myHeader = HorizontalLayout.create(Space.SMALL);
     private final Label myStatus = Label.create();
@@ -75,7 +77,8 @@ final class AIChatToolCallView {
      * @param changed asked to show the parts again - the call was shown or hidden
      */
     @RequiredUIAccess
-    AIChatToolCallView(Project project, AIContent.ToolCall toolCall, Runnable changed) {
+    AIChatToolCallView(Project project, AIContent.ToolCall toolCall, Runnable changed, Consumer<String> feedback) {
+        myFeedback = feedback;
         myProject = project;
         myChanged = changed;
         myToolCall = toolCall;
@@ -86,7 +89,7 @@ final class AIChatToolCallView {
             updateHeader();
             myChanged.run();
         });
-        myChanges = Button.create(LocalizeValue.empty(), event -> AIChangesViewer.getInstance().show(myProject, diffs(myToolCall), 0));
+        myChanges = Button.create(LocalizeValue.empty(), event -> AIChangesViewer.getInstance().show(myProject, diffs(myToolCall), 0, myFeedback));
         myChanges.addStyle(ButtonStyle.INPLACE);
         myChanges.setToolTipText(AILocalize.buttonShowChanges());
 

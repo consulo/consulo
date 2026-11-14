@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * One answer of the assistant as it comes: its text, what it thought, the tools it ran, in the order they came. While
@@ -84,6 +85,10 @@ final class AIChatAnswer {
     }
 
     private final Project myProject;
+    /**
+     * Sends the review of the changes of the answer to the agent.
+     */
+    private final Consumer<String> myFeedback;
     private final UIAccess myUIAccess;
     private final MessageListItem myItem;
     private final List<Segment> mySegments = new ArrayList<>();
@@ -107,7 +112,8 @@ final class AIChatAnswer {
     private boolean myChangesExpanded;
 
     @RequiredUIAccess
-    AIChatAnswer(Project project, UIAccess uiAccess, MessageListItem item) {
+    AIChatAnswer(Project project, UIAccess uiAccess, MessageListItem item, Consumer<String> feedback) {
+        myFeedback = feedback;
         myProject = project;
         myUIAccess = uiAccess;
         myItem = item;
@@ -230,7 +236,7 @@ final class AIChatAnswer {
             render();
             return;
         }
-        view = new AIChatToolCallView(myProject, toolCall, this::render);
+        view = new AIChatToolCallView(myProject, toolCall, this::render, myFeedback);
         myToolCalls.put(toolCall.id(), view);
         mySegments.add(new ToolCallSegment(view));
         toParts();
@@ -351,7 +357,7 @@ final class AIChatAnswer {
             int index = i;
             AIToolCallContent.Diff change = changes.get(i);
             Hyperlink file = Hyperlink.create(LocalizeValue.of(relative(change.path())),
-                event -> AIChangesViewer.getInstance().show(myProject, changes, index));
+                event -> AIChangesViewer.getInstance().show(myProject, changes, index, myFeedback));
             Label count = Label.create(AIChatToolCallView.changeCount(List.of(change)));
             count.addStyle(LabelStyle.FONT_SMALL);
             HorizontalLayout row = HorizontalLayout.create(Space.SMALL);

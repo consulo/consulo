@@ -840,7 +840,7 @@ public class AIChatPanel implements Disposable {
             myFollowUps.add(followUp(AILocalize.buttonPlanBuild(), true, this::buildPlan));
             Path planFile = myPlanFile;
             if (planFile != null) {
-                myFollowUps.add(Button.create(AILocalize.buttonPlanView(), event -> openFile(planFile)));
+                myFollowUps.add(Button.create(AILocalize.buttonPlanView(), event -> openBeside(planFile)));
             }
         }
         myFollowUps.setVisible(true);
@@ -922,6 +922,29 @@ public class AIChatPanel implements Disposable {
             return;
         }
         openFile(logFile);
+    }
+
+    /**
+     * Opens the file in a split next to the chat - the plan and the chat side by side - or brings it up where it is
+     * open already.
+     */
+    @RequiredUIAccess
+    private void openBeside(Path path) {
+        CompletableFuture.supplyAsync(() -> LocalFileSystem.getInstance().refreshAndFindFileByNioFile(path),
+                myProject.getApplication().getInstance(ApplicationConcurrency.class).executor())
+            .whenCompleteAsync((file, error) -> {
+                if (file == null) {
+                    log(AILocalize.labelFileMissing(path.toString()).get());
+                    return;
+                }
+                if (myProject.isDisposed()) {
+                    return;
+                }
+                FileEditorManager manager = FileEditorManager.getInstance(myProject);
+                if (manager.isFileOpen(file) || manager.getSplitters().openInRightSplit(file, true) == null) {
+                    manager.openFile(file, true);
+                }
+            }, myUIAccess);
     }
 
     @RequiredUIAccess
@@ -1708,7 +1731,7 @@ public class AIChatPanel implements Disposable {
         if (myAnswering) {
             item.setWriting(true);
         }
-        return new AIChatAnswer(myProject, myUIAccess, item);
+        return new AIChatAnswer(myProject, myUIAccess, item, this::sendMessage);
     }
 
     @RequiredUIAccess

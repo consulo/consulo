@@ -22,6 +22,8 @@ import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import java.util.List;
+import java.util.function.Consumer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Shows the changes of files an AI agent made, one after another in the diff viewer - the chat itself shows only how
@@ -40,5 +42,15 @@ public interface AIChangesViewer {
      * @param selected the change shown first
      */
     @RequiredUIAccess
-    void show(Project project, List<AIToolCallContent.Diff> changes, int selected);
+    default void show(Project project, List<AIToolCallContent.Diff> changes, int selected) {
+        show(project, changes, selected, null);
+    }
+
+    /**
+     * @param selected the change shown first
+     * @param feedback takes the review of the changes - comments on their lines - as a message to the agent; null
+     *                 shows the changes without a review
+     */
+    @RequiredUIAccess
+    void show(Project project, List<AIToolCallContent.Diff> changes, int selected, @Nullable Consumer<String> feedback);
 }
