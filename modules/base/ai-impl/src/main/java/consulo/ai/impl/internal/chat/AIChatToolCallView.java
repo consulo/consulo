@@ -102,6 +102,8 @@ final class AIChatToolCallView {
         updateHeader();
     }
 
+    private boolean myStopped;
+
     AIContent.ToolCall getToolCall() {
         return myToolCall;
     }
@@ -110,6 +112,18 @@ final class AIChatToolCallView {
     void update(AIContent.ToolCall toolCall) {
         myToolCall = toolCall;
         updateHeader();
+    }
+
+    /**
+     * The answer ended while the call still ran - it never comes to an end, so it stops spinning.
+     */
+    @RequiredUIAccess
+    void stop() {
+        AIToolCallStatus status = myToolCall.status();
+        if (status == AIToolCallStatus.PENDING || status == AIToolCallStatus.IN_PROGRESS) {
+            myStopped = true;
+            updateHeader();
+        }
     }
 
     /**
@@ -133,7 +147,7 @@ final class AIChatToolCallView {
     @RequiredUIAccess
     private void updateHeader() {
         AIContent.ToolCall toolCall = myToolCall;
-        myStatus.setImage(statusImage(toolCall.status()));
+        myStatus.setImage(myStopped ? PlatformIconGroup.runconfigurationsTestterminated() : statusImage(toolCall.status()));
         myTitle.setText(LocalizeValue.of(relative(toolCall.title())));
 
         myFilePath = filePath(toolCall);

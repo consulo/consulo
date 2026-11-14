@@ -1714,7 +1714,9 @@ public class AIChatPanel implements Disposable {
                 appendOwn(withAttachments(said, attachedNames(message)), message.content(), indexOf(history, message), said);
             }
             else {
-                newAnswer().show(message.content());
+                AIChatAnswer answer = newAnswer();
+                answer.show(message.content());
+                answer.finish();
                 for (AIContent.ToolUse toolUse : message.getToolUses()) {
                     append(LocalizeValue.empty(), AILocalize.labelToolCall(toolUse.toolName()).get(), MessageListItemStyle.SYSTEM);
                 }

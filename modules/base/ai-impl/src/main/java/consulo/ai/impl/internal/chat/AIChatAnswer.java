@@ -279,6 +279,9 @@ final class AIChatAnswer {
             mySegments.remove(thinking);
             myThinking = null;
         }
+        for (AIChatToolCallView view : myToolCalls.values()) {
+            view.stop();
+        }
         if (myParts) {
             render();
         }
