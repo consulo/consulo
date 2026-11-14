@@ -26,7 +26,6 @@ import consulo.module.creation.NewModuleWizardContext;
 import consulo.module.creation.localize.ModuleCreationLocalize;
 import consulo.module.ui.BundleBox;
 import consulo.platform.Platform;
-import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.TextBox;
 import consulo.ui.UIAccess;
@@ -67,8 +66,7 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
   public UnifiedProjectOrModuleNameStep(C context) {
     myContext = context;
     myPlatform = context.getPlatform();
-    Project project = context.getProject();
-    myPlatformTargetId = project != null ? project.getPlatformTargetId() : null;
+    myPlatformTargetId = context.getPlatformTargetId();
   }
 
   @RequiredUIAccess
@@ -87,16 +85,18 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
 
     FormBuilder formBuilder = FormBuilder.create();
 
+    // the machine first - the name and the location are of it; only a new project chooses it, and only when there is another
+    PlatformTargetComboBox targetComboBox = null;
+    PlatformTargetManager targetManager = Application.get().getInstance(PlatformTargetManager.class);
+    boolean chooseTarget = myContext.isPlatformChoosable() && targetManager.getTargets().size() > 1;
+    if (chooseTarget) {
+      targetComboBox = new PlatformTargetComboBox(targetManager);
+      formBuilder.addLabeled(ModuleCreationLocalize.labelProjectTarget(), targetComboBox.getComponent());
+    }
+
     myNameTextBox = TextBox.create();
 
     formBuilder.addLabeled(myContext.isNewProject() ? ModuleCreationLocalize.labelProjectName() : ModuleCreationLocalize.labelModuleName(), myNameTextBox);
-
-    PlatformTargetComboBox targetComboBox = null;
-    if (myContext.isNewProject()) {
-      // a new project may be created on any machine - a module is of the machine of its project
-      targetComboBox = new PlatformTargetComboBox(Application.get().getInstance(PlatformTargetManager.class));
-      formBuilder.addLabeled(ModuleCreationLocalize.labelProjectTarget(), targetComboBox.getComponent());
-    }
 
     FileChooserTextBoxBuilder builder = FileChooserTextBoxBuilder.create(myContext.getProject());
     builder.uiDisposable(uiDisposable);
@@ -125,9 +125,9 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
       }
     });
 
-    // a new project may be created on any machine - a module is of the machine of its project
+    // a new project may be created on any machine - a module is of its project, an import of its files
     FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-    builder.fileChooserDescriptor(myContext.isNewProject() ? descriptor.withAnyPlatform() : descriptor.withPlatform(myContext.getPlatform()));
+    builder.fileChooserDescriptor(chooseTarget ? descriptor.withAnyPlatform() : descriptor.withPlatform(myPlatform));
 
     myFileChooserController = builder.build();
 
@@ -160,7 +160,6 @@ public class UnifiedProjectOrModuleNameStep<C extends NewModuleWizardContext> im
 
     if (targetComboBox != null) {
       PlatformTargetComboBox comboBox = targetComboBox;
-      PlatformTargetManager targetManager = Application.get().getInstance(PlatformTargetManager.class);
       UIAccess uiAccess = UIAccess.current();
       Path localBaseDir = Path.of(projectOrModulePath).getParent();
       comboBox.addListener(targetId -> {

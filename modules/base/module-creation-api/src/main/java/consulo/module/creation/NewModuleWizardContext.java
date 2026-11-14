@@ -46,6 +46,22 @@ public interface NewModuleWizardContext {
     default void setPlatform(Platform platform) {
     }
 
+    /**
+     * The target of {@link #getPlatform()}, null for the local machine - known without a connection.
+     */
+    default @Nullable String getPlatformTargetId() {
+        Project project = getProject();
+        return project != null ? project.getPlatformTargetId() : null;
+    }
+
+    /**
+     * Whether the machine is chosen in the wizard - for a new project; a module is of its project, an import is of the
+     * machine of its files.
+     */
+    default boolean isPlatformChoosable() {
+        return isNewProject();
+    }
+
     default String getTargetId() {
         return isNewProject()
             ? ModuleCreationLocalize.projectNewWizardProjectIdentification().get()

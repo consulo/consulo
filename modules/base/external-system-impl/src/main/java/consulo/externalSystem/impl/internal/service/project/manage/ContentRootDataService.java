@@ -26,14 +26,17 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModifiableRootModel;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -109,7 +112,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
           for (DataNode<ContentRootData> data : datas) {
             ContentRootData contentRoot = data.getData();
 
-            ContentEntry contentEntry = findOrCreateContentRoot(model, contentRoot.getRootPath());
+            ContentEntry contentEntry = findOrCreateContentRoot(model, contentRoot.getRootPath(), module.getProject());
 
             for (ContentFolder contentFolder : contentEntry.getFolders(LanguageContentFolderScopes.all())) {
               if (contentFolder.isSynthetic()) {
@@ -119,31 +122,31 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
             }
             LOG.info(String.format("Importing content root '%s' for module '%s'", contentRoot.getRootPath(), module.getName()));
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.SOURCE)) {
-              createSourceRootIfAbsent(contentEntry, path, module.getName(), ProductionContentFolderTypeProvider.getInstance(), false,
+              createSourceRootIfAbsent(contentEntry, path, module, ProductionContentFolderTypeProvider.getInstance(), false,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.TEST)) {
-              createSourceRootIfAbsent(contentEntry, path, module.getName(), TestContentFolderTypeProvider.getInstance(), false,
+              createSourceRootIfAbsent(contentEntry, path, module, TestContentFolderTypeProvider.getInstance(), false,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.RESOURCE)) {
               createSourceRootIfAbsent(contentEntry,
                                        path,
-                                       module.getName(),
+                                       module,
                                        ProductionResourceContentFolderTypeProvider.getInstance(),
                                        false,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.TEST_RESOURCE)) {
-              createSourceRootIfAbsent(contentEntry, path, module.getName(), TestResourceContentFolderTypeProvider.getInstance(), false,
+              createSourceRootIfAbsent(contentEntry, path, module, TestResourceContentFolderTypeProvider.getInstance(), false,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.SOURCE_GENERATED)) {
-              createSourceRootIfAbsent(contentEntry, path, module.getName(), ProductionContentFolderTypeProvider.getInstance(), true,
+              createSourceRootIfAbsent(contentEntry, path, module, ProductionContentFolderTypeProvider.getInstance(), true,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.TEST_GENERATED)) {
-              createSourceRootIfAbsent(contentEntry, path, module.getName(), TestContentFolderTypeProvider.getInstance(), true,
+              createSourceRootIfAbsent(contentEntry, path, module, TestContentFolderTypeProvider.getInstance(), true,
                                        createEmptyContentRootDirectories);
             }
             for (ContentRootData.SourceRoot path : contentRoot.getPaths(ExternalSystemSourceType.EXCLUDED)) {
@@ -163,10 +166,14 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   }
 
   
-  private static ContentEntry findOrCreateContentRoot(ModifiableRootModel model, String path) {
+  private static ContentEntry findOrCreateContentRoot(ModifiableRootModel model, String path, Project project) {
     ContentEntry[] entries = model.getContentEntries();
 
+    String url = toVfsUrl(project, path);
     for (ContentEntry entry : entries) {
+      if (entry.getUrl().equals(url)) {
+        return entry;
+      }
       VirtualFile file = entry.getFile();
       if (file == null) {
         continue;
@@ -175,17 +182,21 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
         return entry;
       }
     }
-    return model.addContentEntry(toVfsUrl(path));
+    return model.addContentEntry(url);
   }
 
   private static void createSourceRootIfAbsent(ContentEntry entry,
                                                ContentRootData.SourceRoot root,
-                                               String moduleName,
+                                               Module module,
                                                ContentFolderTypeProvider folderTypeProvider,
                                                boolean generated,
                                                boolean createEmptyContentRootDirectories) {
+    String url = toVfsUrl(module.getProject(), root.getPath());
     ContentFolder[] folders = entry.getFolders(LanguageContentFolderScopes.of(folderTypeProvider));
     for (ContentFolder folder : folders) {
+      if (folder.getUrl().equals(url)) {
+        return;
+      }
       VirtualFile file = folder.getFile();
       if (file == null) {
         continue;
@@ -194,8 +205,8 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
         return;
       }
     }
-    LOG.info(String.format("Importing %s for content root '%s' of module '%s'", root, entry.getUrl(), moduleName));
-    ContentFolder contentFolder = entry.addFolder(toVfsUrl(root.getPath()), folderTypeProvider);
+    LOG.info(String.format("Importing %s for content root '%s' of module '%s'", root, entry.getUrl(), module.getName()));
+    ContentFolder contentFolder = entry.addFolder(url, folderTypeProvider);
     /*if (!StringUtil.isEmpty(root.getPackagePrefix())) {
       sourceFolder.setPackagePrefix(root.getPackagePrefix());
     } */
@@ -204,7 +215,7 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
     }
     if (createEmptyContentRootDirectories) {
       try {
-        VirtualFileUtil.createDirectoryIfMissing(root.getPath());
+        Files.createDirectories(toNioPath(module.getProject(), root.getPath()));
       }
       catch (IOException e) {
         LOG.warn(String.format("Unable to create directory for the path: %s", root.getPath()), e);
@@ -217,13 +228,19 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
                                                  String moduleName,
                                                  Project project) {
     String rootPath = root.getPath();
+    String url = toVfsUrl(project, rootPath);
+    for (ContentFolder folder : entry.getFolders(LanguageContentFolderScopes.excluded())) {
+      if (folder.getUrl().equals(url)) {
+        return;
+      }
+    }
     for (VirtualFile file : entry.getFolderFiles(LanguageContentFolderScopes.excluded())) {
       if (ExternalSystemApiUtil.getLocalFileSystemPath(file).equals(rootPath)) {
         return;
       }
     }
     LOG.info(String.format("Importing excluded root '%s' for content root '%s' of module '%s'", root, entry.getUrl(), moduleName));
-    entry.addFolder(toVfsUrl(rootPath), ExcludedContentFolderTypeProvider.getInstance());
+    entry.addFolder(url, ExcludedContentFolderTypeProvider.getInstance());
     ChangeListManager.getInstance(project).addDirectoryToIgnoreImplicitly(rootPath);
   }
 
@@ -231,7 +248,21 @@ public class ContentRootDataService implements ProjectDataService<ContentRootDat
   public void removeData(Collection<? extends ContentEntry> toRemove, Project project, boolean synchronous) {
   }
 
-  private static String toVfsUrl(String path) {
+  /**
+   * The path of an external system lives on the platform of the project
+   */
+  private static Path toNioPath(Project project, String path) {
+    Platform platform = project.getPlatform();
+    return platform == Platform.current() ? Path.of(path) : platform.fs().getPath(path);
+  }
+
+  private static String toVfsUrl(Project project, String path) {
+    if (project.getPlatform() != Platform.current()) {
+      String url = VirtualFileManager.getInstance().getUrl(toNioPath(project, path));
+      if (url != null) {
+        return url;
+      }
+    }
     return LocalFileSystem.PROTOCOL_PREFIX + path;
   }
 }

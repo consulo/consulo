@@ -18,16 +18,15 @@ package consulo.module.creation.scratch;
 import consulo.logging.Logger;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.creation.NewModuleWizardContext;
-import consulo.util.io.FileUtil;
-import consulo.util.io.zip.ZipUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author VISTALL
@@ -42,20 +41,40 @@ public abstract class UnzipNewModuleBuilderProcessor<C extends NewModuleWizardCo
     myPath = path;
   }
 
+  /**
+   * Extracts the template into the module directory - on the machine of the module.
+   */
   protected void unzip(ModifiableRootModel model) {
-    InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(myPath);
-    if (resourceAsStream == null) {
-      LOG.error("Resource by path '" + myPath + "' not found");
+    VirtualFile moduleDir = model.getModule().getModuleDir();
+    if (moduleDir == null) {
+      LOG.error("Module '" + model.getModule().getName() + "' has no directory");
       return;
     }
-    try {
-      File tempFile = FileUtil.createTempFile("template", "zip");
-      Files.copy(resourceAsStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-      VirtualFile moduleDir = model.getModule().getModuleDir();
-
-      File outputDir = VirtualFileUtil.virtualToIoFile(moduleDir);
-
-      ZipUtil.extract(tempFile, outputDir, null);
+    try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(myPath)) {
+      if (resourceAsStream == null) {
+        LOG.error("Resource by path '" + myPath + "' not found");
+        return;
+      }
+      Path outputDir = moduleDir.toNioPath();
+      try (ZipInputStream zip = new ZipInputStream(resourceAsStream)) {
+        ZipEntry entry;
+        while ((entry = zip.getNextEntry()) != null) {
+          Path target = outputDir.resolve(entry.getName()).normalize();
+          if (!target.startsWith(outputDir)) {
+            continue;
+          }
+          if (entry.isDirectory()) {
+            Files.createDirectories(target);
+          }
+          else {
+            Path parent = target.getParent();
+            if (parent != null) {
+              Files.createDirectories(parent);
+            }
+            Files.copy(zip, target, StandardCopyOption.REPLACE_EXISTING);
+          }
+        }
+      }
     }
     catch (IOException e) {
       LOG.error(e);

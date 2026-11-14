@@ -15,8 +15,12 @@
  */
 package consulo.module.creation.importing;
 
+import consulo.application.Application;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.disposer.Disposable;
 import consulo.module.creation.NewModuleWizardContext;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import org.jspecify.annotations.Nullable;
 
@@ -97,5 +101,39 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
   @Override
   public boolean isNewProject() {
     return myProject == null;
+  }
+
+  /**
+   * The machine of the imported files - the path tells it.
+   */
+  @Override
+  public boolean isPlatformChoosable() {
+    return false;
+  }
+
+  @Override
+  public Platform getPlatform() {
+    PlatformTarget target = findTarget();
+    Platform platform = target == null ? null : target.getPlatform();
+    if (platform != null) {
+      return platform;
+    }
+    return myProject != null ? myProject.getPlatform() : Platform.current();
+  }
+
+  @Override
+  public @Nullable String getPlatformTargetId() {
+    if (myFileSystem == FileSystems.getDefault()) {
+      return myProject != null ? myProject.getPlatformTargetId() : null;
+    }
+    PlatformTarget target = findTarget();
+    return target != null ? target.getId() : null;
+  }
+
+  private @Nullable PlatformTarget findTarget() {
+    if (myFileSystem == FileSystems.getDefault() || myPath == null) {
+      return null;
+    }
+    return Application.get().getInstance(PlatformTargetManager.class).findTargetOf(getNioPath());
   }
 }
