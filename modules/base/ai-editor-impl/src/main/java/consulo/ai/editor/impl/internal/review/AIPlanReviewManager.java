@@ -16,11 +16,18 @@
 package consulo.ai.editor.impl.internal.review;
 
 import consulo.ai.AIChatContextManager;
+import consulo.ai.editor.impl.internal.review.state.AIPlanReviewDraftEntry;
+import consulo.ai.editor.impl.internal.review.state.AIPlanReviewFileEntry;
+import consulo.ai.editor.impl.internal.review.state.AIPlanReviewState;
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.EditorNotifications;
@@ -34,7 +41,9 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,9 +55,14 @@ import java.util.Map;
 @Singleton
 @ServiceAPI(ComponentScope.PROJECT)
 @ServiceImpl
-public class AIPlanReviewManager implements Disposable {
+@State(name = "AIPlanReviews", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+public class AIPlanReviewManager implements Disposable, PersistentStateComponent<AIPlanReviewState> {
     private final Project myProject;
     private final Map<VirtualFile, AIReviewModel> myModels = new HashMap<>();
+    /**
+     * The drafts by the path of their plan - the ones of the plans open now are taken from their models when saved.
+     */
+    private AIPlanReviewState myState = new AIPlanReviewState();
 
     @Inject
     public AIPlanReviewManager(Project project) {
@@ -74,10 +88,17 @@ public class AIPlanReviewManager implements Disposable {
     @RequiredUIAccess
     void install(Editor editor, VirtualFile file, Disposable editorDisposable) {
         AIReviewModel model = myModels.computeIfAbsent(file, key -> {
-            AIReviewModel created = new AIReviewModel(myProject, editor.getDocument(),
-                () -> EditorNotifications.getInstance(myProject).updateNotifications(key));
-            Disposer.register(this, created);
-            return created;
+            AIReviewModel[] created = new AIReviewModel[1];
+            created[0] = new AIReviewModel(myProject, editor.getDocument(), () -> {
+                saveDrafts(key, created[0]);
+                EditorNotifications.getInstance(myProject).updateNotifications(key);
+            });
+            Disposer.register(this, created[0]);
+            AIPlanReviewFileEntry saved = findEntry(key.getPath());
+            if (saved != null) {
+                created[0].restoreDrafts(new ArrayList<>(saved.DRAFTS));
+            }
+            return created[0];
         });
         myProject.getApplication().getInstance(CodeReviewEditorRenderer.class).setupIn(editorDisposable, editor, model);
     }
@@ -125,6 +146,45 @@ public class AIPlanReviewManager implements Disposable {
         if (path != null) {
             AIChatContextManager.getInstance(myProject).buildPlan(path);
         }
+    }
+
+    private void saveDrafts(VirtualFile file, @Nullable AIReviewModel model) {
+        if (model == null) {
+            return;
+        }
+        AIPlanReviewFileEntry entry = findEntry(file.getPath());
+        List<AIPlanReviewDraftEntry> drafts = model.saveDrafts();
+        if (drafts.isEmpty()) {
+            if (entry != null) {
+                myState.FILES.remove(entry);
+            }
+            return;
+        }
+        if (entry == null) {
+            entry = new AIPlanReviewFileEntry();
+            entry.PATH = file.getPath();
+            myState.FILES.add(entry);
+        }
+        entry.DRAFTS = drafts;
+    }
+
+    private @Nullable AIPlanReviewFileEntry findEntry(String path) {
+        for (AIPlanReviewFileEntry entry : myState.FILES) {
+            if (path.equals(entry.PATH)) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public AIPlanReviewState getState() {
+        return myState;
+    }
+
+    @Override
+    public void loadState(AIPlanReviewState state) {
+        myState = state;
     }
 
     @Override

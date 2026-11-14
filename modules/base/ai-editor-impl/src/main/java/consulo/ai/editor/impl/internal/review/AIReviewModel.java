@@ -15,6 +15,7 @@
  */
 package consulo.ai.editor.impl.internal.review;
 
+import consulo.ai.editor.impl.internal.review.state.AIPlanReviewDraftEntry;
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -120,6 +121,33 @@ final class AIReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>
 
     int getDraftCount() {
         return myDrafts.size();
+    }
+
+    /**
+     * The drafts as they are kept between runs - the lines and the text of each.
+     */
+    List<AIPlanReviewDraftEntry> saveDrafts() {
+        List<AIPlanReviewDraftEntry> entries = new ArrayList<>();
+        for (AIReviewDraftInlay draft : myDrafts) {
+            AIPlanReviewDraftEntry entry = new AIPlanReviewDraftEntry();
+            entry.START = draft.getLines().start();
+            entry.END = draft.getLines().end();
+            entry.TEXT = draft.getComment().getText();
+            entries.add(entry);
+        }
+        return entries;
+    }
+
+    /**
+     * Brings back the drafts of an earlier run - the ones on lines the plan no longer has are dropped.
+     */
+    void restoreDrafts(List<AIPlanReviewDraftEntry> entries) {
+        int lineCount = Math.max(1, myDocument.getLineCount());
+        for (AIPlanReviewDraftEntry entry : entries) {
+            if (entry.START >= 0 && entry.START <= entry.END && entry.END < lineCount && entry.TEXT != null && !entry.TEXT.isBlank()) {
+                addDraft(new CodeReviewLineRange(entry.START, entry.END), entry.TEXT);
+            }
+        }
     }
 
     /**
