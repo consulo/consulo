@@ -183,6 +183,13 @@ public class AIChatPanel implements Disposable {
          */
         @RequiredUIAccess
         void sessionChanged(String sessionId);
+
+        /**
+         * The agent saved the plan of the chat to the file.
+         */
+        @RequiredUIAccess
+        default void planFileSaved(Path file) {
+        }
     }
 
     private final Project myProject;
@@ -886,7 +893,7 @@ public class AIChatPanel implements Disposable {
      * The plan is done - the agent goes to a mode which edits and implements it.
      */
     @RequiredUIAccess
-    private void buildPlan() {
+    void buildPlan() {
         AISessionOption mode = findMode(mySessionOptions);
         AISessionOptionValue editing = mode == null ? null : editingMode(mode);
         if (mode == null || editing == null) {
@@ -1124,7 +1131,10 @@ public class AIChatPanel implements Disposable {
 
             @Override
             public void onPlanFile(Path file) {
-                myUIAccess.give(() -> myPlanFile = file);
+                myUIAccess.give(() -> {
+                    myPlanFile = file;
+                    myListener.planFileSaved(file);
+                });
             }
 
             @Override

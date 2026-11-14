@@ -72,6 +72,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServiceImpl
 @Singleton
 public class AIChatView {
+    private static final String PLAN_SUFFIX = ".plan.md";
+
     private static final Logger LOG = Logger.getInstance(AIChatView.class);
     private static final int TITLE_LENGTH = 40;
 
@@ -99,6 +101,10 @@ public class AIChatView {
      * A message to send once the tab of its chat loaded.
      */
     private final Map<String, String> myPendingMessages = new HashMap<>();
+    /**
+     * The plans the agents saved, with the chats which made them.
+     */
+    private final Map<Path, String> myPlanChats = new ConcurrentHashMap<>();
     /**
      * The file the user worked on last - a chat tab is not one.
      */
@@ -151,8 +157,41 @@ public class AIChatView {
         deliver(attachment, message);
     }
 
+    public boolean isPlan(Path file) {
+        return myPlanChats.containsKey(file.toAbsolutePath().normalize()) || file.getFileName().toString().endsWith(PLAN_SUFFIX);
+    }
+
     @RequiredUIAccess
-    private void deliver(AIChatAttachment attachment, @Nullable String message) {
+    public void revisePlan(Path file, String feedback) {
+        String chatId = myPlanChats.get(file.toAbsolutePath().normalize());
+        AIChatEntry chat = chatId == null ? null : myStore.findChat(chatId);
+        if (chat == null) {
+            deliver(null, feedback);
+            return;
+        }
+        openChat(chat, true);
+        deliverTo(chat.ID, null, feedback);
+    }
+
+    @RequiredUIAccess
+    public void buildPlan(Path file) {
+        String chatId = myPlanChats.get(file.toAbsolutePath().normalize());
+        if (chatId == null) {
+            chatId = activeChat();
+        }
+        AIChatEntry chat = chatId == null ? null : myStore.findChat(chatId);
+        if (chat == null) {
+            return;
+        }
+        openChat(chat, true);
+        AIChatPanel panel = myPanels.get(chat.ID);
+        if (panel != null) {
+            panel.buildPlan();
+        }
+    }
+
+    @RequiredUIAccess
+    private void deliver(@Nullable AIChatAttachment attachment, @Nullable String message) {
         String chatId = activeChat();
         AIChatEntry chat = chatId == null ? null : myStore.findChat(chatId);
         if (chat != null) {
@@ -184,16 +223,20 @@ public class AIChatView {
     }
 
     @RequiredUIAccess
-    private void deliverTo(String chatId, AIChatAttachment attachment, @Nullable String message) {
+    private void deliverTo(String chatId, @Nullable AIChatAttachment attachment, @Nullable String message) {
         AIChatPanel panel = myPanels.get(chatId);
         if (panel != null) {
-            panel.attach(attachment);
+            if (attachment != null) {
+                panel.attach(attachment);
+            }
             if (message != null) {
                 panel.sendMessage(message);
             }
         }
         else {
-            myPendingAttachments.computeIfAbsent(chatId, id -> new ArrayList<>()).add(attachment);
+            if (attachment != null) {
+                myPendingAttachments.computeIfAbsent(chatId, id -> new ArrayList<>()).add(attachment);
+            }
             if (message != null) {
                 myPendingMessages.put(chatId, message);
             }
@@ -487,6 +530,12 @@ public class AIChatView {
     }
 
     private class ChatListener implements AIChatPanel.Listener {
+        @RequiredUIAccess
+        @Override
+        public void planFileSaved(Path file) {
+            myPlanChats.put(file.toAbsolutePath().normalize(), myChat.ID);
+        }
+
         private final AIChatEntry myChat;
         private final AIProvider myProvider;
         private final UIAccess myUIAccess;

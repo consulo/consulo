@@ -21,6 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.nio.file.Path;
 
 /**
  * @author VISTALL
@@ -46,5 +47,22 @@ public class AIChatContextManagerImpl implements AIChatContextManager {
     @Override
     public void send(AIChatAttachment attachment, String message) {
         myView.send(attachment, message);
+    }
+
+    @Override
+    public boolean isPlan(Path file) {
+        return myView.isPlan(file);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void revisePlan(Path file, String feedback) {
+        myView.revisePlan(file, feedback);
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void buildPlan(Path file) {
+        myView.buildPlan(file);
     }
 }

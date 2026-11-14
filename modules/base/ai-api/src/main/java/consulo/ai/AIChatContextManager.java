@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import java.nio.file.Path;
 
 /**
  * Gives context to the AI chats of a project - the chat the user works with, or a new one with the default account
@@ -45,4 +46,21 @@ public interface AIChatContextManager {
      */
     @RequiredUIAccess
     void send(AIChatAttachment attachment, String message);
+
+    /**
+     * Whether the file is a plan an agent wrote - one a chat was told of, or one named as plans are.
+     */
+    boolean isPlan(Path file);
+
+    /**
+     * Sends the feedback on a plan to the chat which made it - the chat the user works with when none is known.
+     */
+    @RequiredUIAccess
+    void revisePlan(Path file, String feedback);
+
+    /**
+     * The plan is accepted - the chat which made it implements it.
+     */
+    @RequiredUIAccess
+    void buildPlan(Path file);
 }
