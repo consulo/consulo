@@ -127,6 +127,28 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
  
   public abstract StateSplitterEx createSplitter(Class<? extends StateSplitterEx> splitter);
 
+  /**
+   * One storage for one file: a spec naming the project file (the {@code misc} file of the config directory) is the
+   * project file storage - two storages of the same file overwrite each other's components on save
+   * (JetBrains: {@code doGetJpsBridgeAwareStorageSpec}, {@code misc.xml} of the config directory is {@code $PROJECT_FILE$}).
+   */
+  private String normalizeFileSpec(String fileSpec) {
+    if (fileSpec.equals(StoragePathMacros.PROJECT_FILE) || fileSpec.endsWith("/")) {
+      return fileSpec;
+    }
+    String projectFile = myMacros.get(StoragePathMacros.PROJECT_FILE);
+    if (projectFile == null) {
+      return fileSpec;
+    }
+    try {
+      String path = FileUtil.toSystemIndependentName(expandMacros(fileSpec));
+      return path.equals(FileUtil.toSystemIndependentName(projectFile)) ? StoragePathMacros.PROJECT_FILE : fileSpec;
+    }
+    catch (IllegalArgumentException e) {
+      return fileSpec;
+    }
+  }
+
   @Override
   public TrackingPathMacroSubstitutor getMacroSubstitutor() {
     return myPathMacroSubstitutor;
@@ -146,13 +168,15 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   @Override
  
   public StateStorage getStateStorage(Storage storageSpec) {
-    String key = buildFileSpec(storageSpec);
+    String key = normalizeFileSpec(buildFileSpec(storageSpec));
 
     myStorageLock.lock();
     try {
       StateStorage stateStorage = myStorages.get(key);
       if (stateStorage == null) {
-        stateStorage = createStateStorage(storageSpec);
+        stateStorage = key.equals(StoragePathMacros.PROJECT_FILE)
+          ? createFileStateStorage(key, storageSpec.roamingType())
+          : createStateStorage(storageSpec);
         myStorages.put(key, stateStorage);
       }
       return stateStorage;
@@ -164,12 +188,13 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   @Override
   public @Nullable StateStorage getStateStorage(String fileSpec, RoamingType roamingType) {
+    String key = normalizeFileSpec(fileSpec);
     myStorageLock.lock();
     try {
-      StateStorage stateStorage = myStorages.get(fileSpec);
+      StateStorage stateStorage = myStorages.get(key);
       if (stateStorage == null) {
-        stateStorage = createFileStateStorage(fileSpec, roamingType);
-        myStorages.put(fileSpec, stateStorage);
+        stateStorage = createFileStateStorage(key, roamingType);
+        myStorages.put(key, stateStorage);
       }
       return stateStorage;
     }

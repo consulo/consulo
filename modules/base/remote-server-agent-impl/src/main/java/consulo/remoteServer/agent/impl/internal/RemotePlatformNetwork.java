@@ -64,8 +64,8 @@ public class RemotePlatformNetwork implements PlatformNetwork {
      * A loopback server socket of the IDE machine - every accepted connection is piped through a connection of its own.
      */
     @Override
-    public ForwardedPort forward(String host, int port) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(0, 50, InetAddress.getLoopbackAddress());
+    public ForwardedPort forward(String host, int port, int localPort) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(localPort, 50, InetAddress.getLoopbackAddress());
         Forwarding forwarding = new Forwarding(serverSocket, host, port);
         Thread.ofVirtual().name("Port forwarding to " + host + ":" + port).start(forwarding::acceptLoop);
         return forwarding;

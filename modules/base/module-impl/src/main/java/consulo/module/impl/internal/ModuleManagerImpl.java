@@ -45,6 +45,7 @@ import consulo.module.internal.ModuleManagerInternal;
 import consulo.module.localize.ModuleLocalize;
 import consulo.module.macro.ModulePathMacroManager;
 import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.RootsChangeRescanningInfo;
 import consulo.project.localize.ProjectLocalize;
@@ -675,9 +676,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         public Module newModule(String name, @Nullable String dirPath) {
             assertWritable();
 
-            String dirUrl = dirPath == null ? null : VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
-
-            return newModuleByUrl(name, dirUrl);
+            return newModuleByUrl(name, dirPath == null ? null : toDirUrl(dirPath));
         }
 
         @Override
@@ -685,6 +684,20 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             assertWritable();
 
             return newModuleByUrl(name, moduleDir.getUrl());
+        }
+
+        /**
+         * The path is a path of the machine of the project.
+         */
+        private String toDirUrl(String dirPath) {
+            Platform platform = myProject.getPlatform();
+            if (platform != Platform.current()) {
+                String url = VirtualFileManager.getInstance().getUrl(platform.fs().getPath(dirPath));
+                if (url != null) {
+                    return url;
+                }
+            }
+            return VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
         }
 
         private Module newModuleByUrl(String name, @Nullable String dirUrl) {

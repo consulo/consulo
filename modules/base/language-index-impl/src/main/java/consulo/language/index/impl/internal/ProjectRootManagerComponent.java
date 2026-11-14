@@ -191,10 +191,13 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
 
         String projectFilePath = myProject.getProjectFilePath();
         File projectDirFile = new File(projectFilePath).getParentFile();
-        VirtualFile projectStoreDir = myProject.getPlatform() == Platform.current() ? null : ProjectCoreUtil.getDirectoryStoreFile(myProject);
-        if (projectStoreDir != null) {
-            // the store of a project of another machine - by its path in the virtual file system
-            recursive.add(projectStoreDir.getPath());
+        if (myProject.getPlatform() != Platform.current()) {
+            // the store of a project of another machine - by its path in the virtual file system; the paths of the project
+            // are not paths of this machine, a store not found yet is watched once the roots change
+            VirtualFile projectStoreDir = ProjectCoreUtil.getDirectoryStoreFile(myProject);
+            if (projectStoreDir != null) {
+                recursive.add(projectStoreDir.getPath());
+            }
         }
         else if (projectDirFile != null && projectDirFile.getName().equals(Project.DIRECTORY_STORE_FOLDER)) {
             recursive.add(projectDirFile.getAbsolutePath());

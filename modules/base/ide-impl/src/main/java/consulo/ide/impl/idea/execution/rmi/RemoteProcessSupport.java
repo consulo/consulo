@@ -42,9 +42,11 @@ import consulo.util.rmi.RemoteServer;
 import consulo.util.rmi.RemoteUtil;
 import org.jspecify.annotations.Nullable;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.RMIClientSocketFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,6 +195,37 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     protected abstract RunProfileState getRunProfileState(Target target, Parameters configuration, Executor executor)
         throws ExecutionException;
 
+    /**
+     * The host the process is reached by from the IDE machine.
+     */
+    protected String getRemoteHost() {
+        return StringUtil.notNullize(System.getProperty("java.rmi.server.hostname"), "127.0.0.1");
+    }
+
+    /**
+     * Makes a port of the process reachable from the IDE machine by the same number - the stubs of the process name it.
+     * A process of the IDE machine needs nothing.
+     *
+     * @return the port of the IDE machine
+     */
+    protected int publishPort(int port, Target target) throws IOException {
+        return port;
+    }
+
+    /**
+     * Makes a port of the IDE machine reachable from the machine of the process by the same number - the process calls the
+     * objects exported by the IDE (the dead hand, listeners) back by their stubs.
+     */
+    protected void publishCallbackPort(int port, Target target) throws IOException {
+    }
+
+    /**
+     * The socket factory of the registry of the process, {@code null} for the default one.
+     */
+    protected @Nullable RMIClientSocketFactory getClientSocketFactory() {
+        return null;
+    }
+
     private boolean getExistingInfo(SimpleReference<RunningInfo> ref, Pair<Target, Parameters> key) {
         Info info;
         synchronized (myProcMap) {
@@ -226,7 +259,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     private EntryPoint acquire(RunningInfo port) throws Exception {
         EntryPoint result = RemoteUtil.executeWithClassLoader(
             () -> {
-                Registry registry = LocateRegistry.getRegistry("localhost", port.port);
+                Registry registry = LocateRegistry.getRegistry(port.host, port.port, getClientSocketFactory());
                 Remote remote = registry.lookup(port.name);
                 if (Remote.class.isAssignableFrom(myValueClass)) {
                     return RemoteUtil.substituteClassLoader(narrowImpl(remote, myValueClass), myValueClass.getClassLoader());
@@ -294,11 +327,22 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
                     if (o instanceof PendingInfo pendingInfo) {
                         info = pendingInfo;
                         if (outputType == ProcessOutputTypes.STDOUT) {
-                            String prefix = "Port/ID:";
+                            String prefix = "Port/ServicesPort/ID:";
                             if (text.startsWith(prefix)) {
-                                String pair = text.substring(prefix.length()).trim();
-                                int idx = pair.indexOf("/");
-                                result = new RunningInfo(info.handler, Integer.parseInt(pair.substring(0, idx)), pair.substring(idx + 1));
+                                List<String> data = StringUtil.split(text.substring(prefix.length()).trim(), "/");
+                                int port = Integer.parseInt(data.get(0));
+                                int servicesPort = Integer.parseInt(data.get(1));
+                                String host = getRemoteHost();
+                                try {
+                                    port = publishPort(port, key.first);
+                                    if (servicesPort != 0) {
+                                        publishPort(servicesPort, key.first);
+                                    }
+                                }
+                                catch (IOException e) {
+                                    LOG.warn("The ports of the process are not published: " + e.getMessage());
+                                }
+                                result = new RunningInfo(info.handler, host, port, data.get(2));
                                 myProcMap.put(key, result);
                                 myProcMap.notifyAll();
                             }
@@ -318,7 +362,8 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
                     }
                     fireModificationCountChanged();
                     try {
-                        RemoteDeadHand.TwoMinutesTurkish.startCooking("localhost", result.port);
+                        publishCallbackPort(RemoteDeadHand.TwoMinutesTurkish.getPort(), key.first);
+                        RemoteDeadHand.TwoMinutesTurkish.startCooking(result.host, result.port);
                     }
                     catch (Exception e) {
                         LOG.warn("The cook failed to start due to " + ExceptionUtil.getRootCause(e));
@@ -346,7 +391,7 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
                 if (errorMessage != null) {
                     pendingInfo.stderr.append(errorMessage);
                 }
-                pendingInfo.ref.set(new RunningInfo(null, -1, pendingInfo.stderr.toString()));
+                pendingInfo.ref.set(new RunningInfo(null, getRemoteHost(), -1, pendingInfo.stderr.toString()));
             }
             synchronized (pendingInfo.ref) {
                 pendingInfo.ref.notifyAll();
@@ -374,12 +419,14 @@ public abstract class RemoteProcessSupport<Target, EntryPoint, Parameters> {
     }
 
     private static class RunningInfo extends Info {
+        final String host;
         final int port;
         final String name;
         Object entryPointHardRef;
 
-        RunningInfo(ProcessHandler handler, int port, String name) {
+        RunningInfo(ProcessHandler handler, String host, int port, String name) {
             super(handler);
+            this.host = host;
             this.port = port;
             this.name = name;
         }

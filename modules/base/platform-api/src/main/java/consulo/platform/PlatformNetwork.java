@@ -42,5 +42,15 @@ public interface PlatformNetwork {
      * An address of the IDE machine leading to {@code host:port} of this machine - for a client which can only connect by
      * an address (a debugger interface, an RMI client). Forwarded until closed.
      */
-    ForwardedPort forward(String host, int port) throws IOException;
+    default ForwardedPort forward(String host, int port) throws IOException {
+        return forward(host, port, 0);
+    }
+
+    /**
+     * Same as {@link #forward(String, int)}, on the given port of the IDE machine - for an address the client takes from
+     * the other side as is (the stubs of RMI name the port of their server).
+     *
+     * @param localPort the port of the IDE machine, {@code 0} for any free one
+     */
+    ForwardedPort forward(String host, int port, int localPort) throws IOException;
 }

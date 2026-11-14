@@ -71,7 +71,7 @@ public class LocalPlatformNetwork implements PlatformNetwork {
     }
 
     @Override
-    public ForwardedPort forward(String host, int port) {
+    public ForwardedPort forward(String host, int port, int localPort) {
         // the address is an address of the IDE machine already
         return new ForwardedPort() {
             @Override

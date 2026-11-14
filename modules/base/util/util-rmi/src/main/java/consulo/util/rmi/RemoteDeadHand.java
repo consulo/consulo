@@ -58,6 +58,13 @@ public interface RemoteDeadHand extends Remote {
       return 2 * 60 * 1000L;
     }
 
+    /**
+     * The port of the hand on this machine - the process calls it back, from another machine through a published port.
+     */
+    public static int getPort() {
+      return RemoteServer.getEndpointPort(ourHand);
+    }
+
     public static void startCooking(String host, int port) throws Exception {
       Registry registry = LocateRegistry.getRegistry(host, port);
       registry.bind(RemoteDeadHand.BINDING_NAME, ourHand);

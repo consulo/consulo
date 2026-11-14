@@ -30,8 +30,12 @@ import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Hashtable;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RemoteServer {
+  private static final Pattern REF_ENDPOINT_PATTERN = Pattern.compile("endpoint:\\[.*:(\\d+)]");
+
   private static Remote ourRemote;
 
   @SuppressWarnings("UseOfSystemOutOrSystemErr")
@@ -60,7 +64,8 @@ public class RemoteServer {
       registry.bind(name, stub);
 
       String id = port + "/" + name;
-      System.out.println("Port/ID: " + id);
+      // the first used port is reused for all further exported objects - a client on another machine forwards both
+      System.out.println("Port/ServicesPort/ID: " + port + "/" + getEndpointPort(stub) + "/" + name);
 
       long waitTime = 2 * 60 * 1000L;
       Object lock = new Object();
@@ -84,10 +89,20 @@ public class RemoteServer {
     // this properties are necessary for RMI servers to work in some cases:
     // if we are behind a firewall, if the network connection is lost, etc.
 
-    // do not use domain or http address for server
-    System.setProperty("java.rmi.server.hostname", "localhost");
+    // do not use domain or http address for server; a loopback address, not a name - a forwarded port listens on it
+    if (System.getProperty("java.rmi.server.hostname") == null) {
+      System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+    }
     // do not use HTTP tunnelling
     System.setProperty("java.rmi.server.disableHttp", "true");
+  }
+
+  /**
+   * The port the stub calls - the port of the objects exported by its machine, {@code 0} when it is not known.
+   */
+  public static int getEndpointPort(Remote stub) {
+    Matcher matcher = REF_ENDPOINT_PATTERN.matcher(stub.toString());
+    return matcher.find() ? Integer.parseInt(matcher.group(1)) : 0;
   }
 
   private static void banJNDI() {

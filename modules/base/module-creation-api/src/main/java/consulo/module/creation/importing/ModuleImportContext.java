@@ -61,6 +61,13 @@ public class ModuleImportContext implements NewModuleWizardContext, Disposable {
   }
 
   /**
+   * A path of this context as a path of the file system the project is imported on.
+   */
+  public Path toNioPath(String path) {
+    return myFileSystem.getPath(path);
+  }
+
+  /**
    * {@link #getPath()} as a path of the file system the project is imported on.
    */
   public Path getNioPath() {
