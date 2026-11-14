@@ -335,7 +335,19 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         private final JBLabel myHeader = new JBLabel();
         private final JPanel myHeaderRow = new JPanel(new BorderLayout(DesktopSpace.toPixels(Space.MEDIUM), 0));
         private final CobraMessageBody myBody = new CobraMessageBody(DesktopMessageListImpl.this::linkClicked, this::rendered);
-        private final JPanel myPartsPanel = new JPanel(new VerticalLayout(DesktopSpace.toPixels(Space.SMALL)));
+        /**
+         * A component of the caller may change its height on its own - an html view after it rendered - so the
+         * message is measured again whenever something in the parts asks for a new layout.
+         */
+        private final JPanel myPartsPanel = new JPanel(new VerticalLayout(DesktopSpace.toPixels(Space.SMALL))) {
+            @Override
+            public void invalidate() {
+                super.invalidate();
+                partsInvalidated();
+            }
+        };
+        private boolean myMeasuring;
+        private boolean myRemeasurePending;
         private final JPanel myWritingRow = new JPanel(new BorderLayout(DesktopSpace.toPixels(Space.SMALL), 0));
         private final JBLabel myWritingLabel = new JBLabel();
         private @Nullable AsyncProcessIcon myWritingIcon;
@@ -448,6 +460,25 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
             }
         }
 
+        private void partsInvalidated() {
+            if (myMeasuring || myRemeasurePending) {
+                return;
+            }
+            myRemeasurePending = true;
+            SwingUtilities.invokeLater(() -> {
+                myRemeasurePending = false;
+                Item item = myItem;
+                if (item.myView != this || item.myMeasuredWidth <= 0) {
+                    return;
+                }
+                int height = measure(item.myMeasuredWidth);
+                if (height != item.myMeasuredHeight) {
+                    item.myMeasuredHeight = height;
+                    contentChanged();
+                }
+            });
+        }
+
         /**
          * Gives back the components of the caller - the actions and the parts - which outlive the view.
          */
@@ -479,10 +510,16 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
          * The height at the width, laid out at it first - the wrapping bodies follow the width of their parent.
          */
         int measure(int width) {
-            myPanel.setSize(width, Math.max(1, myPanel.getHeight()));
-            myPanel.doLayout();
-            myPanel.validate();
-            return myPanel.getPreferredSize().height;
+            myMeasuring = true;
+            try {
+                myPanel.setSize(width, Math.max(1, myPanel.getHeight()));
+                myPanel.doLayout();
+                myPanel.validate();
+                return myPanel.getPreferredSize().height;
+            }
+            finally {
+                myMeasuring = false;
+            }
         }
     }
 

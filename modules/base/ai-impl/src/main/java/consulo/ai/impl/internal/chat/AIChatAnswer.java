@@ -70,6 +70,11 @@ final class AIChatAnswer {
 
     private static final class TextSegment implements Segment {
         final StringBuilder myText = new StringBuilder();
+        /**
+         * The views of the code blocks of the text, in order - kept while the text streams, so a block is colored
+         * again rather than made anew.
+         */
+        final List<AIChatCodeBlock> myCodeBlocks = new ArrayList<>();
     }
 
     private static final class ThinkingSegment implements Segment {
@@ -153,6 +158,10 @@ final class AIChatAnswer {
         segment.myText.append(delta);
         if (myParts) {
             scheduleRender();
+        }
+        else if ((delta.indexOf('`') >= 0 || delta.indexOf('~') >= 0) && AIChatTextBlock.hasCode(segment.myText)) {
+            // a code block is a part of its own, colored as the editor colors its language
+            toParts();
         }
         else {
             myItem.appendText(delta);
@@ -275,6 +284,28 @@ final class AIChatAnswer {
         }
     }
 
+    @RequiredUIAccess
+    private void addText(List<MessageListItemPart> parts, TextSegment segment) {
+        int codeIndex = 0;
+        for (AIChatTextBlock block : AIChatTextBlock.split(segment.myText.toString())) {
+            if (!block.code()) {
+                parts.add(MessageListItemPart.text(block.text()));
+                continue;
+            }
+            AIChatCodeBlock view;
+            if (codeIndex < segment.myCodeBlocks.size()) {
+                view = segment.myCodeBlocks.get(codeIndex);
+            }
+            else {
+                view = new AIChatCodeBlock(myProject);
+                segment.myCodeBlocks.add(view);
+            }
+            codeIndex++;
+            view.update(block.language(), block.text());
+            parts.add(MessageListItemPart.component(view.getComponent()));
+        }
+    }
+
     private @Nullable Segment lastSegment() {
         return mySegments.isEmpty() ? null : mySegments.getLast();
     }
@@ -304,11 +335,7 @@ final class AIChatAnswer {
         List<MessageListItemPart> parts = new ArrayList<>();
         for (Segment segment : mySegments) {
             switch (segment) {
-                case TextSegment text -> {
-                    if (!text.myText.isEmpty()) {
-                        parts.add(MessageListItemPart.text(text.myText.toString()));
-                    }
-                }
+                case TextSegment text -> addText(parts, text);
                 case ThinkingSegment thinking -> {
                     Hyperlink toggle = Objects.requireNonNull(thinking.myToggle);
                     toggle.setText(thinking.myExpanded ? AILocalize.linkThinkingHide() : AILocalize.linkThinking());
