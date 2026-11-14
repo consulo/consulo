@@ -68,6 +68,8 @@ import consulo.ui.ListBox;
 import consulo.ui.MessageBoxes;
 import consulo.ui.PopupOptions;
 import consulo.ui.PopupPosition;
+import consulo.ui.ProgressBar;
+import consulo.ui.ProgressBarStyle;
 import consulo.ui.Space;
 import consulo.ui.TextAttribute;
 import consulo.ui.ToggleButton;
@@ -204,7 +206,11 @@ public class AIChatPanel implements Disposable {
     private final DockLayout myPromptHolder = DockLayout.create();
     private final AIChatPlanPanel myPlan;
     private final AIChatQueuePanel myQueue;
-    private final Label myUsage = Label.create();
+    /**
+     * How full the context of the session is, as a ring - the details of the usage are a click away.
+     */
+    private final ProgressBar myUsage = ProgressBar.create();
+    private @Nullable ProgressBarStyle myUsageTone;
     private final Button myStopButton;
     private final Button myModeButton;
     private List<AISessionOption> mySessionOptions = List.of();
@@ -373,8 +379,17 @@ public class AIChatPanel implements Disposable {
         attachImage.setToolTipText(AILocalize.buttonAttachImage());
         attachImage.addStyle(ButtonStyle.INPLACE);
 
+        myUsage.addStyle(ProgressBarStyle.SPINNER);
+        myUsage.addStyle(ProgressBarStyle.TRANSPARENT_BACKGROUND);
+        myUsage.setMinimum(0);
+        myUsage.setMaximum(100);
+        myUsage.setVisible(false);
+        myUsage.paddingBuilder().rightSet(Space.SMALL).apply();
+        myUsage.addClickListener(event -> showUsagePopup());
+
         HorizontalLayout suffix = HorizontalLayout.create(Space.NONE);
         suffix.addStyle(HorizontalLayoutStyle.TRANSPARENT_BACKGROUND);
+        suffix.add(myUsage);
         suffix.add(attachImage);
         suffix.add(myWorkingDirectoryButton);
         suffix.add(myModeButton);
@@ -402,9 +417,6 @@ public class AIChatPanel implements Disposable {
         myFollowUps.setVisible(false);
         myFooterTop.add(myFollowUps);
 
-        myUsage.addStyle(LabelStyle.FONT_SMALL);
-        myUsage.paddingBuilder().topSet(Space.SMALL).apply();
-        myUsage.setVisible(false);
 
         // the box at the bottom reads as one editor - every row of it on the background of the editor
         myFooter.setBackgroundColor(ColorValue.lazy(() -> EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground()));
@@ -412,7 +424,6 @@ public class AIChatPanel implements Disposable {
         myPromptHolder.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
         myFooter.top(myFooterTop);
         myFooter.center(myInput.getComponent());
-        myFooter.bottom(myUsage);
         myFooter.borderBuilder().topSet().apply();
         // the rows of the box keep off its edges and off each other
         myFooter.paddingBuilder().leftSet(Space.LARGE).rightSet(Space.LARGE).topSet(Space.MEDIUM).bottomSet(Space.MEDIUM).apply();
@@ -1317,10 +1328,34 @@ public class AIChatPanel implements Disposable {
     }
 
     /**
-     * The tokens of the last answer and how full the context of the session is.
+     * The ring of the usage - how full the context of the session is, the details in its tooltip and popup.
      */
     @RequiredUIAccess
     private void updateUsage() {
+        List<String> parts = usageSummary();
+        AIContextUsage context = myContextUsage;
+        long percent = contextPercent(context);
+        myUsage.setValue((int) Math.min(100, Math.max(0, percent)));
+        myUsage.setToolTipText(LocalizeValue.of(String.join(" \u00b7 ", parts)));
+        myUsage.setVisible(!parts.isEmpty());
+
+        // the ring warns while the context fills up - the agent starts to forget, then cannot go on
+        ProgressBarStyle tone = percent >= 95 ? ProgressBarStyle.ERROR : percent >= 80 ? ProgressBarStyle.WARNING : null;
+        if (tone != myUsageTone) {
+            if (myUsageTone != null) {
+                myUsage.removeStyle(myUsageTone);
+            }
+            if (tone != null) {
+                myUsage.addStyle(tone);
+            }
+            myUsageTone = tone;
+        }
+    }
+
+    /**
+     * The tokens of the last answer and how full the context of the session is, in a line each.
+     */
+    private List<String> usageSummary() {
         List<String> parts = new ArrayList<>();
         AIUsage usage = myTurnUsage;
         if (usage != null && usage.inputTokens() >= 0 && usage.outputTokens() >= 0) {
@@ -1328,17 +1363,81 @@ public class AIChatPanel implements Disposable {
         }
         AIContextUsage context = myContextUsage;
         if (context != null && context.size() > 0 && context.used() >= 0) {
-            long percent = Math.round(context.used() * 100.0 / context.size());
-            parts.add(AILocalize.labelUsageContext(tokens(context.used()), tokens(context.size()), percent).get());
-            if (context.cost() != null) {
-                String currency = context.currency();
-                parts.add(currency == null || currency.equals("USD")
-                    ? String.format(Locale.ROOT, "$%.2f", context.cost())
-                    : String.format(Locale.ROOT, "%.2f %s", context.cost(), currency));
+            parts.add(AILocalize.labelUsageContext(tokens(context.used()), tokens(context.size()), contextPercent(context)).get());
+            String cost = cost(context);
+            if (cost != null) {
+                parts.add(cost);
             }
         }
-        myUsage.setText(LocalizeValue.of(String.join(" \u00b7 ", parts)));
-        myUsage.setVisible(!parts.isEmpty());
+        return parts;
+    }
+
+    private static long contextPercent(@Nullable AIContextUsage context) {
+        return context == null || context.size() <= 0 || context.used() < 0 ? 0 : Math.round(context.used() * 100.0 / context.size());
+    }
+
+    private static @Nullable String cost(AIContextUsage context) {
+        Double cost = context.cost();
+        if (cost == null) {
+            return null;
+        }
+        String currency = context.currency();
+        return currency == null || currency.equals("USD")
+            ? String.format(Locale.ROOT, "$%.2f", cost)
+            : String.format(Locale.ROOT, "%.2f %s", cost, currency);
+    }
+
+    /**
+     * The details of the usage, anchored to the ring - the context window, the last answer and what the session cost.
+     */
+    @RequiredUIAccess
+    private void showUsagePopup() {
+        AIContextUsage context = myContextUsage;
+        AIUsage usage = myTurnUsage;
+        if (context == null && usage == null) {
+            return;
+        }
+        LightPopup popup = LightPopup.create(PopupOptions.builder().position(PopupPosition.TOP).arrow().build());
+        VerticalLayout content = VerticalLayout.create(Space.SMALL);
+        content.paddingBuilder().allSet(Space.LARGE).apply();
+
+        if (context != null && context.size() > 0 && context.used() >= 0) {
+            long percent = contextPercent(context);
+            content.add(sectionLabel(AILocalize.labelUsageContextTitle()));
+            content.add(Label.create(AILocalize.labelUsageContextDetail(tokens(context.used()), tokens(context.size()), percent)));
+            ProgressBar bar = ProgressBar.create();
+            bar.addStyle(ProgressBarStyle.HEIGHT_MEDIUM);
+            if (myUsageTone != null) {
+                bar.addStyle(myUsageTone);
+            }
+            bar.setMinimum(0);
+            bar.setMaximum(100);
+            bar.setValue((int) Math.min(100, percent));
+            content.add(bar);
+            Label left = Label.create(AILocalize.labelUsageContextLeft(tokens(Math.max(0, context.size() - context.used()))));
+            left.addStyle(LabelStyle.FONT_SMALL);
+            content.add(left);
+        }
+        if (usage != null && usage.inputTokens() >= 0 && usage.outputTokens() >= 0) {
+            Label title = sectionLabel(AILocalize.labelUsageLastAnswer());
+            title.paddingBuilder().topSet(Space.SMALL).apply();
+            content.add(title);
+            content.add(Label.create(AILocalize.labelUsageTokens(tokens(usage.inputTokens()), tokens(usage.outputTokens()))));
+            if (usage.cachedInputTokens() > 0) {
+                Label cached = Label.create(AILocalize.labelUsageCached(tokens(usage.cachedInputTokens())));
+                cached.addStyle(LabelStyle.FONT_SMALL);
+                content.add(cached);
+            }
+        }
+        String cost = context == null ? null : cost(context);
+        if (cost != null) {
+            Label title = sectionLabel(AILocalize.labelUsageCostTitle());
+            title.paddingBuilder().topSet(Space.SMALL).apply();
+            content.add(title);
+            content.add(Label.create(LocalizeValue.of(cost)));
+        }
+        popup.setContent(content);
+        popup.showBy(myUsage);
     }
 
     private static String tokens(long count) {

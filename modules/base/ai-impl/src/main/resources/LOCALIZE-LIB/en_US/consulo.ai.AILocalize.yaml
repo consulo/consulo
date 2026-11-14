@@ -344,3 +344,15 @@ button.plan.view:
     text: View Plan
 label.file.missing:
     text: '{0} does not exist'
+label.usage.context.title:
+    text: Context window
+label.usage.context.detail:
+    text: '{0} of {1} tokens used ({2}%)'
+label.usage.context.left:
+    text: '{0} tokens left before the agent has to compact the conversation'
+label.usage.last.answer:
+    text: Last answer
+label.usage.cached:
+    text: '{0} of the input read from the cache'
+label.usage.cost.title:
+    text: Session cost
