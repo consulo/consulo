@@ -67,14 +67,21 @@ public final class CIUtil {
         if (job.kind().isContainer()) {
             return PlatformIconGroup.nodesFolder();
         }
+        return statusIcon(jobStatus(job));
+    }
+
+    /**
+     * The status a job is shown with: a running or queued build wins over the result of the last finished one.
+     */
+    public static CIBuildStatus jobStatus(CIJob job) {
         CIBuild lastBuild = job.lastBuild();
         if (lastBuild != null && lastBuild.status().isActive()) {
-            return statusIcon(lastBuild.status());
+            return lastBuild.status();
         }
         if (job.queued()) {
-            return statusIcon(CIBuildStatus.QUEUED);
+            return CIBuildStatus.QUEUED;
         }
-        return statusIcon(job.status());
+        return job.status();
     }
 
     /**

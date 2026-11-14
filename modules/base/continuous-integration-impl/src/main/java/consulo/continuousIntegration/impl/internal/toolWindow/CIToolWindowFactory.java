@@ -50,7 +50,8 @@ public class CIToolWindowFactory implements ToolWindowFactory, DumbAware {
         CIToolWindowPanel panel = new CIToolWindowPanel(
             project,
             CIManager.getInstance(project),
-            (CIBuildMonitorImpl) CIBuildMonitor.getInstance(project)
+            (CIBuildMonitorImpl) CIBuildMonitor.getInstance(project),
+            CIToolWindowSettings.getInstance(project)
         );
         Content content = ContentFactory.getInstance().createUIContent(panel.getComponent(), "", false);
         content.setDisposer(panel);

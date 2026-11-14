@@ -30,6 +30,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
     id = CIToolbarActionGroup.ID,
     children = {
         @ActionRef(type = CIRefreshAction.class),
+        @ActionRef(type = CIFilterActionGroup.class),
         @ActionRef(type = AnSeparator.class),
         @ActionRef(type = CIRunAction.class),
         @ActionRef(type = CIStopAction.class),

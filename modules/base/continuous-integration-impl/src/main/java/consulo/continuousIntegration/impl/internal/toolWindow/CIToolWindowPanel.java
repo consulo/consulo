@@ -104,6 +104,7 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     private final Project myProject;
     private final CIManager myManager;
     private final CIBuildMonitorImpl myMonitor;
+    private final CIToolWindowSettings mySettings;
     private final UIAccess myUIAccess;
 
     private final Tree<CITreeNode> myTree;
@@ -115,16 +116,18 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     private final Map<String, LoadState<CIJob>> myJobLists = new HashMap<>();
     private final Map<String, LoadState<CIBuild>> myBuildLists = new HashMap<>();
     private final Map<String, CIJob> myJobs = new HashMap<>();
+    private final Map<String, String> myJobParents = new HashMap<>();
     private final Map<String, CIBuild> myBuilds = new HashMap<>();
     private List<CIServer> myServers = List.of();
     private int myGeneration;
     private boolean myDisposed;
 
     @RequiredUIAccess
-    public CIToolWindowPanel(Project project, CIManager manager, CIBuildMonitorImpl monitor) {
+    public CIToolWindowPanel(Project project, CIManager manager, CIBuildMonitorImpl monitor, CIToolWindowSettings settings) {
         myProject = project;
         myManager = manager;
         myMonitor = monitor;
+        mySettings = settings;
         myUIAccess = UIAccess.current();
 
         myTree = Tree.create(new Model());
@@ -170,6 +173,10 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
         return myRoot;
     }
 
+    public CIToolWindowSettings getSettings() {
+        return mySettings;
+    }
+
     @RequiredUIAccess
     private Component createEmptyComponent() {
         VerticalLayout layout = VerticalLayout.create(Space.SMALL, HorizontalAlignment.CENTER);
@@ -200,11 +207,22 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
         myJobLists.clear();
         myBuildLists.clear();
         myJobs.clear();
+        myJobParents.clear();
         myBuilds.clear();
         myServers = myManager.getServers();
 
         myContent.center(myServers.isEmpty() ? myEmptyComponent : myTreeComponent);
         myTree.refreshAll();
+    }
+
+    /**
+     * The filter of the shown jobs changed: builds the tree again from what is already loaded, nothing is requested.
+     */
+    @RequiredUIAccess
+    public void filterChanged() {
+        if (!myDisposed) {
+            myTree.refreshAll();
+        }
     }
 
     @Override
@@ -280,11 +298,25 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 }
                 List<CITreeNode> nodes = new ArrayList<>(loaded.items().size());
                 for (CIJob job : loaded.items()) {
-                    nodes.add(new CITreeNode.Job(server, job, CIUtil.jobKey(server, job)));
+                    String key = CIUtil.jobKey(server, job);
+                    if (isShown(latestJob(key, job))) {
+                        nodes.add(new CITreeNode.Job(server, job, key));
+                    }
+                }
+                if (nodes.isEmpty()) {
+                    yield empty(parentKey, ContinuousIntegrationImplLocalize.treeAllJobsFiltered());
                 }
                 yield nodes;
             }
         };
+    }
+
+    /**
+     * Folders are always shown: their jobs are loaded only when they are opened, so it is unknown whether any of them
+     * passes the filter.
+     */
+    private boolean isShown(CIJob job) {
+        return job.kind().isContainer() || !mySettings.isHidden(CIUtil.jobStatus(job));
     }
 
     @RequiredUIAccess
@@ -345,7 +377,9 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
             else {
                 myJobLists.put(parentKey, new LoadState.Loaded<>(List.copyOf(jobs)));
                 for (CIJob job : jobs) {
-                    myJobs.put(CIUtil.jobKey(server, job), job);
+                    String jobKey = CIUtil.jobKey(server, job);
+                    myJobs.put(jobKey, job);
+                    myJobParents.put(jobKey, parentKey);
                 }
             }
             refreshChildren(parentKey);
@@ -380,8 +414,15 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
             if (myDisposed || generation != myGeneration || error != null || updated == null) {
                 return;
             }
-            myJobs.put(jobKey, updated);
-            refreshPresentation(jobKey);
+            CIJob previous = myJobs.put(jobKey, updated);
+            String parentKey = myJobParents.get(jobKey);
+            if (parentKey != null && previous != null && isShown(previous) != isShown(updated)) {
+                // the job enters or leaves the filter
+                refreshChildren(parentKey);
+            }
+            else {
+                refreshPresentation(jobKey);
+            }
         }, myUIAccess);
     }
 

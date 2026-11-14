@@ -12,6 +12,8 @@ tree.no.jobs:
     text: No jobs
 tree.no.builds:
     text: No builds
+tree.all.jobs.filtered:
+    text: All jobs are hidden by the filter
 tree.error:
     text: 'Failed to load: {0}'
 tree.job.disabled:
@@ -32,6 +34,10 @@ action.refresh.text:
     text: Refresh
 action.refresh.description:
     text: Reload servers, jobs and builds
+action.filter.text:
+    text: Filter Jobs by Status
+action.filter.description:
+    text: Choose the statuses of the jobs shown in the tree
 action.run.text:
     text: Run Build
 action.run.description:
