@@ -2,6 +2,7 @@
 package consulo.remoteServer.impl.internal.runtime;
 
 import consulo.application.ApplicationManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -16,6 +17,7 @@ import consulo.remoteServer.impl.internal.runtime.deployment.LocalDeploymentImpl
 import consulo.remoteServer.impl.internal.runtime.log.DeploymentLogManagerImpl;
 import consulo.remoteServer.impl.internal.runtime.log.LoggingHandlerImpl;
 import consulo.remoteServer.localize.RemoteServerLocalize;
+import consulo.remoteServer.platformAware.PlatformAwareServerConfiguration;
 import consulo.remoteServer.runtime.ConnectionStatus;
 import consulo.remoteServer.runtime.Deployment;
 import consulo.remoteServer.runtime.ServerConnection;
@@ -29,6 +31,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class ServerConnectionImpl<D extends DeploymentConfiguration> implements ServerConnection<D> {
@@ -46,6 +50,8 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     private final List<ServerConnector.ConnectionCallback<D>> myPendingCallbacks = new ArrayList<>();
     private final Map<Project, LogManagersForProject> myPerProjectLogManagers = new ConcurrentHashMap<>();
     private final MyDeployments myAllDeployments;
+    // the next attempt to connect again a lost connection of an always online server
+    private @Nullable ScheduledFuture<?> myReconnect;
 
     public ServerConnectionImpl(RemoteServer<?> server,
                                 ServerConnector<D> connector,
@@ -75,6 +81,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
     @Override
     public void connect(final Runnable onFinished) {
+        cancelReconnect();
         doDisconnect(LocalizeValue.empty());
         connectIfNeeded(new ServerConnector.ConnectionCallback<>() {
             @Override
@@ -91,6 +98,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
     @Override
     public void disconnect() {
+        cancelReconnect();
         if (myConnectionManager != null) {
             myConnectionManager.removeConnection(myServer);
         }
@@ -104,6 +112,44 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
     private void onConnectionLost(ServerRuntimeInstance<D> instance, LocalizeValue message) {
         if (myRuntimeInstance == instance) {
             doDisconnect(message);
+            if (myServer.getConfiguration() instanceof PlatformAwareServerConfiguration configuration
+                && configuration.isReconnectAutomatically()) {
+                scheduleReconnect(0);
+            }
+        }
+    }
+
+    /**
+     * Connects again after a pause which grows with every failed attempt - 5 seconds first, a minute at most.
+     */
+    private synchronized void scheduleReconnect(int attempt) {
+        long delay = Math.min(60, 5L << Math.min(attempt, 4));
+        LOG.info("Connection to " + myServer.getName() + " is lost, connecting again in " + delay + " s");
+        myReconnect = AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
+            synchronized (this) {
+                myReconnect = null;
+            }
+            if (myStatus != ConnectionStatus.DISCONNECTED) {
+                return;
+            }
+            connectIfNeeded(new ServerConnector.ConnectionCallback<>() {
+                @Override
+                public void connected(ServerRuntimeInstance<D> serverRuntimeInstance) {
+                    LOG.info("Connected again to " + myServer.getName());
+                }
+
+                @Override
+                public void errorOccurred(LocalizeValue errorMessage) {
+                    scheduleReconnect(attempt + 1);
+                }
+            });
+        }, delay, TimeUnit.SECONDS);
+    }
+
+    private synchronized void cancelReconnect() {
+        if (myReconnect != null) {
+            myReconnect.cancel(false);
+            myReconnect = null;
         }
     }
 

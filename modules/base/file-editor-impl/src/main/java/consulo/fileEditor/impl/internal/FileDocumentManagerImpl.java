@@ -5,6 +5,8 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.platform.PlatformTarget;
 import consulo.application.platform.PlatformTargetListener;
 import consulo.application.platform.PlatformTargetManager;
@@ -48,6 +50,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.localize.UILocalize;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
@@ -81,6 +84,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 @ServiceImpl
@@ -97,6 +101,12 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private final Set<Document> myOfflineDocuments = ContainerUtil.newConcurrentSet();
     // the notifications about the unsaved files of a machine which is not connected, by the id of its target
     private final Map<String, Notification> myOfflineNotifications = new ConcurrentHashMap<>();
+    // the ids of the targets which are not connected now
+    private final Set<String> myDisconnectedTargets = ConcurrentHashMap.newKeySet();
+    // the local copies of the offline documents - kept while typing, written a moment after the last change
+    private final OfflineDocumentBackups myBackups = new OfflineDocumentBackups();
+    private final Set<Document> myBackupQueue = ContainerUtil.newConcurrentSet();
+    private volatile boolean myBackupScheduled;
 
     private final MessageBus myBus;
 
@@ -119,6 +129,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             Document document = e.getDocument();
             if (!Application.get().hasWriteAction(ExternalChangeAction.ExternalDocumentChange.class)) {
                 myUnsavedDocuments.add(document);
+                if (myOfflineDocuments.contains(document) || isOnDisconnectedTarget(document)) {
+                    myOfflineDocuments.add(document);
+                    scheduleBackup(document);
+                }
             }
             Project project = CommandProcessor.getInstance().getCurrentCommandProject();
             if (project == null) {
@@ -151,7 +165,25 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         myBus.connect().subscribe(PlatformTargetListener.class, new PlatformTargetListener() {
             @Override
             public void targetConnected(PlatformTarget target) {
+                myDisconnectedTargets.remove(target.getId());
                 application.invokeLater(() -> saveOfflineDocuments(target));
+            }
+
+            @Override
+            public void targetDisconnected(PlatformTarget target) {
+                myDisconnectedTargets.add(target.getId());
+                application.invokeLater(() -> {
+                    List<Document> documents = new ArrayList<>();
+                    for (Document document : myUnsavedDocuments) {
+                        VirtualFile file = getFile(document);
+                        if (file != null && target.getId().equals(targetIdOf(file))) {
+                            documents.add(document);
+                        }
+                    }
+                    if (!documents.isEmpty()) {
+                        keepOffline(documents, true);
+                    }
+                });
             }
         });
     }
@@ -162,15 +194,14 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         public boolean test(Project project) {
             FileDocumentManagerImpl manager = (FileDocumentManagerImpl) FileDocumentManager.getInstance();
             if (!manager.myUnsavedDocuments.isEmpty()) {
-                manager.myOnClose = true;
-                try {
-                    manager.saveAllDocuments();
-                }
-                finally {
-                    manager.myOnClose = false;
-                }
+                manager.saveOnClose();
             }
-            return manager.myUnsavedDocuments.isEmpty();
+            List<Document> offline = manager.offlineDocumentsOf(project);
+            if (!offline.isEmpty() && !manager.closeWithOfflineDocuments(project, offline)) {
+                return false;
+            }
+            // the offline documents of the other projects wait for the close of those
+            return manager.myOfflineDocuments.containsAll(manager.myUnsavedDocuments);
         }
     }
 
@@ -392,14 +423,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                     doSaveDocument(document, isExplicit);
                 }
                 catch (FileSystemUnavailableException e) {
-                    if (myOnClose) {
-                        failedToSave.put(document, e);
-                    }
-                    else {
-                        // the machine of the file is not connected - the changes wait for it
-                        vetoed.add(document);
-                        offline.add(document);
-                    }
+                    // the machine of the file is not connected - the changes wait for it
+                    vetoed.add(document);
+                    offline.add(document);
                 }
                 catch (IOException e) {
                     failedToSave.put(document, e);
@@ -416,7 +442,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         }
 
         if (!offline.isEmpty()) {
-            keepOffline(offline);
+            keepOffline(offline, !myOnClose);
         }
         return failedToSave;
     }
@@ -439,12 +465,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             doSaveDocument(document, explicit);
         }
         catch (FileSystemUnavailableException e) {
-            if (myOnClose) {
-                handleErrorsOnSave(Collections.singletonMap(document, e));
-            }
-            else {
-                keepOffline(List.of(document));
-            }
+            keepOffline(List.of(document), !myOnClose);
         }
         catch (IOException e) {
             handleErrorsOnSave(Collections.singletonMap(document, e));
@@ -476,14 +497,20 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     /**
-     * The documents stay unsaved until the machine of their files is connected again - the user is told once per machine.
+     * The documents stay unsaved until the machine of their files is connected again, with local copies of their text -
+     * the user is told once per machine.
      */
-    private void keepOffline(Collection<Document> documents) {
+    private void keepOffline(Collection<Document> documents, boolean notify) {
         myOfflineDocuments.addAll(documents);
 
         for (Document document : documents) {
             VirtualFile file = getFile(document);
-            PlatformTarget target = file == null ? null : findTarget(file);
+            if (file == null) {
+                continue;
+            }
+            myBackups.save(file, document.getImmutableCharSequence());
+
+            PlatformTarget target = notify ? findTarget(file) : null;
             if (target == null || myOfflineNotifications.containsKey(target.getId())) {
                 continue;
             }
@@ -523,14 +550,175 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     /**
-     * The target of the machine the file is on - the root of a file of another machine is named by the id of its target.
+     * The target of the machine the file is on.
      */
     private static @Nullable PlatformTarget findTarget(VirtualFile file) {
+        String targetId = targetIdOf(file);
+        return targetId == null ? null : Application.get().getInstance(PlatformTargetManager.class).findTarget(targetId);
+    }
+
+    /**
+     * The id of the target of the machine the file is on, if it is another machine - the root of a file of another
+     * machine is named by the id of its target.
+     */
+    private static @Nullable String targetIdOf(VirtualFile file) {
         if (!(file.getFileSystem() instanceof NewVirtualFileSystem fileSystem) || fileSystem instanceof LocalFileSystem) {
             return null;
         }
-        String rootPath = fileSystem.extractRootPath(file.getPath());
-        return Application.get().getInstance(PlatformTargetManager.class).findTarget(rootPath);
+        return fileSystem.extractRootPath(file.getPath());
+    }
+
+    private boolean isOnDisconnectedTarget(Document document) {
+        if (myDisconnectedTargets.isEmpty()) {
+            return false;
+        }
+        VirtualFile file = getFile(document);
+        String targetId = file == null ? null : targetIdOf(file);
+        return targetId != null && myDisconnectedTargets.contains(targetId);
+    }
+
+    private void scheduleBackup(Document document) {
+        myBackupQueue.add(document);
+        if (!myBackupScheduled) {
+            myBackupScheduled = true;
+            AppExecutorUtil.getAppScheduledExecutorService().schedule(this::flushBackups, 2, TimeUnit.SECONDS);
+        }
+    }
+
+    private void flushBackups() {
+        myBackupScheduled = false;
+        for (Document document : new ArrayList<>(myBackupQueue)) {
+            myBackupQueue.remove(document);
+            VirtualFile file = getFile(document);
+            if (file != null && myOfflineDocuments.contains(document)) {
+                myBackups.save(file, document.getImmutableCharSequence());
+            }
+        }
+    }
+
+    OfflineDocumentBackups getOfflineBackups() {
+        return myBackups;
+    }
+
+    @RequiredUIAccess
+    private void saveOnClose() {
+        myOnClose = true;
+        try {
+            saveAllDocuments();
+        }
+        finally {
+            myOnClose = false;
+        }
+    }
+
+    /**
+     * The offline documents of the files of the project - or of no project at all.
+     */
+    private List<Document> offlineDocumentsOf(Project project) {
+        List<Document> documents = new ArrayList<>();
+        for (Document document : myOfflineDocuments) {
+            VirtualFile file = getFile(document);
+            if (file == null || !myUnsavedDocuments.contains(document)) {
+                continue;
+            }
+            Project fileProject = ProjectLocator.getInstance().guessProjectForFile(file);
+            if (fileProject == null || fileProject == project) {
+                documents.add(document);
+            }
+        }
+        return documents;
+    }
+
+    /**
+     * The project closes with documents which cannot be saved now - the user connects their machines again, keeps local
+     * copies of them (restored the next time the project opens) or drops them.
+     *
+     * @return false if the project stays open
+     */
+    @RequiredUIAccess
+    private boolean closeWithOfflineDocuments(Project project, List<Document> documents) {
+        List<Document> offline = documents;
+        while (!offline.isEmpty()) {
+            Map<String, PlatformTarget> targets = new LinkedHashMap<>();
+            for (Document document : offline) {
+                VirtualFile file = getFile(document);
+                PlatformTarget target = file == null ? null : findTarget(file);
+                if (target != null) {
+                    targets.putIfAbsent(target.getId(), target);
+                }
+            }
+            String names = StringUtil.join(targets.values(), target -> target.getDisplayName().get(), ", ");
+
+            int choice = Messages.showDialog(
+                project,
+                FileEditorLocalize.unsavedFilesCloseMessage(offline.size(), names).get(),
+                FileEditorLocalize.unsavedFilesCloseTitle().get(),
+                new String[]{
+                    FileEditorLocalize.unsavedFilesCloseReconnect().get(),
+                    FileEditorLocalize.unsavedFilesCloseKeepCopies().get(),
+                    FileEditorLocalize.unsavedFilesCloseDiscard().get(),
+                    CommonLocalize.buttonCancel().get()
+                },
+                0,
+                Messages.getWarningIcon()
+            );
+            switch (choice) {
+                case 0 -> {
+                    ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                        () -> {
+                            for (PlatformTarget target : targets.values()) {
+                                try {
+                                    target.connect().get(30, TimeUnit.SECONDS);
+                                }
+                                catch (Exception e) {
+                                    LOG.info("Cannot connect " + target.getId() + " to save its files", e);
+                                }
+                            }
+                        },
+                        FileEditorLocalize.unsavedFilesCloseConnecting(names),
+                        true,
+                        project
+                    );
+                    saveOnClose();
+                    offline = offlineDocumentsOf(project);
+                }
+                case 1 -> {
+                    dropOfflineDocuments(offline, false);
+                    return true;
+                }
+                case 2 -> {
+                    dropOfflineDocuments(offline, true);
+                    return true;
+                }
+                default -> {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * The documents leave the IDE unsaved - with their local copies kept up to date, or deleted.
+     */
+    private void dropOfflineDocuments(List<Document> documents, boolean deleteCopies) {
+        for (Document document : documents) {
+            myUnsavedDocuments.remove(document);
+            myOfflineDocuments.remove(document);
+            VirtualFile file = getFile(document);
+            if (file == null) {
+                continue;
+            }
+            if (deleteCopies) {
+                myBackups.remove(file);
+            }
+            else {
+                myBackups.save(file, document.getImmutableCharSequence());
+            }
+            // the text of the document is not the one of the file - it must not be found for the file again
+            unbindFileFromDocument(file, document);
+        }
+        fireUnsavedDocumentsDropped();
     }
 
     private void doSaveDocument(Document document, boolean isExplicit) throws IOException, SaveVetoException {
@@ -617,6 +805,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             LoadTextUtil.write(project, file, this, text, document.getModificationStamp());
 
             myUnsavedDocuments.remove(document);
+            myOfflineDocuments.remove(document);
+            myBackups.remove(file);
             LOG.assertTrue(!myUnsavedDocuments.contains(document));
             myTrailingSpacesStripper.clearLineModificationFlags(document);
         });
@@ -636,6 +826,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private void removeFromUnsaved(Document document) {
         myUnsavedDocuments.remove(document);
         myOfflineDocuments.remove(document);
+        VirtualFile file = getFile(document);
+        if (file != null) {
+            myBackups.remove(file);
+        }
         fireUnsavedDocumentsDropped();
         LOG.assertTrue(!myUnsavedDocuments.contains(document));
     }
@@ -844,6 +1038,8 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             myMultiCaster.fileWithNoDocumentChanged(file);
         }
         myUnsavedDocuments.remove(document);
+        myOfflineDocuments.remove(document);
+        myBackups.remove(file);
     }
 
     private static boolean isReloadable(VirtualFile file, Document document, @Nullable Project project) {

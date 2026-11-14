@@ -27,4 +27,15 @@ public interface PlatformAwareServerConfiguration {
     PredefinedBundlesMode getPredefinedBundlesMode();
 
     void setPredefinedBundlesMode(PredefinedBundlesMode mode);
+
+    /**
+     * Whether a lost connection is connected again on its own, with growing pauses between the attempts - for a machine
+     * which should always be online. A connection closed by the user is not connected again.
+     */
+    default boolean isReconnectAutomatically() {
+        return false;
+    }
+
+    default void setReconnectAutomatically(boolean reconnectAutomatically) {
+    }
 }

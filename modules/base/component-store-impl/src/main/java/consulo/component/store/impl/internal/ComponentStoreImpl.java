@@ -74,6 +74,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   private final Map<String, Long> myComponentsModificationCount = ConcurrentFactoryMap.createMap(k -> UNKNOWN_MODIFICATION_COUNT);
 
   private final List<SettingsSavingComponent> mySettingsSavingComponents = new CopyOnWriteArrayList<>();
+  // the components whose storage could not be reached when they were loaded - they are not saved until it is read
+  private final Set<String> myNotLoadedComponents = ConcurrentHashMap.newKeySet();
 
   private static final Set<String> ourReportedLegacyStorageComponents = ConcurrentHashMap.newKeySet();
 
@@ -169,6 +171,27 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     }
   }
 
+  /**
+   * The components whose storage was not reachable read their state now - if it is reachable again.
+   */
+  private void loadNotLoadedComponents() {
+    for (String name : new ArrayList<>(myNotLoadedComponents)) {
+      StateComponentInfo componentInfo = myComponents.get(name);
+      if (componentInfo == null || componentInfo.isAsync()) {
+        continue;
+      }
+      try {
+        Object state = readState(componentInfo, null, false);
+        if (state != null && !myNotLoadedComponents.contains(name)) {
+          applyState(componentInfo, state);
+        }
+      }
+      catch (Exception e) {
+        LOG.warn("Cannot load the state of " + name, e);
+      }
+    }
+  }
+
   private void loadSyncStateReportingErrors(StateComponentInfo componentInfo) {
     try {
       Object state = readState(componentInfo, null, false);
@@ -194,6 +217,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   public Coroutine<Object, Object> createSaveCoroutine(List<Pair<StateStorage.SaveSession, Path>> readonlyFiles) {
     boolean force = false;
 
+    loadNotLoadedComponents();
+
     StateStorageManager.ExternalizationSession externalizationSession = myComponents.isEmpty() ? null : getStateStorageManager().startExternalization();
 
     String[] names;
@@ -211,7 +236,8 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
     for (String name : names) {
       StateComponentInfo componentInfo = myComponents.get(name);
-      if (isUnchangedByModTracker(componentInfo, force)) {
+      if (myNotLoadedComponents.contains(name) || isUnchangedByModTracker(componentInfo, force)) {
+        // a component with a state which was not read must not overwrite the saved one with its default state
         continue;
       }
 
@@ -256,7 +282,9 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     chain = chain.then(CodeExecution.<Object, Object>apply(input -> {
       if (finalSession != null) {
         for (String name : finalNames) {
-          commitComponent(myComponents.get(name), finalSession, states.get(name), force);
+          if (!myNotLoadedComponents.contains(name)) {
+            commitComponent(myComponents.get(name), finalSession, states.get(name), force);
+          }
         }
       }
 
@@ -409,12 +437,20 @@ public abstract class ComponentStoreImpl implements IComponentStore {
     Object state = null;
 
     Storage[] storageSpecs = getComponentStorageSpecs(component, stateSpec, StateStorageOperation.READ);
-    for (Storage storageSpec : storageSpecs) {
-      StateStorage stateStorage = getStateStorageManager().getStateStorage(storageSpec);
-      if (stateStorage != null && (stateStorage.hasState(component, name, stateClass, reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
-        state = stateStorage.getState(component, name, stateClass);
-        break;
+    try {
+      for (Storage storageSpec : storageSpecs) {
+        StateStorage stateStorage = getStateStorageManager().getStateStorage(storageSpec);
+        if (stateStorage != null && (stateStorage.hasState(component, name, stateClass, reloadData) || (changedStorages != null && changedStorages.contains(stateStorage)))) {
+          state = stateStorage.getState(component, name, stateClass);
+          break;
+        }
       }
+      myNotLoadedComponents.remove(name);
+    }
+    catch (StateStorageUnavailableException e) {
+      // the default state for now - the saved one is read before the component is saved
+      LOG.info("The state of " + name + " is not loaded: " + e.getMessage());
+      myNotLoadedComponents.add(name);
     }
 
     if (state == null) {

@@ -36,6 +36,7 @@ public class RemoteAgentServerConfiguration extends ServerConfigurationBase<Remo
     private boolean myUseTls;
     private String myCertificateFingerprint = "";
     private PredefinedBundlesMode myPredefinedBundlesMode = PredefinedBundlesMode.ON_FIRST_CONNECT;
+    private boolean myReconnectAutomatically;
 
     @Attribute("credentialId")
     private String myCredentialId = "";
@@ -85,6 +86,17 @@ public class RemoteAgentServerConfiguration extends ServerConfigurationBase<Remo
     @Override
     public void setPredefinedBundlesMode(PredefinedBundlesMode mode) {
         myPredefinedBundlesMode = mode;
+    }
+
+    @Override
+    @Attribute("reconnectAutomatically")
+    public boolean isReconnectAutomatically() {
+        return myReconnectAutomatically;
+    }
+
+    @Override
+    public void setReconnectAutomatically(boolean reconnectAutomatically) {
+        myReconnectAutomatically = reconnectAutomatically;
     }
 
     public String getCredentialId() {

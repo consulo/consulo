@@ -16,11 +16,14 @@
 package consulo.project.impl.internal.store;
 
 import consulo.application.Application;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.internal.PathMacrosService;
+import consulo.component.store.internal.StateStorageUnavailableException;
 import consulo.component.store.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
+import consulo.platform.Platform;
 import consulo.project.Project;
 
 import java.nio.file.Path;
@@ -39,7 +42,11 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
 
   @Override
   protected Path resolvePath(String path) {
-    return myProject.getPlatform().fs().getPath(path);
+    Platform platform = myProject.getPlatform();
+    if (!myApplication.getInstance(PlatformTargetManager.class).isReachable(platform)) {
+      throw new StateStorageUnavailableException("The machine of " + path + " is not connected");
+    }
+    return platform.fs().getPath(path);
   }
 
   

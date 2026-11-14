@@ -114,3 +114,25 @@ unsaved.files.target.disconnected.reconnect:
     text: Reconnect
 unsaved.files.target.disconnected.title:
     text: Cannot save files on {0}
+unsaved.files.close.connecting:
+    text: Connecting to {0}
+unsaved.files.close.discard:
+    text: Discard Changes
+unsaved.files.close.keep.copies:
+    text: Keep Local Copies
+unsaved.files.close.message:
+    text: '{0,choice,1#1 unsaved file is|1<{0} unsaved files are} on {1}, which is not connected. Connect again to save them, or keep local copies of the changes: they are offered for restore when the project opens again.'
+unsaved.files.close.reconnect:
+    text: Reconnect and Save
+unsaved.files.close.title:
+    text: Unsaved Files of a Disconnected Machine
+unsaved.files.restore.command:
+    text: Restore Unsaved Changes
+unsaved.files.restore.content:
+    text: '{0,choice,1#1 file of this project has|1<{0} files of this project have} changes which were not saved, because their machine was not connected.'
+unsaved.files.restore.discard:
+    text: Discard
+unsaved.files.restore.restore:
+    text: Restore
+unsaved.files.restore.title:
+    text: Unsaved changes of the last session

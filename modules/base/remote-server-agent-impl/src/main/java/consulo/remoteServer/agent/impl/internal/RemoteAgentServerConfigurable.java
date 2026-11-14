@@ -42,6 +42,7 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
     private @Nullable TextBox myFingerprintField;
     private @Nullable PasswordBox myTokenField;
     private @Nullable ComboBox<PredefinedBundlesMode> myPredefinedBundlesBox;
+    private @Nullable CheckBox myReconnectBox;
     private String myStoredToken = "";
 
     RemoteAgentServerConfigurable(RemoteAgentServerConfiguration configuration, RemoteAgentCredentials credentials) {
@@ -62,6 +63,8 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
         ComboBox<PredefinedBundlesMode> predefinedBundlesBox = ComboBox.create(PredefinedBundlesMode.values());
         predefinedBundlesBox.setTextRenderer(value -> value == null ? LocalizeValue.empty() : value.getText());
         myPredefinedBundlesBox = predefinedBundlesBox;
+        CheckBox reconnectBox = CheckBox.create(LocalizeValue.localizeTODO("Always online: reconnect when the connection is lost"));
+        myReconnectBox = reconnectBox;
 
         myHostField = hostField;
         myPortField = portField;
@@ -77,6 +80,7 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
             .addLabeled(LocalizeValue.localizeTODO("Certificate fingerprint:"), fingerprintField)
             .addLabeled(LocalizeValue.localizeTODO("Token:"), tokenField)
             .addLabeled(LocalizeValue.localizeTODO("Detect SDKs:"), predefinedBundlesBox)
+            .addLabeled(LocalizeValue.localizeTODO("Connection:"), reconnectBox)
             .build();
     }
 
@@ -91,7 +95,8 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
             || myTlsBox.getValueOrError() != myConfiguration.isUseTls()
             || !text(myFingerprintField).equals(myConfiguration.getCertificateFingerprint())
             || !StringUtil.notNullize(myTokenField.getValue()).equals(myStoredToken)
-            || (myPredefinedBundlesBox != null && myPredefinedBundlesBox.getValue() != myConfiguration.getPredefinedBundlesMode());
+            || (myPredefinedBundlesBox != null && myPredefinedBundlesBox.getValue() != myConfiguration.getPredefinedBundlesMode())
+            || (myReconnectBox != null && myReconnectBox.getValueOrError() != myConfiguration.isReconnectAutomatically());
     }
 
     @RequiredUIAccess
@@ -119,6 +124,9 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
         if (myPredefinedBundlesBox != null && myPredefinedBundlesBox.getValue() != null) {
             myConfiguration.setPredefinedBundlesMode(myPredefinedBundlesBox.getValue());
         }
+        if (myReconnectBox != null) {
+            myConfiguration.setReconnectAutomatically(myReconnectBox.getValueOrError());
+        }
 
         String newToken = StringUtil.notNullize(myTokenField.getValue());
         if (!newToken.equals(myStoredToken)) {
@@ -140,6 +148,9 @@ class RemoteAgentServerConfigurable extends RemoteServerConfigurable {
         myFingerprintField.setEnabled(myConfiguration.isUseTls());
         if (myPredefinedBundlesBox != null) {
             myPredefinedBundlesBox.setValue(myConfiguration.getPredefinedBundlesMode());
+        }
+        if (myReconnectBox != null) {
+            myReconnectBox.setValue(myConfiguration.isReconnectAutomatically());
         }
 
         PasswordBox tokenField = myTokenField;

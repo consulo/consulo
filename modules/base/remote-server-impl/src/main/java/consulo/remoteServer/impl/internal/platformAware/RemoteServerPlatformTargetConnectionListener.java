@@ -60,7 +60,7 @@ public class RemoteServerPlatformTargetConnectionListener implements ServerConne
         if (connection.getStatus() == ConnectionStatus.CONNECTED) {
             publisher.targetConnected(target);
         }
-        else {
+        else if (connection.getStatus() == ConnectionStatus.DISCONNECTED) {
             publisher.targetDisconnected(target);
         }
     }
