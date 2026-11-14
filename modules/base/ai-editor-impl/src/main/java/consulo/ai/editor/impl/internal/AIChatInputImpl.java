@@ -49,6 +49,7 @@ import consulo.project.Project;
 import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Component;
+import consulo.ui.DropHandler;
 import consulo.ui.Space;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -176,12 +177,15 @@ final class AIChatInputImpl implements AIChatInput {
         registerKey(KeyStroke.pressed(KeyCode.ENTER, Modifier.SHIFT), parentDisposable, editor -> true, this::breakLine);
         registerKey(KeyStroke.pressed(KeyCode.UP), parentDisposable, this::canGoBack, editor -> goBack());
         installImagePaste(parentDisposable);
-        myRoot.setDropHandler((component, transfer, checkOnly) -> {
+        DropHandler dropHandler = (component, transfer, checkOnly) -> {
             if (transfer.get(DataTransferType.IMAGE) == null && transfer.get(DataTransferType.FILE_LIST) == null) {
                 return false;
             }
             return checkOnly || attachDropped(transfer);
-        });
+        };
+        // the text of the box takes its drops itself - both get the handler
+        myRoot.setDropHandler(dropHandler);
+        myEditorBox.setDropHandler(dropHandler);
         registerKey(KeyStroke.pressed(KeyCode.DOWN), parentDisposable, this::canGoForward, editor -> goForward());
     }
 

@@ -17,6 +17,12 @@ package consulo.desktop.awt.editor.impl.internal;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.ui.clipboard.DataTransfer;
+import consulo.ui.DropHandler;
+import consulo.project.Project;
+import consulo.desktop.awt.ui.impl.clipboard.DesktopAWTDataTransfers;
+import consulo.codeEditor.impl.EditorDropHandler;
+import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.desktop.awt.ui.impl.base.SwingComponentDelegate;
@@ -41,6 +47,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -60,6 +68,12 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
 
             for (Consumer<EditorEx> customization : myOptions.customizations()) {
                 customization.accept(editor);
+            }
+
+            // the editor takes the drops over its text itself - the handler of the box goes to it too
+            DropHandler dropHandler = myDropHandler;
+            if (dropHandler != null && editor instanceof CodeEditorBase base) {
+                base.setDropHandler(new BoxDropHandler(dropHandler));
             }
 
             if (!myOptions.oneLine()) {
@@ -119,6 +133,39 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
 
     private int myVisibleLength;
 
+    private @Nullable DropHandler myDropHandler;
+
+    /**
+     * Files and images dropped on the text of the box go to the handler of the box - a dragged text is still the
+     * editor's.
+     */
+    private class BoxDropHandler implements EditorDropHandler {
+        private final DropHandler myHandler;
+
+        BoxDropHandler(DropHandler handler) {
+            myHandler = handler;
+        }
+
+        @Override
+        public boolean canHandleDrop(DataFlavor[] transferFlavors) {
+            for (DataFlavor flavor : transferFlavors) {
+                if (DataFlavor.javaFileListFlavor.equals(flavor) || DataFlavor.imageFlavor.equals(flavor)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void handleDrop(Transferable t, Project project, Object editorWindow) {
+            DataTransfer transfer = DesktopAWTDataTransfers.fromTransferable(t);
+            if (myHandler.drop(DesktopEditorBoxImpl.this, transfer, true)) {
+                myHandler.drop(DesktopEditorBoxImpl.this, transfer, false);
+            }
+        }
+    }
+
     DesktopEditorBoxImpl(EditorBoxOptions options) {
         myOptions = options;
     }
@@ -171,6 +218,15 @@ class DesktopEditorBoxImpl extends SwingComponentDelegate<DesktopEditorBoxImpl.M
     @Override
     public void selectAll() {
         toAWTComponent().selectAll();
+    }
+
+    @Override
+    public void setDropHandler(@Nullable DropHandler handler) {
+        super.setDropHandler(handler);
+        myDropHandler = handler;
+        if (toAWTComponent().getEditor() instanceof CodeEditorBase base) {
+            base.setDropHandler(handler == null ? null : new BoxDropHandler(handler));
+        }
     }
 
     @RequiredUIAccess
