@@ -18,17 +18,24 @@ package consulo.continuousIntegration.impl.internal.toolWindow;
 import consulo.continuousIntegration.CIBuild;
 import consulo.continuousIntegration.CIJob;
 import consulo.continuousIntegration.CIServer;
+import consulo.continuousIntegration.support.CIView;
 import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Value of a node in the CI tree. Nodes are equal by {@link #key()}, so a reloaded job or build stays the same node and
- * keeps its expansion and selection; the latest snapshot of a job or build is looked up by the key when rendering.
+ * keeps its expansion and selection. The key is the path of the node, as one job can be shown in several views; the
+ * loaded data is shared by {@link #dataKey()}, the identity of the job or build on its server, and the latest snapshot
+ * of a job or build is looked up by it when rendering.
  *
  * @since 2026-11-09
  */
 sealed interface CITreeNode {
     String key();
+
+    default String dataKey() {
+        return key();
+    }
 
     boolean isLeaf();
 
@@ -49,7 +56,27 @@ sealed interface CITreeNode {
         }
     }
 
-    record Job(CIServer server, CIJob job, String key) implements CITreeNode {
+    /**
+     * View of a server which supports them; its jobs are shown again in every view containing them.
+     */
+    record View(CIServer server, CIView view, String key, String dataKey) implements CITreeNode {
+        @Override
+        public boolean isLeaf() {
+            return false;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object o) {
+            return o instanceof View other && key.equals(other.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return key.hashCode();
+        }
+    }
+
+    record Job(CIServer server, CIJob job, String key, String dataKey) implements CITreeNode {
         @Override
         public boolean isLeaf() {
             return false;
@@ -66,7 +93,7 @@ sealed interface CITreeNode {
         }
     }
 
-    record Build(CIServer server, CIJob job, CIBuild build, String key) implements CITreeNode {
+    record Build(CIServer server, CIJob job, CIBuild build, String key, String dataKey) implements CITreeNode {
         @Override
         public boolean isLeaf() {
             return true;

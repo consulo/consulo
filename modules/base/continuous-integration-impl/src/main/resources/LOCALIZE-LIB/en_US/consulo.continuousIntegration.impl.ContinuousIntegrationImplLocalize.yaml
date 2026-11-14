@@ -10,6 +10,8 @@ tree.loading:
     text: Loading…
 tree.no.jobs:
     text: No jobs
+tree.no.views:
+    text: No views
 tree.no.builds:
     text: No builds
 tree.all.jobs.filtered:

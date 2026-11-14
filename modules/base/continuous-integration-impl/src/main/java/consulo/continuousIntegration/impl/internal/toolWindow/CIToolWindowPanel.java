@@ -31,6 +31,8 @@ import consulo.continuousIntegration.impl.internal.action.CIToolbarActionGroup;
 import consulo.continuousIntegration.impl.internal.monitor.CIBuildMonitorImpl;
 import consulo.continuousIntegration.impl.internal.monitor.CIBuildMonitorListener;
 import consulo.continuousIntegration.impl.localize.ContinuousIntegrationImplLocalize;
+import consulo.continuousIntegration.support.CIView;
+import consulo.continuousIntegration.support.CIViewsSupport;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
 import consulo.disposer.Disposable;
@@ -71,16 +73,19 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Content of the CI tool window: servers, their folders and jobs, and the last builds of each job. Children are loaded
- * asynchronously when a node is opened; the tree shows a loading node meanwhile and is refreshed when the data arrives.
- * Every map below is only touched on the UI thread.
+ * Content of the CI tool window: servers, their views when they support them, their folders and jobs, and the last
+ * builds of each job. Children are loaded asynchronously when a node is opened; the tree shows a loading node meanwhile
+ * and is refreshed when the data arrives. Every map below is keyed by {@link CITreeNode#dataKey()}, so a job shown in
+ * several views loads its builds once and all its nodes are refreshed together, and is only touched on the UI thread.
  *
  * @since 2026-11-09
  */
@@ -113,10 +118,11 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     private final Component myTreeComponent;
     private final Component myEmptyComponent;
 
+    private final Map<String, LoadState<CIView>> myViewLists = new HashMap<>();
     private final Map<String, LoadState<CIJob>> myJobLists = new HashMap<>();
     private final Map<String, LoadState<CIBuild>> myBuildLists = new HashMap<>();
     private final Map<String, CIJob> myJobs = new HashMap<>();
-    private final Map<String, String> myJobParents = new HashMap<>();
+    private final Map<String, Set<String>> myJobParents = new HashMap<>();
     private final Map<String, CIBuild> myBuilds = new HashMap<>();
     private List<CIServer> myServers = List.of();
     private int myGeneration;
@@ -204,6 +210,7 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
         }
 
         myGeneration++;
+        myViewLists.clear();
         myJobLists.clear();
         myBuildLists.clear();
         myJobs.clear();
@@ -233,14 +240,15 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
         CITreeNode value = node == null ? null : node.getValue();
         switch (value) {
             case CITreeNode.Server server -> sink.set(CIDataKeys.SERVER, server.server());
+            case CITreeNode.View view -> sink.set(CIDataKeys.SERVER, view.server());
             case CITreeNode.Job job -> {
                 sink.set(CIDataKeys.SERVER, job.server());
-                sink.set(CIDataKeys.JOB, latestJob(job.key(), job.job()));
+                sink.set(CIDataKeys.JOB, latestJob(job.dataKey(), job.job()));
             }
             case CITreeNode.Build build -> {
                 sink.set(CIDataKeys.SERVER, build.server());
                 sink.set(CIDataKeys.JOB, latestJob(CIUtil.jobKey(build.server(), build.job()), build.job()));
-                sink.set(CIDataKeys.BUILD, latestBuild(build.key(), build.build()));
+                sink.set(CIDataKeys.BUILD, latestBuild(build.dataKey(), build.build()));
             }
             case CITreeNode.Message ignored -> {
             }
@@ -271,9 +279,18 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 }
                 yield nodes;
             }
-            case CITreeNode.Server server -> getJobChildren(server.server(), server.key(), null);
+            case CITreeNode.Server server -> {
+                CIViewsSupport views = server.server().getSupport(CIViewsSupport.class);
+                yield views == null
+                    ? getJobChildren(server.server(), server, () -> server.server().loadJobs(null))
+                    : getViewChildren(server, views);
+            }
+            case CITreeNode.View view -> {
+                CIViewsSupport views = view.server().getSupport(CIViewsSupport.class);
+                yield views == null ? List.of() : getJobChildren(view.server(), view, () -> views.loadJobs(view.view()));
+            }
             case CITreeNode.Job job -> job.job().kind().isContainer()
-                ? getJobChildren(job.server(), job.key(), job.job())
+                ? getJobChildren(job.server(), job, () -> job.server().loadJobs(job.job()))
                 : getBuildChildren(job);
             case CITreeNode.Build ignored -> List.of();
             case CITreeNode.Message ignored -> List.of();
@@ -281,12 +298,45 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     }
 
     @RequiredUIAccess
-    private List<CITreeNode> getJobChildren(CIServer server, String parentKey, @Nullable CIJob folder) {
-        LoadState<CIJob> state = myJobLists.get(parentKey);
+    private List<CITreeNode> getViewChildren(CITreeNode.Server serverNode, CIViewsSupport views) {
+        String parentKey = serverNode.key();
+        LoadState<CIView> state = myViewLists.get(serverNode.dataKey());
         if (state == null) {
             state = new LoadState.Loading<>();
-            myJobLists.put(parentKey, state);
-            loadJobs(server, parentKey, folder);
+            myViewLists.put(serverNode.dataKey(), state);
+            loadViews(serverNode.dataKey(), views);
+        }
+
+        return switch (state) {
+            case LoadState.Loading<CIView> ignored -> loading(parentKey);
+            case LoadState.Failed<CIView> failed -> failed(parentKey, failed.message());
+            case LoadState.Loaded<CIView> loaded -> {
+                if (loaded.items().isEmpty()) {
+                    yield empty(parentKey, ContinuousIntegrationImplLocalize.treeNoViews());
+                }
+                List<CITreeNode> nodes = new ArrayList<>(loaded.items().size());
+                for (CIView view : loaded.items()) {
+                    String dataKey = serverNode.dataKey() + "\n#view\n" + view.id();
+                    nodes.add(new CITreeNode.View(serverNode.server(), view, parentKey + "\n#view\n" + view.id(), dataKey));
+                }
+                yield nodes;
+            }
+        };
+    }
+
+    /**
+     * Jobs of a server, view or folder; the list is loaded once by the data key of the parent, the nodes are made for
+     * the path of the parent.
+     */
+    @RequiredUIAccess
+    private List<CITreeNode> getJobChildren(CIServer server, CITreeNode parent, Supplier<CompletableFuture<List<CIJob>>> request) {
+        String parentKey = parent.key();
+        String listKey = parent.dataKey();
+        LoadState<CIJob> state = myJobLists.get(listKey);
+        if (state == null) {
+            state = new LoadState.Loading<>();
+            myJobLists.put(listKey, state);
+            loadJobs(server, listKey, request);
         }
 
         return switch (state) {
@@ -298,9 +348,9 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 }
                 List<CITreeNode> nodes = new ArrayList<>(loaded.items().size());
                 for (CIJob job : loaded.items()) {
-                    String key = CIUtil.jobKey(server, job);
-                    if (isShown(latestJob(key, job))) {
-                        nodes.add(new CITreeNode.Job(server, job, key));
+                    String dataKey = CIUtil.jobKey(server, job);
+                    if (isShown(latestJob(dataKey, job))) {
+                        nodes.add(new CITreeNode.Job(server, job, parentKey + "\n" + job.id(), dataKey));
                     }
                 }
                 if (nodes.isEmpty()) {
@@ -322,11 +372,12 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     @RequiredUIAccess
     private List<CITreeNode> getBuildChildren(CITreeNode.Job jobNode) {
         String parentKey = jobNode.key();
-        LoadState<CIBuild> state = myBuildLists.get(parentKey);
+        String listKey = jobNode.dataKey();
+        LoadState<CIBuild> state = myBuildLists.get(listKey);
         if (state == null) {
             state = new LoadState.Loading<>();
-            myBuildLists.put(parentKey, state);
-            loadBuilds(jobNode.server(), jobNode.job(), parentKey);
+            myBuildLists.put(listKey, state);
+            loadBuilds(jobNode.server(), jobNode.job(), listKey);
         }
 
         return switch (state) {
@@ -338,7 +389,8 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 }
                 List<CITreeNode> nodes = new ArrayList<>(loaded.items().size());
                 for (CIBuild build : loaded.items()) {
-                    nodes.add(new CITreeNode.Build(jobNode.server(), jobNode.job(), build, CIUtil.buildKey(jobNode.server(), build)));
+                    String dataKey = CIUtil.buildKey(jobNode.server(), build);
+                    nodes.add(new CITreeNode.Build(jobNode.server(), jobNode.job(), build, parentKey + "\n" + build.id(), dataKey));
                 }
                 yield nodes;
             }
@@ -365,9 +417,28 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
 
     // region loading
 
-    private void loadJobs(CIServer server, String parentKey, @Nullable CIJob folder) {
+    private void loadViews(String serverKey, CIViewsSupport views) {
         int generation = myGeneration;
-        call(() -> server.loadJobs(folder)).whenCompleteAsync((jobs, error) -> {
+        call(views::loadViews).whenCompleteAsync((loaded, error) -> {
+            if (myDisposed || generation != myGeneration) {
+                return;
+            }
+            if (error != null || loaded == null) {
+                myViewLists.put(serverKey, new LoadState.Failed<>(error == null ? "" : CIUtil.errorMessage(error)));
+            }
+            else {
+                // the primary view first, it is the one the server opens with
+                List<CIView> sorted = new ArrayList<>(loaded);
+                sorted.sort((a, b) -> Boolean.compare(b.primary(), a.primary()));
+                myViewLists.put(serverKey, new LoadState.Loaded<>(List.copyOf(sorted)));
+            }
+            refreshChildren(serverKey);
+        }, myUIAccess);
+    }
+
+    private void loadJobs(CIServer server, String parentKey, Supplier<CompletableFuture<List<CIJob>>> request) {
+        int generation = myGeneration;
+        call(request).whenCompleteAsync((jobs, error) -> {
             if (myDisposed || generation != myGeneration) {
                 return;
             }
@@ -379,7 +450,7 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 for (CIJob job : jobs) {
                     String jobKey = CIUtil.jobKey(server, job);
                     myJobs.put(jobKey, job);
-                    myJobParents.put(jobKey, parentKey);
+                    myJobParents.computeIfAbsent(jobKey, key -> new HashSet<>()).add(parentKey);
                 }
             }
             refreshChildren(parentKey);
@@ -415,10 +486,12 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 return;
             }
             CIJob previous = myJobs.put(jobKey, updated);
-            String parentKey = myJobParents.get(jobKey);
-            if (parentKey != null && previous != null && isShown(previous) != isShown(updated)) {
-                // the job enters or leaves the filter
-                refreshChildren(parentKey);
+            Set<String> parentKeys = myJobParents.get(jobKey);
+            if (parentKeys != null && previous != null && isShown(previous) != isShown(updated)) {
+                // the job enters or leaves the filter, in every list showing it
+                for (String parentKey : parentKeys) {
+                    refreshChildren(parentKey);
+                }
             }
             else {
                 refreshPresentation(jobKey);
@@ -464,41 +537,41 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     }
 
     @RequiredUIAccess
-    private void refreshChildren(String key) {
-        TreeNode<CITreeNode> node = findLoadedNode(key);
-        if (node != null) {
+    private void refreshChildren(String dataKey) {
+        for (TreeNode<CITreeNode> node : findLoadedNodes(dataKey)) {
             myTree.refreshItem(node, true);
         }
     }
 
     @RequiredUIAccess
-    private void refreshPresentation(String key) {
-        TreeNode<CITreeNode> node = findLoadedNode(key);
-        if (node != null) {
+    private void refreshPresentation(String dataKey) {
+        for (TreeNode<CITreeNode> node : findLoadedNodes(dataKey)) {
             myTree.refreshItem(node, false);
         }
     }
 
     /**
-     * Looks only at the nodes already built: a node which was never shown has nothing to refresh, and building the
-     * rest of the tree to find it would load every job of the server.
+     * Every node showing the data, one per view containing the job. Looks only at the nodes already built: a node
+     * which was never shown has nothing to refresh, and building the rest of the tree to find it would load every job
+     * of the server.
      */
-    private @Nullable TreeNode<CITreeNode> findLoadedNode(String key) {
+    private List<TreeNode<CITreeNode>> findLoadedNodes(String dataKey) {
         TreeNode<CITreeNode> root = myTree.getRootNode();
         if (root == null) {
-            return null;
+            return List.of();
         }
 
+        List<TreeNode<CITreeNode>> result = new ArrayList<>();
         Deque<TreeNode<CITreeNode>> queue = new ArrayDeque<>(root.getLoadedChildren());
         while (!queue.isEmpty()) {
             TreeNode<CITreeNode> node = queue.poll();
             CITreeNode value = node.getValue();
-            if (value != null && value.key().equals(key)) {
-                return node;
+            if (value != null && value.dataKey().equals(dataKey)) {
+                result.add(node);
             }
             queue.addAll(node.getLoadedChildren());
         }
-        return null;
+        return result;
     }
 
     // endregion
@@ -512,15 +585,19 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
                 presentation.append(server.server().getName());
                 appendDetails(presentation, server.server().getType().getPresentableName());
             }
+            case CITreeNode.View viewNode -> {
+                presentation.withIcon(PlatformIconGroup.uidesignerTabbedpane());
+                presentation.append(viewNode.view().name());
+            }
             case CITreeNode.Job jobNode -> {
-                CIJob job = latestJob(jobNode.key(), jobNode.job());
+                CIJob job = latestJob(jobNode.dataKey(), jobNode.job());
                 presentation.withIcon(CIUtil.jobIcon(job));
                 boolean disabled = job.kind() == CIJobKind.JOB && !job.buildable();
                 presentation.append(job.displayName(), disabled ? TextAttribute.GRAYED : TextAttribute.REGULAR);
                 appendDetails(presentation, getJobDetails(job));
             }
             case CITreeNode.Build buildNode -> {
-                CIBuild build = latestBuild(buildNode.key(), buildNode.build());
+                CIBuild build = latestBuild(buildNode.dataKey(), buildNode.build());
                 presentation.withIcon(CIUtil.statusIcon(build.status()));
                 presentation.append(build.displayName(), build.status().isActive() ? TextAttribute.REGULAR_BOLD : TextAttribute.REGULAR);
                 appendDetails(presentation, getBuildDetails(build));
@@ -596,8 +673,9 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
     private String getSpeedSearchText(CITreeNode value) {
         return switch (value) {
             case CITreeNode.Server server -> server.server().getName();
-            case CITreeNode.Job job -> latestJob(job.key(), job.job()).displayName();
-            case CITreeNode.Build build -> latestBuild(build.key(), build.build()).displayName();
+            case CITreeNode.View view -> view.view().name();
+            case CITreeNode.Job job -> latestJob(job.dataKey(), job.job()).displayName();
+            case CITreeNode.Build build -> latestBuild(build.dataKey(), build.build()).displayName();
             case CITreeNode.Message ignored -> "";
         };
     }
@@ -646,7 +724,7 @@ public final class CIToolWindowPanel implements Disposable, UiDataProvider {
         @Override
         public boolean onDoubleClick(Tree<CITreeNode> tree, TreeNode<CITreeNode> node) {
             if (node.getValue() instanceof CITreeNode.Build build) {
-                myMonitor.showBuild(build.server(), build.job(), latestBuild(build.key(), build.build()));
+                myMonitor.showBuild(build.server(), build.job(), latestBuild(build.dataKey(), build.build()));
                 return false;
             }
             return true;
