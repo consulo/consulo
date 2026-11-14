@@ -16,6 +16,7 @@
 package consulo.ai.impl.internal.chat;
 
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFilePathWrapper;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.light.LightVirtualFileBase;
 import org.jspecify.annotations.Nullable;
@@ -31,7 +32,7 @@ import java.io.OutputStream;
  * @author VISTALL
  * @since 2026-11-10
  */
-public final class AIChatVirtualFile extends LightVirtualFileBase {
+public final class AIChatVirtualFile extends LightVirtualFileBase implements VirtualFilePathWrapper {
     private final VirtualFileSystem myFileSystem;
     private final String myPath;
     private final String myChatId;
@@ -64,6 +65,20 @@ public final class AIChatVirtualFile extends LightVirtualFileBase {
 
     public String getChatId() {
         return myChatId;
+    }
+
+    /**
+     * A chat is shown by its title - two chats of the same title are not told apart by the path of the file, which
+     * means nothing to the user.
+     */
+    @Override
+    public String getPresentablePath() {
+        return getName();
+    }
+
+    @Override
+    public boolean enforcePresentableName() {
+        return true;
     }
 
     @Override
