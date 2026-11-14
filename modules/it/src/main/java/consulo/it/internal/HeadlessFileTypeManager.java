@@ -33,6 +33,7 @@ import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.impl.internal.fileType.FileTypeDetectionService;
@@ -134,6 +135,28 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
     private static class Registry {
         final Map<String, FileType> byExtension = new HashMap<>();
         final List<Pair<FileNameMatcher, FileType>> matchers = new ArrayList<>();
+        /**
+         * The file types which recognize a file by itself, asked before its name is matched - as FileTypeManagerImpl does.
+         */
+        final List<FileTypeIdentifiableByVirtualFile> special = new ArrayList<>();
+
+        void register(FileType fileType) {
+            if (fileType instanceof FileTypeIdentifiableByVirtualFile identifiable && !special.contains(identifiable)) {
+                special.add(identifiable);
+            }
+        }
+    }
+
+    /**
+     * The file type which recognizes {@code file} by itself, if one does.
+     */
+    private @Nullable FileType specialFileTypeOf(VirtualFile file) {
+        for (FileTypeIdentifiableByVirtualFile type : registry().special) {
+            if (type.isMyFileType(file)) {
+                return type;
+            }
+        }
+        return null;
     }
 
     private Registry registry() {
@@ -151,6 +174,7 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
                         @Override
                         public void consume(FileType fileType, String extensions) {
+                            filled.register(fileType);
                             for (String extension : extensions.split(";")) {
                                 if (!extension.isEmpty()) {
                                     filled.byExtension.put(extension.toLowerCase(Locale.ROOT), fileType);
@@ -160,6 +184,7 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
 
                         @Override
                         public void consume(FileType fileType, FileNameMatcher... nameMatchers) {
+                            filled.register(fileType);
                             for (FileNameMatcher matcher : nameMatchers) {
                                 filled.matchers.add(Pair.create(matcher, fileType));
                             }
@@ -208,6 +233,10 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
             return file.getFileType().equals(type);
         }
 
+        FileType special = specialFileTypeOf(file);
+        if (special != null) {
+            return special == type;
+        }
         FileType fileTypeByFileName = getFileTypeByFileName(file.getName());
         if (fileTypeByFileName == type) {
             return true;
@@ -246,6 +275,10 @@ public class HeadlessFileTypeManager extends FileTypeManagerEx implements Dispos
             if (assignedFileType != null) {
                 return assignedFileType;
             }
+        }
+        FileType special = specialFileTypeOf(file);
+        if (special != null) {
+            return special;
         }
         FileType fileType = getFileTypeByFileName(file.getName());
         if (file instanceof StubVirtualFile) {
