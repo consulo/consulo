@@ -105,11 +105,11 @@ public interface EndpointProvider<G, E> {
     }
 
     /**
-     * Whether the module has {@link #getModuleExtensionClass()} enabled; always true for a provider without it.
+     * Whether the module has {@link #getModuleExtensionClass()} of the provider enabled; always true for a provider without it.
      */
     @SuppressWarnings("unchecked")
-    default boolean isApplicable(Module module) {
-        Class moduleExtensionClass = getModuleExtensionClass();
+    static boolean hasModuleExtension(EndpointProvider<?, ?> provider, Module module) {
+        Class moduleExtensionClass = provider.getModuleExtensionClass();
         return moduleExtensionClass == null || module.getExtension(moduleExtensionClass) != null;
     }
 

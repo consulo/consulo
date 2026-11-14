@@ -124,7 +124,7 @@ public final class EndpointLoader {
 
             List<EndpointRowData<?, ?>> rows = new ArrayList<>();
             for (EndpointProviderInfo info : infos) {
-                if (filter instanceof ModuleEndpointFilter moduleFilter && !info.provider().isApplicable(moduleFilter.getModule())) {
+                if (filter instanceof ModuleEndpointFilter moduleFilter && !EndpointProvider.hasModuleExtension(info.provider(), moduleFilter.getModule())) {
                     continue;
                 }
                 rows.addAll(getRows(info, filter, scheme, null, usedKeys, generation));

@@ -93,7 +93,7 @@ final class ServicesDiagramGraphBuilder {
             String serviceName = ServicesDiagramService.qualifiedName(module.getName());
             EndpointFilter filter = myProjectModel.createFilter(module, false, false);
             for (EndpointProvider<?, ?> provider : providers) {
-                if (filter instanceof ModuleEndpointFilter moduleFilter && !provider.isApplicable(moduleFilter.getModule())) {
+                if (filter instanceof ModuleEndpointFilter moduleFilter && !EndpointProvider.hasModuleExtension(provider, moduleFilter.getModule())) {
                     continue;
                 }
                 try {
