@@ -33,6 +33,7 @@ import consulo.util.concurrent.coroutine.ObservableValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -95,7 +96,7 @@ final class AIReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>
         Disposer.register(this, disposable);
         AIReviewNewCommentViewModel editor = new AIReviewNewCommentViewModel(myProject, disposable, text -> {
             dropNewComment();
-            addDraft(lineRange, text);
+            addDraft(lineRange, text, new Date());
         });
         myNewComment = new AIReviewNewCommentInlay(lineRange, editor, () -> {
             dropNewComment();
@@ -133,6 +134,8 @@ final class AIReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>
             entry.START = draft.getLines().start();
             entry.END = draft.getLines().end();
             entry.TEXT = draft.getComment().getText();
+            Date createdAt = draft.getComment().getCreatedAt();
+            entry.CREATED = createdAt == null ? 0 : createdAt.getTime();
             entries.add(entry);
         }
         return entries;
@@ -145,7 +148,7 @@ final class AIReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>
         int lineCount = Math.max(1, myDocument.getLineCount());
         for (AIPlanReviewDraftEntry entry : entries) {
             if (entry.START >= 0 && entry.START <= entry.END && entry.END < lineCount && entry.TEXT != null && !entry.TEXT.isBlank()) {
-                addDraft(new CodeReviewLineRange(entry.START, entry.END), entry.TEXT);
+                addDraft(new CodeReviewLineRange(entry.START, entry.END), entry.TEXT, entry.CREATED > 0 ? new Date(entry.CREATED) : new Date());
             }
         }
     }
@@ -178,10 +181,10 @@ final class AIReviewModel implements CodeReviewEditorModel<CodeReviewInlayModel>
         return text.length() > MAX_QUOTE ? text.substring(0, MAX_QUOTE) + "…" : text;
     }
 
-    private void addDraft(CodeReviewLineRange range, String text) {
+    private void addDraft(CodeReviewLineRange range, String text, Date createdAt) {
         String id = "plan-comment-" + (++myCounter);
         AIReviewDraftInlay[] draft = new AIReviewDraftInlay[1];
-        draft[0] = new AIReviewDraftInlay(new AIReviewComment(id, text, () -> {
+        draft[0] = new AIReviewDraftInlay(new AIReviewComment(id, text, createdAt, () -> {
             myDrafts.remove(draft[0]);
             update();
         }), range);

@@ -28,4 +28,8 @@ public class AIPlanReviewDraftEntry {
     public int START;
     public int END;
     public String TEXT = "";
+    /**
+     * When the comment was written, in milliseconds - 0 when unknown.
+     */
+    public long CREATED;
 }

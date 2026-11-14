@@ -31,12 +31,13 @@ import java.util.Date;
 final class AIReviewComment implements CodeReviewCommentViewModel {
     private final String myId;
     private final String myText;
-    private final Date myCreatedAt = new Date();
+    private final Date myCreatedAt;
     private final Runnable myDelete;
 
-    AIReviewComment(String id, String text, Runnable delete) {
+    AIReviewComment(String id, String text, Date createdAt, Runnable delete) {
         myId = id;
         myText = text;
+        myCreatedAt = createdAt;
         myDelete = delete;
     }
 
