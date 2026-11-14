@@ -90,6 +90,12 @@ public class LocalPlatformNetwork implements PlatformNetwork {
         };
     }
 
+    @Override
+    public ForwardedPort publish(int localPort) {
+        // a process of the IDE machine reaches the port as is
+        return forward("127.0.0.1", localPort, 0);
+    }
+
     private record LocalSocket(Socket socket) implements PlatformSocket {
         @Override
         public InputStream getInputStream() throws IOException {
