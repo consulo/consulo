@@ -352,3 +352,9 @@ sends all drafts as one prompt to the chat which made the plan (`AIChatContextMa
 and offers Build (`buildPlan`). The selection toolbar on a plan offers "Comment on Plan" for the selected lines; on other
 text it offers "Add to AI Chat" and an inline "Comment for AI" box (Enter sends with the selection).
 Open: review the agent's diffs with the same model; Claude/Codex per-chat mode switch (Debug/Plan unreachable there).
+Plan mode per provider (2026-11-14, pushed): Claude - a per-chat `mode` session option over the permission modes,
+switched live with the `set_permission_mode` control request; ExitPlanMode's `planFilePath` (~/.claude/plans/*.md) is the
+plan file. Codex - `initialize` opts into `experimentalApi`, every `turn/start` carries `collaborationMode`
+{mode plan|default, settings.model (the default model when the chat has none)}; the `plan` item's markdown is shown in
+the answer and saved to `<cwd>/.consulo/ai-plans/<title>-<hash>.plan.md`. Both open in plan review via View Plan.
+CursorJ code and text carry META-INF/NOTICE + LICENSE-MIT (ai-api, ai-acp-api, ai-impl, consulo-cursor).
