@@ -27,8 +27,10 @@ import consulo.endpoint.presentation.HttpUrlPresentation;
 import consulo.endpoint.url.UrlTargetInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.module.extension.ModuleExtension;
 import consulo.navigation.ItemPresentation;
 import consulo.project.Project;
+import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 import consulo.sandboxPlugin.lang.psi.SandClass;
 import consulo.sandboxPlugin.lang.psi.SandStringExpression;
 import org.jspecify.annotations.Nullable;
@@ -46,16 +48,18 @@ public abstract class SandHttpEndpointProviderBase implements EndpointUrlTargetP
 
     @Override
     public Status getStatus() {
-        return SandEndpointSearch.getStatus(myProject);
+        return Status.HAS_ENDPOINTS;
+    }
+
+    @Override
+    public Class<? extends ModuleExtension> getModuleExtensionClass() {
+        return SandModuleExtension.class;
     }
 
     @Override
     @RequiredReadAction
     public Iterable<SandClass> getEndpointGroups(EndpointFilter filter) {
         if (filter instanceof ModuleEndpointFilter moduleFilter) {
-            if (!SandEndpointSearch.hasSandExtension(moduleFilter.getModule())) {
-                return List.of();
-            }
             GlobalSearchScope scope = moduleFilter.isFromLibraries()
                 ? moduleFilter.getTransitiveSearchScope()
                 : moduleFilter.getContentSearchScope();

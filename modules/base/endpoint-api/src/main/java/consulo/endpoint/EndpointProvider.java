@@ -10,7 +10,10 @@ import consulo.dataContext.DataSink;
 import consulo.endpoint.url.UrlTargetInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiModificationTracker;
+import consulo.module.Module;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionHelper;
 import consulo.navigation.ItemPresentation;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -43,8 +46,19 @@ public interface EndpointProvider<G, E> {
 
     /**
      * Fast check if there may be endpoints in the project without searching for them.
+     * Called only when a module of the project has {@link #getModuleExtensionClass()} enabled.
      */
     Status getStatus();
+
+    /**
+     * The module extension (framework) whose modules may declare endpoints of this provider.
+     * When set, the provider is unavailable until a module of the project has it enabled,
+     * and the modules without it are not asked for endpoints.
+     * When null, {@link #getStatus()} alone decides, and every module is asked.
+     */
+    default @Nullable Class<? extends ModuleExtension> getModuleExtensionClass() {
+        return null;
+    }
 
     /**
      * Groups correspond to locations where endpoints are or can be declared.
@@ -90,6 +104,15 @@ public interface EndpointProvider<G, E> {
     default void uiDataSnapshot(DataSink sink, G group, E endpoint) {
     }
 
+    /**
+     * Whether the module has {@link #getModuleExtensionClass()} enabled; always true for a provider without it.
+     */
+    @SuppressWarnings("unchecked")
+    default boolean isApplicable(Module module) {
+        Class moduleExtensionClass = getModuleExtensionClass();
+        return moduleExtensionClass == null || module.getExtension(moduleExtensionClass) != null;
+    }
+
     static boolean hasAnyProviders(Project project) {
         return project.getExtensionPoint(EndpointProvider.class).hasAnyExtensions();
     }
@@ -100,8 +123,13 @@ public interface EndpointProvider<G, E> {
 
     static List<EndpointProvider<?, ?>> getAvailableProviders(Project project) {
         return CachedValuesManager.getManager(project).getCachedValue(project, () -> {
+            ModuleExtensionHelper helper = ModuleExtensionHelper.getInstance(project);
             List<EndpointProvider<?, ?>> available = new ArrayList<>();
             project.getExtensionPoint(EndpointProvider.class).forEachExtensionSafe(provider -> {
+                Class<? extends ModuleExtension> moduleExtensionClass = provider.getModuleExtensionClass();
+                if (moduleExtensionClass != null && !helper.hasModuleExtension(moduleExtensionClass)) {
+                    return;
+                }
                 if (provider.getStatus() != Status.UNAVAILABLE) {
                     available.add(provider);
                 }

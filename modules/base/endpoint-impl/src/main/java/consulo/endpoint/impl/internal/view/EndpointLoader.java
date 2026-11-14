@@ -12,6 +12,7 @@ import consulo.endpoint.EndpointProvider;
 import consulo.endpoint.EndpointType;
 import consulo.endpoint.ExternalEndpointFilter;
 import consulo.endpoint.FrameworkPresentation;
+import consulo.endpoint.ModuleEndpointFilter;
 import consulo.endpoint.localize.EndpointLocalize;
 import consulo.language.editor.FileColorManager;
 import consulo.language.editor.scope.NonProjectFilesScope;
@@ -123,6 +124,9 @@ public final class EndpointLoader {
 
             List<EndpointRowData<?, ?>> rows = new ArrayList<>();
             for (EndpointProviderInfo info : infos) {
+                if (filter instanceof ModuleEndpointFilter moduleFilter && !info.provider().isApplicable(moduleFilter.getModule())) {
+                    continue;
+                }
                 rows.addAll(getRows(info, filter, scheme, null, usedKeys, generation));
             }
             sections.add(new EndpointModuleSnapshot(entity, name, LocalizeValue.of(name), entity.getIcon(), List.copyOf(rows)));

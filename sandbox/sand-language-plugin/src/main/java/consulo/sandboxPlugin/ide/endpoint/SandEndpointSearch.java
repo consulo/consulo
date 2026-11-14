@@ -19,7 +19,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.component.util.ModificationTracker;
-import consulo.endpoint.EndpointProvider;
 import consulo.endpoint.url.UrlTargetInfo;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -30,7 +29,6 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.module.extension.ModuleExtensionHelper;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
@@ -45,12 +43,6 @@ import java.util.List;
 
 public final class SandEndpointSearch {
     private SandEndpointSearch() {
-    }
-
-    public static EndpointProvider.Status getStatus(Project project) {
-        return ModuleExtensionHelper.getInstance(project).hasModuleExtension(SandModuleExtension.class)
-            ? EndpointProvider.Status.HAS_ENDPOINTS
-            : EndpointProvider.Status.UNAVAILABLE;
     }
 
     public static ModificationTracker getModificationTracker(Project project) {

@@ -12,6 +12,7 @@ import consulo.endpoint.EndpointProvider;
 import consulo.endpoint.EndpointType;
 import consulo.endpoint.EndpointUrlTargetProvider;
 import consulo.endpoint.FrameworkPresentation;
+import consulo.endpoint.ModuleEndpointFilter;
 import consulo.endpoint.presentation.EndpointMethodPresentation;
 import consulo.endpoint.url.Authority;
 import consulo.endpoint.url.UrlResolveRequest;
@@ -92,6 +93,9 @@ final class ServicesDiagramGraphBuilder {
             String serviceName = ServicesDiagramService.qualifiedName(module.getName());
             EndpointFilter filter = myProjectModel.createFilter(module, false, false);
             for (EndpointProvider<?, ?> provider : providers) {
+                if (filter instanceof ModuleEndpointFilter moduleFilter && !provider.isApplicable(moduleFilter.getModule())) {
+                    continue;
+                }
                 try {
                     collect(provider, filter, module, serviceName);
                 }

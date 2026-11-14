@@ -25,10 +25,10 @@ import consulo.endpoint.FrameworkPresentation;
 import consulo.endpoint.presentation.HttpMethodPresentation;
 import consulo.endpoint.url.Authority;
 import consulo.endpoint.url.UrlTargetInfo;
+import consulo.module.extension.ModuleExtension;
 import consulo.navigation.ItemPresentation;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.project.Project;
-import jakarta.inject.Inject;
+import consulo.sandboxPlugin.ide.module.extension.SandModuleExtension;
 
 import java.util.List;
 import java.util.Set;
@@ -48,13 +48,6 @@ public final class SandExternalEndpointProvider implements EndpointUrlTargetProv
         new SandExternalEndpoint("DELETE", "/v2/store/order/{orderId}")
     );
 
-    private final Project myProject;
-
-    @Inject
-    public SandExternalEndpointProvider(Project project) {
-        myProject = project;
-    }
-
     @Override
     public EndpointType getEndpointType() {
         return EndpointType.API_DEFINITION_TYPE;
@@ -67,7 +60,12 @@ public final class SandExternalEndpointProvider implements EndpointUrlTargetProv
 
     @Override
     public Status getStatus() {
-        return SandEndpointSearch.getStatus(myProject);
+        return Status.HAS_ENDPOINTS;
+    }
+
+    @Override
+    public Class<? extends ModuleExtension> getModuleExtensionClass() {
+        return SandModuleExtension.class;
     }
 
     @Override
