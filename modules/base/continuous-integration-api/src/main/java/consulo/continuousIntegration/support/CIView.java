@@ -18,9 +18,13 @@ package consulo.continuousIntegration.support;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Named selection of jobs (Jenkins view).
+ * Named selection of jobs (Jenkins view). A {@link #container() container} view groups other views instead of jobs
+ * (Jenkins nested view); its views come from {@link CIViewsSupport#loadViews(CIView)}.
  *
  * @since 2026-11-09
  */
-public record CIView(String id, String name, @Nullable String webUrl, boolean primary) {
+public record CIView(String id, String name, @Nullable String webUrl, boolean primary, boolean container) {
+    public CIView(String id, String name, @Nullable String webUrl, boolean primary) {
+        this(id, name, webUrl, primary, false);
+    }
 }

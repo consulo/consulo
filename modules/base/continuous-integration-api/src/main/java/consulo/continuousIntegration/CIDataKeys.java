@@ -15,16 +15,18 @@
  */
 package consulo.continuousIntegration;
 
+import consulo.continuousIntegration.support.CIView;
 import consulo.util.dataholder.Key;
 
 /**
  * Selection of the CI tool window, for actions added to its toolbar or popup menu. A selected build also provides
- * its job and server, a selected job provides its server.
+ * its job and server, a selected job or view provides its server.
  *
  * @since 2026-11-09
  */
 public final class CIDataKeys {
     public static final Key<CIServer> SERVER = Key.create("ContinuousIntegration.Server");
+    public static final Key<CIView> VIEW = Key.create("ContinuousIntegration.View");
     public static final Key<CIJob> JOB = Key.create("ContinuousIntegration.Job");
     public static final Key<CIBuild> BUILD = Key.create("ContinuousIntegration.Build");
 

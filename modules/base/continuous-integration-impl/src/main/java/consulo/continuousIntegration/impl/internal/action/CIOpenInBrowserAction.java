@@ -21,6 +21,7 @@ import consulo.continuousIntegration.CIDataKeys;
 import consulo.continuousIntegration.CIJob;
 import consulo.continuousIntegration.CIServer;
 import consulo.continuousIntegration.impl.localize.ContinuousIntegrationImplLocalize;
+import consulo.continuousIntegration.support.CIView;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,7 +31,7 @@ import consulo.webBrowser.BrowserUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Opens the selected build, job or server, whichever is the most specific one with a page.
+ * Opens the selected build, job, view or server, whichever is the most specific one with a page.
  *
  * @since 2026-11-09
  */
@@ -66,6 +67,10 @@ public class CIOpenInBrowserAction extends DumbAwareAction implements AnActionWi
         CIJob job = e.getData(CIDataKeys.JOB);
         if (job != null && job.webUrl() != null) {
             return job.webUrl();
+        }
+        CIView view = e.getData(CIDataKeys.VIEW);
+        if (view != null && view.webUrl() != null) {
+            return view.webUrl();
         }
         CIServer server = e.getData(CIDataKeys.SERVER);
         return server == null ? null : server.getWebUrl();

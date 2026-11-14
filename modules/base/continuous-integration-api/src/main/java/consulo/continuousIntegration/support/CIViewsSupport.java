@@ -24,7 +24,17 @@ import java.util.concurrent.CompletableFuture;
  * @since 2026-11-09
  */
 public interface CIViewsSupport {
+    /**
+     * Top level views of the server.
+     */
     CompletableFuture<List<CIView>> loadViews();
+
+    /**
+     * Views of a {@link CIView#container() container} view.
+     */
+    default CompletableFuture<List<CIView>> loadViews(CIView parent) {
+        return CompletableFuture.completedFuture(List.of());
+    }
 
     CompletableFuture<List<CIJob>> loadJobs(CIView view);
 }
