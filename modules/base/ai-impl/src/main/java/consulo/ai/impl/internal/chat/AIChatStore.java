@@ -15,6 +15,7 @@
  */
 package consulo.ai.impl.internal.chat;
 
+import consulo.ai.AIChatHiddenContext;
 import consulo.ai.AIMessage;
 import consulo.ai.AIProvider;
 import consulo.ai.AIProviderTable;
@@ -257,6 +258,8 @@ public class AIChatStore implements PersistentStateComponent<AIChatStoreState> {
      * A title which is not the user's - the first line sent, or one the provider generated. A name the user gave wins.
      */
     public void suggestTitle(AIChatEntry chat, String title) {
+        // a title an agent made of a prompt as it was sent carries the hidden rules - they are no title
+        title = AIChatHiddenContext.strip(title).strip();
         // a chat which moved to another session is named after what it was before - the new one sees only the carryover
         if (chat.NAMED_BY_USER || !chat.SESSION_ID.isEmpty() || title.isBlank() || title.equals(chat.TITLE)) {
             return;
