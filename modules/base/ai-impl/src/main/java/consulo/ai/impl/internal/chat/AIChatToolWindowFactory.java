@@ -16,7 +16,9 @@
 package consulo.ai.impl.internal.chat;
 
 import consulo.ai.AIProviderTable;
-import consulo.ai.icon.AIIconGroup;
+import consulo.ai.AIToolWindowTabProvider;
+import consulo.disposer.Disposable;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.configurable.internal.ShowConfigurableService;
 import consulo.ai.localize.AILocalize;
 import consulo.annotation.component.ExtensionImpl;
@@ -39,7 +41,7 @@ import consulo.ui.image.Image;
  */
 @ExtensionImpl
 public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
-    public static final String ID = "AI Chat";
+    public static final String ID = "AI";
 
     @Override
     public String getId() {
@@ -48,7 +50,12 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public boolean validate(Project project) {
-        return !AIProviderTable.getInstance().getProviders().isEmpty();
+        if (!AIProviderTable.getInstance().getProviders().isEmpty()) {
+            return true;
+        }
+        boolean[] tab = {false};
+        project.getApplication().getExtensionPoint(AIToolWindowTabProvider.class).forEach(provider -> tab[0] |= provider.isAvailable(project));
+        return tab[0];
     }
 
     @RequiredUIAccess
@@ -60,9 +67,19 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
             AIProviderTable.getInstance(),
             project.getApplication().getInstance(ShowConfigurableService.class)
         );
-        Content content = ContentFactory.getInstance().createUIContent(panel.getComponent(), "", false);
+        Content content = ContentFactory.getInstance().createUIContent(panel.getComponent(), AILocalize.tabChats().get(), false);
         content.setDisposer(panel);
         toolWindow.getContentManager().addContent(content);
+
+        project.getApplication().getExtensionPoint(AIToolWindowTabProvider.class).forEach(provider -> {
+            if (!provider.isAvailable(project)) {
+                return;
+            }
+            Disposable disposable = Disposable.newDisposable("AIToolWindowTab");
+            Content tab = ContentFactory.getInstance().createUIContent(provider.createComponent(project, disposable), provider.getDisplayName().get(), false);
+            tab.setDisposer(disposable);
+            toolWindow.getContentManager().addContent(tab);
+        });
 
         // chats a provider keeps on its side may have come from outside the IDE - a terminal - since it was last shown
         project.getMessageBus().connect(panel).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
@@ -86,7 +103,7 @@ public class AIChatToolWindowFactory implements ToolWindowFactory, DumbAware {
 
     @Override
     public Image getIcon() {
-        return AIIconGroup.toolwindowAiassistant();
+        return PlatformIconGroup.toolwindowsToolwindowaskai();
     }
 
     @Override

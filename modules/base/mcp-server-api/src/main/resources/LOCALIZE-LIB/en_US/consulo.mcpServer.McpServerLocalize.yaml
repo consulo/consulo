@@ -62,6 +62,10 @@ column.status:
     text: Status
 column.duration:
     text: Duration
+label.call.arguments:
+    text: Arguments
+label.call.result:
+    text: Result
 status.waiting.for.approval:
     text: Waiting for approval
 status.running:

@@ -19,14 +19,19 @@ import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.mcpServer.localize.McpServerLocalize;
+import consulo.util.lang.StringUtil;
 import consulo.ui.Component;
+import consulo.ui.Label;
+import consulo.ui.LabelStyle;
+import consulo.ui.Space;
 import consulo.ui.Table;
 import consulo.ui.TextArea;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.DockLayout;
+import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.ScrollableLayout;
-import consulo.ui.layout.SplitLayoutPosition;
-import consulo.ui.layout.TwoComponentSplitLayout;
+import consulo.ui.layout.VerticalLayout;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
 import org.jspecify.annotations.Nullable;
@@ -47,8 +52,8 @@ public final class McpCallLogPanel {
 
     private final MutableFlatDataModel<McpToolCallRecord> myModel;
     private final Table<McpToolCallRecord> myTable;
-    private final TextArea myDetails;
-    private final TwoComponentSplitLayout myLayout;
+    private final ScrollableLayout myLayout;
+    private @Nullable McpToolCallRecord myExpanded;
 
     @RequiredUIAccess
     public McpCallLogPanel(Application application, McpToolCallLog callLog, Disposable parentDisposable) {
@@ -56,22 +61,15 @@ public final class McpCallLogPanel {
         Collections.reverse(records);
         myModel = FlatDataModel.of(records);
 
+        // a narrow tab shows what was called and how it went - the rest opens under the row of the call
         myTable = Table.create(myModel);
-        myTable.addColumn(McpServerLocalize.columnTime(), record -> formatTime(record.getStartedAt())).setWidth(80);
-        myTable.addColumn(McpServerLocalize.columnClient(), McpToolCallRecord::getClientName).setWidth(160);
-        myTable.addColumn(McpServerLocalize.columnProject(), record -> record.getProjectName() == null ? "" : record.getProjectName()).setWidth(140);
-        myTable.addColumn(McpServerLocalize.columnTool(), McpToolCallRecord::getToolName).setWidth(200);
-        myTable.addColumn(McpServerLocalize.columnStatus(), record -> statusText(record.getStatus()).get()).setWidth(150);
-        myTable.addColumn(McpServerLocalize.columnDuration(), McpCallLogPanel::durationText).setWidth(90);
-        myTable.addSelectListener(event -> showDetails(event.getValue()));
+        myTable.addColumn(McpServerLocalize.columnTime(), record -> formatTime(record.getStartedAt())).setWidth(70);
+        myTable.addColumn(McpServerLocalize.columnTool(), McpToolCallRecord::getToolName).setWidth(180);
+        myTable.addColumn(McpServerLocalize.columnStatus(), record -> statusText(record.getStatus()).get()).setWidth(120);
+        myTable.setDetailsRenderer(McpCallLogPanel::details);
+        myTable.addSelectListener(event -> expand(event.getValue()));
 
-        myDetails = TextArea.create();
-        myDetails.setEditable(false);
-
-        myLayout = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL);
-        myLayout.setFirstComponent(ScrollableLayout.create(myTable));
-        myLayout.setSecondComponent(myDetails);
-        myLayout.setProportion(70);
+        myLayout = ScrollableLayout.create(myTable);
 
         UIAccess uiAccess = UIAccess.current();
         application.getMessageBus().connect(parentDisposable).subscribe(McpToolCallListener.class, new McpToolCallListener() {
@@ -84,25 +82,77 @@ public final class McpCallLogPanel {
             public void callChanged(McpToolCallRecord record) {
                 uiAccess.execute(() -> {
                     myModel.update(record);
-                    if (myTable.getSelectedItem() == record) {
-                        showDetails(record);
+                    // the details show what the call is now - its result once it has one
+                    if (myExpanded == record) {
+                        myTable.setDetailsVisible(record, false);
+                        myTable.setDetailsVisible(record, true);
                     }
                 });
             }
         });
     }
 
-    public Component getComponent() {
-        return myLayout;
+    /**
+     * One call at a time shows its details - the one selected last.
+     */
+    @RequiredUIAccess
+    private void expand(@Nullable McpToolCallRecord record) {
+        McpToolCallRecord expanded = myExpanded;
+        if (expanded == record) {
+            return;
+        }
+        if (expanded != null) {
+            myTable.setDetailsVisible(expanded, false);
+        }
+        myExpanded = record;
+        if (record != null) {
+            myTable.setDetailsVisible(record, true);
+        }
     }
 
     @RequiredUIAccess
-    private void showDetails(@Nullable McpToolCallRecord record) {
-        if (record == null) {
-            myDetails.setValue("");
-            return;
+    private static Component details(McpToolCallRecord record) {
+        VerticalLayout details = VerticalLayout.create(Space.X_SMALL);
+        details.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+        details.paddingBuilder().allSet(Space.SMALL).apply();
+        details.add(row(McpServerLocalize.columnClient(), record.getClientName()));
+        String project = record.getProjectName();
+        if (project != null) {
+            details.add(row(McpServerLocalize.columnProject(), project));
         }
-        myDetails.setValue(record.getToolName() + " " + record.getArguments() + "\n\n" + record.getResult());
+        String duration = durationText(record);
+        if (!duration.isEmpty()) {
+            details.add(row(McpServerLocalize.columnDuration(), duration));
+        }
+        details.add(text(McpServerLocalize.labelCallArguments(), record.getArguments()));
+        if (!record.getResult().isEmpty()) {
+            details.add(text(McpServerLocalize.labelCallResult(), record.getResult()));
+        }
+        return details;
+    }
+
+    @RequiredUIAccess
+    private static Component row(LocalizeValue name, String value) {
+        Label label = Label.create(name);
+        label.addStyle(LabelStyle.FONT_SMALL);
+        return DockLayout.create().left(label).right(Label.create(LocalizeValue.of(StringUtil.escapeMnemonics(value))));
+    }
+
+    @RequiredUIAccess
+    private static Component text(LocalizeValue name, String value) {
+        VerticalLayout layout = VerticalLayout.create(Space.X_SMALL);
+        layout.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
+        Label label = Label.create(name);
+        label.addStyle(LabelStyle.FONT_SMALL);
+        layout.add(label);
+        TextArea area = TextArea.create(value);
+        area.setEditable(false);
+        layout.add(area);
+        return layout;
+    }
+
+    public Component getComponent() {
+        return myLayout;
     }
 
     private static String formatTime(long millis) {
