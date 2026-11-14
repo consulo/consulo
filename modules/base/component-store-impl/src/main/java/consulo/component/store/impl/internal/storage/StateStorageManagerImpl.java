@@ -129,8 +129,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
 
   /**
    * One storage for one file: a spec naming the project file (the {@code misc} file of the config directory) is the
-   * project file storage - two storages of the same file overwrite each other's components on save
-   * (JetBrains: {@code doGetJpsBridgeAwareStorageSpec}, {@code misc.xml} of the config directory is {@code $PROJECT_FILE$}).
+   * project file storage - two storages of the same file overwrite each other's components on save.
    */
   private String normalizeFileSpec(String fileSpec) {
     if (fileSpec.equals(StoragePathMacros.PROJECT_FILE) || fileSpec.endsWith("/")) {
