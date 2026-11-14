@@ -217,7 +217,10 @@ public class McpDispatcher {
         McpToolCallRecord record = myCallLog.start(clientName, callProject == null ? null : callProject.getName(), name, argumentsText);
 
         CompletableFuture<Boolean> approval;
-        if (myApprovalService.requiresApproval(registration.getDescriptor()) && !myApprovalService.isPreApproved(session, name)) {
+        // the agent of an AI chat of the IDE asks the user in the chat before it calls a tool - a second question
+        // here would ask about the same call again
+        boolean askedInChat = session != null && session.belongsTo(McpPrincipal.AI_AGENT);
+        if (!askedInChat && myApprovalService.requiresApproval(registration.getDescriptor()) && !myApprovalService.isPreApproved(session, name)) {
             myCallLog.changeStatus(record, McpToolCallStatus.WAITING_FOR_APPROVAL);
             approval = myApprovalService.askApproval(session, callProject, clientName, name, argumentsText)
                 .exceptionally(throwable -> {

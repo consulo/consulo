@@ -35,7 +35,7 @@ oauth.consent.allow:
 oauth.consent.deny:
     text: Deny
 checkbox.require.approval:
-    text: Ask before running tools that change files or run commands
+    text: Ask before an external client runs tools that change files or run commands (the AI chats ask in the chat)
 button.forget.approvals:
     text: Forget Remembered Approvals
 approval.title:
