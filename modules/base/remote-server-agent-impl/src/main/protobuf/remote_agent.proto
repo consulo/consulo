@@ -93,6 +93,13 @@ message ExecStart {
     string working_directory = 3;
     // added to the inherited environment
     map<string, string> environment = 4;
+    // set: the process runs in a pseudo terminal of this size - stdout carries everything it prints, stderr stays empty
+    optional PtySize pty = 5;
+}
+
+message PtySize {
+    int32 columns = 1;
+    int32 rows = 2;
 }
 
 message ExecKill {
@@ -108,6 +115,8 @@ message ExecInput {
         bytes stdin = 2;
         Empty close_stdin = 3;
         ExecKill kill = 4;
+        // the pseudo terminal of the process changed its size
+        PtySize resize = 5;
     }
 }
 

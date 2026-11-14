@@ -42,4 +42,18 @@ public interface PlatformProcessHandlerFactory {
     default BinaryProcessHandler createBinaryProcessHandler(GeneralCommandLine commandLine) throws ExecutionException {
         throw new ExecutionException("Binary process handler is not supported at " + commandLine.getPlatform().getName());
     }
+
+    /**
+     * A handler of a process running in a pseudo terminal - its output is the one of the terminal, there is no error output.
+     */
+    default KillableProcessHandler createPtyProcessHandler(GeneralCommandLine commandLine, boolean colored) throws ExecutionException {
+        throw new ExecutionException("Terminals are not supported at " + commandLine.getPlatform().getName());
+    }
+
+    /**
+     * A process of a terminal - see {@link PlatformPtyProcess}.
+     */
+    default PlatformPtyProcess createPtyProcess(GeneralCommandLine commandLine, int columns, int rows) throws ExecutionException {
+        throw new ExecutionException("Terminals are not supported at " + commandLine.getPlatform().getName());
+    }
 }

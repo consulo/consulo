@@ -17,15 +17,22 @@ package consulo.execution.terminal;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.platform.Platform;
 
 import java.util.function.Supplier;
 
-/**
- * @author VISTALL
- * @since 15/04/2023
- */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface TerminalSessionFactory {
-  
-  TerminalSession createLocal(String connectorName, String workingDirectory, Supplier<String> shellPathGetter);
+    /**
+     * A shell in a terminal of the machine of the platform.
+     *
+     * @param workingDirectory a path of that machine
+     * @param shellPathGetter  the shell to start - empty for {@link #findDefaultShellPath(Platform)}
+     */
+    TerminalSession create(Platform platform, String connectorName, String workingDirectory, Supplier<String> shellPathGetter);
+
+    /**
+     * The shell a terminal of the machine starts when none is configured. Blocking - asks that machine.
+     */
+    String findDefaultShellPath(Platform platform);
 }

@@ -180,6 +180,9 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
     if (line.getSudoPromt() != null) {
       throw new ExecutionException("Sudo is not supported at " + platformName);
     }
+    if (myConsoleType == ProcessConsoleType.EXTERNAL_EMULATION) {
+      return factory.createPtyProcessHandler(line, myColored);
+    }
     return factory.createProcessHandler(line, myColored);
   }
 

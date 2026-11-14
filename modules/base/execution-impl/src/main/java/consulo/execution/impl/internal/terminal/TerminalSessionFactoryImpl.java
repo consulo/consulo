@@ -18,22 +18,45 @@ package consulo.execution.impl.internal.terminal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.execution.terminal.TerminalSession;
 import consulo.execution.terminal.TerminalSessionFactory;
+import consulo.platform.Platform;
 import jakarta.inject.Singleton;
 
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * @author VISTALL
- * @since 15/04/2023
- */
 @ServiceImpl
 @Singleton
 public class TerminalSessionFactoryImpl implements TerminalSessionFactory {
-  
-  @Override
-  public TerminalSession createLocal(String connectorName,
-                                     String workDirectory,
-                                     Supplier<String> shellPathGetter) {
-    return new LocalTerminalDirectRunner(connectorName, workDirectory, shellPathGetter);
-  }
+    @Override
+    public TerminalSession create(Platform platform, String connectorName, String workingDirectory, Supplier<String> shellPathGetter) {
+        return new PlatformTerminalRunner(this, platform, connectorName, workingDirectory, shellPathGetter);
+    }
+
+    /**
+     * PowerShell on Windows; otherwise the shell of the user, zsh on a Mac, bash, at last sh - the first one which is a
+     * file of that machine.
+     */
+    @Override
+    public String findDefaultShellPath(Platform platform) {
+        if (platform.os().isWindows()) {
+            return "powershell.exe";
+        }
+        List<String> candidates = new ArrayList<>();
+        String shell = platform.os().getEnvironmentVariable("SHELL");
+        if (shell != null && !shell.isBlank()) {
+            candidates.add(shell);
+        }
+        if (platform.os().isMac()) {
+            candidates.add("/bin/zsh");
+        }
+        candidates.add("/bin/bash");
+        for (String candidate : candidates) {
+            if (Files.isRegularFile(platform.fs().getPath(candidate))) {
+                return candidate;
+            }
+        }
+        return "/bin/sh";
+    }
 }
