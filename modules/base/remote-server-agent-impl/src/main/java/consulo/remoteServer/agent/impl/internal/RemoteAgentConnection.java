@@ -131,6 +131,13 @@ public class RemoteAgentConnection implements AutoCloseable {
         return call(stub -> stub.getAgentInfo(Empty.getDefaultInstance()));
     }
 
+    /**
+     * Whether the agent answers - a call of its info, failing after the timeout.
+     */
+    public void ping(long timeoutSeconds) {
+        call(stub -> stub.withDeadlineAfter(timeoutSeconds, TimeUnit.SECONDS).getAgentInfo(Empty.getDefaultInstance()));
+    }
+
     public String getWorkspacePath() {
         return call(stub -> stub.getWorkspacePath(Empty.getDefaultInstance())).getPath();
     }

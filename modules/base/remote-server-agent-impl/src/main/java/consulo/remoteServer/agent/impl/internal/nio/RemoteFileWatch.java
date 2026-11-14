@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * Changes of files of the agent's machine - its Watch stream. A lost stream is opened again; the roots are reset then, as the
@@ -47,16 +48,20 @@ final class RemoteFileWatch implements PlatformFileWatch {
 
     private final RemoteNioFileSystem myFileSystem;
     private final PlatformFileWatchListener myListener;
+    private final Consumer<RemoteFileWatch> myOnClose;
     private final Object myLock = new Object();
 
     private List<Path> myRecursiveRoots = List.of();
     private List<Path> myFlatRoots = List.of();
     private @Nullable StreamObserver<WatchInput> myRequests;
+    // the receiver of the current stream - the end of an older stream (of a lost connection) changes nothing
+    private @Nullable Events myEvents;
     private boolean myClosed;
 
-    RemoteFileWatch(RemoteNioFileSystem fileSystem, PlatformFileWatchListener listener) {
+    RemoteFileWatch(RemoteNioFileSystem fileSystem, PlatformFileWatchListener listener, Consumer<RemoteFileWatch> onClose) {
         myFileSystem = fileSystem;
         myListener = listener;
+        myOnClose = onClose;
     }
 
     @Override
@@ -77,8 +82,35 @@ final class RemoteFileWatch implements PlatformFileWatch {
     }
 
     private void open() {
-        myRequests = myFileSystem.getConnection().watch(new Events());
+        Events events = new Events();
+        myEvents = events;
+        myRequests = myFileSystem.getConnection().watch(events);
         sendRoots();
+    }
+
+    /**
+     * The file system has a new connection - the stream of the old one is dropped, a stream of the new one is opened and
+     * the roots are refreshed, their changes in between are not known.
+     */
+    void reconnected() {
+        StreamObserver<WatchInput> old;
+        synchronized (myLock) {
+            if (myClosed) {
+                return;
+            }
+            old = myRequests;
+            myRequests = null;
+            myEvents = null;
+        }
+        if (old != null) {
+            try {
+                old.onCompleted();
+            }
+            catch (RuntimeException e) {
+                LOG.debug(e);
+            }
+        }
+        reopen();
     }
 
     private void sendRoots() {
@@ -130,10 +162,12 @@ final class RemoteFileWatch implements PlatformFileWatch {
             myClosed = true;
             StreamObserver<WatchInput> requests = myRequests;
             myRequests = null;
+            myEvents = null;
             if (requests != null) {
                 requests.onCompleted();
             }
         }
+        myOnClose.accept(this);
     }
 
     private void onEvent(WatchEvent event) {
@@ -161,9 +195,13 @@ final class RemoteFileWatch implements PlatformFileWatch {
         }
     }
 
-    private void onEnd(@Nullable Throwable error) {
+    private void onEnd(Events source, @Nullable Throwable error) {
         synchronized (myLock) {
+            if (source != myEvents) {
+                return;
+            }
             myRequests = null;
+            myEvents = null;
             if (myClosed) {
                 return;
             }
@@ -190,12 +228,12 @@ final class RemoteFileWatch implements PlatformFileWatch {
 
         @Override
         public void onError(Throwable error) {
-            onEnd(error);
+            onEnd(this, error);
         }
 
         @Override
         public void onCompleted() {
-            onEnd(null);
+            onEnd(this, null);
         }
     }
 }

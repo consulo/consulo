@@ -75,7 +75,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
 
     @Override
     public void connect(final Runnable onFinished) {
-        doDisconnect();
+        doDisconnect(LocalizeValue.empty());
         connectIfNeeded(new ServerConnector.ConnectionCallback<>() {
             @Override
             public void connected(ServerRuntimeInstance<D> serverRuntimeInstance) {
@@ -94,16 +94,26 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
         if (myConnectionManager != null) {
             myConnectionManager.removeConnection(myServer);
         }
-        doDisconnect();
+        doDisconnect(LocalizeValue.empty());
     }
 
-    private void doDisconnect() {
+    /**
+     * The server of the instance is lost - the connection stays (with the message as its status) and connects again on the
+     * next use.
+     */
+    private void onConnectionLost(ServerRuntimeInstance<D> instance, LocalizeValue message) {
+        if (myRuntimeInstance == instance) {
+            doDisconnect(message);
+        }
+    }
+
+    private void doDisconnect(LocalizeValue statusText) {
         if (myStatus == ConnectionStatus.CONNECTED) {
             if (myRuntimeInstance != null) {
                 myRuntimeInstance.disconnect();
                 myRuntimeInstance = null;
             }
-            setStatus(ConnectionStatus.DISCONNECTED);
+            setStatus(ConnectionStatus.DISCONNECTED, statusText);
             for (LogManagersForProject forNextProject : myPerProjectLogManagers.values()) {
                 forNextProject.disposeAllLogs();
             }
@@ -333,6 +343,7 @@ public class ServerConnectionImpl<D extends DeploymentConfiguration> implements 
             public void connected(ServerRuntimeInstance<D> instance) {
                 // the instance is there before anyone sees the connected status
                 myRuntimeInstance = instance;
+                instance.setConnectionLostListener(message -> onConnectionLost(instance, message));
                 setStatus(ConnectionStatus.CONNECTED);
                 setupProjectListener();
                 for (ServerConnector.ConnectionCallback<D> pending : takePendingCallbacks()) {

@@ -26,6 +26,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * NIO FileSystem implementation for remote agent.
@@ -43,6 +44,8 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
     // child (what a VFS refresh or an indexing scan does) costs one round trip, not one per child
     private final RemoteFileMetadataCache myMetadataCache = new RemoteFileMetadataCache();
     private volatile boolean myOpen = true;
+    // the watches of this file system - opened again on the connection of a reconnect
+    private final Set<RemoteFileWatch> myWatches = ConcurrentHashMap.newKeySet();
 
     RemoteNioFileSystem(RemoteAgentConnection connection, RemoteFileSystemProvider provider) {
         myPlatformId = connection.getPlatformId();
@@ -59,6 +62,10 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
         myConnection = connection;
         myMetadataCache.invalidateAll();
         myOpen = true;
+        // the streams of the watches belong to the lost connection - files changed meanwhile are refreshed
+        for (RemoteFileWatch watch : myWatches) {
+            watch.reconnected();
+        }
     }
 
     @Override
@@ -138,7 +145,9 @@ public class RemoteNioFileSystem extends FileSystem implements PlatformNioFileSy
 
     @Override
     public PlatformFileWatch watch(PlatformFileWatchListener listener) {
-        return new RemoteFileWatch(this, listener);
+        RemoteFileWatch watch = new RemoteFileWatch(this, listener, myWatches::remove);
+        myWatches.add(watch);
+        return watch;
     }
 
     public RemoteFileMetadataCache getMetadataCache() {
