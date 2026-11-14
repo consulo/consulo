@@ -43,6 +43,8 @@ public final class ArchiveNioFileSystem extends FileSystem {
     private final ArchiveNioFileSystemProvider myProvider;
     private final ArchiveFileSystemViaArchiveFile myArchiveFileSystem;
     private final Path myArchiveFile;
+    /** The file the entries are read from - the archive itself, or this machine's copy of another machine's archive. */
+    private final Path myReadFile;
     private final long myArchiveStamp;
     private final long myArchiveLength;
     private final ArchiveHandler myHandler;
@@ -54,12 +56,26 @@ public final class ArchiveNioFileSystem extends FileSystem {
                          ArchiveFileSystemViaArchiveFile archiveFileSystem,
                          Path archiveFile,
                          FileAttributes attributes) {
+        this(provider, archiveFileSystem, archiveFile, archiveFile, attributes.lastModified, attributes.length);
+    }
+
+    /**
+     * @param archiveFile the archive - a path of any machine, which the archive's root goes up to
+     * @param readFile the local file its entries are read from - a copy when the archive is another machine's
+     */
+    ArchiveNioFileSystem(ArchiveNioFileSystemProvider provider,
+                         ArchiveFileSystemViaArchiveFile archiveFileSystem,
+                         Path archiveFile,
+                         Path readFile,
+                         long stamp,
+                         long length) {
         myProvider = provider;
         myArchiveFileSystem = archiveFileSystem;
         myArchiveFile = archiveFile;
-        myArchiveStamp = attributes.lastModified;
-        myArchiveLength = attributes.length;
-        myHandler = new ZipHandler(archiveFile.toString()) {
+        myReadFile = readFile;
+        myArchiveStamp = stamp;
+        myArchiveLength = length;
+        myHandler = new ZipHandler(readFile.toString()) {
             @Override
             public ArchiveFile createArchiveFile(Path path) throws IOException {
                 return archiveFileSystem.createArchiveFile(path);
@@ -69,7 +85,11 @@ public final class ArchiveNioFileSystem extends FileSystem {
     }
 
     boolean isUpToDate(FileAttributes attributes) {
-        return myOpen && attributes.lastModified == myArchiveStamp && attributes.length == myArchiveLength;
+        return isUpToDate(attributes.lastModified, attributes.length);
+    }
+
+    boolean isUpToDate(long stamp, long length) {
+        return myOpen && stamp == myArchiveStamp && length == myArchiveLength;
     }
 
     ArchivePathImpl getRoot() {
@@ -85,7 +105,8 @@ public final class ArchiveNioFileSystem extends FileSystem {
     }
 
     String getVirtualFileUrl(String entryPath) {
-        String localPath = FileUtil.toSystemIndependentName(myArchiveFile.toString());
+        // the archive file systems of the IDE read local files - the entries of another machine's archive are its copy's
+        String localPath = FileUtil.toSystemIndependentName(myReadFile.toString());
         return VirtualFileManager.constructUrl(myArchiveFileSystem.getProtocol(), myArchiveFileSystem.composeRootPath(localPath) + entryPath);
     }
 
