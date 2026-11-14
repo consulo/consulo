@@ -234,10 +234,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         @RequiredUIAccess
         @Override
         public void setParts(List<MessageListItemPart> parts) {
-            ItemView view = myView;
-            if (view != null) {
-                view.detachComponents();
-            }
+            // the view keeps what stays - a part changed alone is redrawn alone, the rest does not blink
             myParts = List.copyOf(parts);
             changed();
         }
@@ -353,6 +350,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         private @Nullable AsyncProcessIcon myWritingIcon;
         private java.awt.@Nullable Component myAttachedActions;
         private final List<java.awt.Component> myAttachedParts = new ArrayList<>();
+        private final List<@Nullable String> myAttachedTexts = new ArrayList<>();
 
         ItemView(Item item) {
             myItem = item;
@@ -404,24 +402,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
             myBody.setVisible(item.myParts.isEmpty() && !item.myText.isEmpty());
 
 
-            if (myAttachedParts.isEmpty() && !item.myParts.isEmpty()) {
-                myPartsPanel.removeAll();
-                for (MessageListItemPart part : item.myParts) {
-                    String text = part.getText();
-                    Component component = part.getComponent();
-                    if (text != null) {
-                        CobraMessageBody body = new CobraMessageBody(DesktopMessageListImpl.this::linkClicked, this::rendered);
-                        fillBody(body, text);
-                        myPartsPanel.add(body);
-                        myAttachedParts.add(body);
-                    }
-                    else if (component != null) {
-                        java.awt.Component awt = TargetAWT.to(component);
-                        myPartsPanel.add(awt);
-                        myAttachedParts.add(awt);
-                    }
-                }
-            }
+            syncParts(item.myParts);
             myPartsPanel.setVisible(!item.myParts.isEmpty());
 
             if (item.myWriting && myWritingIcon == null) {
@@ -480,6 +461,55 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
         }
 
         /**
+         * Shows the parts, keeping the components already shown for them: a text shown as it is keeps its body, a text
+         * which grew is drawn again in the body at its place, a component of the caller stays where it is.
+         */
+        private void syncParts(List<MessageListItemPart> parts) {
+            List<java.awt.Component> next = new ArrayList<>(parts.size());
+            List<@Nullable String> nextTexts = new ArrayList<>(parts.size());
+            for (int i = 0; i < parts.size(); i++) {
+                MessageListItemPart part = parts.get(i);
+                String text = part.getText();
+                Component component = part.getComponent();
+                if (text != null) {
+                    CobraMessageBody body = reusableBody(text, i, next);
+                    fillBody(body, text);
+                    next.add(body);
+                    nextTexts.add(text);
+                }
+                else if (component != null) {
+                    next.add(TargetAWT.to(component));
+                    nextTexts.add(null);
+                }
+            }
+            if (!next.equals(myAttachedParts)) {
+                myPartsPanel.removeAll();
+                for (java.awt.Component awt : next) {
+                    myPartsPanel.add(awt);
+                }
+            }
+            myAttachedParts.clear();
+            myAttachedParts.addAll(next);
+            myAttachedTexts.clear();
+            myAttachedTexts.addAll(nextTexts);
+        }
+
+        /**
+         * The body showing the text already, else the body at the place of the part, else a new one.
+         */
+        private CobraMessageBody reusableBody(String text, int index, List<java.awt.Component> taken) {
+            for (int i = 0; i < myAttachedParts.size(); i++) {
+                if (myAttachedParts.get(i) instanceof CobraMessageBody body && text.equals(myAttachedTexts.get(i)) && !taken.contains(body)) {
+                    return body;
+                }
+            }
+            if (index < myAttachedParts.size() && myAttachedParts.get(index) instanceof CobraMessageBody body && !taken.contains(body)) {
+                return body;
+            }
+            return new CobraMessageBody(DesktopMessageListImpl.this::linkClicked, this::rendered);
+        }
+
+        /**
          * Gives back the components of the caller - the actions and the parts - which outlive the view.
          */
         void detachComponents() {
@@ -490,6 +520,7 @@ public class DesktopMessageListImpl extends SwingComponentDelegate<JBScrollPane>
             }
             myPartsPanel.removeAll();
             myAttachedParts.clear();
+            myAttachedTexts.clear();
         }
 
         void dispose() {
