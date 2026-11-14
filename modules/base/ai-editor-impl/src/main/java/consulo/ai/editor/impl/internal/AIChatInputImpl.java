@@ -33,6 +33,7 @@ import consulo.document.event.DocumentListener;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.ui.EditorBox;
 import consulo.language.editor.ui.EditorBoxBuilderFactory;
@@ -357,8 +358,10 @@ final class AIChatInputImpl implements AIChatInput {
             @Override
             public void updateAtUI(AnActionEvent e) {
                 Editor editor = myEditorBox.getEditor();
-                boolean lookup = LookupManager.getInstance(myProject).getActiveLookup() != null;
-                e.getPresentation().setEnabled(editor != null && !lookup && enabled.test(editor));
+                // a completion still looking for items has nothing to choose yet - a key typed fast after the text is the chat's
+                Lookup lookup = LookupManager.getInstance(myProject).getActiveLookup();
+                boolean choosing = lookup != null && !lookup.getItems().isEmpty();
+                e.getPresentation().setEnabled(editor != null && !choosing && enabled.test(editor));
             }
 
             @RequiredUIAccess
