@@ -44,19 +44,16 @@ public class PlatformTerminalRunner implements TerminalSession {
     private final Platform myPlatform;
     private final String myConnectorName;
     private final String myWorkingDirectory;
-    private final Supplier<String> myShellPathGetter;
-    private final TerminalSessionFactoryImpl myFactory;
+    private final Supplier<List<String>> myCommandGetter;
 
-    public PlatformTerminalRunner(TerminalSessionFactoryImpl factory,
-                                  Platform platform,
+    public PlatformTerminalRunner(Platform platform,
                                   String connectorName,
                                   String workingDirectory,
-                                  Supplier<String> shellPathGetter) {
-        myFactory = factory;
+                                  Supplier<List<String>> commandGetter) {
         myPlatform = platform;
         myConnectorName = connectorName;
         myWorkingDirectory = workingDirectory;
-        myShellPathGetter = shellPathGetter;
+        myCommandGetter = commandGetter;
     }
 
     @Override
@@ -66,7 +63,7 @@ public class PlatformTerminalRunner implements TerminalSession {
 
     @Override
     public TtyConnector connect() throws ExecutionException {
-        List<String> command = getCommand();
+        List<String> command = myCommandGetter.get();
 
         GeneralCommandLine commandLine = new GeneralCommandLine();
         commandLine.withPlatform(myPlatform);
@@ -88,12 +85,11 @@ public class PlatformTerminalRunner implements TerminalSession {
         return new PlatformPtyTtyConnector(process, StandardCharsets.UTF_8, myConnectorName);
     }
 
-    private List<String> getCommand() {
-        String shellPath = myShellPathGetter.get();
-        if (StringUtil.isEmptyOrSpaces(shellPath)) {
-            shellPath = myFactory.findDefaultShellPath(myPlatform);
-        }
-        if (myPlatform.os().isWindows()) {
+    /**
+     * The command of a shell path: bash, sh and zsh start as login shells, other paths may carry their options after a space.
+     */
+    public static List<String> shellCommand(Platform platform, String shellPath) {
+        if (platform.os().isWindows()) {
             return List.of(shellPath);
         }
         String shellName = shellPath.substring(shellPath.lastIndexOf('/') + 1);

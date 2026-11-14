@@ -24,18 +24,13 @@ import consulo.application.Application;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import consulo.logging.Logger;
-import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jspecify.annotations.Nullable;
 
-import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 
 /**
@@ -45,8 +40,6 @@ import java.util.function.BiFunction;
 @ServiceImpl
 @Singleton
 public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
-    private static final Logger LOG = Logger.getInstance(WebTerminalConsoleFactory.class);
-
     private static final int DEFAULT_COLUMNS = 80;
     private static final int DEFAULT_ROWS = 24;
 
@@ -65,19 +58,9 @@ public class WebTerminalConsoleFactory implements TerminalConsoleFactory {
 
     @Override
     @RequiredUIAccess
-    public @Nullable JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
-        TtyConnector connector;
-        try {
-            connector = session.connect();
-        }
-        catch (ExecutionException e) {
-            LOG.warn("Error connecting terminal", e);
-            MessageBoxes.okError(e).showAsync();
-            return null;
-        }
-
+    public JediTerminalConsole create(TtyConnector connector, TerminalConsoleSettings settings, Disposable parentDisposable) {
         WebTerminalConsole console =
-            new WebTerminalConsole(session.getConnectorName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS);
+            new WebTerminalConsole(connector.getName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS);
         Disposer.register(parentDisposable, console);
         listenForThemeChange(console, parentDisposable);
         console.start();

@@ -22,17 +22,13 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import consulo.logging.Logger;
-import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 
 /**
@@ -42,8 +38,6 @@ import java.util.function.BiFunction;
 @ServiceImpl
 @Singleton
 public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory {
-    private static final Logger LOG = Logger.getInstance(DesktopAWTTerminalConsoleFactory.class);
-
     private final Application myApplication;
 
     @Inject
@@ -53,24 +47,18 @@ public class DesktopAWTTerminalConsoleFactory implements TerminalConsoleFactory 
 
     @Override
     @RequiredUIAccess
-    public JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
+    public JediTerminalConsole create(TtyConnector connector, TerminalConsoleSettings settings, Disposable parentDisposable) {
         JBTerminalSystemSettingsProvider provider = new JBTerminalSystemSettingsProvider(myApplication, settings, parentDisposable);
 
         JBTerminalWidget widget = new JBTerminalWidget(provider) {
             @Override
             public String getSessionName() {
-                return session.getConnectorName();
+                return connector.getName();
             }
         };
         Disposer.register(parentDisposable, widget);
 
-        try {
-            widget.createTerminalSession(session.connect()).start();
-        }
-        catch (ExecutionException e) {
-            LOG.warn("Error connecting terminal", e);
-            MessageBoxes.okError(e).showAsync();
-        }
+        widget.createTerminalSession(connector).start();
 
         return widget;
     }

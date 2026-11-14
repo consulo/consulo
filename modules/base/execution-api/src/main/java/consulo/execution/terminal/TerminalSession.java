@@ -27,7 +27,8 @@ public interface TerminalSession {
     String getConnectorName();
 
     /**
-     * Starts the underlying process and returns the channel used to talk to it.
+     * Starts the underlying process and returns the channel used to talk to it. Blocking - the process may live on another
+     * machine, so never call it on the UI thread.
      */
     TtyConnector connect() throws ExecutionException;
 }

@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.execution.terminal.TerminalSession;
 import consulo.execution.terminal.TerminalSessionFactory;
 import consulo.platform.Platform;
+import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 
 import java.nio.file.Files;
@@ -31,7 +32,22 @@ import java.util.function.Supplier;
 public class TerminalSessionFactoryImpl implements TerminalSessionFactory {
     @Override
     public TerminalSession create(Platform platform, String connectorName, String workingDirectory, Supplier<String> shellPathGetter) {
-        return new PlatformTerminalRunner(this, platform, connectorName, workingDirectory, shellPathGetter);
+        return new PlatformTerminalRunner(platform, connectorName, workingDirectory, () -> {
+            String shellPath = shellPathGetter.get();
+            if (StringUtil.isEmptyOrSpaces(shellPath)) {
+                shellPath = findDefaultShellPath(platform);
+            }
+            return PlatformTerminalRunner.shellCommand(platform, shellPath);
+        });
+    }
+
+    @Override
+    public TerminalSession create(Platform platform, String connectorName, String workingDirectory, List<String> shellCommand) {
+        if (shellCommand.isEmpty()) {
+            throw new IllegalArgumentException("Empty shell command");
+        }
+        List<String> command = List.copyOf(shellCommand);
+        return new PlatformTerminalRunner(platform, connectorName, workingDirectory, () -> command);
     }
 
     /**

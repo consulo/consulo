@@ -22,17 +22,12 @@ import com.jediterm.terminal.emulator.JediEmulator;
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.terminal.TerminalSession;
 import consulo.execution.ui.terminal.JediTerminalConsole;
 import consulo.execution.ui.terminal.TerminalConsoleFactory;
 import consulo.execution.ui.terminal.TerminalConsoleSettings;
-import consulo.logging.Logger;
-import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
-import org.jspecify.annotations.Nullable;
 
-import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 
 /**
@@ -42,26 +37,14 @@ import java.util.function.BiFunction;
 @ServiceImpl
 @Singleton
 public class DesktopQtTerminalConsoleFactory implements TerminalConsoleFactory {
-    private static final Logger LOG = Logger.getInstance(DesktopQtTerminalConsoleFactory.class);
-
     private static final int DEFAULT_COLUMNS = 80;
     private static final int DEFAULT_ROWS = 24;
 
     @Override
     @RequiredUIAccess
-    public @Nullable JediTerminalConsole create(TerminalSession session, TerminalConsoleSettings settings, Disposable parentDisposable) {
-        TtyConnector connector;
-        try {
-            connector = session.connect();
-        }
-        catch (ExecutionException e) {
-            LOG.warn("Error connecting terminal", e);
-            MessageBoxes.okError(e).showAsync();
-            return null;
-        }
-
+    public JediTerminalConsole create(TtyConnector connector, TerminalConsoleSettings settings, Disposable parentDisposable) {
         return start(
-            new DesktopQtTerminalConsole(session.getConnectorName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS),
+            new DesktopQtTerminalConsole(connector.getName(), connector, JediEmulator::new, DEFAULT_COLUMNS, DEFAULT_ROWS),
             parentDisposable
         );
     }

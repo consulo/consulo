@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.platform.Platform;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 @ServiceAPI(ComponentScope.APPLICATION)
@@ -30,6 +31,13 @@ public interface TerminalSessionFactory {
      * @param shellPathGetter  the shell to start - empty for {@link #findDefaultShellPath(Platform)}
      */
     TerminalSession create(Platform platform, String connectorName, String workingDirectory, Supplier<String> shellPathGetter);
+
+    /**
+     * A terminal which starts exactly this command - the shell and its options, nothing is added.
+     *
+     * @param workingDirectory a path of that machine
+     */
+    TerminalSession create(Platform platform, String connectorName, String workingDirectory, List<String> shellCommand);
 
     /**
      * The shell a terminal of the machine starts when none is configured. Blocking - asks that machine.
