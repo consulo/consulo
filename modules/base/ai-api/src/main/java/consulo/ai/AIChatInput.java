@@ -46,6 +46,11 @@ public interface AIChatInput {
     void addSubmitListener(Consumer<String> listener);
 
     /**
+     * Told the text after every change of it - typing, pasting, a line break.
+     */
+    void addTextListener(Consumer<String> listener);
+
+    /**
      * Told what the user attached in the box itself - a pasted screenshot, pasted image files.
      */
     void addAttachListener(Consumer<AIChatAttachment> listener);

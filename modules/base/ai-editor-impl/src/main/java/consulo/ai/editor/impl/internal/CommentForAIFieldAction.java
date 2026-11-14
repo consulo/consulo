@@ -26,7 +26,6 @@ import consulo.codeEditor.toolbar.floating.CodeFloatingToolbarActions;
 import consulo.project.Project;
 import consulo.review.icon.ReviewIconGroup;
 import consulo.ui.Component;
-import consulo.ui.HasSize;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxStyle;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -54,7 +53,16 @@ public class CommentForAIFieldAction extends DumbAwareAction implements CustomUI
      * The editor of the toolbar - the box finds the selection through it when Enter is pressed.
      */
     private static final Key<Editor> EDITOR = Key.create("AI.CommentForAIField.editor");
-    private static final int WIDTH = 260;
+    /**
+     * The box of the toolbar of an editor - the comment action of the editor menu types in it.
+     */
+    static final Key<TextBox> FIELD = Key.create("AI.CommentForAIField.box");
+    /**
+     * The box of a presentation - the update hands it to the editor once the editor is known.
+     */
+    private static final Key<TextBox> BOX = Key.create("AI.CommentForAIField.presentationBox");
+
+    private static final int COLUMNS = 32;
 
     public CommentForAIFieldAction() {
         super(AIEditorLocalize.actionCommentForAiText(), AIEditorLocalize.actionCommentForAiDescription(), ReviewIconGroup.comment());
@@ -65,6 +73,10 @@ public class CommentForAIFieldAction extends DumbAwareAction implements CustomUI
         Editor editor = e.getData(Editor.KEY);
         e.getPresentation().setEnabledAndVisible(e.getData(Project.KEY) != null && editor != null);
         e.getPresentation().putClientProperty(EDITOR, editor);
+        TextBox box = e.getPresentation().getClientProperty(BOX);
+        if (editor != null && box != null) {
+            editor.putUserData(FIELD, box);
+        }
     }
 
     @RequiredUIAccess
@@ -76,11 +88,16 @@ public class CommentForAIFieldAction extends DumbAwareAction implements CustomUI
     @Override
     public Component createCustomComponent(Presentation presentation, String place) {
         TextBox box = TextBox.create();
+        presentation.putClientProperty(BOX, box);
+        box.addDetachListener(event -> {
+            Editor editor = presentation.getClientProperty(EDITOR);
+            if (editor != null && editor.getUserData(FIELD) == box) {
+                editor.putUserData(FIELD, null);
+            }
+        });
         box.addStyle(TextBoxStyle.INPLACE);
         box.setPlaceholder(AIEditorLocalize.placeholderCommentForAi());
-        if (box instanceof HasSize sized) {
-            sized.setWidth(WIDTH);
-        }
+        box.setVisibleLength(COLUMNS);
         box.addKeyPressedListener(event -> {
             if (!(event.getInputDetails() instanceof KeyboardInputDetails details)
                 || details.getKeyCode() != KeyCode.ENTER

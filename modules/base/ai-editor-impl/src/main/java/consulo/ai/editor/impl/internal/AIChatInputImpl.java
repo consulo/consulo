@@ -209,6 +209,11 @@ final class AIChatInputImpl implements AIChatInput {
     }
 
     @Override
+    public void addTextListener(Consumer<String> listener) {
+        myEditorBox.addValueListener(event -> listener.accept(getText()));
+    }
+
+    @Override
     public void addAttachListener(Consumer<AIChatAttachment> listener) {
         myAttachListeners.add(listener);
     }

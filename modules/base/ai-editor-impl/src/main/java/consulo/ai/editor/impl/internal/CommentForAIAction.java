@@ -18,6 +18,7 @@ package consulo.ai.editor.impl.internal;
 import consulo.ai.AIChatContextManager;
 import consulo.ai.AIChatInput;
 import consulo.ai.AIChatInputFactory;
+import consulo.ai.editor.impl.internal.review.AIPlanReviewManager;
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionParentRef;
@@ -32,6 +33,8 @@ import consulo.ui.Button;
 import consulo.ui.Label;
 import consulo.ui.LabelStyle;
 import consulo.ui.Space;
+import consulo.ui.TextBox;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
@@ -42,6 +45,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.HorizontalLayoutStyle;
 import consulo.ui.layout.VerticalLayout;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -60,6 +64,8 @@ import java.util.function.Consumer;
     }
 )
 public class CommentForAIAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+    private static final int WIDTH = 480;
+
     public static final String ID = "AI.CommentForAI";
 
 
@@ -80,6 +86,31 @@ public class CommentForAIAction extends DumbAwareAction implements AnActionWithS
         if (project == null || editor == null) {
             return;
         }
+        // the selection toolbar has the box to write in - the menu brings it up and puts the caret there
+        CodeFloatingToolbar toolbar = CodeFloatingToolbar.getToolbar(editor);
+        VirtualFile file = editor.getVirtualFile();
+        boolean plan = file != null && AIPlanReviewManager.getInstance(project).isPlan(file);
+        if (toolbar != null && !plan && editor.getSelectionModel().hasSelection()) {
+            UIAccess uiAccess = UIAccess.current();
+            toolbar.showAsync().whenCompleteAsync((shown, error) -> {
+                TextBox box = editor.getUserData(CommentForAIFieldAction.FIELD);
+                if (Boolean.TRUE.equals(shown) && box != null) {
+                    box.focus();
+                }
+                else {
+                    showPopup(project, editor);
+                }
+            }, uiAccess);
+            return;
+        }
+        showPopup(project, editor);
+    }
+
+    /**
+     * Without the box of the selection toolbar - the toolbar off, a plan - the comment is written in a popup.
+     */
+    @RequiredUIAccess
+    private void showPopup(Project project, Editor editor) {
         AIEditorSelection target = AIEditorSelection.of(editor);
 
         Disposable disposable = Disposable.newDisposable();
@@ -89,6 +120,8 @@ public class CommentForAIAction extends DumbAwareAction implements AnActionWithS
         content.paddingBuilder().allSet(Space.MEDIUM).apply();
         Label title = Label.create(AIEditorLocalize.labelCommentOn(target.where()));
         title.addStyle(LabelStyle.FONT_SMALL);
+        // the line of the title sets the width of the box - its height stays the one of the text written in it
+        title.setWidth(WIDTH);
         content.add(title);
         content.add(input.getComponent());
 
@@ -119,6 +152,7 @@ public class CommentForAIAction extends DumbAwareAction implements AnActionWithS
         // Enter and the send button of the box send, as in the chat
         input.addSubmitListener(send);
 
+
         popup[0] = JBPopupFactory.getInstance()
             .createComponentPopupBuilder(content, input.getComponent())
             .setRequestFocus(true)
@@ -126,6 +160,7 @@ public class CommentForAIAction extends DumbAwareAction implements AnActionWithS
             .setMovable(true)
             .createPopup();
         Disposer.register(popup[0], disposable);
+        input.addTextListener(text -> popup[0].pack(false, true));
         // from the selection toolbar the box hangs under its button, the toolbar staying - else next to the selection
         CodeFloatingToolbar toolbar = CodeFloatingToolbar.getToolbar(editor);
         if (toolbar == null || !toolbar.isShown() || !toolbar.showPopupUnderneath(this, popup[0])) {
