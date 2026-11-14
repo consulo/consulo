@@ -148,7 +148,7 @@ final class AIChatToolCallView {
     private void updateHeader() {
         AIContent.ToolCall toolCall = myToolCall;
         myStatus.setImage(myStopped ? PlatformIconGroup.runconfigurationsTestterminated() : statusImage(toolCall.status()));
-        myTitle.setText(AIChatTexts.plain(relative(toolCall.title())));
+        myTitle.setText(AIChatTexts.plain(relative(displayTitle(toolCall))));
 
         myFilePath = filePath(toolCall);
         myFile.setText(myFilePath == null ? LocalizeValue.empty() : AIChatTexts.plain(Path.of(myFilePath).getFileName().toString()));
@@ -296,6 +296,22 @@ final class AIChatToolCallView {
     private static String string(JsonObject object, String name) {
         JsonElement element = object.get(name);
         return element == null || !element.isJsonPrimitive() ? "" : element.getAsString();
+    }
+
+    /**
+     * The title as the chat shows it - an agent wraps a command in backticks, as markdown would, and a call whose input
+     * still streams may have nothing in them yet.
+     */
+    static String displayTitle(AIContent.ToolCall toolCall) {
+        String title = toolCall.title().strip();
+        if (title.length() >= 2 && title.startsWith("`") && title.endsWith("`")) {
+            title = title.substring(1, title.length() - 1).strip();
+        }
+        if (title.isEmpty()) {
+            String kind = toolCall.kind();
+            return kind.isEmpty() ? AILocalize.labelToolCallUntitled().get() : Character.toUpperCase(kind.charAt(0)) + kind.substring(1);
+        }
+        return title;
     }
 
     /**

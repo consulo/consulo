@@ -184,6 +184,8 @@ label.writing.thinking:
     text: Thinking...
 label.writing.tool:
     text: Running {0}...
+label.tool.call.untitled:
+    text: Tool
 dialog.delete.items.title:
     text: Delete Chats and Groups
 dialog.delete.items.message:

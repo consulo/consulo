@@ -1171,7 +1171,7 @@ public class AIChatPanel implements Disposable {
                 myUIAccess.give(() -> {
                     AIChatAnswer answer = answer();
                     answer.toolCall(toolCall);
-                    answer.getItem().setWritingStatus(AILocalize.labelWritingTool(toolCall.title()));
+                    answer.getItem().setWritingStatus(AILocalize.labelWritingTool(AIChatToolCallView.displayTitle(toolCall)));
                 });
             }
 
