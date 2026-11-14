@@ -101,7 +101,6 @@ module consulo.language.editor.impl {
         consulo.desktop.awt.ide.impl,
         consulo.ide.impl;
 
-    exports consulo.language.editor.impl.internal.inlay to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inlay.param to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.inlay.setting to consulo.ide.impl;
 

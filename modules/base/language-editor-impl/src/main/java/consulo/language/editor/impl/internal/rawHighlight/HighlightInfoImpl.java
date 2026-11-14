@@ -419,6 +419,7 @@ public class HighlightInfoImpl implements HighlightInfo {
         return myGutterIconRenderer;
     }
 
+    @Override
     public @Nullable ProblemGroup getProblemGroup() {
         return myProblemGroup;
     }

@@ -50,4 +50,19 @@ public interface RenameRefactoring extends Refactoring {
     void addRenamerFactory(AutomaticRenamerFactory factory);
 
     void removeRenamerFactory(AutomaticRenamerFactory factory);
+
+    /**
+     * Adds automatic renamer factories which are enabled in settings and applicable to the elements being renamed.
+     */
+    void respectEnabledAutomaticRenames();
+
+    /**
+     * Adds all automatic renamer factories (which have an option) applicable to the elements being renamed.
+     */
+    void respectAllAutomaticRenames();
+
+    /**
+     * @return true if there are usages in comments, strings or non-code files which would be renamed
+     */
+    boolean hasNonCodeUsages();
 }

@@ -94,6 +94,12 @@ public abstract class DaemonCodeAnalyzer {
     public abstract boolean isErrorAnalyzingFinished(PsiFile file);
 
     /**
+     * @return the most severe highlight at the offset of the document (element under caret highlights and TODOs are skipped)
+     */
+    @RequiredReadAction
+    public abstract @Nullable HighlightInfo findHighlightByOffset(Document document, int offset, boolean includeFixRange);
+
+    /**
      * @param document
      * @param project
      * @param minSeverity null means all

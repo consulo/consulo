@@ -2,12 +2,12 @@ package consulo.ide.impl.idea.codeInsight.hints.settings;
 
 import consulo.ide.impl.idea.codeInsight.hints.ParameterHintsPassFactory;
 import consulo.language.Language;
-import consulo.language.editor.impl.internal.inlay.setting.ImmediateConfigurable;
-import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel;
+import consulo.language.editor.inlay.setting.ImmediateConfigurable;
+import consulo.language.editor.inlay.setting.InlayProviderSettingsModel;
 import consulo.language.editor.inlay.InlayGroup;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.editor.inlay.Option;
-import consulo.language.editor.internal.ParameterNameHintsSettings;
+import consulo.language.editor.inlay.ParameterNameHintsSettings;
 import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
 

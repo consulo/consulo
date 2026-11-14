@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.internal.inspection.scheme;
 
+import consulo.colorScheme.TextAttributesKey;
 import consulo.content.internal.scope.AllScopeHolder;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -143,6 +144,10 @@ public class ToolsImpl implements Tools {
 
     }
     return myDefaultState.getTool();
+  }
+
+  public @Nullable TextAttributesKey getAttributesKey(PsiElement element) {
+    return getInspectionTool(element).getDefaultEditorAttributes();
   }
 
   @Override

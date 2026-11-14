@@ -20,7 +20,7 @@ import java.awt.*;
  * above / next-to declarations.
  * <p>
  * Per-provider enable/disable is handled by the individual
- * {@link consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel}
+ * {@link consulo.language.editor.inlay.setting.InlayProviderSettingsModel}
  * nodes contributed by {@link CodeVisionInlaySettingsProvider}.
  */
 @ExtensionImpl

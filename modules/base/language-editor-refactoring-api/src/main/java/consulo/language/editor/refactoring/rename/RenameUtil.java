@@ -135,6 +135,75 @@ public class RenameUtil {
         return result.toArray(new UsageInfo[result.size()]);
     }
 
+    @RequiredReadAction
+    public static boolean hasNonCodeUsages(
+        PsiElement element,
+        String newName,
+        boolean searchInStringsAndComments,
+        boolean searchForTextOccurrences
+    ) {
+        RenamePsiElementProcessor processor = RenamePsiElementProcessor.forElement(element);
+        PsiElement searchForInComments = processor.getElementToSearchInStringsAndComments(element);
+        if (searchForInComments == null) {
+            return false;
+        }
+
+        if (searchInStringsAndComments) {
+            LocalizeValue stringToSearch =
+                ElementDescriptionUtil.getElementDescription(searchForInComments, NonCodeSearchDescriptionLocation.STRINGS_AND_COMMENTS);
+            if (stringToSearch.isNotEmpty()) {
+                String stringToReplace = getStringToReplace(element, newName, false, processor);
+                UsageInfoFactory factory = new NonCodeUsageInfoFactory(searchForInComments, stringToReplace);
+                boolean noUsages = TextOccurrencesUtil.processUsagesInStringsAndComments(
+                    searchForInComments,
+                    stringToSearch.get(),
+                    false,
+                    (commentOrLiteral, textRange) ->
+                        factory.createUsageInfo(commentOrLiteral, textRange.getStartOffset(), textRange.getEndOffset()) == null
+                );
+                if (!noUsages) {
+                    return true;
+                }
+            }
+        }
+
+        if (searchForTextOccurrences) {
+            GlobalSearchScope projectScope = GlobalSearchScope.projectScope(element.getProject());
+            LocalizeValue stringToSearch =
+                ElementDescriptionUtil.getElementDescription(searchForInComments, NonCodeSearchDescriptionLocation.NON_JAVA);
+            if (stringToSearch.isNotEmpty()) {
+                String stringToReplace = getStringToReplace(element, newName, true, processor);
+                if (hasTextOccurrence(searchForInComments, projectScope, stringToSearch.get(), stringToReplace)) {
+                    return true;
+                }
+            }
+
+            Pair<String, String> additionalStringToSearch = processor.getTextOccurrenceSearchStrings(searchForInComments, newName);
+            if (additionalStringToSearch != null && additionalStringToSearch.first.length() > 0) {
+                if (hasTextOccurrence(searchForInComments, projectScope, additionalStringToSearch.first, additionalStringToSearch.second)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean hasTextOccurrence(
+        PsiElement element,
+        GlobalSearchScope projectScope,
+        String stringToSearch,
+        String stringToReplace
+    ) {
+        @RequiredReadAction
+        UsageInfoFactory factory = (usage, startOffset, endOffset) -> {
+            TextRange textRange = usage.getTextRange();
+            int start = textRange.getStartOffset();
+            return NonCodeUsageInfo.create(usage.getContainingFile(), start + startOffset, start + endOffset, element, stringToReplace);
+        };
+        return !TextOccurrencesUtil.processTextOccurences(element, stringToSearch, projectScope, info -> false, factory);
+    }
+
     private static void addTextOccurrence(
         PsiElement element,
         List<UsageInfo> result,

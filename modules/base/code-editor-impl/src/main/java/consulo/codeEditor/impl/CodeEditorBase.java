@@ -883,6 +883,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         return myScrollToCaret;
     }
 
+    @Override
     public void setScrollToCaret(boolean scrollToCaret) {
         myScrollToCaret = scrollToCaret;
     }

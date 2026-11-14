@@ -55,6 +55,8 @@ public interface RealEditor extends EditorEx {
 
     boolean isScrollToCaret();
 
+    void setScrollToCaret(boolean scrollToCaret);
+
     boolean shouldSoftWrapsBeForced();
 
     void setHighlightingFilter(@Nullable Predicate<RangeHighlighter> filter);

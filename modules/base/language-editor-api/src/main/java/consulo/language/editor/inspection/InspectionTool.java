@@ -17,6 +17,7 @@ package consulo.language.editor.inspection;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.language.Language;
 import consulo.language.editor.inspection.localize.InspectionLocalize;
 import consulo.language.editor.internal.inspection.DummyInspectionToolState;
@@ -125,6 +126,14 @@ public abstract class InspectionTool implements BatchSuppressableTool {
 
     public boolean isEnabledByDefault() {
         return true;
+    }
+
+    /**
+     * @return attributes key if the editor presentation of the problems should be different from the severity presentation,
+     * {@code null} if the attributes should correspond to the chosen severity
+     */
+    public @Nullable TextAttributesKey getEditorAttributesKey() {
+        return null;
     }
 
     /**

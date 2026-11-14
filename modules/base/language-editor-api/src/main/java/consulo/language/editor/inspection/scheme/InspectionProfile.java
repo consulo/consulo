@@ -17,6 +17,7 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.content.scope.NamedScope;
 import consulo.language.editor.inspection.InspectionTool;
 import consulo.language.editor.internal.inspection.ScopeToolState;
@@ -46,6 +47,12 @@ public interface InspectionProfile extends Profile {
   @Nullable InspectionToolWrapper getInspectionTool(String shortName, Project project);
 
   @Nullable InspectionToolWrapper getToolById(String id, PsiElement element);
+
+  /**
+   * @return the editor attributes of the tool problems in the scope of the element, {@code null} if the attributes
+   * correspond to the tool severity
+   */
+  @Nullable TextAttributesKey getEditorAttributes(String shortName, PsiElement element);
 
   /**
    * @return tool by shortName and scope

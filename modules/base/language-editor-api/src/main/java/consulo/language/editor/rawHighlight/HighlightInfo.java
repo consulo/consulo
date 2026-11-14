@@ -280,6 +280,10 @@ public interface HighlightInfo extends Segment {
 
     boolean isFileLevelAnnotation();
 
+    default @Nullable ProblemGroup getProblemGroup() {
+        return null;
+    }
+
     void unregisterQuickFix(Predicate<? super IntentionAction> condition);
 
     void forEachQuickFix(BiConsumer<IntentionAction, TextRange> consumer);

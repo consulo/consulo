@@ -132,7 +132,7 @@ public class WordCompletionContributor extends CompletionContributor implements 
   private static boolean shouldPerformWordCompletion(CompletionParameters parameters) {
     PsiElement insertedElement = parameters.getPosition();
     boolean dumb = DumbService.getInstance(insertedElement.getProject()).isDumb();
-    if (dumb) {
+    if (dumb && WordCompletionElementFilter.isWordCompletionInDumbModeEnabled(insertedElement.getContainingFile().getLanguage())) {
       return true;
     }
 

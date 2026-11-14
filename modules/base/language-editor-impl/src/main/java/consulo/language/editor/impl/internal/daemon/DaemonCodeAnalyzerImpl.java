@@ -538,6 +538,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
         );
     }
 
+    @Override
     @RequiredReadAction
     public @Nullable HighlightInfoImpl findHighlightByOffset(Document document, int offset, boolean includeFixRange) {
         return findHighlightByOffset(document, offset, includeFixRange, HighlightSeverity.INFORMATION);

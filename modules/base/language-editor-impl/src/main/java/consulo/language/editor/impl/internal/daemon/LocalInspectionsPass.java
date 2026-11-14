@@ -23,6 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.JobLauncher;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.DocumentWindow;
@@ -459,7 +460,8 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         HighlightInfoType highlightInfoType,
         LocalizeValue message,
         LocalizeValue toolTip,
-        PsiElement psiElement
+        PsiElement psiElement,
+        HighlightDisplayKey key
     ) {
         TextRange textRange = ((ProblemDescriptorBase) problemDescriptor).getTextRange();
         if (textRange == null || psiElement == null) {
@@ -468,12 +470,23 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
         boolean isFileLevel = psiElement instanceof PsiFile && textRange.equals(psiElement.getTextRange());
 
         HighlightSeverity severity = highlightInfoType.getSeverity(psiElement);
-        TextAttributes attributes = mySeverityRegistrar.getTextAttributesBySeverity(severity);
+        TextAttributesKey attributesKey = ((ProblemDescriptorBase) problemDescriptor).getEnforcedTextAttributes();
+        if (problemDescriptor.getHighlightType() == ProblemHighlightType.GENERIC_ERROR_OR_WARNING && attributesKey == null) {
+            attributesKey = myProfileWrapper.getInspectionProfile().getEditorAttributes(key.toString(), getFile());
+        }
+        EditorColorsScheme editorColorsScheme = getColorsScheme();
+        TextAttributes attributes =
+            attributesKey == null || editorColorsScheme == null || severity.getName().equals(attributesKey.getExternalName())
+            ? mySeverityRegistrar.getTextAttributesBySeverity(severity)
+            : editorColorsScheme.getAttributes(attributesKey);
         HighlightInfoImpl.Builder b = HighlightInfoImpl.newHighlightInfo(highlightInfoType)
             .range(psiElement, textRange.getStartOffset(), textRange.getEndOffset())
             .description(message)
             .severity(severity)
             .escapedToolTip(toolTip);
+        if (attributesKey != null) {
+            b.textAttributes(attributesKey);
+        }
         if (attributes != null) {
             b.textAttributes(attributes);
         }
@@ -734,7 +747,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
                 (text.startsWith("<html>") ? XmlStringUtil.stripHtml(text) : XmlStringUtil.escapeText(text)) + link
             ));
         }
-        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, message, tooltip, element);
+        HighlightInfoImpl highlightInfo = highlightInfoFromDescriptor(descriptor, type, message, tooltip, element, key);
         if (highlightInfo != null) {
             registerQuickFixes(tool, descriptor, highlightInfo, emptyActionRegistered);
         }

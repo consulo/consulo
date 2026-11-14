@@ -13,7 +13,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
+import consulo.codeEditor.EditorMouseHoverPopupControl;
 import consulo.codeEditor.util.AWTEditorUtil;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsManager;

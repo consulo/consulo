@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inlay;
 
-import consulo.language.editor.internal.ParameterNameHintsSettings;
 import consulo.localize.LocalizeValue;
 
 /**

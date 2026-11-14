@@ -413,6 +413,17 @@ public class RenameProcessor extends BaseRefactoringProcessor {
         return new AutomaticRenamingDialog(myProject, automaticVariableRenamer).showAsync();
     }
 
+    @RequiredReadAction
+    public boolean hasNonCodeUsages() {
+        for (PsiElement element : new ArrayList<>(myAllRenames.keySet())) {
+            String newName = myAllRenames.get(element);
+            if (RenameUtil.hasNonCodeUsages(element, newName, mySearchInComments, mySearchTextOccurrences)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addElement(PsiElement element, String newName) {
         assertNonCompileElement(element);
         myAllRenames.put(element, newName);

@@ -16,6 +16,7 @@
 package consulo.language.editor.impl.internal.inspection.scheme;
 
 import consulo.application.Application;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.component.persist.scheme.ExternalInfo;
 import consulo.component.persist.scheme.ExternalizableScheme;
 import consulo.component.util.graph.DFSTBuilder;
@@ -326,6 +327,12 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     public @Nullable InspectionToolWrapper getInspectionTool(String shortName, PsiElement element) {
         Tools toolList = getTools(shortName, element.getProject());
         return toolList == null ? null : toolList.getInspectionTool(element);
+    }
+
+    @Override
+    public @Nullable TextAttributesKey getEditorAttributes(String shortName, PsiElement element) {
+        ToolsImpl tools = getTools(shortName, element.getProject());
+        return tools != null ? tools.getAttributesKey(element) : null;
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package consulo.language.editor.refactoring.impl.internal.rename;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.refactoring.RefactoringImpl;
 import consulo.language.editor.refactoring.RenameRefactoring;
 import consulo.language.editor.refactoring.rename.AutomaticRenamerFactory;
@@ -78,5 +79,30 @@ public class RenameRefactoringImpl extends RefactoringImpl<RenameProcessor> impl
     @Override
     public void removeRenamerFactory(AutomaticRenamerFactory factory) {
         myProcessor.addRenamerFactory(factory);
+    }
+
+    @Override
+    public void respectEnabledAutomaticRenames() {
+        for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
+            if (factory.getOptionName().isNotEmpty() && factory.isEnabled()
+                && getElements().stream().anyMatch(factory::isApplicable)) {
+                myProcessor.addRenamerFactory(factory);
+            }
+        }
+    }
+
+    @Override
+    public void respectAllAutomaticRenames() {
+        for (AutomaticRenamerFactory factory : AutomaticRenamerFactory.EP_NAME.getExtensionList()) {
+            if (factory.getOptionName().isNotEmpty() && getElements().stream().anyMatch(factory::isApplicable)) {
+                myProcessor.addRenamerFactory(factory);
+            }
+        }
+    }
+
+    @Override
+    @RequiredReadAction
+    public boolean hasNonCodeUsages() {
+        return myProcessor.hasNonCodeUsages();
     }
 }

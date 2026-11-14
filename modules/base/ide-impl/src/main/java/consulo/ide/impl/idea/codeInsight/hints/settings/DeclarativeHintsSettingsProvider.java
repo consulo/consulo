@@ -3,8 +3,8 @@ package consulo.ide.impl.idea.codeInsight.hints.settings;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
-import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel;
-import consulo.language.editor.impl.internal.inlay.setting.InlaySettingsProvider;
+import consulo.language.editor.inlay.setting.InlayProviderSettingsModel;
+import consulo.language.editor.inlay.setting.InlaySettingsProvider;
 import consulo.language.editor.inlay.DeclarativeInlayHintsProviderFactoryUtil;
 import consulo.language.editor.inlay.DeclarativeInlayHintsSettings;
 import consulo.language.editor.inlay.InlayProviderInfo;

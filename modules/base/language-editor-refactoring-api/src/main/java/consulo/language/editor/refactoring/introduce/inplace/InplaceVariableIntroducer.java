@@ -40,7 +40,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.internal.StartMarkAction;
+import consulo.undoRedo.StartMarkAction;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import org.jspecify.annotations.Nullable;

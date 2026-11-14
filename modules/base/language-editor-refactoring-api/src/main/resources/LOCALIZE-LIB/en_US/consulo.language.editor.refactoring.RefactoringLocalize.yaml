@@ -1491,6 +1491,56 @@ statusBar.noUsages:
     text: No occurrences found
 statusBar.refactoring.result:
     text: '{0, choice, 1#1 occurrence|2#{0,number} occurrences} changed'
+suggested.refactoring.change.signature.command.name:
+    text: Update {0}
+suggested.refactoring.change.signature.gutter.icon.tooltip:
+    text: 'Update {0} of ''''{1}'''' to reflect signature change… {2}'
+suggested.refactoring.change.signature.intention.text:
+    text: Update {0} to reflect signature change
+suggested.refactoring.change.signature.label.text:
+    text: 'Update {0} to reflect signature changes:'
+suggested.refactoring.declaration:
+    text: declaration
+suggested.refactoring.disabled.gutter.icon.tooltip:
+    text: There are changes in signature but nothing can be updated in usages
+suggested.refactoring.group.key:
+    text: Suggested refactoring
+suggested.refactoring.ignore.button.text:
+    text: Ignore
+suggested.refactoring.implementations:
+    text: implementations
+suggested.refactoring.next.button.text:
+    text: Next
+suggested.refactoring.overrides:
+    text: overrides
+suggested.refactoring.parameter.values.label.text:
+    text: 'Add values for new parameters:'
+suggested.refactoring.parameter.values.placeholder:
+    text: Optional value
+suggested.refactoring.rename.button.text:
+    text: Rename
+suggested.refactoring.rename.command.name:
+    text: Rename usages
+suggested.refactoring.rename.gutter.icon.tooltip:
+    text: 'Rename usages of ''''{0}'''' to ''''{1}''''... {2}'
+suggested.refactoring.rename.intention.text:
+    text: 'Rename usages of ''''{0}'''''
+suggested.refactoring.rename.popup.text:
+    text: 'Rename usages of ''''{0}'''' to ''''{1}'''''
+suggested.refactoring.rename.text.occurrences:
+    text: 'Found occurrences in comments and strings while renaming ''''{0}'''' to ''''{1}''''. Would you like to rename them as well?'
+suggested.refactoring.rename.text.occurrences.title:
+    text: Rename text occurrences
+suggested.refactoring.rename.with.preview.button.text:
+    text: Rename with Preview
+suggested.refactoring.update.button.text:
+    text: Update
+suggested.refactoring.usages:
+    text: usages
+suggested.refactoring.use.any.variable.checkbox.hint:
+    text: If a single variable of suitable type exists at the call place, it will be used as argument value
+suggested.refactoring.use.any.variable.checkbox.text:
+    text: Use any variable
 superclass.cannot.be.extracted.from.an.enum:
     text: Superclass cannot be extracted from an enum.
 superclass.cannot.be.extracted.from.an.interface:

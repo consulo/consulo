@@ -58,4 +58,15 @@ public interface WordCompletionElementFilter extends LanguageExtension {
     ParserDefinition parserDefinition = ParserDefinition.forLanguage(element.getLanguage());
     return parserDefinition != null && parserDefinition.getCommentTokens(languageVersion).contains(element);
   }
+
+  static boolean isWordCompletionInDumbModeEnabled(Language language) {
+    return forLanguage(language).isWordCompletionInDumbModeEnabled();
+  }
+
+  /**
+   * @return true if word completion is enabled in dumb mode
+   */
+  default boolean isWordCompletionInDumbModeEnabled() {
+    return true;
+  }
 }

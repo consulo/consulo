@@ -4,7 +4,7 @@ package consulo.ide.impl.codeInsight.codeVision.ui.renderers.painters;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.language.editor.impl.internal.inlay.param.HintUtils;
+import consulo.language.editor.internal.inlay.HintUtils;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;

@@ -42,7 +42,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.awt.JBUI;
 import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.internal.StartMarkAction;
+import consulo.undoRedo.StartMarkAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;

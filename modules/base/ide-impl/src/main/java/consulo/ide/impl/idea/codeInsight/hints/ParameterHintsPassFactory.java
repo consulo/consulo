@@ -10,7 +10,7 @@ import consulo.language.Language;
 import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.highlight.TextEditorHighlightingPassFactory;
-import consulo.language.editor.impl.internal.inlay.param.MethodInfoExcludeListFilter;
+import consulo.language.editor.inlay.MethodInfoExcludeListFilter;
 import consulo.language.editor.inlay.InlayParameterHintsProvider;
 import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;

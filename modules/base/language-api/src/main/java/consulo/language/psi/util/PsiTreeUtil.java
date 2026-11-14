@@ -1054,6 +1054,76 @@ public class PsiTreeUtil {
         return false;
     }
 
+    @RequiredReadAction
+    public static boolean hasErrorElementInRange(PsiFile file, TextRange range) {
+        if (range.getStartOffset() < 0) {
+            throw new IllegalArgumentException("Range start offset is negative: " + range);
+        }
+        if (range.getEndOffset() > file.getTextLength()) {
+            throw new IllegalArgumentException("Range " + range + " is outside of the file (" + file.getTextLength() + ")");
+        }
+
+        PsiElement leaf = file.findElementAt(range.getStartOffset());
+        if (leaf == null) {
+            return false;
+        }
+        TextRange leafRange = leaf.getTextRange();
+        if (leafRange.getStartOffset() < range.getStartOffset()) {
+            leaf = nextLeaf(leaf, true);
+            if (leaf == null) {
+                return false;
+            }
+            leafRange = leaf.getTextRange();
+        }
+        if (leafRange.getStartOffset() < range.getStartOffset()) {
+            throw new IllegalStateException("Leaf " + leafRange + " starts before " + range);
+        }
+
+        PsiElement stopAt = leaf.getParent();
+        while (stopAt != null && !(stopAt instanceof PsiFile) && !stopAt.getTextRange().contains(range)) {
+            stopAt = stopAt.getParent();
+        }
+        if (stopAt instanceof PsiErrorElement) {
+            return true;
+        }
+
+        if (leafRange.getStartOffset() == range.getStartOffset()) {
+            PsiElement prevLeaf = prevLeaf(leaf);
+            if (prevLeaf instanceof PsiErrorElement && prevLeaf.getTextLength() == 0) {
+                return true;
+            }
+        }
+        if (leafRange.getEndOffset() == range.getEndOffset()) {
+            PsiElement nextLeaf = nextLeaf(leaf);
+            if (nextLeaf instanceof PsiErrorElement && nextLeaf.getTextLength() == 0) {
+                return true;
+            }
+        }
+
+        int endOffset = leafRange.getEndOffset();
+        while (endOffset <= range.getEndOffset()) {
+            if (isInsideErrorElement(leaf, stopAt)) {
+                return true;
+            }
+            leaf = nextLeaf(leaf);
+            if (leaf == null) {
+                return false;
+            }
+            endOffset += leaf.getTextLength();
+        }
+        return false;
+    }
+
+    private static boolean isInsideErrorElement(PsiElement leaf, @Nullable PsiElement stopAt) {
+        PsiElement element = leaf;
+        while (element != null && element != stopAt) {
+            if (element instanceof PsiErrorElement) {
+                return true;
+            }
+            element = element.getParent();
+        }
+        return false;
+    }
 
     public static PsiElement[] filterAncestors(PsiElement[] elements) {
         if (LOG.isDebugEnabled()) {

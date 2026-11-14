@@ -16,6 +16,7 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.component.persist.ComponentSerializationUtil;
 import consulo.language.Language;
 import consulo.language.editor.inspection.CleanupLocalInspectionTool;
@@ -142,6 +143,10 @@ public abstract class InspectionToolWrapper<T extends InspectionTool> {
 
     public String getShortName() {
         return getTool().getShortName();
+    }
+
+    public @Nullable TextAttributesKey getDefaultEditorAttributes() {
+        return getTool().getEditorAttributesKey();
     }
 
     public LocalizeValue getDisplayName() {

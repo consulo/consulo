@@ -11,7 +11,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.ide.impl.desktop.awt.editor.DesktopAWTEditor;
 import consulo.ui.ex.awt.paint.EffectPainter;
-import consulo.language.editor.impl.internal.inlay.param.HintUtils;
+import consulo.language.editor.internal.inlay.HintUtils;
 import consulo.language.editor.inlay.HintWidthAdjustment;
 import consulo.language.editor.ui.awt.AWTLanguageEditorUtil;
 import consulo.ui.color.ColorValue;

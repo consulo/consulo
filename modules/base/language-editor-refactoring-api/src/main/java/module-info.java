@@ -43,6 +43,7 @@ module consulo.language.editor.refactoring.api {
     exports consulo.language.editor.refactoring.rename.inplace;
     exports consulo.language.editor.refactoring.safeDelete;
     exports consulo.language.editor.refactoring.safeDelete.usageInfo;
+    exports consulo.language.editor.refactoring.suggested;
     exports consulo.language.editor.refactoring.ui;
     exports consulo.language.editor.refactoring.unwrap;
     exports consulo.language.editor.refactoring.util;

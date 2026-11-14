@@ -8,7 +8,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.disposer.Disposable;
 import consulo.language.Language;
-import consulo.language.editor.impl.internal.inlay.setting.InlayProviderSettingsModel;
+import consulo.language.editor.inlay.setting.InlayProviderSettingsModel;
 import consulo.language.editor.localize.LanguageEditorLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
