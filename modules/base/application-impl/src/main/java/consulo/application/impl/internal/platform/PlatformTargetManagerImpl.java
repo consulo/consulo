@@ -73,6 +73,11 @@ public class PlatformTargetManagerImpl implements PlatformTargetManager {
     }
 
     @Override
+    public boolean isReachable(Platform platform) {
+        return !(platform instanceof UnknownPlatform);
+    }
+
+    @Override
     public Platform getPlatform(@Nullable String id) {
         PlatformTarget target = findTarget(id);
         if (target == null) {

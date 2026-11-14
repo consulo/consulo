@@ -5,6 +5,9 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.application.platform.PlatformTarget;
+import consulo.application.platform.PlatformTargetListener;
+import consulo.application.platform.PlatformTargetManager;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ComponentManager;
 import consulo.component.messagebus.MessageBus;
@@ -23,6 +26,7 @@ import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.internal.RealTextEditor;
+import consulo.fileEditor.localize.FileEditorLocalize;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.editor.internal.EditorFactoryImpl;
 import consulo.language.file.light.LightVirtualFile;
@@ -38,6 +42,8 @@ import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectManagerEx;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -74,6 +80,7 @@ import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 @ServiceImpl
@@ -86,6 +93,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private static final Key<Boolean> BIG_FILE_PREVIEW = Key.create("BIG_FILE_PREVIEW");
 
     private final Set<Document> myUnsavedDocuments = ContainerUtil.newConcurrentSet();
+    // the unsaved documents whose files are on a machine which is not connected now - saved when it is connected again
+    private final Set<Document> myOfflineDocuments = ContainerUtil.newConcurrentSet();
+    // the notifications about the unsaved files of a machine which is not connected, by the id of its target
+    private final Map<String, Notification> myOfflineNotifications = new ConcurrentHashMap<>();
 
     private final MessageBus myBus;
 
@@ -136,6 +147,13 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         ClassLoader loader = FileDocumentManagerListener.class.getClassLoader();
         myMultiCaster =
             (FileDocumentManagerListener) Proxy.newProxyInstance(loader, new Class[]{FileDocumentManagerListener.class}, handler);
+
+        myBus.connect().subscribe(PlatformTargetListener.class, new PlatformTargetListener() {
+            @Override
+            public void targetConnected(PlatformTarget target) {
+                application.invokeLater(() -> saveOfflineDocuments(target));
+            }
+        });
     }
 
     static final class MyProjectCloseHandler implements Predicate<Project> {
@@ -362,6 +380,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     private Map<Document, IOException> saveUnsavedDocuments(boolean isExplicit) {
         Map<Document, IOException> failedToSave = new HashMap<>();
         Set<Document> vetoed = new HashSet<>();
+        List<Document> offline = new ArrayList<>();
         while (true) {
             int count = 0;
 
@@ -371,6 +390,16 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
                 }
                 try {
                     doSaveDocument(document, isExplicit);
+                }
+                catch (FileSystemUnavailableException e) {
+                    if (myOnClose) {
+                        failedToSave.put(document, e);
+                    }
+                    else {
+                        // the machine of the file is not connected - the changes wait for it
+                        vetoed.add(document);
+                        offline.add(document);
+                    }
                 }
                 catch (IOException e) {
                     failedToSave.put(document, e);
@@ -386,6 +415,9 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
             }
         }
 
+        if (!offline.isEmpty()) {
+            keepOffline(offline);
+        }
         return failedToSave;
     }
 
@@ -405,6 +437,14 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
         try {
             doSaveDocument(document, explicit);
+        }
+        catch (FileSystemUnavailableException e) {
+            if (myOnClose) {
+                handleErrorsOnSave(Collections.singletonMap(document, e));
+            }
+            else {
+                keepOffline(List.of(document));
+            }
         }
         catch (IOException e) {
             handleErrorsOnSave(Collections.singletonMap(document, e));
@@ -433,6 +473,64 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
     }
 
     private static class SaveVetoException extends Exception {
+    }
+
+    /**
+     * The documents stay unsaved until the machine of their files is connected again - the user is told once per machine.
+     */
+    private void keepOffline(Collection<Document> documents) {
+        myOfflineDocuments.addAll(documents);
+
+        for (Document document : documents) {
+            VirtualFile file = getFile(document);
+            PlatformTarget target = file == null ? null : findTarget(file);
+            if (target == null || myOfflineNotifications.containsKey(target.getId())) {
+                continue;
+            }
+
+            Notification notification = NotificationService.getInstance()
+                .newWarn(UnsavedFilesNotificationGroupContributor.TARGET_DISCONNECTED)
+                .title(FileEditorLocalize.unsavedFilesTargetDisconnectedTitle(target.getDisplayName()))
+                .content(FileEditorLocalize.unsavedFilesTargetDisconnectedContent(target.getDisplayName()))
+                .addClosingAction(FileEditorLocalize.unsavedFilesTargetDisconnectedReconnect(), () -> target.connect())
+                .whenExpired(() -> myOfflineNotifications.remove(target.getId()))
+                .create();
+            myOfflineNotifications.put(target.getId(), notification);
+            notification.notify(ProjectLocator.getInstance().guessProjectForFile(file));
+        }
+    }
+
+    /**
+     * The machine is connected again - the documents kept for it are saved now. A file changed there meanwhile is
+     * refreshed first, and its conflict with the document is resolved by the user, as for any file changed on disk.
+     */
+    @RequiredUIAccess
+    private void saveOfflineDocuments(PlatformTarget target) {
+        Notification notification = myOfflineNotifications.remove(target.getId());
+        if (notification != null) {
+            notification.expire();
+        }
+
+        for (Document document : new ArrayList<>(myOfflineDocuments)) {
+            VirtualFile file = getFile(document);
+            PlatformTarget documentTarget = file == null ? null : findTarget(file);
+            if (documentTarget != null && !documentTarget.getId().equals(target.getId())) {
+                continue;
+            }
+            myOfflineDocuments.remove(document);
+            saveDocument(document);
+        }
+    }
+
+    /**
+     * The target of the machine the file is on - the root of a file of another machine is named by the id of its target.
+     */
+    private static @Nullable PlatformTarget findTarget(VirtualFile file) {
+        if (!(file.getFileSystem() instanceof NewVirtualFileSystem fileSystem) || fileSystem instanceof LocalFileSystem) {
+            return null;
+        }
+        String rootPath = fileSystem.extractRootPath(file.getPath());
+        return Application.get().getInstance(PlatformTargetManager.class).findTarget(rootPath);
     }
 
     private void doSaveDocument(Document document, boolean isExplicit) throws IOException, SaveVetoException {
@@ -485,6 +583,10 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
         try {
             saveNeeded = isSaveNeeded(document, file);
         }
+        catch (FileSystemUnavailableException e) {
+            // the content on the machine of the file is unknown now - the document stays unsaved
+            throw e;
+        }
         catch (IOException e) {
             // in case of corrupted VFS try to stay consistent
             ioException = e;
@@ -533,6 +635,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     private void removeFromUnsaved(Document document) {
         myUnsavedDocuments.remove(document);
+        myOfflineDocuments.remove(document);
         fireUnsavedDocumentsDropped();
         LOG.assertTrue(!myUnsavedDocuments.contains(document));
     }

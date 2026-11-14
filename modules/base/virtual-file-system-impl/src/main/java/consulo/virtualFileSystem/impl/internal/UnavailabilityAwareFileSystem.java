@@ -2,6 +2,7 @@
 package consulo.virtualFileSystem.impl.internal;
 
 import consulo.util.io.FileAttributes;
+import consulo.virtualFileSystem.FileSystemUnavailableException;
 import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;

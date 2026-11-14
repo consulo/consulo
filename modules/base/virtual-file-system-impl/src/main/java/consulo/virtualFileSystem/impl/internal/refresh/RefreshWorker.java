@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.impl.internal.BatchingFileSystem;
-import consulo.virtualFileSystem.impl.internal.FileSystemUnavailableException;
+import consulo.virtualFileSystem.FileSystemUnavailableException;
 import consulo.virtualFileSystem.impl.internal.UnavailabilityAwareFileSystem;
 import consulo.virtualFileSystem.impl.internal.entry.ChildInfoImpl;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualDirectoryImpl;

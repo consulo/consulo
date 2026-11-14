@@ -681,11 +681,17 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
 
                 Application.get().assertWriteAccessAllowed();
 
+                NewVirtualFileSystem delegate = getDelegate(file);
+                if (delegate instanceof UnavailabilityAwareFileSystem unavailabilityAware) {
+                    // nothing is written while the environment of the file is not connected - neither the cached content nor
+                    // the stamp may claim a write which did not happen, or the next refresh would reload the old content
+                    unavailabilityAware.getAttributesOrThrowIfUnavailable(file);
+                }
+
                 VFileContentChangeEvent event = new VFileContentChangeEvent(requestor, file, file.getModificationStamp(), modStamp, false);
                 List<VFileContentChangeEvent> events = Collections.singletonList(event);
                 fireBeforeEvents(events);
 
-                NewVirtualFileSystem delegate = getDelegate(file);
                 // FSRecords.ContentOutputStream already buffered, no need to wrap in BufferedStream
                 try (OutputStream persistenceStream = writeContent(file, delegate.isReadOnly())) {
                     persistenceStream.write(buf, 0, count);

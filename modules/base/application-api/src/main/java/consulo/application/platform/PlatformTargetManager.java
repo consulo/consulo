@@ -48,6 +48,11 @@ public interface PlatformTargetManager {
     Platform getPlatform(@Nullable String id);
 
     /**
+     * Whether the files of the platform are readable and writable now - false for the platform of a target which is not connected.
+     */
+    boolean isReachable(Platform platform);
+
+    /**
      * The reachable target whose file system the path belongs to - how a path chosen on some machine names it.
      */
     @Nullable PlatformTarget findTargetOf(Path path);

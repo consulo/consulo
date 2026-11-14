@@ -106,3 +106,11 @@ large.file.editor.words.action.mnemonic.text:
     text: W&ords
 message.warning.about.regex.search.limitations:
     text: Regex search can''t find matches with length longer then {0} Kb
+notification.group.unsaved.files.target.disconnected:
+    text: Unsaved files of disconnected machines
+unsaved.files.target.disconnected.content:
+    text: '{0} is not connected. The changes are kept and saved when it is connected again.'
+unsaved.files.target.disconnected.reconnect:
+    text: Reconnect
+unsaved.files.target.disconnected.title:
+    text: Cannot save files on {0}

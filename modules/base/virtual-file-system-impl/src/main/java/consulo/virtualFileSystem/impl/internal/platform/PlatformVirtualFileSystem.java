@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.RefreshableFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.impl.internal.BatchingFileSystem;
-import consulo.virtualFileSystem.impl.internal.FileSystemUnavailableException;
+import consulo.virtualFileSystem.FileSystemUnavailableException;
 import consulo.virtualFileSystem.impl.internal.UnavailabilityAwareFileSystem;
 import consulo.virtualFileSystem.impl.internal.watcher.WatchedFileSystem;
 import consulo.virtualFileSystem.internal.FakeVirtualFile;

@@ -308,6 +308,10 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
         if (application.isDoNotSave()) {
             return Coroutine.empty();
         }
+        if (!application.getInstance(PlatformTargetManager.class).isReachable(getPlatform())) {
+            // the machine of the project is not connected - the changed settings are saved once it is connected again
+            return Coroutine.empty();
+        }
 
         return createSaveChain()
             .then(CodeExecution.<Object, Object>apply(input -> {
