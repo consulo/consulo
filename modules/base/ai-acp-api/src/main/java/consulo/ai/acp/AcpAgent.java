@@ -48,6 +48,7 @@ import consulo.ai.AIUsage;
 import consulo.ai.acp.localize.AcpLocalize;
 import consulo.application.Application;
 import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandlerBuilderFactory;
 import consulo.process.cmd.GeneralCommandLine;
@@ -111,6 +112,11 @@ public final class AcpAgent {
      * A turn the agent sent nothing for this long is given up.
      */
     private static final long TURN_IDLE_FAIL_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(15);
+    /**
+     * The most output a terminal keeps when the agent sets no limit.
+     */
+    private static final int TERMINAL_OUTPUT_LIMIT = 1_000_000;
+    private static final long TERMINAL_REFRESH_MILLIS = 250;
 
     private static final class Turn {
         final @Nullable AIStreamListener myListener;
@@ -188,8 +194,17 @@ public final class AcpAgent {
      */
     private final Map<String, List<AIChatSessionListener>> mySessionListeners = new ConcurrentHashMap<>();
 
-    private AcpAgent(AcpConnection connection, JsonObject initialized) {
+    /**
+     * The terminals the agent made - kept after they are released, so a tool call showing one keeps its output.
+     */
+    private final Map<String, AcpTerminal> myTerminals = new ConcurrentHashMap<>();
+    private final Set<String> myTerminalRefreshes = ConcurrentHashMap.newKeySet();
+    private final AtomicInteger myNextTerminalId = new AtomicInteger();
+    private final ProcessHandlerBuilderFactory myProcessFactory;
+
+    private AcpAgent(AcpConnection connection, JsonObject initialized, ProcessHandlerBuilderFactory processFactory) {
         myConnection = connection;
+        myProcessFactory = processFactory;
         JsonObject capabilities = object(initialized, "agentCapabilities");
         myCapabilities = capabilities == null ? new JsonObject() : capabilities;
 
@@ -214,6 +229,11 @@ public final class AcpAgent {
         connection.onRequest("session/request_permission", this::onPermission);
         connection.onRequest("fs/read_text_file", this::onReadTextFile);
         connection.onRequest("fs/write_text_file", this::onWriteTextFile);
+        connection.onRequest("terminal/create", this::onTerminalCreate);
+        connection.onRequest("terminal/output", this::onTerminalOutput);
+        connection.onRequest("terminal/wait_for_exit", this::onTerminalWaitForExit);
+        connection.onRequest("terminal/kill", this::onTerminalKill);
+        connection.onRequest("terminal/release", this::onTerminalRelease);
     }
 
     /**
@@ -243,7 +263,8 @@ public final class AcpAgent {
         fs.addProperty("writeTextFile", true);
         JsonObject clientCapabilities = new JsonObject();
         clientCapabilities.add("fs", fs);
-        clientCapabilities.addProperty("terminal", false);
+        // commands of the agent run in processes of the IDE, their output shows in the tool calls
+        clientCapabilities.addProperty("terminal", true);
         if (capabilitiesMeta != null) {
             clientCapabilities.add("_meta", capabilitiesMeta);
         }
@@ -261,7 +282,7 @@ public final class AcpAgent {
         // the handlers of the agent are registered before any session update can come
         return connection.request("initialize", params).thenApply(result -> {
             JsonObject initialized = result.isJsonObject() ? result.getAsJsonObject() : new JsonObject();
-            return new AcpAgent(connection, initialized);
+            return new AcpAgent(connection, initialized, factory);
         }).whenComplete((agent, error) -> {
             if (error != null) {
                 connection.close();
@@ -980,7 +1001,7 @@ public final class AcpAgent {
             case "tool_call", "tool_call_update" -> {
                 AIContent.ToolCall toolCall;
                 synchronized (turn) {
-                    toolCall = toolCall(turn.myToolCalls.get(string(update, "toolCallId")), update);
+                    toolCall = withTerminals(toolCall(turn.myToolCalls.get(string(update, "toolCallId")), update));
                     turn.myToolCalls.put(toolCall.id(), toolCall);
                 }
                 turn.toolCallChanged(toolCall);
@@ -1167,6 +1188,174 @@ public final class AcpAgent {
             ));
         }
         return AIAgentFileSystem.getInstance().writeText(path, string(params, "content")).thenApply(ignored -> JsonNull.INSTANCE);
+    }
+
+    private CompletableFuture<JsonElement> onTerminalCreate(JsonObject params) {
+        String sessionId = string(params, "sessionId");
+        String command = string(params, "command");
+        List<String> args = new ArrayList<>();
+        JsonElement argsElement = params.get("args");
+        if (argsElement != null && argsElement.isJsonArray()) {
+            for (JsonElement arg : argsElement.getAsJsonArray()) {
+                args.add(arg.getAsString());
+            }
+        }
+        GeneralCommandLine commandLine;
+        if (args.isEmpty()) {
+            // a command without arguments is a line for the shell - pipes, redirections and all
+            commandLine = Platform.current().os().isWindows()
+                ? new GeneralCommandLine("cmd.exe", "/c", command)
+                : new GeneralCommandLine("/bin/sh", "-c", command);
+        }
+        else {
+            commandLine = new GeneralCommandLine(command).withParameters(args);
+        }
+        String cwd = string(params, "cwd");
+        Path directory = cwd.isEmpty() ? myDirectories.get(sessionId) : Path.of(cwd);
+        if (directory != null) {
+            commandLine.withWorkDirectory(directory.toString());
+        }
+        JsonElement env = params.get("env");
+        if (env != null && env.isJsonArray()) {
+            Map<String, String> variables = new LinkedHashMap<>();
+            for (JsonElement variable : env.getAsJsonArray()) {
+                if (variable.isJsonObject()) {
+                    variables.put(string(variable.getAsJsonObject(), "name"), string(variable.getAsJsonObject(), "value"));
+                }
+            }
+            commandLine.withEnvironment(variables);
+        }
+        JsonElement limitElement = params.get("outputByteLimit");
+        int limit = limitElement == null || limitElement.isJsonNull() ? TERMINAL_OUTPUT_LIMIT : limitElement.getAsInt();
+
+        String terminalId = "consulo-terminal-" + myNextTerminalId.incrementAndGet();
+        try {
+            myTerminals.put(terminalId, AcpTerminal.start(myProcessFactory, sessionId, commandLine, limit, () -> scheduleTerminalRefresh(terminalId)));
+        }
+        catch (ExecutionException e) {
+            return CompletableFuture.failedFuture(new AcpConnection.AcpException(AcpConnection.INVALID_PARAMS, String.valueOf(e.getMessage())));
+        }
+        JsonObject result = new JsonObject();
+        result.addProperty("terminalId", terminalId);
+        return CompletableFuture.completedFuture(result);
+    }
+
+    private CompletableFuture<JsonElement> onTerminalOutput(JsonObject params) {
+        AcpTerminal terminal = myTerminals.get(string(params, "terminalId"));
+        if (terminal == null) {
+            return unknownTerminal(params);
+        }
+        JsonObject result = new JsonObject();
+        result.addProperty("output", terminal.getOutput());
+        result.addProperty("truncated", terminal.isTruncated());
+        Integer exitCode = terminal.getExitCode();
+        if (exitCode != null) {
+            result.add("exitStatus", exitStatus(exitCode));
+        }
+        return CompletableFuture.completedFuture(result);
+    }
+
+    private CompletableFuture<JsonElement> onTerminalWaitForExit(JsonObject params) {
+        AcpTerminal terminal = myTerminals.get(string(params, "terminalId"));
+        if (terminal == null) {
+            return unknownTerminal(params);
+        }
+        return terminal.whenExited().thenApply(AcpAgent::exitStatus);
+    }
+
+    private CompletableFuture<JsonElement> onTerminalKill(JsonObject params) {
+        AcpTerminal terminal = myTerminals.get(string(params, "terminalId"));
+        if (terminal == null) {
+            return unknownTerminal(params);
+        }
+        terminal.kill();
+        return CompletableFuture.completedFuture(new JsonObject());
+    }
+
+    /**
+     * The agent is done with the terminal - a command still running is stopped. The output stays for the tool calls
+     * which show it.
+     */
+    private CompletableFuture<JsonElement> onTerminalRelease(JsonObject params) {
+        AcpTerminal terminal = myTerminals.get(string(params, "terminalId"));
+        if (terminal != null) {
+            terminal.kill();
+        }
+        return CompletableFuture.completedFuture(new JsonObject());
+    }
+
+    private static CompletableFuture<JsonElement> unknownTerminal(JsonObject params) {
+        return CompletableFuture.failedFuture(new AcpConnection.AcpException(
+            AcpConnection.INVALID_PARAMS,
+            "Unknown terminal " + string(params, "terminalId")
+        ));
+    }
+
+    private static JsonElement exitStatus(int exitCode) {
+        JsonObject status = new JsonObject();
+        status.addProperty("exitCode", exitCode);
+        status.add("signal", JsonNull.INSTANCE);
+        return status;
+    }
+
+    /**
+     * Shows the output of a terminal in the tool calls holding it - at most every {@value #TERMINAL_REFRESH_MILLIS} ms
+     * while it prints.
+     */
+    private void scheduleTerminalRefresh(String terminalId) {
+        if (!myTerminalRefreshes.add(terminalId)) {
+            return;
+        }
+        CompletableFuture.delayedExecutor(TERMINAL_REFRESH_MILLIS, TimeUnit.MILLISECONDS).execute(() -> {
+            myTerminalRefreshes.remove(terminalId);
+            AcpTerminal terminal = myTerminals.get(terminalId);
+            if (terminal == null) {
+                return;
+            }
+            String sessionId = terminal.getSessionId();
+            Turn turn = myTurns.get(sessionId);
+            if (turn == null) {
+                return;
+            }
+            List<AIContent.ToolCall> showing = new ArrayList<>();
+            synchronized (turn) {
+                for (AIContent.ToolCall toolCall : turn.myToolCalls.values()) {
+                    if (toolCall.content().stream().anyMatch(part -> part instanceof AIToolCallContent.Terminal shown && shown.terminalId().equals(terminalId))) {
+                        showing.add(toolCall);
+                    }
+                }
+            }
+            for (AIContent.ToolCall toolCall : showing) {
+                reportToolCall(sessionId, withTerminals(toolCall));
+            }
+        });
+    }
+
+    /**
+     * The tool call with the output its terminals printed so far.
+     */
+    private AIContent.ToolCall withTerminals(AIContent.ToolCall toolCall) {
+        if (toolCall.content().stream().noneMatch(part -> part instanceof AIToolCallContent.Terminal)) {
+            return toolCall;
+        }
+        List<AIToolCallContent> content = new ArrayList<>();
+        for (AIToolCallContent part : toolCall.content()) {
+            AcpTerminal terminal = part instanceof AIToolCallContent.Terminal shown ? myTerminals.get(shown.terminalId()) : null;
+            content.add(terminal == null
+                ? part
+                : new AIToolCallContent.Terminal(((AIToolCallContent.Terminal) part).terminalId(), terminal.getOutput(), terminal.getExitCode()));
+        }
+        return new AIContent.ToolCall(
+            toolCall.id(),
+            toolCall.parentId(),
+            toolCall.title(),
+            toolCall.kind(),
+            toolCall.status(),
+            toolCall.locations(),
+            List.copyOf(content),
+            toolCall.inputJson(),
+            toolCall.outputJson()
+        );
     }
 
     /**
@@ -1356,7 +1545,7 @@ public final class AcpAgent {
                     }
                     result.add(new AIToolCallContent.Diff(string(content, "path"), oldText, newText));
                 }
-                case "terminal" -> result.add(new AIToolCallContent.Terminal(string(content, "terminalId")));
+                case "terminal" -> result.add(new AIToolCallContent.Terminal(string(content, "terminalId"), "", null));
                 default -> {
                 }
             }

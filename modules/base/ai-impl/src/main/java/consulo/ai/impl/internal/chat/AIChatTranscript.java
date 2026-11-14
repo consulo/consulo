@@ -136,6 +136,8 @@ final class AIChatTranscript {
             case AIToolCallContent.Terminal terminal -> {
                 object.addProperty("type", "terminal");
                 object.addProperty("terminalId", terminal.terminalId());
+                object.addProperty("output", terminal.output());
+                object.addProperty("exitCode", terminal.exitCode());
             }
             case AIToolCallContent.Image image -> {
                 object.addProperty("type", "image");
@@ -196,7 +198,14 @@ final class AIChatTranscript {
                 switch (string(part, "type")) {
                     case "text" -> content.add(new AIToolCallContent.Text(string(part, "text")));
                     case "diff" -> content.add(new AIToolCallContent.Diff(string(part, "path"), nullable(part, "oldText"), string(part, "newText")));
-                    case "terminal" -> content.add(new AIToolCallContent.Terminal(string(part, "terminalId")));
+                    case "terminal" -> {
+                        JsonElement exitCode = part.get("exitCode");
+                        content.add(new AIToolCallContent.Terminal(
+                            string(part, "terminalId"),
+                            string(part, "output"),
+                            exitCode == null || exitCode.isJsonNull() ? null : exitCode.getAsInt()
+                        ));
+                    }
                     case "image" -> content.add(new AIToolCallContent.Image(string(part, "mediaType"), Base64.getDecoder().decode(string(part, "data"))));
                     default -> {
                     }

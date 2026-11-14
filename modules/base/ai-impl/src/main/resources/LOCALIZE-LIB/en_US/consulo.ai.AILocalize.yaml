@@ -204,8 +204,6 @@ link.thinking:
     text: Thinking
 link.thinking.hide:
     text: Hide thinking
-label.terminal:
-    text: 'Terminal {0}'
 label.exit.code:
     text: 'Exit code {0}'
 label.plan:

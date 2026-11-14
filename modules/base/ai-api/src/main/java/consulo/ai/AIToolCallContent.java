@@ -43,8 +43,11 @@ public sealed interface AIToolCallContent {
     }
 
     /**
-     * The output of a terminal of the agent, which lives while the agent keeps it.
+     * A command the agent ran in a terminal of the client, with what it printed so far.
+     *
+     * @param output   the end of the output, as much as the agent asked to keep
+     * @param exitCode null while the command runs
      */
-    record Terminal(String terminalId) implements AIToolCallContent {
+    record Terminal(String terminalId, String output, @Nullable Integer exitCode) implements AIToolCallContent {
     }
 }

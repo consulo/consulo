@@ -232,7 +232,16 @@ final class AIChatToolCallView {
                     // the changes open in the diff viewer
                 }
                 case AIToolCallContent.Text text -> body.append(text.text()).append('\n');
-                case AIToolCallContent.Terminal terminal -> body.append(AILocalize.labelTerminal(terminal.terminalId()).get()).append('\n');
+                case AIToolCallContent.Terminal terminal -> {
+                    String output = terminal.output().strip();
+                    if (!output.isEmpty()) {
+                        body.append(fenced(output));
+                    }
+                    Integer exitCode = terminal.exitCode();
+                    if (exitCode != null && exitCode != 0) {
+                        body.append(AILocalize.labelExitCode(exitCode).get()).append('\n');
+                    }
+                }
                 case AIToolCallContent.Image image -> {
                     // shown as a picture under the text
                 }
