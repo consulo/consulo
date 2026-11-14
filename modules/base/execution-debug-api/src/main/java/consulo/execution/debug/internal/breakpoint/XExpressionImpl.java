@@ -62,6 +62,14 @@ public class XExpressionImpl implements XExpression {
         return myMode;
     }
 
+    public static XExpressionImpl changeLanguage(XExpression expression, @Nullable Language language) {
+        return new XExpressionImpl(expression.getExpression(), language, expression.getCustomInfo(), expression.getMode());
+    }
+
+    public static XExpressionImpl changeText(XExpression expression, String newExpression) {
+        return new XExpressionImpl(newExpression, expression.getLanguage(), expression.getCustomInfo(), expression.getMode());
+    }
+
     @Override
     public String toString() {
         return myExpression;

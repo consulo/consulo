@@ -4,7 +4,7 @@ package consulo.execution.debug.impl.internal.ui;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.internal.EditorMouseHoverPopupControl;
+import consulo.codeEditor.EditorMouseHoverPopupControl;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;

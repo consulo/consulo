@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  */
 public interface XCompositeNode extends Obsolescent {
     /**
-     * If node has more children than this constant it's recommended to stop adding children and call {@link #tooManyChildren(int)} method
+     * If node has more children than this constant it's recommended to stop adding children and call {@link #tooManyChildren(int, Runnable)} method
      */
     int MAX_CHILDREN_TO_SHOW = 100;
 
@@ -48,8 +48,23 @@ public interface XCompositeNode extends Obsolescent {
      *
      * @param remaining number of remaining children or <code>-1</code> if unknown
      * @see #MAX_CHILDREN_TO_SHOW
+     * @deprecated use {@link #tooManyChildren(int, Runnable)}
      */
+    @Deprecated
     void tooManyChildren(int remaining);
+
+    /**
+     * Add an ellipsis node ("...") indicating that the node has too many children.
+     * When the user double-clicks the node, the supplied Runnable is called to add the next batch of children.
+     *
+     * @param remaining       number of remaining children or {@code -1} if unknown. This number is used only in the UI.
+     * @param addNextChildren Runnable that is used to add the next batch of children.
+     *                        Note that it is called from the Event Dispatch thread so it should return quickly.
+     * @see #MAX_CHILDREN_TO_SHOW
+     */
+    default void tooManyChildren(int remaining, Runnable addNextChildren) {
+        tooManyChildren(remaining);
+    }
 
     /**
      * Use sort specified in data view settings (alreadySorted false, by default) or not

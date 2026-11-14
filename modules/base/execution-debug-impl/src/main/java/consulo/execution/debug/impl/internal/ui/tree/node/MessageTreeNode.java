@@ -99,7 +99,7 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   }
 
   @Override
-  protected @Nullable XDebuggerTreeNodeHyperlink getLink() {
+  public @Nullable XDebuggerTreeNodeHyperlink getLink() {
     return myLink;
   }
 
@@ -113,11 +113,17 @@ public class MessageTreeNode extends XDebuggerTreeNode {
   public void clearChildren() {
   }
 
-  public static MessageTreeNode createEllipsisNode(XDebuggerTree tree, XDebuggerTreeNode parent, int remaining) {
+  public static MessageTreeNode createEllipsisNode(XDebuggerTree tree, XDebuggerTreeNode parent, int remaining, Runnable onClick) {
     LocalizeValue message = remaining == -1
       ? XDebuggerLocalize.nodeTextEllipsis0UnknownMoreNodesDoubleClickToShow()
       : XDebuggerLocalize.nodeTextEllipsis0MoreNodesDoubleClickToShow(remaining);
-    return new MessageTreeNode(tree, parent, message, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, true, null);
+    XDebuggerTreeNodeHyperlink link = new XDebuggerTreeNodeHyperlink(message) {
+      @Override
+      public void onClick(MouseEvent event) {
+        onClick.run();
+      }
+    };
+    return new MessageTreeNode(tree, parent, message, SimpleTextAttributes.GRAYED_ATTRIBUTES, null, true, link);
   }
 
   public static MessageTreeNode createMessageNode(

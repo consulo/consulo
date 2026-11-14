@@ -15,79 +15,120 @@
  */
 package consulo.execution.debug.impl.internal.action;
 
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.logging.Logger;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * @author nik
  */
 public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandler {
+    private static final Logger LOG = Logger.getInstance(XDebuggerSmartStepIntoHandler.class);
 
-  @Override
-  protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
-    return super.isEnabled(session, dataContext) && session.getDebugProcess().getSmartStepIntoHandler() != null;
-  }
-
-  @Override
-  protected void perform(XDebugSession session, DataContext dataContext) {
-    XSmartStepIntoHandler<?> handler = session.getDebugProcess().getSmartStepIntoHandler();
-    XSourcePosition position = session.getTopFramePosition();
-    if (position == null || handler == null) return;
-
-    FileEditor editor = FileEditorManager.getInstance(session.getProject()).getSelectedEditor(position.getFile());
-    if (editor instanceof TextEditor) {
-      doSmartStepInto(handler, position, session, ((TextEditor)editor).getEditor());
-    }
-  }
-
-  private static <V extends XSmartStepIntoVariant> void doSmartStepInto(final XSmartStepIntoHandler<V> handler,
-                                                                        XSourcePosition position,
-                                                                        final XDebugSession session,
-                                                                        Editor editor) {
-    List<V> variants = handler.computeSmartStepVariants(position);
-    if (variants.isEmpty()) {
-      session.stepInto();
-      return;
-    }
-    else if (variants.size() == 1) {
-      session.smartStepInto(handler, variants.get(0));
-      return;
+    @Override
+    protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
+        return super.isEnabled(session, dataContext) && session.getDebugProcess().getSmartStepIntoHandler() != null;
     }
 
-    ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<V>(handler.getPopupTitle(position), variants) {
-      @Override
-      public Image getIconFor(V aValue) {
-        return aValue.getIcon();
-      }
+    @Override
+    @RequiredUIAccess
+    protected void perform(XDebugSession session, DataContext dataContext) {
+        XSmartStepIntoHandler<?> handler = session.getDebugProcess().getSmartStepIntoHandler();
+        XSourcePosition position = session.getTopFramePosition();
+        if (position != null && handler != null) {
+            FileEditor editor = FileEditorManager.getInstance(session.getProject()).getSelectedEditor(position.getFile());
+            if (editor instanceof TextEditor textEditor) {
+                doSmartStepInto(handler, position, session, textEditor.getEditor());
+                return;
+            }
+        }
+        session.stepInto();
+    }
 
-      
-      @Override
-      public String getTextFor(V value) {
-        return value.getText();
-      }
+    @RequiredUIAccess
+    private <V extends XSmartStepIntoVariant> void doSmartStepInto(XSmartStepIntoHandler<V> handler,
+                                                                   XSourcePosition position,
+                                                                   XDebugSession session,
+                                                                   Editor editor) {
+        UIAccess uiAccess = UIAccess.current();
+        computeVariants(handler, position).whenComplete((variants, throwable) -> uiAccess.giveIfNeed(() -> {
+            if (throwable != null) {
+                Throwable cause = throwable instanceof CompletionException && throwable.getCause() != null ? throwable.getCause() : throwable;
+                if (!(cause instanceof UnsupportedOperationException) && !(cause instanceof CancellationException)) {
+                    LOG.warn("Exception while computing smart step into variants, falling back to step into", cause);
+                }
+                session.stepInto();
+            }
+            else if (!handleSimpleCases(handler, variants, session)) {
+                choose(handler, variants, position, session, editor);
+            }
+        }));
+    }
 
-      @Override
-      public PopupStep onChosen(V selectedValue, boolean finalChoice) {
-        session.smartStepInto(handler, selectedValue);
-        return FINAL_CHOICE;
-      }
-    });
-    DebuggerUIImplUtil.showPopupForEditorLine(popup, editor, position.getLine());
-  }
+    protected <V extends XSmartStepIntoVariant> CompletableFuture<List<V>> computeVariants(XSmartStepIntoHandler<V> handler,
+                                                                                           XSourcePosition position) {
+        return handler.computeSmartStepVariantsAsync(position);
+    }
+
+    @RequiredUIAccess
+    protected <V extends XSmartStepIntoVariant> boolean handleSimpleCases(XSmartStepIntoHandler<V> handler,
+                                                                          List<? extends V> variants,
+                                                                          XDebugSession session) {
+        if (variants.isEmpty()) {
+            handler.stepIntoEmpty(session);
+            return true;
+        }
+        else if (variants.size() == 1) {
+            session.smartStepInto(handler, variants.get(0));
+            return true;
+        }
+        return false;
+    }
+
+    @RequiredUIAccess
+    private static <V extends XSmartStepIntoVariant> void choose(XSmartStepIntoHandler<V> handler,
+                                                                 List<? extends V> variants,
+                                                                 XSourcePosition position,
+                                                                 XDebugSession session,
+                                                                 Editor editor) {
+        ListPopup popup = JBPopupFactory.getInstance().createListPopup(new BaseListPopupStep<V>(handler.getPopupTitle(position), variants) {
+            @Override
+            public Image getIconFor(V aValue) {
+                return aValue.getIcon();
+            }
+
+            @Override
+            public String getTextFor(V value) {
+                return value.getText();
+            }
+
+            @Override
+            public PopupStep onChosen(V selectedValue, boolean finalChoice) {
+                session.smartStepInto(handler, selectedValue);
+                return FINAL_CHOICE;
+            }
+        });
+        DebuggerUIImplUtil.showPopupForEditorLine(popup, editor, position.getLine());
+    }
 }

@@ -170,6 +170,18 @@ public class XBreakpointUtil {
                                                                     @Nullable Editor editor,
                                                                     boolean temporary,
                                                                     boolean moveCaret) {
+        return toggleLineBreakpoint(project, position, editor, temporary, moveCaret, false);
+    }
+
+    /**
+     * @param selectVariantByPositionColumn choose the breakpoint variant by the caret position instead of by the variant priority
+     */
+    public static AsyncResult<XLineBreakpoint> toggleLineBreakpoint(Project project,
+                                                                    XSourcePosition position,
+                                                                    @Nullable Editor editor,
+                                                                    boolean temporary,
+                                                                    boolean moveCaret,
+                                                                    boolean selectVariantByPositionColumn) {
         int lineStart = position.getLine();
         VirtualFile file = position.getFile();
         // for folded text check each line and find out type with the biggest priority
@@ -214,7 +226,7 @@ public class XBreakpointUtil {
             XSourcePosition winPosition = (lineStart == lineWinner) ? position : XSourcePositionImpl.create(file, lineWinner);
             if (winPosition != null) {
                 AsyncResult<XLineBreakpoint> res =
-                    XDebuggerUtilImpl.toggleAndReturnLineBreakpoint(project, typeWinner, winPosition, temporary, editor);
+                    XDebuggerUtilImpl.toggleAndReturnLineBreakpoint(project, typeWinner, winPosition, temporary, editor, selectVariantByPositionColumn);
 
                 if (editor != null && lineStart != lineWinner) {
                     int offset = editor.getDocument().getLineStartOffset(lineWinner);

@@ -63,6 +63,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
@@ -125,11 +126,25 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
 
     
     public static <P extends XBreakpointProperties> AsyncResult<XLineBreakpoint> toggleAndReturnLineBreakpoint(
+        Project project,
+        XLineBreakpointType<P> type,
+        XSourcePosition position,
+        boolean temporary,
+        @Nullable Editor editor
+    ) {
+        return toggleAndReturnLineBreakpoint(project, type, position, temporary, editor, false);
+    }
+
+    /**
+     * @param selectVariantByPositionColumn choose the variant by the caret position (the toggle action) instead of by the priority (a gutter click)
+     */
+    public static <P extends XBreakpointProperties> AsyncResult<XLineBreakpoint> toggleAndReturnLineBreakpoint(
         final Project project,
         final XLineBreakpointType<P> type,
         XSourcePosition position,
         final boolean temporary,
-        final @Nullable Editor editor
+        final @Nullable Editor editor,
+        boolean selectVariantByPositionColumn
     ) {
         return WriteAction.compute(() -> {
             final VirtualFile file = position.getFile();
@@ -143,6 +158,15 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                 List<? extends XLineBreakpointType<P>.XLineBreakpointVariant> variants = type.computeVariants(project, position);
                 if (!variants.isEmpty() && editor != null) {
                     RelativePoint2D relativePoint = DebuggerUIImplUtil.getPositionForPopup(editor, line);
+                    if (variants.size() > 1 && relativePoint != null && !ContainerUtil.exists(variants, v -> v.isMultiVariant())) {
+                        // There is no "all" variant, every variant is an exact location on the line:
+                        // the variant is chosen without a popup - by the caret for the toggle action, by the priority for a click
+                        XLineBreakpointType<P>.XLineBreakpointVariant variant = selectVariantByPositionColumn
+                            ? getBestMatchingVariant(editor.getCaretModel().getOffset(), variants)
+                            : getHighestPriorityVariant(project, variants);
+                        P properties = variant.createProperties();
+                        return AsyncResult.done((XLineBreakpoint) breakpointManager.addLineBreakpoint(type, file.getUrl(), line, properties, temporary));
+                    }
                     if (variants.size() > 1 && relativePoint != null) {
                         final AsyncResult<XLineBreakpoint> res = new AsyncResult<>();
                         class MySelectionListener implements Consumer<Object> {
@@ -192,7 +216,7 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
                                 }
                             }
                         }
-                        final int defaultIndex = defaultVariant != null ? variants.indexOf(defaultVariant) : 0;
+                        final int defaultIndex = variants.indexOf(defaultVariant != null ? defaultVariant : getHighestPriorityVariant(project, variants));
 
                         final MySelectionListener selectionListener = new MySelectionListener();
                         BaseListPopupStep<XLineBreakpointType.XLineBreakpointVariant> step = new BaseListPopupStep<XLineBreakpointType.XLineBreakpointVariant>(
@@ -249,6 +273,45 @@ public class XDebuggerUtilImpl extends XDebuggerUtil {
             }
             return AsyncResult.<XLineBreakpoint>rejected();
         });
+    }
+
+    @RequiredReadAction
+    private static <V extends XLineBreakpointType<?>.XLineBreakpointVariant> V getHighestPriorityVariant(Project project, List<? extends V> variants) {
+        V best = variants.get(0);
+        int bestPriority = best.getPriority(project);
+        for (V variant : variants) {
+            int priority = variant.getPriority(project);
+            // the first one of the variants with the highest priority
+            if (priority > bestPriority) {
+                best = variant;
+                bestPriority = priority;
+            }
+        }
+        return best;
+    }
+
+    @RequiredReadAction
+    private static <V extends XLineBreakpointType<?>.XLineBreakpointVariant> V getBestMatchingVariant(int caretOffset, List<? extends V> variants) {
+        V bestVariant = null;
+        int bestDistance = Integer.MAX_VALUE;
+        int bestRangeLength = Integer.MAX_VALUE;
+        for (V variant : variants) {
+            TextRange range = variant.getHighlightRange();
+            int rangeLength = range != null ? range.getLength() : Integer.MAX_VALUE;
+            int distance;
+            if (range == null || range.containsOffset(caretOffset)) {
+                distance = 0;
+            }
+            else {
+                distance = Math.min(Math.abs(range.getStartOffset() - caretOffset), Math.abs(range.getEndOffset() - caretOffset));
+            }
+            if (bestVariant == null || distance < bestDistance || (distance == bestDistance && rangeLength < bestRangeLength)) {
+                bestVariant = variant;
+                bestDistance = distance;
+                bestRangeLength = rangeLength;
+            }
+        }
+        return Objects.requireNonNull(bestVariant);
     }
 
     public static <P extends XBreakpointProperties> XLineBreakpoint toggleAndReturnLineBreakpoint(

@@ -21,7 +21,9 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XSuspendContext;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Implement this class and return its instance from {@link XDebugProcess#getSmartStepIntoHandler()} to support
@@ -38,6 +40,23 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
   public abstract List<Variant> computeSmartStepVariants(XSourcePosition position);
 
   /**
+   * @param position current position
+   * @return list of function/method calls containing in the current line
+   */
+  public CompletableFuture<List<Variant>> computeSmartStepVariantsAsync(XSourcePosition position) {
+    return CompletableFuture.completedFuture(computeSmartStepVariants(position));
+  }
+
+  /**
+   * List of variants for the regular step into, if supported
+   * @param position current position
+   * @return list of function/method calls containing in the current line, a failed future if the regular step into must be performed
+   */
+  public CompletableFuture<List<Variant>> computeStepIntoVariants(XSourcePosition position) {
+    return CompletableFuture.failedFuture(new UnsupportedOperationException());
+  }
+
+  /**
    * Resume execution and call {@link XDebugSession#positionReached(XSuspendContext)}
    * when {@code variant} function/method is reached
    * @param variant selected variant
@@ -48,6 +67,13 @@ public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVarian
 
   public void startStepInto(Variant variant, @Nullable XSuspendContext context) {
     startStepInto(variant);
+  }
+
+  /**
+   * Action if no variants detected, defaults to step into
+   */
+  public void stepIntoEmpty(XDebugSession session) {
+    session.stepInto();
   }
 
   /**

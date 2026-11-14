@@ -187,7 +187,7 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
         new DoubleClickListener() {
             @Override
             protected boolean onDoubleClick(MouseEvent e) {
-                return expandIfEllipsis();
+                return expandIfEllipsis(e);
             }
         }.installOn(this);
 
@@ -196,7 +196,7 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
                 if (key == KeyEvent.VK_ENTER || key == KeyEvent.VK_SPACE || key == KeyEvent.VK_RIGHT) {
-                    expandIfEllipsis();
+                    expandIfEllipsis(dummyMouseClickEvent());
                 }
             }
         });
@@ -236,14 +236,18 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
         return false;
     }
 
-    private boolean expandIfEllipsis() {
+    private MouseEvent dummyMouseClickEvent() {
+        return new MouseEvent(this, 0, 0, 0, 0, 0, 1, false);
+    }
+
+    private boolean expandIfEllipsis(MouseEvent e) {
         MessageTreeNode[] treeNodes = getSelectedNodes(MessageTreeNode.class, null);
         if (treeNodes.length == 1) {
             MessageTreeNode node = treeNodes[0];
             if (node.isEllipsis()) {
-                TreeNode parent = node.getParent();
-                if (parent instanceof XValueContainerNode) {
-                    ((XValueContainerNode) parent).startComputingChildren();
+                XDebuggerTreeNodeHyperlink link = node.getLink();
+                if (link != null) {
+                    link.onClick(e);
                     return true;
                 }
             }
@@ -376,10 +380,17 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
         return context.getData(XDEBUGGER_TREE_KEY);
     }
 
-    public void selectNodeOnLoad(final Predicate<TreeNode> nodeFilter) {
+    public void selectNodeOnLoad(Predicate<TreeNode> nodeFilter) {
+        selectNodeOnLoad(nodeFilter, node -> false);
+    }
+
+    public void selectNodeOnLoad(Predicate<TreeNode> nodeFilter, Predicate<TreeNode> obsoleteChecker) {
         addTreeListener(new XDebuggerTreeListener() {
             @Override
             public void nodeLoaded(RestorableStateNode node, LocalizeValue name) {
+                if (obsoleteChecker.test(node)) {
+                    removeTreeListener(this);
+                }
                 if (nodeFilter.test(node)) {
                     setSelectionPath(node.getPath());
                     removeTreeListener(this); // remove the listener on first match

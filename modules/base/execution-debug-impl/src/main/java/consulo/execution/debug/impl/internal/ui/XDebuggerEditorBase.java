@@ -27,6 +27,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.execution.debug.XDebuggerHistoryManager;
+import consulo.execution.debug.XDebuggerUtil;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.evaluation.EvaluationMode;
@@ -192,7 +193,12 @@ public abstract class XDebuggerEditorBase {
     public void setSourcePosition(@Nullable XSourcePosition sourcePosition) {
         if (mySourcePosition != sourcePosition) {
             mySourcePosition = sourcePosition;
-            setExpression(getExpression());
+            XExpression expression = getExpression();
+            // for empty expression we reset the language from the source position
+            if (XDebuggerUtil.getInstance().isEmptyExpression(expression) && expression.getLanguage() != null) {
+                expression = XExpressionImpl.changeLanguage(expression, null);
+            }
+            setExpression(expression);
         }
     }
 

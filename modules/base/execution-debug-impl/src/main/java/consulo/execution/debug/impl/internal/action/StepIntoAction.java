@@ -16,12 +16,9 @@
 package consulo.execution.debug.impl.internal.action;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.dataContext.DataContext;
-import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
-import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
 
 /**
@@ -29,12 +26,7 @@ import consulo.execution.debug.localize.XDebuggerLocalize;
  */
 @ActionImpl(id = XDebuggerActions.STEP_INTO)
 public class StepIntoAction extends XDebuggerActionBase {
-    private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
-        @Override
-        protected void perform(XDebugSession session, DataContext dataContext) {
-            session.stepInto();
-        }
-    };
+    private final DebuggerActionHandler myHandler = new XDebuggerStepIntoHandler();
 
     public StepIntoAction() {
         super(

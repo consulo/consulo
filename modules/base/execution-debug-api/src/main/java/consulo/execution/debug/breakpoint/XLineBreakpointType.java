@@ -139,7 +139,28 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     @RequiredReadAction
     public abstract @Nullable TextRange getHighlightRange();
 
+    /**
+     * The priority is considered when several breakpoint variants can be set on the same line,
+     * in this case we choose the variant with the highest priority.
+     */
+    @RequiredReadAction
+    public int getPriority(Project project) {
+      return getType().getPriority();
+    }
+
+    /**
+     * @return true if this variant corresponds to breakpoint hitting at all line locations
+     *         (i.e., "all", "line and all lambdas")
+     */
+    public boolean isMultiVariant() {
+      return false;
+    }
+
     public abstract @Nullable P createProperties();
+
+    public final XLineBreakpointType<P> getType() {
+      return XLineBreakpointType.this;
+    }
   }
 
   public class XLineBreakpointAllVariant extends XLineBreakpointVariant {
@@ -165,6 +186,12 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     @Override
     public @Nullable TextRange getHighlightRange() {
       return null;
+    }
+
+    @Override
+    public boolean isMultiVariant() {
+      // Historically, base class for all variants was "all" variant.
+      return true;
     }
 
     @Override
@@ -199,6 +226,11 @@ public abstract class XLineBreakpointType<P extends XBreakpointProperties> exten
     @Override
     public TextRange getHighlightRange() {
       return myElement.getTextRange();
+    }
+
+    @Override
+    public boolean isMultiVariant() {
+      return false;
     }
   }
 }

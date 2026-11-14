@@ -15,8 +15,8 @@
  */
 package consulo.execution.debug.step;
 
+import consulo.document.util.TextRange;
 import consulo.ui.image.Image;
-
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -28,5 +28,12 @@ public abstract class XSmartStepIntoVariant {
   }
 
   public abstract String getText();
+
+  /**
+   * Returns a range to highlight in the editor when this variant is selected.
+   */
+  public @Nullable TextRange getHighlightRange() {
+    return null;
+  }
 
 }
