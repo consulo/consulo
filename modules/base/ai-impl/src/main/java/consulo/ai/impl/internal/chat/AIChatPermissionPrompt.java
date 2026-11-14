@@ -30,6 +30,8 @@ import consulo.ui.Button;
 import consulo.ui.ButtonStyle;
 import consulo.ui.Hyperlink;
 import consulo.ui.Label;
+import consulo.ui.OptionButton;
+import consulo.ui.OptionButtonItem;
 import consulo.ui.Space;
 import consulo.ui.TextArea;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -38,7 +40,10 @@ import consulo.ui.layout.FlowLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.LayoutStyle;
 import consulo.ui.layout.VerticalLayout;
+import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -127,30 +132,60 @@ final class AIChatPermissionPrompt extends AIChatPrompt<AIToolPermissionDecision
         FlowLayout buttons = FlowLayout.create(Space.SMALL);
         buttons.addStyle(LayoutStyle.TRANSPARENT_BACKGROUND);
         if (request.options().isEmpty()) {
-            Button allow = Button.create(AILocalize.buttonAllow(), event -> result.complete(AIToolPermissionDecision.allow()));
+            OptionButton allow = OptionButton.create(AILocalize.buttonAllow(), event -> result.complete(AIToolPermissionDecision.allow()));
             allow.addStyle(ButtonStyle.PRIMARY);
+            allow.setOptions(List.of(OptionButtonItem.of(AILocalize.buttonAllowAlways(),
+                event -> result.complete(AIToolPermissionDecision.allowAlways()))));
             buttons.add(allow);
-            buttons.add(Button.create(AILocalize.buttonAllowAlways(), event -> result.complete(AIToolPermissionDecision.allowAlways())));
             buttons.add(Button.create(
                 AILocalize.buttonDeny(),
                 event -> result.complete(AIToolPermissionDecision.deny(AILocalize.messagePermissionDenied().get()))
             ));
         }
         else {
-            boolean primary = false;
+            // the answers of an agent come as a few buttons - the main one of each side, the rest in its drop-down
+            List<AIToolPermissionOption> allows = new ArrayList<>();
+            List<AIToolPermissionOption> others = new ArrayList<>();
             for (AIToolPermissionOption option : request.options()) {
-                Button button = Button.create(LocalizeValue.of(option.name()), event -> result.complete(AIToolPermissionDecision.option(option)));
-                if (!primary && option.kind() == AIToolPermissionOptionKind.ALLOW_ONCE) {
-                    button.addStyle(ButtonStyle.PRIMARY);
-                    primary = true;
-                }
-                buttons.add(button);
+                (option.kind().isAllow() ? allows : others).add(option);
+            }
+            allows.sort(Comparator.comparing(option -> option.kind() != AIToolPermissionOptionKind.ALLOW_ONCE));
+            others.sort(Comparator.comparing(option -> option.kind() != AIToolPermissionOptionKind.REJECT_ONCE));
+            Button allow = group(allows, result);
+            if (allow != null) {
+                allow.addStyle(ButtonStyle.PRIMARY);
+                buttons.add(allow);
+            }
+            Button reject = group(others, result);
+            if (reject != null) {
+                buttons.add(reject);
             }
         }
         Hyperlink everything = Hyperlink.create(AILocalize.linkPermissionRunEverything(), event -> runEverything.run());
         everything.setToolTipText(AILocalize.linkPermissionRunEverythingTooltip());
         buttons.add(everything);
         myRoot.add(buttons);
+    }
+
+    /**
+     * The first answer as a button - with the others in its drop-down when there are more.
+     */
+    @RequiredUIAccess
+    private static @Nullable Button group(List<AIToolPermissionOption> options, CompletableFuture<AIToolPermissionDecision> result) {
+        if (options.isEmpty()) {
+            return null;
+        }
+        AIToolPermissionOption main = options.getFirst();
+        if (options.size() == 1) {
+            return Button.create(LocalizeValue.of(main.name()), event -> result.complete(AIToolPermissionDecision.option(main)));
+        }
+        OptionButton button = OptionButton.create(LocalizeValue.of(main.name()), event -> result.complete(AIToolPermissionDecision.option(main)));
+        List<OptionButtonItem> items = new ArrayList<>();
+        for (AIToolPermissionOption option : options.subList(1, options.size())) {
+            items.add(OptionButtonItem.of(LocalizeValue.of(option.name()), event -> result.complete(AIToolPermissionDecision.option(option))));
+        }
+        button.setOptions(items);
+        return button;
     }
 
     private static String pretty(String json) {
