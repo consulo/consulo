@@ -15,6 +15,8 @@
  */
 package consulo.ai.editor.impl.internal;
 
+import consulo.ai.editor.impl.internal.plan.AIPlanReviewManager;
+import consulo.ai.editor.impl.internal.plan.CommentOnPlanAction;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
@@ -22,6 +24,8 @@ import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.toolbar.floating.CodeFloatingToolbarConfiguration;
 import consulo.codeEditor.toolbar.floating.CodeFloatingToolbarProvider;
 import consulo.codeEditor.toolbar.floating.CodeFloatingToolbarSelection;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -35,14 +39,21 @@ import java.util.List;
  */
 @ExtensionImpl(order = "last")
 public class AICodeFloatingToolbarProvider implements CodeFloatingToolbarProvider {
+    private static final List<String> PLAN_ACTIONS = List.of(CommentOnPlanAction.ID, AddSelectionToAIChatAction.ID);
     private static final List<String> ACTIONS = List.of(AddSelectionToAIChatAction.ID, CommentForAIFieldAction.ID);
 
     @RequiredReadAction
     @Override
     public @Nullable CodeFloatingToolbarConfiguration getConfiguration(Editor editor, CodeFloatingToolbarSelection selection) {
-        if (!selection.hasSelection() || editor.getProject() == null || editor.getEditorKind() != EditorKind.MAIN_EDITOR
-            || editor.isViewer() || editor.isOneLineMode() || editor.getVirtualFile() == null) {
+        Project project = editor.getProject();
+        VirtualFile file = editor.getVirtualFile();
+        if (!selection.hasSelection() || project == null || file == null || editor.getEditorKind() != EditorKind.MAIN_EDITOR
+            || editor.isViewer() || editor.isOneLineMode()) {
             return null;
+        }
+        // the selected lines of a plan take a review comment - the plan goes back to the agent with the comments
+        if (AIPlanReviewManager.getInstance(project).isPlan(file)) {
+            return new CodeFloatingToolbarConfiguration(PLAN_ACTIONS, true);
         }
         return new CodeFloatingToolbarConfiguration(ACTIONS, true);
     }

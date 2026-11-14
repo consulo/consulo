@@ -25,6 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.EditorNotifications;
 import consulo.project.Project;
 import consulo.review.editor.CodeReviewEditorRenderer;
+import consulo.review.editor.CodeReviewLineRange;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
@@ -53,7 +54,7 @@ public class AIPlanReviewManager implements Disposable {
         myProject = project;
     }
 
-    static AIPlanReviewManager getInstance(Project project) {
+    public static AIPlanReviewManager getInstance(Project project) {
         return project.getInstance(AIPlanReviewManager.class);
     }
 
@@ -61,7 +62,7 @@ public class AIPlanReviewManager implements Disposable {
         return file.isInLocalFileSystem() ? Path.of(file.getPath()) : null;
     }
 
-    boolean isPlan(VirtualFile file) {
+    public boolean isPlan(VirtualFile file) {
         Path path = pathOf(file);
         return path != null && AIChatContextManager.getInstance(myProject).isPlan(path);
     }
@@ -78,6 +79,21 @@ public class AIPlanReviewManager implements Disposable {
             return created;
         });
         myProject.getApplication().getInstance(CodeReviewEditorRenderer.class).setupIn(editorDisposable, editor, model);
+    }
+
+    /**
+     * Opens the input of a new comment on the lines - the ones a selection spans.
+     */
+    @RequiredUIAccess
+    void requestComment(VirtualFile file, CodeReviewLineRange lines) {
+        AIPlanReviewModel model = myModels.get(file);
+        if (model != null) {
+            model.requestNewComment(lines);
+        }
+    }
+
+    boolean hasReview(VirtualFile file) {
+        return myModels.containsKey(file);
     }
 
     int getDraftCount(VirtualFile file) {

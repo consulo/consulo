@@ -48,3 +48,7 @@ prompt.plan.feedback.lines:
     text: 'Lines {0}-{1} ("{2}"):'
 prompt.plan.feedback.line:
     text: 'Line {0} ("{1}"):'
+action.comment.on.plan.text:
+    text: Comment on Plan
+action.comment.on.plan.description:
+    text: Write a review comment on the selected lines of the plan - it goes back to the agent with the other comments
