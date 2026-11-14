@@ -8,6 +8,7 @@ import consulo.execution.configuration.fragment.EnvironmentFragmentState;
 import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
+import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentId;
 import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentOrder;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.execution.ui.awt.EnvironmentVariablesTextFieldWithBrowseButton;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class EnvironmentRunConfigurationFragment implements RunConfigurationFragment<RunConfiguration> {
     @Override
     public String getId() {
-        return "environment";
+        return StandardRunConfigurationFragmentId.ENVIRONMENT;
     }
 
     @Override

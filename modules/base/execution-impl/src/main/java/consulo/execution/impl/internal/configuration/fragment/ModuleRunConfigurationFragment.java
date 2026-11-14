@@ -9,6 +9,7 @@ import consulo.execution.configuration.fragment.ModuleFragmentState;
 import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
+import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentId;
 import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentOrder;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
@@ -32,7 +33,7 @@ import java.util.List;
 public class ModuleRunConfigurationFragment implements RunConfigurationFragment<RunConfiguration> {
     @Override
     public String getId() {
-        return "module";
+        return StandardRunConfigurationFragmentId.MODULE;
     }
 
     @Override
@@ -99,6 +100,12 @@ public class ModuleRunConfigurationFragment implements RunConfigurationFragment<
             @Override
             public void apply(RunConfiguration target) {
                 ((ModuleBasedConfiguration<?>) target).setModule(box.getValue());
+            }
+
+            @RequiredUIAccess
+            @Override
+            public void setEnabled(boolean enabled) {
+                box.setEnabled(enabled);
             }
         };
     }

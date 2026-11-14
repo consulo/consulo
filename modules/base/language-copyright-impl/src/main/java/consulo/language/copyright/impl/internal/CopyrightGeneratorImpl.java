@@ -16,18 +16,21 @@
 package consulo.language.copyright.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.language.copyright.impl.internal.pattern.DateInfo;
-import consulo.language.copyright.impl.internal.pattern.FileInfo;
 import consulo.language.copyright.impl.internal.pattern.ModuleInfo;
 import consulo.language.copyright.impl.internal.pattern.ProjectInfo;
 import consulo.language.copyright.internal.CopyrightGenerator;
+import consulo.language.copyright.pattern.CopyrightVariablesProvider;
+import consulo.language.copyright.pattern.DateInfo;
+import consulo.language.copyright.pattern.FileInfo;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -37,6 +40,8 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -89,6 +94,20 @@ public class CopyrightGeneratorImpl implements CopyrightGenerator {
     vc.put("project", new ProjectInfo(myProject));
     if (module != null) vc.put("module", new ModuleInfo(module));
     vc.put("username", Platform.current().user().name());
+
+    if (file != null) {
+      VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
+      if (virtualFile != null) {
+        CopyrightVariablesProvider variablesProvider = CopyrightVariablesProvider.forFileType(virtualFile.getFileType());
+        if (variablesProvider != null) {
+          Map<String, Object> context = new HashMap<>();
+          variablesProvider.collectVariables(context, myProject, module, file);
+          for (Map.Entry<String, Object> entry : context.entrySet()) {
+            vc.put(entry.getKey(), entry.getValue());
+          }
+        }
+      }
+    }
 
     StringWriter sw = new StringWriter();
     boolean stripLineBreak = false;

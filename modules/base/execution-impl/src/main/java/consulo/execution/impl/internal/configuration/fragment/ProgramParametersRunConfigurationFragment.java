@@ -8,6 +8,7 @@ import consulo.execution.configuration.fragment.ProgramParametersFragmentState;
 import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
+import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentId;
 import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentOrder;
 import consulo.execution.localize.ExecutionLocalize;
 import consulo.localize.LocalizeValue;
@@ -21,7 +22,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 public class ProgramParametersRunConfigurationFragment implements RunConfigurationFragment<RunConfiguration> {
     @Override
     public String getId() {
-        return "programParameters";
+        return StandardRunConfigurationFragmentId.PROGRAM_PARAMETERS;
     }
 
     @Override

@@ -206,6 +206,11 @@ public class RunConfigurationBeforeRunFragment implements BeforeRunFragment<RunC
         }
         ExecutionEnvironment environment = new ExecutionEnvironment(executor, runner, settings, myProject);
         environment.setExecutionId(env.getExecutionId());
+        env.copyUserDataTo(environment);
+        RunnerAndConfigurationSettings mainSettings = env.getRunnerAndConfigurationSettings();
+        if (environment.getUserData(ExecutionEnvironment.MAIN_CONFIGURATION_ID) == null && mainSettings != null) {
+            environment.putUserData(ExecutionEnvironment.MAIN_CONFIGURATION_ID, mainSettings.getUniqueID());
+        }
         if (!ExecutionTargetManager.canRun(settings, env.getExecutionTarget()) || !runner.canRun(executorId, environment.getRunProfile())) {
             return CompletableFuture.failedFuture(new CancellationException());
         }

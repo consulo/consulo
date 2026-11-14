@@ -40,6 +40,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ExecutionEnvironment extends UserDataHolderBase implements Disposable {
     public static final Key<ExecutionEnvironment> KEY = Key.create("executionEnvironment");
 
+    /**
+     * The {@link RunnerAndConfigurationSettings#getUniqueID() unique id} of the run configuration whose launch started this environment:
+     * an environment of a run configuration run as a "Before launch" task of another one has the id of that other configuration.
+     */
+    public static final Key<String> MAIN_CONFIGURATION_ID = Key.create("RunWidgetMainRunConfigurationId");
+
     private static final AtomicLong myIdHolder = new AtomicLong(1L);
 
    

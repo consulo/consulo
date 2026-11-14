@@ -7,6 +7,7 @@ import consulo.execution.configuration.WorkingDirectoryAware;
 import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
+import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentId;
 import consulo.execution.configuration.fragment.StandardRunConfigurationFragmentOrder;
 import consulo.execution.configuration.fragment.WorkingDirectoryFragmentState;
 import consulo.execution.localize.ExecutionLocalize;
@@ -24,7 +25,7 @@ import consulo.util.io.PathUtil;
 public class WorkingDirectoryRunConfigurationFragment implements RunConfigurationFragment<RunConfiguration> {
     @Override
     public String getId() {
-        return "workingDirectory";
+        return StandardRunConfigurationFragmentId.WORKING_DIRECTORY;
     }
 
     @Override

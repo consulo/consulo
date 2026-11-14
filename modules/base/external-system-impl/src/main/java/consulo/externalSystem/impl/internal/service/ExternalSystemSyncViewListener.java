@@ -18,11 +18,16 @@ package consulo.externalSystem.impl.internal.service;
 import consulo.application.Application;
 import consulo.build.ui.DefaultBuildDescriptor;
 import consulo.build.ui.SyncViewManager;
+import consulo.build.ui.BuildNotificationsGroups;
 import consulo.build.ui.event.BuildEventFactory;
+import consulo.build.ui.event.Failure;
 import consulo.build.ui.event.FailureResult;
 import consulo.build.ui.event.FinishBuildEvent;
+import consulo.build.ui.issue.BuildIssue;
+import consulo.build.ui.issue.BuildIssueQuickFix;
 import consulo.externalSystem.impl.internal.service.execution.ExternalSystemEventDispatcher;
 import consulo.externalSystem.impl.internal.service.execution.ExternalSystemProcessHandler;
+import consulo.externalSystem.issue.BuildIssueException;
 import consulo.externalSystem.model.ProjectSystemId;
 import consulo.externalSystem.model.task.ExternalSystemTask;
 import consulo.externalSystem.model.task.ExternalSystemTaskId;
@@ -30,9 +35,15 @@ import consulo.externalSystem.model.task.ExternalSystemTaskNotificationListenerA
 import consulo.localize.LocalizeValue;
 import consulo.process.ProcessOutputType;
 import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
+import consulo.util.lang.ExceptionUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bridges {@link consulo.externalSystem.model.task.ExternalSystemTaskNotificationListener}
@@ -181,10 +192,45 @@ public class ExternalSystemSyncViewListener extends ExternalSystemTaskNotificati
                 factory.createFinishBuildEvent(id, null, eventTime, LocalizeValue.localizeTODO("finished"), factory.createSuccessResult());
         }
         else {
-            FailureResult failureResult = factory.createFailureResult(myException);
+            FailureResult failureResult = createFailureResult(factory, myException);
             finishBuildEvent =
                 factory.createFinishBuildEvent(id, null, eventTime, LocalizeValue.localizeTODO("failed"), failureResult);
         }
         mySyncViewManager.onEvent(id, finishBuildEvent);
+    }
+
+    /**
+     * A {@link BuildIssueException} becomes one failure per issue, its quick fixes run from the links of the description.
+     */
+    private FailureResult createFailureResult(BuildEventFactory factory, @Nullable Exception exception) {
+        BuildIssueException buildIssueException = exception == null ? null : ExceptionUtil.findCause(exception, BuildIssueException.class);
+        if (buildIssueException == null) {
+            return factory.createFailureResult(exception);
+        }
+
+        BuildIssue buildIssue = buildIssueException.getBuildIssue();
+        Map<String, BuildIssueQuickFix> quickFixes = new LinkedHashMap<>();
+        for (BuildIssueQuickFix quickFix : buildIssue.getQuickFixes()) {
+            quickFixes.put(quickFix.getId(), quickFix);
+        }
+        Notification notification = NotificationService.getInstance()
+            .newError(BuildNotificationsGroups.BUILD_ISSUES)
+            .title(buildIssue.getTitle())
+            .content(buildIssue.getDescription())
+            .hyperlinkListener((n, event) -> {
+                BuildIssueQuickFix quickFix = quickFixes.get(event.getDescription());
+                if (quickFix != null) {
+                    quickFix.runQuickFix(myProject, dataId -> null);
+                }
+            })
+            .create();
+        Failure failure = factory.newFailure()
+            .message(buildIssue.getTitle())
+            .description(buildIssue.getDescription())
+            .error(buildIssueException)
+            .notification(notification)
+            .optionalNavigatable(buildIssue.getNavigatable(myProject))
+            .create();
+        return factory.createFailureResult(List.of(failure));
     }
 }

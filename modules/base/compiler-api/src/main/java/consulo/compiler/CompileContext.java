@@ -28,6 +28,7 @@ import consulo.util.dataholder.UserDataHolder;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.Collection;
 
 /**
  * An interface allowing access and modification of the data associated with the current compile session.
@@ -47,6 +48,11 @@ public interface CompileContext extends UserDataHolder {
         default MessageBuilder optionalNavigatable(@Nullable Navigatable navigatable) {
             return navigatable == null ? this : navigatable(navigatable);
         }
+
+        /**
+         * The module (or the modules of a dependency cycle) the message is about, see {@link CompilerMessage#getModuleNames()}.
+         */
+        MessageBuilder moduleNames(Collection<String> moduleNames);
 
         void add();
     }

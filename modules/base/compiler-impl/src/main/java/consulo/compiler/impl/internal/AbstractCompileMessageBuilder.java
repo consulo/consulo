@@ -21,6 +21,9 @@ import consulo.localize.LocalizeValue;
 import consulo.navigation.Navigatable;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author UNV
  * @since 2026-06-23
@@ -33,6 +36,7 @@ public abstract class AbstractCompileMessageBuilder implements CompileContext.Me
     protected @Nullable String myUrl = null;
     protected int myRow = -1;
     protected int myColumn = -1;
+    protected List<String> myModuleNames = List.of();
 
     protected AbstractCompileMessageBuilder(CompilerMessageCategory category, LocalizeValue message) {
         myCategory = category;
@@ -54,6 +58,12 @@ public abstract class AbstractCompileMessageBuilder implements CompileContext.Me
     @Override
     public CompileContext.MessageBuilder navigatable(Navigatable navigatable) {
         myNavigatable = navigatable;
+        return this;
+    }
+
+    @Override
+    public CompileContext.MessageBuilder moduleNames(Collection<String> moduleNames) {
+        myModuleNames = List.copyOf(moduleNames);
         return this;
     }
 }

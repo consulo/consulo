@@ -17,10 +17,15 @@
 package consulo.language.copyright.impl.internal.pattern;
 
 import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.pattern.CopyrightVariablesProvider;
+import consulo.language.copyright.pattern.DateInfo;
+import consulo.language.copyright.pattern.FileInfo;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -28,6 +33,8 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import org.jspecify.annotations.Nullable;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class VelocityHelper {
@@ -46,6 +53,20 @@ public class VelocityHelper {
     if (project != null) vc.put("project", new ProjectInfo(project));
     if (module != null) vc.put("module", new ModuleInfo(module));
     vc.put("username", System.getProperty("user.name"));
+
+    if (file != null) {
+      VirtualFile virtualFile = PsiUtilCore.getVirtualFile(file);
+      if (virtualFile != null) {
+        CopyrightVariablesProvider variablesProvider = CopyrightVariablesProvider.forFileType(virtualFile.getFileType());
+        if (variablesProvider != null) {
+          Map<String, Object> context = new HashMap<>();
+          variablesProvider.collectVariables(context, project, module, file);
+          for (Map.Entry<String, Object> entry : context.entrySet()) {
+            vc.put(entry.getKey(), entry.getValue());
+          }
+        }
+      }
+    }
 
     StringWriter sw = new StringWriter();
     boolean stripLineBreak = false;

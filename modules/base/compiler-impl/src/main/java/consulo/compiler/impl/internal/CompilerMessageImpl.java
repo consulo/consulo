@@ -26,6 +26,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 public final class CompilerMessageImpl implements CompilerMessage {
@@ -38,6 +40,7 @@ public final class CompilerMessageImpl implements CompilerMessage {
     private final @Nullable String myUrl;
     private final int myRow;
     private final int myColumn;
+    private final Collection<String> myModuleNames;
 
     public CompilerMessageImpl(Project project, CompilerMessageCategory category, LocalizeValue message) {
         this(project, category, message, null, -1, -1, null);
@@ -52,7 +55,21 @@ public final class CompilerMessageImpl implements CompilerMessage {
         int column,
         @Nullable Navigatable navigatable
     ) {
+        this(project, category, message, url, row, column, navigatable, List.of());
+    }
+
+    public CompilerMessageImpl(
+        Project project,
+        CompilerMessageCategory category,
+        LocalizeValue message,
+        @Nullable String url,
+        int row,
+        int column,
+        @Nullable Navigatable navigatable,
+        Collection<String> moduleNames
+    ) {
         myProject = project;
+        myModuleNames = moduleNames;
         myCategory = category;
         myNavigatable = navigatable;
         myMessage = message;
@@ -129,6 +146,11 @@ public final class CompilerMessageImpl implements CompilerMessage {
     @Override
     public int getColumn() {
         return myColumn;
+    }
+
+    @Override
+    public Collection<String> getModuleNames() {
+        return myModuleNames;
     }
 
     @Override

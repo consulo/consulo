@@ -16,4 +16,20 @@ public interface RunConfigurationFragmentEditor<T> {
 
     @RequiredUIAccess
     void apply(T target) throws ConfigurationException;
+
+    /**
+     * Called once after the editor is created, before its first {@link #reset}: the page with the other fragments, for an editor
+     * which reacts to or drives them.
+     */
+    @RequiredUIAccess
+    default void attach(RunConfigurationFragmentHost host) {
+    }
+
+    /**
+     * Enables or disables the components of the editor, see {@link RunConfigurationFragmentHost#setFragmentEnabled}. The values of
+     * a disabled editor are still applied.
+     */
+    @RequiredUIAccess
+    default void setEnabled(boolean enabled) {
+    }
 }

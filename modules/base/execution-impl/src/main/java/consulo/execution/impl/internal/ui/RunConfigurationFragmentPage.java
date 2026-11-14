@@ -8,6 +8,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragmentHost;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentLayout;
 import consulo.execution.configuration.fragment.RunConfigurationFragmentType;
 import consulo.execution.configuration.fragment.RunnerAndConfigurationSettingsFragment;
@@ -39,9 +40,11 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -58,6 +61,9 @@ final class RunConfigurationFragmentPage implements Disposable {
     private final Runnable myChangeListener;
     private final VerticalLayout myRoot = VerticalLayout.create(Space.MEDIUM);
     private Supplier<List<AnAction>> myBeforeRunActions = List::of;
+    private final Map<String, Boolean> myFragmentEnabled = new HashMap<>();
+    private final Map<String, List<Consumer<Boolean>>> myVisibilityListeners = new HashMap<>();
+    private final RunConfigurationFragmentHost myHost = new Host();
 
     @RequiredUIAccess
     RunConfigurationFragmentPage(
@@ -134,12 +140,16 @@ final class RunConfigurationFragmentPage implements Disposable {
             }
 
             Object target = entry.target(settings);
+            boolean wasVisible = entry.myVisible;
             entry.myVisible = entry.isVisible(settings, target);
             if (entry.myVisible) {
                 RunConfigurationFragmentEditor<Object> editor = entry.editor(settings);
                 if (editor != null) {
                     editor.reset(target);
                 }
+            }
+            if (wasVisible != entry.myVisible) {
+                fireVisibilityChanged(entry);
             }
         }
         rebuild();
@@ -308,7 +318,27 @@ final class RunConfigurationFragmentPage implements Disposable {
             }
         }
         rebuild();
+        fireVisibilityChanged(entry);
         myChangeListener.run();
+    }
+
+    @RequiredUIAccess
+    private void fireVisibilityChanged(Entry entry) {
+        List<Consumer<Boolean>> listeners = myVisibilityListeners.get(entry.myFragment.getId());
+        if (listeners != null) {
+            for (Consumer<Boolean> listener : List.copyOf(listeners)) {
+                listener.accept(entry.myVisible);
+            }
+        }
+    }
+
+    private @Nullable Entry findEntry(String fragmentId) {
+        for (Entry entry : myAllEntries) {
+            if (entry.myFragment.getId().equals(fragmentId)) {
+                return entry;
+            }
+        }
+        return null;
     }
 
     @RequiredUIAccess
@@ -400,6 +430,51 @@ final class RunConfigurationFragmentPage implements Disposable {
         }
     }
 
+    private final class Host implements RunConfigurationFragmentHost {
+        @RequiredUIAccess
+        @Override
+        public void setFragmentEnabled(String fragmentId, boolean enabled) {
+            Entry entry = findEntry(fragmentId);
+            if (entry == null) {
+                return;
+            }
+
+            myFragmentEnabled.put(fragmentId, enabled);
+            RunConfigurationFragmentEditor<Object> editor = entry.myEditor;
+            if (editor != null) {
+                editor.setEnabled(enabled);
+            }
+        }
+
+        @RequiredUIAccess
+        @Override
+        public boolean isFragmentEnabled(String fragmentId) {
+            return myFragmentEnabled.getOrDefault(fragmentId, Boolean.TRUE);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public boolean isFragmentVisible(String fragmentId) {
+            Entry entry = findEntry(fragmentId);
+            return entry != null && entry.isShown();
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setFragmentVisible(String fragmentId, boolean visible) {
+            Entry entry = findEntry(fragmentId);
+            if (entry != null && !entry.isGroup() && entry.myFragment.isRemovable()) {
+                setVisible(entry, visible);
+            }
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void addVisibilityListener(String fragmentId, Consumer<Boolean> listener) {
+            myVisibilityListeners.computeIfAbsent(fragmentId, id -> new ArrayList<>()).add(listener);
+        }
+    }
+
     private final class Entry {
         private final RunConfigurationFragment<?> myFragment;
         private final List<Entry> myChildren = new ArrayList<>();
@@ -457,6 +532,12 @@ final class RunConfigurationFragmentPage implements Disposable {
                 myEditorCreated = true;
                 try {
                     myEditor = fragment().createEditor(settings.getConfiguration().getProject(), RunConfigurationFragmentPage.this);
+                    if (myEditor != null) {
+                        myEditor.attach(myHost);
+                        if (!myFragmentEnabled.getOrDefault(myFragment.getId(), Boolean.TRUE)) {
+                            myEditor.setEnabled(false);
+                        }
+                    }
                 }
                 catch (Throwable e) {
                     LOG.error("Run configuration fragment editor can not be created: " + myFragment.getId(), e);

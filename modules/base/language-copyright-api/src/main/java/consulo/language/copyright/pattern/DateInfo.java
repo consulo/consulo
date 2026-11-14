@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.copyright.impl.internal.pattern;
+package consulo.language.copyright.pattern;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

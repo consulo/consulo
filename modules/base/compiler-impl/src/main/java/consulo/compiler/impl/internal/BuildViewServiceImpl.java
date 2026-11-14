@@ -13,6 +13,7 @@ import consulo.build.ui.issue.BuildIssue;
 import consulo.build.ui.localize.BuildLocalize;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
+import consulo.compiler.BuildIssueContributor;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
 import consulo.compiler.ExitStatus;
@@ -342,8 +343,9 @@ public class BuildViewServiceImpl {
         @Nullable Path file,
         @Nullable Navigatable navigatable
     ) {
-        // TODO [VISTALL] use ep? like in idea
-        return null;
+        return myProject.getApplication().getExtensionPoint(BuildIssueContributor.class).computeSafeIfAny(
+            contributor -> contributor.createBuildIssue(myProject, moduleNames, title, message, kind, file, navigatable)
+        );
     }
 
     private static List<AnAction> getContextActions() {

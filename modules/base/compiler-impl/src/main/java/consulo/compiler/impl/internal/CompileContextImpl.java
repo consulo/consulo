@@ -82,7 +82,7 @@ public class CompileContextImpl extends UserDataHolderBase implements CompileCon
 
         @Override
         public void add() {
-            addMessage(new CompilerMessageImpl(myProject, myCategory, myMessage, myUrl, myRow, myColumn, myNavigatable));
+            addMessage(new CompilerMessageImpl(myProject, myCategory, myMessage, myUrl, myRow, myColumn, myNavigatable, myModuleNames));
         }
     }
 
