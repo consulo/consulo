@@ -15,9 +15,11 @@
  */
 package consulo.mcpServer.impl.internal.setting;
 
+import consulo.ai.AIToolWindowAvailabilityListener;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -56,7 +58,12 @@ public class McpServerSettings implements PersistentStateComponent<McpServerSett
     }
 
     public void setEnabled(boolean enabled) {
+        if (myState.ENABLED == enabled) {
+            return;
+        }
         myState.ENABLED = enabled;
+        // the calls of the server are a tab of the AI tool window
+        Application.get().getMessageBus().syncPublisher(AIToolWindowAvailabilityListener.class).availabilityChanged();
     }
 
     public int getPort() {

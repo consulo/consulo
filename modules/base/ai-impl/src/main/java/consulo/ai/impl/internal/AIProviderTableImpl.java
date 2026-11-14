@@ -21,6 +21,7 @@ import consulo.accountManagement.AccountManager;
 import consulo.ai.AIModel;
 import consulo.ai.AIProvider;
 import consulo.ai.AIProviderTable;
+import consulo.ai.AIToolWindowAvailabilityListener;
 import consulo.ai.AIProviderType;
 import consulo.ai.impl.internal.setting.AISettings;
 import consulo.ai.impl.internal.setting.state.AISettingsState;
@@ -142,6 +143,7 @@ public class AIProviderTableImpl implements AIProviderTable {
             public void accountsChanged() {
                 removeProvidersOfRemovedAccounts(accountManager);
                 addProvidersOfNewAccounts(accountManager);
+                availabilityChanged();
             }
         }, myApplication);
     }
@@ -271,6 +273,10 @@ public class AIProviderTableImpl implements AIProviderTable {
         return null;
     }
 
+    private void availabilityChanged() {
+        myApplication.getMessageBus().syncPublisher(AIToolWindowAvailabilityListener.class).availabilityChanged();
+    }
+
     @Override
     public AIProvider addProvider(String name, AIProviderType type) {
         if (findProvider(name) != null) {
@@ -278,6 +284,7 @@ public class AIProviderTableImpl implements AIProviderTable {
         }
 
         mySettings.get().getState().PROVIDERS.add(new ProviderEntry(name, type.getId()));
+        availabilityChanged();
         return new AIProvider(name, type);
     }
 
@@ -288,6 +295,7 @@ public class AIProviderTableImpl implements AIProviderTable {
         if (provider.getName().equals(mySettings.get().getState().DEFAULT_PROVIDER_NAME)) {
             setDefault(null, null);
         }
+        availabilityChanged();
 
         // the key would otherwise outlive the instance it belongs to
         return provider.setApiKey(null);
