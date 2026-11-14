@@ -1,0 +1,4 @@
+Consulo: ai-impl module (consulo.ai.impl)
+
+Contains code from CursorJ (https://github.com/vaughanb/CursorJ), Copyright (c) 2026 vaughanb, licensed under the MIT
+License (see LICENSE-MIT).
