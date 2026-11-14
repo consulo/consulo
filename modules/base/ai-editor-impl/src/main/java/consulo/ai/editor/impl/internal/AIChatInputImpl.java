@@ -23,8 +23,6 @@ import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.application.Application;
 import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.action.EditorActionManager;
-import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -64,7 +62,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
@@ -246,15 +243,19 @@ final class AIChatInputImpl implements AIChatInput {
             @RequiredUIAccess
             @Override
             public void actionPerformed(AnActionEvent e) {
-                DataContext dataContext = e.getDataContext();
                 clipboard.getContents().whenCompleteAsync((transfer, error) -> {
-                    if (transfer != null && attachPasted(transfer)) {
+                    if (transfer == null || attachPasted(transfer)) {
                         return;
                     }
+                    // a message is plain text - it goes in at the caret, over the selection, as one undoable step
+                    String text = transfer.get(DataTransferType.TEXT);
                     Editor editor = myEditorBox.getEditor();
-                    if (editor != null) {
-                        EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_PASTE)
-                            .execute(editor, editor.getCaretModel().getCurrentCaret(), dataContext);
+                    if (text != null && !text.isEmpty() && editor != null) {
+                        String normalized = text.replace("\r\n", "\n").replace('\r', '\n');
+                        WriteCommandAction.runWriteCommandAction(myProject, () -> {
+                            EditorModificationUtil.deleteSelectedText(editor);
+                            EditorModificationUtil.insertStringAtCaret(editor, normalized);
+                        });
                     }
                 }, uiAccess);
             }
