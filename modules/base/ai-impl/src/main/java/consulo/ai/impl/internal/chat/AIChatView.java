@@ -455,10 +455,12 @@ public class AIChatView {
                     uiAccess,
                     provider,
                     findModel(provider, chat.MODEL_ID),
+                    chat.MODEL_ID,
                     AIChatStore.sessionId(chat),
                     history == null ? List.of() : history,
                     myStore.getWorkingDirectory(chat),
                     chat.EFFORT,
+                    chat.SESSION_OPTIONS,
                     new ChatListener(chat, provider, uiAccess)
                 );
                 Disposer.register(editor, panel);
@@ -556,6 +558,13 @@ public class AIChatView {
         @Override
         public void modelChanged(AIModel model) {
             myChat.MODEL_ID = model.getId();
+            myStore.changed(myChat);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void sessionOptionChosen(String optionId, String value) {
+            myChat.SESSION_OPTIONS.put(optionId, value);
             myStore.changed(myChat);
         }
 

@@ -97,6 +97,7 @@ import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -188,6 +189,9 @@ public class AIChatPanel implements Disposable {
          * The agent saved the plan of the chat to the file.
          */
         @RequiredUIAccess
+        default void sessionOptionChosen(String optionId, String value) {
+        }
+
         default void planFileSaved(Path file) {
         }
     }
@@ -196,6 +200,14 @@ public class AIChatPanel implements Disposable {
     private final UIAccess myUIAccess;
     private final AIProvider myProvider;
     private final String myChatId;
+    /**
+     * The model the chat was saved with - resolved again once the provider listed its models.
+     */
+    private final String myWantedModelId;
+    /**
+     * The settings the chat was saved with which the session did not offer yet - set once it does.
+     */
+    private final Map<String, String> myPendingSessionOptions = new LinkedHashMap<>();
     private final Listener myListener;
 
     private final DockLayout myRoot = DockLayout.create();
@@ -322,14 +334,18 @@ public class AIChatPanel implements Disposable {
                        UIAccess uiAccess,
                        AIProvider provider,
                        @Nullable AIModel model,
+                       String wantedModelId,
                        String chatId,
                        List<AIMessage> history,
                        @Nullable Path workingDirectory,
                        String effort,
+                       Map<String, String> sessionOptions,
                        Listener listener) {
         myProject = project;
         myUIAccess = uiAccess;
         myProvider = provider;
+        myWantedModelId = wantedModelId;
+        myPendingSessionOptions.putAll(sessionOptions);
         myChatId = chatId;
         myListener = listener;
         myFirstMessageSent = !history.isEmpty();
@@ -495,6 +511,11 @@ public class AIChatPanel implements Disposable {
     @RequiredUIAccess
     private void modelsLoaded(List<AIModel> models) {
         myModels = models;
+        // the model of the chat may be one only the listed models know - until they came the chat took the default
+        AIModel wanted = myWantedModelId.isEmpty() ? null : myProvider.getType().resolveModel(models, myWantedModelId);
+        if (wanted != null && !wanted.getId().equals(myModel == null ? null : myModel.getId())) {
+            switchModel(wanted);
+        }
         AIModel current = myModel;
         AIModel loaded = current == null ? null : myProvider.getType().resolveModel(models, current.getId());
         if (loaded != null) {
@@ -681,6 +702,14 @@ public class AIChatPanel implements Disposable {
     @RequiredUIAccess
     private void sessionOptionsChanged(List<AISessionOption> options) {
         mySessionOptions = options;
+        if (!myPendingSessionOptions.isEmpty()) {
+            for (AISessionOption option : options) {
+                String saved = myPendingSessionOptions.remove(option.id());
+                if (saved != null && !saved.equals(option.currentValue()) && option.findValue(saved) != null) {
+                    setSessionOption(option, saved);
+                }
+            }
+        }
         AISessionOption mode = findMode(options);
         String currentValue = mode == null ? null : mode.currentValue();
         AISessionOptionValue current = mode == null || currentValue == null ? null : mode.findValue(currentValue);
@@ -900,6 +929,7 @@ public class AIChatPanel implements Disposable {
             send(AILocalize.promptPlanBuild().get());
             return;
         }
+        myListener.sessionOptionChosen(mode.id(), editing.value());
         myProvider.getType().setSessionOption(myProvider, myChatId, mode.id(), editing.value()).whenCompleteAsync((options, error) -> {
             if (options != null) {
                 sessionOptionsChanged(options);
@@ -966,6 +996,9 @@ public class AIChatPanel implements Disposable {
      */
     @RequiredUIAccess
     private void setSessionOption(AISessionOption option, String value) {
+        if (!option.isModel() && !option.isEffort()) {
+            myListener.sessionOptionChosen(option.id(), value);
+        }
         myProvider.getType().setSessionOption(myProvider, myChatId, option.id(), value).whenCompleteAsync((options, error) -> {
             if (error != null) {
                 Throwable cause = error instanceof CompletionException && error.getCause() != null ? error.getCause() : error;

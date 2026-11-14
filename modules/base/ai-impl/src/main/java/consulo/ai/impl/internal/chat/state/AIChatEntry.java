@@ -17,6 +17,9 @@ package consulo.ai.impl.internal.chat.state;
 
 import com.dslplatform.json.CompiledJson;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * A chat of the project as the workspace keeps it - which account it talks to and where it is filed, not what it said.
  *
@@ -44,6 +47,11 @@ public class AIChatEntry {
      * The effort of the model, empty for the provider's default.
      */
     public String EFFORT = "";
+    /**
+     * The settings of the session the user chose besides the model and the effort - the mode, thinking - by the id of
+     * the option. Set again when the chat opens.
+     */
+    public Map<String, String> SESSION_OPTIONS = new LinkedHashMap<>();
     public long CREATED;
     public long UPDATED;
 }
