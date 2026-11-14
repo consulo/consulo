@@ -44,10 +44,18 @@ public class RemotePlatformOperatingSystem implements PlatformOperatingSystem {
                                          Map<String, String> environmentVariables) {
         myConnection = connection;
         mySystemInfo = systemInfo;
-        myEnvironmentVariables = environmentVariables;
-
         String osNameLowered = systemInfo.getOsName().toLowerCase(Locale.ROOT);
         myIsWindows = osNameLowered.startsWith("windows");
+
+        if (myIsWindows) {
+            // names of Windows are not case sensitive - Path is PATH, as System.getenv() of the local machine answers
+            Map<String, String> variables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            variables.putAll(environmentVariables);
+            myEnvironmentVariables = Collections.unmodifiableMap(variables);
+        }
+        else {
+            myEnvironmentVariables = environmentVariables;
+        }
         myIsMac = osNameLowered.startsWith("mac");
         myIsLinux = osNameLowered.startsWith("linux");
         myIsFreeBSD = osNameLowered.startsWith("freebsd");
