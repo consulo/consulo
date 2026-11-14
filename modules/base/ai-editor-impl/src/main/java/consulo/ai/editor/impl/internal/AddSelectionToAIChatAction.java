@@ -46,13 +46,15 @@ import java.util.List;
  * @since 2026-11-13
  */
 @ActionImpl(
-    id = "AI.AddSelectionToChat",
+    id = AddSelectionToAIChatAction.ID,
     parents = {
         @ActionParentRef(@ActionRef(id = IdeActions.GROUP_EDITOR_POPUP)),
         @ActionParentRef(@ActionRef(id = CodeFloatingToolbarActions.GROUP))
     }
 )
 public class AddSelectionToAIChatAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+    public static final String ID = "AI.AddSelectionToChat";
+
     public AddSelectionToAIChatAction() {
         super(AIEditorLocalize.actionAddSelectionText(), AIEditorLocalize.actionAddSelectionDescription(), AIIconGroup.toolwindowAiassistant());
     }

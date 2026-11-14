@@ -452,6 +452,12 @@ final class AIChatInputImpl implements AIChatInput {
         show(text);
     }
 
+    @Override
+    public String getText() {
+        String value = myEditorBox.getValue();
+        return value == null ? "" : value;
+    }
+
     @RequiredUIAccess
     private void show(String text) {
         myEditorBox.setValue(text);

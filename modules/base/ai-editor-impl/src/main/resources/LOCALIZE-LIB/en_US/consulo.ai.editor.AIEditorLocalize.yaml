@@ -20,3 +20,15 @@ label.pasted.image:
     text: Pasted image
 command.agent.edit:
     text: AI Agent Edit
+action.comment.for.ai.text:
+    text: Comment for AI
+action.comment.for.ai.description:
+    text: Write a comment on the selected code for the agent - send it at once, or add it to the next message of the AI chat
+placeholder.comment.for.ai:
+    text: What should the agent do here?
+label.comment.on:
+    text: 'Comment on {0}'
+button.comment.add:
+    text: Add to Chat
+prompt.comment.on:
+    text: 'Comment on {0} lines {1}-{2}: {3}'

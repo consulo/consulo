@@ -11,6 +11,7 @@ import org.jspecify.annotations.NullMarked;
 module consulo.ai.editor.impl {
     requires consulo.ai.api;
     requires consulo.diff.api;
+    requires consulo.review.api;
     requires consulo.language.editor.ui.api;
     requires consulo.local.history.api;
 }

@@ -96,6 +96,10 @@ public class AIChatView {
      */
     private final Map<String, List<AIChatAttachment>> myPendingAttachments = new HashMap<>();
     /**
+     * A message to send once the tab of its chat loaded.
+     */
+    private final Map<String, String> myPendingMessages = new HashMap<>();
+    /**
      * The file the user worked on last - a chat tab is not one.
      */
     private @Nullable VirtualFile myActiveFile;
@@ -135,11 +139,25 @@ public class AIChatView {
      */
     @RequiredUIAccess
     public void attach(AIChatAttachment attachment) {
+        deliver(attachment, null);
+    }
+
+    /**
+     * Sends a message with the attachment to the chat the user works with - a new chat of the default provider when
+     * there is none.
+     */
+    @RequiredUIAccess
+    public void send(AIChatAttachment attachment, String message) {
+        deliver(attachment, message);
+    }
+
+    @RequiredUIAccess
+    private void deliver(AIChatAttachment attachment, @Nullable String message) {
         String chatId = activeChat();
         AIChatEntry chat = chatId == null ? null : myStore.findChat(chatId);
         if (chat != null) {
             openChat(chat, true);
-            attachTo(chat.ID, attachment);
+            deliverTo(chat.ID, attachment, message);
             return;
         }
         UIAccess uiAccess = UIAccess.current();
@@ -147,7 +165,7 @@ public class AIChatView {
             if (provider == null) {
                 return;
             }
-            startChat(provider, null, "").thenAcceptAsync(started -> attachTo(started.ID, attachment), uiAccess);
+            startChat(provider, null, "").thenAcceptAsync(started -> deliverTo(started.ID, attachment, message), uiAccess);
         }, uiAccess);
     }
 
@@ -166,13 +184,19 @@ public class AIChatView {
     }
 
     @RequiredUIAccess
-    private void attachTo(String chatId, AIChatAttachment attachment) {
+    private void deliverTo(String chatId, AIChatAttachment attachment, @Nullable String message) {
         AIChatPanel panel = myPanels.get(chatId);
         if (panel != null) {
             panel.attach(attachment);
+            if (message != null) {
+                panel.sendMessage(message);
+            }
         }
         else {
             myPendingAttachments.computeIfAbsent(chatId, id -> new ArrayList<>()).add(attachment);
+            if (message != null) {
+                myPendingMessages.put(chatId, message);
+            }
         }
     }
 
@@ -403,6 +427,10 @@ public class AIChatView {
                     panel.attach(attachment);
                 }
                 myPendingAttachments.remove(chat.ID);
+                String pendingMessage = myPendingMessages.remove(chat.ID);
+                if (pendingMessage != null) {
+                    panel.sendMessage(pendingMessage);
+                }
                 root.stopLoading(layout -> layout.center(panel.getComponent()));
             }
             catch (RuntimeException e) {

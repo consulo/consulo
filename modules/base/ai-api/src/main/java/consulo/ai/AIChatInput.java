@@ -61,4 +61,9 @@ public interface AIChatInput {
      */
     @RequiredUIAccess
     void setText(String text);
+
+    /**
+     * What is written in the box now.
+     */
+    String getText();
 }

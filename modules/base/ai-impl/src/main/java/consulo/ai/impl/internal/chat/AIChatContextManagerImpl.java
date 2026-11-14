@@ -41,4 +41,10 @@ public class AIChatContextManagerImpl implements AIChatContextManager {
     public void attach(AIChatAttachment attachment) {
         myView.attach(attachment);
     }
+
+    @RequiredUIAccess
+    @Override
+    public void send(AIChatAttachment attachment, String message) {
+        myView.send(attachment, message);
+    }
 }

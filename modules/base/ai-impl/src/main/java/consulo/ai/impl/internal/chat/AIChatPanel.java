@@ -1495,6 +1495,14 @@ public class AIChatPanel implements Disposable {
     }
 
     /**
+     * Sends the message as if the user wrote it - with the attachments the chat holds.
+     */
+    @RequiredUIAccess
+    void sendMessage(String text) {
+        send(text);
+    }
+
+    /**
      * Images - screenshots - for the model to look at, chosen from the disk.
      */
     @RequiredUIAccess

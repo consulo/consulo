@@ -38,4 +38,11 @@ public interface AIChatContextManager {
      */
     @RequiredUIAccess
     void attach(AIChatAttachment attachment);
+
+    /**
+     * Sends a message about what the user picked - code with a comment on it - to the chat the user works with, the
+     * attachment going with the message.
+     */
+    @RequiredUIAccess
+    void send(AIChatAttachment attachment, String message);
 }
