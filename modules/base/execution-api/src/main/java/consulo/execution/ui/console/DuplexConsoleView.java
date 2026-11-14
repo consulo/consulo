@@ -34,6 +34,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.util.concurrent.coroutine.CoroutineStep;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
@@ -298,8 +299,8 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
             if (action2 instanceof ToggleUseSoftWrapsToolbarAction toggleUseSoftWrapsToolbarAction2) {
                 return new MergedWrapTextAction(((ToggleUseSoftWrapsToolbarAction) action1), toggleUseSoftWrapsToolbarAction2);
             }
-            else if (action2 instanceof ScrollToTheEndToolbarAction) {
-                return new MergedToggleAction(((ToggleAction) action1), (ToggleAction) action2);
+            else if (action2 instanceof ScrollToTheEndToolbarAction scrollToTheEndAction2) {
+                return new MergedAsyncToggleAction((ScrollToTheEndToolbarAction) action1, scrollToTheEndAction2);
             }
             else if (action2 instanceof ClearConsoleAction) {
                 return new MergedAction(action1, action2);
@@ -376,6 +377,29 @@ public class DuplexConsoleView<S extends ConsoleView, T extends ConsoleView> ext
         @Override
         public boolean isSelected(AnActionEvent e) {
             return myAction1.isSelected(e);
+        }
+
+        @RequiredUIAccess
+        @Override
+        public void setSelected(AnActionEvent e, boolean state) {
+            myAction1.setSelected(e, state);
+            myAction2.setSelected(e, state);
+        }
+    }
+
+    private static class MergedAsyncToggleAction extends AsyncToggleAction implements DumbAware {
+        private final AsyncToggleAction myAction1;
+        private final AsyncToggleAction myAction2;
+
+        private MergedAsyncToggleAction(AsyncToggleAction action1, AsyncToggleAction action2) {
+            myAction1 = action1;
+            myAction2 = action2;
+            copyFrom(action1);
+        }
+
+        @Override
+        public CoroutineStep<Object, Boolean> isSelectedAsync(AnActionEvent e) {
+            return myAction1.isSelectedAsync(e);
         }
 
         @RequiredUIAccess
