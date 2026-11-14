@@ -342,3 +342,13 @@ and usage only. Item shapes taken from `codex app-server generate-json-schema` a
 - Plugins now build properly (mvn package in consulo-claude / consulo-codex / consulo-cursor) against the platform
   jars synced into ~/.m2 (ai-api, ai-acp-api; unpushed platform changes).
 - Not done: MCP elicitations, network policy amendments.
+
+## Plan review (2026-11-14, pushed)
+
+A plan file of an agent (one reported through `AIStreamListener.onPlanFile`, or any `*.plan.md`) opens with a review:
+`AIPlanReviewModel` (review-api `CodeReviewEditorModel`) drawn by `CodeReviewEditorRenderer.setupIn` - gutter "+",
+the stock new-comment box, drafts as one-comment threads by "You". The editor banner (`AIPlanReviewNotificationProvider`)
+sends all drafts as one prompt to the chat which made the plan (`AIChatContextManager.revisePlan`, else the active chat)
+and offers Build (`buildPlan`). The selection toolbar on a plan offers "Comment on Plan" for the selected lines; on other
+text it offers "Add to AI Chat" and an inline "Comment for AI" box (Enter sends with the selection).
+Open: review the agent's diffs with the same model; Claude/Codex per-chat mode switch (Debug/Plan unreachable there).
