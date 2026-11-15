@@ -55,6 +55,12 @@ public interface ProcessHandlerBuilder {
    */
   ProcessHandlerBuilder blockingReader();
 
+  /**
+   * Options of the output readers of the process, e.g. {@code splitToLines() = false} to get the output as it comes.
+   * Replaces {@link #silentReader()} / {@link #blockingReader()}. Not supported with {@link ProcessConsoleType#EXTERNAL}.
+   */
+  ProcessHandlerBuilder readerOptions(BaseOutputReader.Options options);
+
   
   ProcessHandlerBuilder consoleType(ProcessConsoleType type);
 
