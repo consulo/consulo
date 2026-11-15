@@ -69,8 +69,15 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
         List<VFileEvent> afterEvents = new ArrayList<>();
 
         CompactVirtualFileSet newFilesSet = new CompactVirtualFileSet();
+        // the file of a create or copy event exists only after the change is applied
+        List<VFileEvent> createEvents = new ArrayList<>();
 
         for (VFileEvent event : events) {
+            if (event instanceof VFileCreateEvent || event instanceof VFileCopyEvent) {
+                createEvents.add(event);
+                continue;
+            }
+
             VirtualFile file = event.getFile();
             if (file == null || ProjectCoreUtil.isProjectOrWorkspaceFile(file)) {
                 continue;
@@ -84,15 +91,12 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
             else if (event instanceof VFileDeleteEvent) {
                 beforeEvents.add(event);
             }
-            else if (event instanceof VFileCreateEvent || event instanceof VFileCopyEvent) {
-                newFilesSet.add(file);
-            }
             else if (event instanceof VFilePropertyChangeEvent || event instanceof VFileContentChangeEvent) {
                 afterEvents.add(event);
             }
         }
 
-        if (beforeEvents.isEmpty() && afterEvents.isEmpty() && newFilesSet.isEmpty()) {
+        if (beforeEvents.isEmpty() && afterEvents.isEmpty() && newFilesSet.isEmpty() && createEvents.isEmpty()) {
             return null;
         }
 
@@ -111,6 +115,13 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
 
             @Override
             public void afterVfsChange() {
+                for (VFileEvent event : createEvents) {
+                    VirtualFile file = event instanceof VFileCopyEvent copyEvent ? copyEvent.findCreatedFile() : event.getFile();
+                    if (file != null && !ProjectCoreUtil.isProjectOrWorkspaceFile(file)) {
+                        newFilesSet.add(file);
+                    }
+                }
+
                 newFilesSet.process(it -> {
                     processNewFile(it);
                     return true;
@@ -257,34 +268,35 @@ public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileList
             }
             ProjectCompilerState state = ProjectCompilerState.getInstance(project);
             ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
+            if (!fileIndex.isInContent(file) && !belongsToIntermediateSources(file, project)) {
+                continue;
+            }
 
-            if (fileIndex.isInSourceContent(file)) {
-                TranslatingCompiler[] translators = CompilerManager.getInstance(project).getCompilers(TranslatingCompiler.class);
-                Predicate<VirtualFile> isCompilable = thisFile -> {
-                    for (TranslatingCompiler translator : translators) {
-                        if (translator.isCompilableFile(thisFile.toNioPath(), DummyCompileContext.getInstance())) {
-                            return true;
-                        }
+            TranslatingCompiler[] translators = CompilerManager.getInstance(project).getCompilers(TranslatingCompiler.class);
+            Predicate<VirtualFile> isCompilable = thisFile -> {
+                for (TranslatingCompiler translator : translators) {
+                    if (translator.isCompilableFile(thisFile.toNioPath(), DummyCompileContext.getInstance())) {
+                        return true;
                     }
-                    return false;
-                };
-                processRecursively(
-                    file,
-                    false,
-                    thisFile -> {
+                }
+                return false;
+            };
+            // a new directory can contain source roots without being in the source content itself (a new "src" with
+            // "src/main/scala" in it), so every file is checked
+            processRecursively(
+                file,
+                false,
+                thisFile -> {
+                    if (fileIndex.isInSourceContent(thisFile)) {
                         if (isCompilable.test(thisFile)) {
                             state.markSourceDirty(TranslatingCompilerFilesMonitorImpl.pathOf(thisFile));
                         }
                     }
-                );
-            }
-            else if (belongsToIntermediateSources(file, project)) {
-                processRecursively(
-                    file,
-                    false,
-                    thisFile -> state.markSourceDirty(TranslatingCompilerFilesMonitorImpl.pathOf(thisFile))
-                );
-            }
+                    else if (belongsToIntermediateSources(thisFile, project)) {
+                        state.markSourceDirty(TranslatingCompilerFilesMonitorImpl.pathOf(thisFile));
+                    }
+                }
+            );
         }
     }
 
