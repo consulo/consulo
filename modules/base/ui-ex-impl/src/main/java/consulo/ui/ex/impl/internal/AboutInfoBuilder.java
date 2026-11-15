@@ -84,7 +84,7 @@ public class AboutInfoBuilder {
         group("OS");
         item("name", platform.os().name());
         item("version", platform.os().version());
-        item("arch", platform.os().arch());
+        item("arch", platform.os().archString());
 
         group("Env");
         for (Map.Entry<String, String> entry : new TreeMap<>(platform.os().environmentVariables()).entrySet()) {

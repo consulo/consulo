@@ -170,7 +170,14 @@ public class PlatformOperatingSystemImpl implements PlatformOperatingSystem {
     }
 
     @Override
-    public String arch() {
+    public String archString() {
+        return myOSArch;
+    }
+
+    /**
+     * The architecture the JVM was built for - {@code os.arch}.
+     */
+    protected String jvmArchString() {
         return myOSArch;
     }
 }

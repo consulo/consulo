@@ -17,6 +17,7 @@ package consulo.platform;
 
 import org.jspecify.annotations.Nullable;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,35 @@ public final class CpuArchitecture {
     public static final CpuArchitecture RISCV64 = new CpuArchitecture("RISCV64", 64, "-riscv64");
     public static final CpuArchitecture LOONG64 = new CpuArchitecture("LOONG64", 64, "-loong64");
     public static final CpuArchitecture E2K = new CpuArchitecture("E2K", 64, "-e2k");
+
+    /**
+     * The architecture a raw name stands for - as {@code os.arch}, an OS or a remote machine reports it: "amd64",
+     * "x86_64", "AMD64", "arm64"... An unknown name is an architecture of its own.
+     *
+     * @param width the width of an unknown architecture
+     */
+    public static CpuArchitecture of(String rawName, int width) {
+        String name = rawName.toLowerCase(Locale.ROOT);
+        return switch (name) {
+            case "x86_64", "x86-64", "amd64", "x64" -> X86_64;
+            case "x86", "i386", "i486", "i586", "i686" -> X86;
+            case "aarch64", "arm64" -> AARCH64;
+            case "riscv64" -> RISCV64;
+            case "loongarch64", "loong64" -> LOONG64;
+            case "e2k" -> E2K;
+            default -> {
+                String upperName = rawName.toUpperCase(Locale.ROOT);
+                yield new CpuArchitecture(upperName, width, "-" + upperName);
+            }
+        };
+    }
+
+    /**
+     * See {@link #of(String, int)} - an unknown architecture is taken for a 64-bit one.
+     */
+    public static CpuArchitecture of(String rawName) {
+        return of(rawName, 64);
+    }
 
     private final String myName;
     private final int myWidth;

@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author VISTALL
@@ -80,7 +81,40 @@ public interface Platform extends UserDataHolder {
 
     void openInBrowser(URL url);
 
+    /**
+     * The name the machine's file manager goes by - "Explorer", "Finder", the file manager of a Linux desktop.
+     */
     default String fileManagerName() {
+        PlatformOperatingSystem os = os();
+        if (os.isWindows()) {
+            return "Explorer";
+        }
+        if (os.isMac()) {
+            return "Finder";
+        }
+        if (os.isHaiku()) {
+            return "Tracker";
+        }
+        // XDG_CURRENT_DESKTOP lists the desktop and what it derives from - "ubuntu:GNOME", "X-Cinnamon"
+        String desktop = os.getEnvironmentVariable("XDG_CURRENT_DESKTOP");
+        if (desktop != null) {
+            for (String name : desktop.toUpperCase(Locale.ROOT).split(":")) {
+                String fileManager = switch (name) {
+                    case "KDE" -> "Dolphin";
+                    case "GNOME", "UNITY", "PANTHEON", "BUDGIE" -> "Files";
+                    case "X-CINNAMON", "CINNAMON" -> "Nemo";
+                    case "XFCE" -> "Thunar";
+                    case "MATE" -> "Caja";
+                    case "LXQT" -> "PCManFM-Qt";
+                    case "LXDE" -> "PCManFM";
+                    case "DEEPIN" -> "Deepin File Manager";
+                    default -> null;
+                };
+                if (fileManager != null) {
+                    return fileManager;
+                }
+            }
+        }
         return "File Manager";
     }
 
@@ -128,8 +162,12 @@ public interface Platform extends UserDataHolder {
         return null;
     }
 
+    /**
+     * The name of an executable built for the machine - an executable runs on the operating system, so it is built for
+     * the system's architecture, which a JVM may not share.
+     */
     default String mapExecutableName(String baseName) {
-        String archSuffix = jvm().arch().fileNameSuffix();
+        String archSuffix = os().arch().fileNameSuffix();
         return !archSuffix.isEmpty() ? baseName + archSuffix : baseName;
     }
 
@@ -149,17 +187,19 @@ public interface Platform extends UserDataHolder {
         return mapExecutableName(baseName) + "." + extension;
     }
 
+    /**
+     * The file name of a native library of the machine - named the way its operating system names libraries, not the way
+     * the machine the IDE runs on does. A library is loaded into a JVM, so it is built for the JVM's architecture.
+     */
     default String mapLibraryName(String libName) {
-        String baseName = libName;
-        String archSuffix = jvm().arch().fileNameSuffix();
-        if (!archSuffix.isEmpty()) {
-            baseName = baseName + archSuffix;
+        String baseName = libName + jvm().arch().fileNameSuffix();
+        PlatformOperatingSystem os = os();
+        if (os.isWindows()) {
+            return baseName + ".dll";
         }
-
-        String fileName = System.mapLibraryName(baseName);
-        if (os().isMac()) {
-            fileName = fileName.replace(".jnilib", ".dylib");
+        if (os.isMac()) {
+            return "lib" + baseName + ".dylib";
         }
-        return fileName;
+        return "lib" + baseName + ".so";
     }
 }

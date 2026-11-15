@@ -89,7 +89,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
       myOffsets = BSD_64;
     }
     else {
-      throw new IllegalStateException("Unsupported OS/arch: " + Platform.current().os().name() + "/" + Platform.current().os().arch());
+      throw new IllegalStateException("Unsupported OS/arch: " + Platform.current().os().name() + "/" + Platform.current().os().archString());
     }
 
     myLibC = Native.load("c", LibC.class);

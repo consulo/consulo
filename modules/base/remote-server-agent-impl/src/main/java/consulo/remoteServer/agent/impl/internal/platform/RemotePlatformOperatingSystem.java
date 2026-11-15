@@ -120,7 +120,7 @@ public class RemotePlatformOperatingSystem implements PlatformOperatingSystem {
     }
 
     @Override
-    public String arch() {
+    public String archString() {
         return mySystemInfo.getArch();
     }
 

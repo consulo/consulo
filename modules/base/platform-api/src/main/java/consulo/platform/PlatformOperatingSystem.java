@@ -47,7 +47,18 @@ public interface PlatformOperatingSystem {
 
     String version();
 
-    String arch();
+    /**
+     * The architecture of the operating system - what its executables are built for. Not necessarily the JVM's
+     * ({@link PlatformJvm#arch()}): a 32-bit JVM runs on a 64-bit Windows, an x86-64 one on an ARM Mac.
+     */
+    default CpuArchitecture arch() {
+        return CpuArchitecture.of(archString());
+    }
+
+    /**
+     * The architecture of the operating system as the machine names it - "AMD64", "x86_64", "arm64"...
+     */
+    String archString();
 
     Map<String, String> environmentVariables();
 

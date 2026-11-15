@@ -15,7 +15,13 @@
  */
 package consulo.platform.impl;
 
+import com.sun.jna.platform.mac.SystemB;
+import com.sun.jna.ptr.IntByReference;
+import consulo.platform.CpuArchitecture;
 import consulo.platform.os.MacOperatingSystem;
+import consulo.util.lang.lazy.LazyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -26,7 +32,11 @@ import java.util.function.Supplier;
  * @since 25/04/2023
  */
 public class MacOperatingSystemImpl extends PlatformOperatingSystemImpl implements MacOperatingSystem {
+  private static final Logger LOG = LoggerFactory.getLogger(MacOperatingSystemImpl.class);
+
   public final boolean isMacOSMojave;
+
+  private final LazyValue<String> myArchString = LazyValue.notNull(this::detectArchString);
 
   public MacOperatingSystemImpl(Map<String, String> jvmProperties,
                                 Function<String, String> getEnvFunc,
@@ -38,5 +48,37 @@ public class MacOperatingSystemImpl extends PlatformOperatingSystemImpl implemen
   @Override
   public boolean isMacMojave() {
     return isMacOSMojave;
+  }
+
+  @Override
+  public String archString() {
+    return myArchString.get();
+  }
+
+  /**
+   * An x86-64 JVM on an Apple silicon Mac runs translated by Rosetta 2 and sees "x86_64" - the machine is an arm64 one.
+   */
+  private String detectArchString() {
+    String jvmArch = jvmArchString();
+    if (CpuArchitecture.of(jvmArch) == CpuArchitecture.X86_64 && isUnderRosetta()) {
+      return "arm64";
+    }
+    return jvmArch;
+  }
+
+  // https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment
+  private static boolean isUnderRosetta() {
+    try {
+      IntByReference translated = new IntByReference(0);
+      IntByReference size = new IntByReference(Integer.BYTES);
+      // fails with ENOENT on an Intel Mac - nothing translates there
+      int result = SystemB.INSTANCE.sysctlbyname("sysctl.proc_translated", translated.getPointer(), size, null, 0);
+      // the value is an int - anything else is not the key asked for
+      return result == 0 && size.getValue() == Integer.BYTES && translated.getValue() == 1;
+    }
+    catch (Throwable e) {
+      LOG.debug("Cannot ask whether the process is translated", e);
+      return false;
+    }
   }
 }

@@ -84,7 +84,7 @@ public final class HttpClientUtil {
         Platform platform = Platform.current();
         String java = "JRE " + platform.jvm().rawVersion();
         String os = platform.os().name() + " " + platform.os().version();
-        String arch = platform.os().arch();
+        String arch = platform.os().archString();
         return agentName + " " + ideName + "/" + ideBuild + " (" + java + "; " + os + "; " + arch + ")";
     }
 

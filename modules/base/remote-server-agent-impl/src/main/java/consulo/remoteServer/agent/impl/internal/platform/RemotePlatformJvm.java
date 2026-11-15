@@ -32,19 +32,7 @@ public class RemotePlatformJvm implements PlatformJvm {
     private final CpuArchitecture myArch;
 
     public RemotePlatformJvm(String archString) {
-        myArch = mapArchitecture(archString);
-    }
-
-    private static CpuArchitecture mapArchitecture(String arch) {
-        return switch (arch) {
-            case "x86_64", "amd64" -> CpuArchitecture.X86_64;
-            case "aarch64", "arm64" -> CpuArchitecture.AARCH64;
-            case "x86", "i386", "i686" -> CpuArchitecture.X86;
-            case "riscv64" -> CpuArchitecture.RISCV64;
-            case "loongarch64" -> CpuArchitecture.LOONG64;
-            case "e2k" -> CpuArchitecture.E2K;
-            default -> new CpuArchitecture(arch, 64, "");
-        };
+        myArch = CpuArchitecture.of(archString);
     }
 
     @Override

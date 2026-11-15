@@ -23,7 +23,6 @@ import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -45,40 +44,12 @@ class PlatformJvmImpl implements PlatformJvm {
         myJavaName = jvmProperties.getOrDefault("java.vm.name", "n/a");
 
         String osArch = jvmProperties.getOrDefault("os.arch", "");
-        switch (osArch) {
-            case "x86_64":
-            case "x86-64":
-            case "amd64":
-                myCpuArchitecture = CpuArchitecture.X86_64;
-                break;
-            case "i386":
-            case "x86":
-                myCpuArchitecture = CpuArchitecture.X86;
-                break;
-            case "arm64":
-            case "aarch64":
-                myCpuArchitecture = CpuArchitecture.AARCH64;
-                break;
-            case "e2k":
-                myCpuArchitecture = CpuArchitecture.E2K;
-                break;
-            case "loongarch64":
-                myCpuArchitecture = CpuArchitecture.LOONG64;
-                break;
-            case "riscv64":
-                myCpuArchitecture = CpuArchitecture.RISCV64;
-                break;
-            default:
-                String name = osArch.toUpperCase(Locale.ROOT);
-                int width = 0;
-                String sunArchModel = jvmProperties.get("sun.arch.data.model");
-                if (sunArchModel != null) {
-                    width = StringUtil.parseInt(sunArchModel, 0);
-                }
-
-                myCpuArchitecture = new CpuArchitecture(name, width, "-" + name);
-                break;
+        int width = 0;
+        String sunArchModel = jvmProperties.get("sun.arch.data.model");
+        if (sunArchModel != null) {
+            width = StringUtil.parseInt(sunArchModel, 0);
         }
+        myCpuArchitecture = CpuArchitecture.of(osArch, width);
 
         String javaRuntimeVersion = jvmProperties.getOrDefault("java.runtime.version", "n/a");
 
