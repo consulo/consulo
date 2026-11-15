@@ -21,8 +21,6 @@ import consulo.ai.AIChatInputFactory;
 import consulo.ai.editor.impl.internal.review.AIPlanReviewManager;
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionParentRef;
-import consulo.annotation.component.ActionRef;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.toolbar.floating.CodeFloatingToolbar;
 import consulo.disposer.Disposable;
@@ -39,7 +37,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.layout.HorizontalLayout;
@@ -57,12 +54,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2026-11-14
  */
-@ActionImpl(
-    id = CommentForAIAction.ID,
-    parents = {
-        @ActionParentRef(@ActionRef(id = IdeActions.GROUP_EDITOR_POPUP))
-    }
-)
+@ActionImpl(id = CommentForAIAction.ID)
 public class CommentForAIAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     private static final int COLUMNS = 60;
 

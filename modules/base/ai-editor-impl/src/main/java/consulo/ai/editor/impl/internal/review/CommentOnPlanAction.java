@@ -17,8 +17,6 @@ package consulo.ai.editor.impl.internal.review;
 
 import consulo.ai.editor.localize.AIEditorLocalize;
 import consulo.annotation.component.ActionImpl;
-import consulo.annotation.component.ActionParentRef;
-import consulo.annotation.component.ActionRef;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.Document;
@@ -29,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -38,7 +35,7 @@ import consulo.virtualFileSystem.VirtualFile;
  * @author VISTALL
  * @since 2026-11-14
  */
-@ActionImpl(id = CommentOnPlanAction.ID, parents = @ActionParentRef(@ActionRef(id = IdeActions.GROUP_EDITOR_POPUP)))
+@ActionImpl(id = CommentOnPlanAction.ID)
 public class CommentOnPlanAction extends DumbAwareAction implements AnActionWithSyncUpdate {
     public static final String ID = "AI.CommentOnPlan";
 

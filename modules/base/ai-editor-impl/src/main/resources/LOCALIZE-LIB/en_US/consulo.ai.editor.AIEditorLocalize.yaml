@@ -60,3 +60,9 @@ button.changes.review.send:
     text: Send Review
 button.changes.review.send.description:
     text: Send the comments on the changes to the agent
+group.ai.editor.popup.text:
+    text: AI
+configurable.editor:
+    text: Editor
+checkbox.show.editor.popup.group:
+    text: Show AI action group in editor popup

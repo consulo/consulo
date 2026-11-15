@@ -33,7 +33,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.List;
@@ -48,7 +47,6 @@ import java.util.List;
 @ActionImpl(
     id = AddSelectionToAIChatAction.ID,
     parents = {
-        @ActionParentRef(@ActionRef(id = IdeActions.GROUP_EDITOR_POPUP)),
         @ActionParentRef(@ActionRef(id = CodeFloatingToolbarActions.GROUP))
     }
 )

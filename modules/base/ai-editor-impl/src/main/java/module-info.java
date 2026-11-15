@@ -16,4 +16,5 @@ module consulo.ai.editor.impl {
     requires consulo.local.history.api;
 
     opens consulo.ai.editor.impl.internal.review.state to consulo.util.xml.serializer;
+    opens consulo.ai.editor.impl.internal.setting.state to consulo.util.xml.serializer;
 }
