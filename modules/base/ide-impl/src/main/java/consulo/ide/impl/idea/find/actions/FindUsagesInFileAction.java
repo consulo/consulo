@@ -102,7 +102,12 @@ public class FindUsagesInFileAction extends LegacyAnAction {
             if (language == null) {
                 language = file.getLanguage();
             }
-            return !(FindUsagesProvider.forLanguage(language) instanceof EmptyFindUsagesProvider);
+            if (!(FindUsagesProvider.forLanguage(language) instanceof EmptyFindUsagesProvider)) {
+                return true;
+            }
+            // a UsageTargetProvider may supply targets for a language without a FindUsagesProvider
+            UsageTarget[] targets = dataContext.getData(UsageView.USAGE_TARGETS_KEY);
+            return targets != null && targets.length > 0;
         }
     }
 
