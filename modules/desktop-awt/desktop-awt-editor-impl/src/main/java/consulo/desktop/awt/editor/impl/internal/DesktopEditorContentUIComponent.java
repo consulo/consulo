@@ -28,6 +28,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.project.Project;
+import consulo.ui.HasFocus;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.CutProvider;
@@ -44,7 +45,7 @@ import org.jspecify.annotations.Nullable;
  * @author VISTALL
  * @since 2026-08-17
  */
-public class DesktopEditorContentUIComponent extends SwingComponentDelegate<EditorComponentImpl> {
+public class DesktopEditorContentUIComponent extends SwingComponentDelegate<EditorComponentImpl> implements HasFocus {
     private final DesktopEditorImpl myEditor;
 
     public DesktopEditorContentUIComponent(DesktopEditorImpl editor) {
