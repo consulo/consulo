@@ -23,7 +23,10 @@ import consulo.util.dataholder.UserDataHolderBase;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class RefactoringEventData extends UserDataHolderBase {
@@ -32,6 +35,14 @@ public class RefactoringEventData extends UserDataHolderBase {
     public static final Key<String[]> STRING_PROPERTIES = Key.create("stringProperties");
     public static final Key<PsiElement[]> PSI_ELEMENT_ARRAY_KEY = Key.create("elementArray");
     public static final Key<Collection<UsageInfo>> USAGE_INFOS_KEY = Key.create("usageInfos");
+    /**
+     * The target of the refactoring, e.g., the new parent directory of moved files and directories.
+     */
+    public static final Key<PsiElement> TARGET_ELEMENT_KEY = Key.create("targetElement");
+    /**
+     * All elements of a rename mapped to their new names, the primary element first, then the automatic renames.
+     */
+    public static final Key<Map<PsiElement, String>> RENAMES_KEY = Key.create("renames");
 
     public void addElement(PsiElement element) {
         putUserData(PSI_ELEMENT_KEY, element);
@@ -59,5 +70,16 @@ public class RefactoringEventData extends UserDataHolderBase {
 
     public void addStringProperties(String... properties) {
         putUserData(STRING_PROPERTIES, properties);
+    }
+
+    public void addTargetElement(PsiElement target) {
+        putUserData(TARGET_ELEMENT_KEY, target);
+    }
+
+    /**
+     * Stores an unmodifiable copy of {@code renames}, in the order of the given map.
+     */
+    public void addRenames(Map<? extends PsiElement, String> renames) {
+        putUserData(RENAMES_KEY, Collections.unmodifiableMap(new LinkedHashMap<>(renames)));
     }
 }
