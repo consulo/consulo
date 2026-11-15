@@ -22,6 +22,7 @@ import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointCacheKey;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
+import consulo.language.Language;
 import consulo.language.editor.hierarchy.HierarchyKind;
 import consulo.language.editor.hierarchy.HierarchyModel;
 import consulo.language.editor.hierarchy.HierarchyProvider;
@@ -62,7 +63,7 @@ public class HierarchyBrowseServiceImpl implements HierarchyBrowseService {
     private static final ExtensionPointCacheKey CACHE_KEY =
         ExtensionPointCacheKey.<HierarchyProvider, ByLanguageValue<List<HierarchyProvider>>>create(
             "HierarchyProvider",
-            LanguageOneToMany.build(false)
+            LanguageOneToMany.buildOrAny()
         );
 
     private static final Logger LOG = Logger.getInstance(HierarchyBrowseServiceImpl.class);
@@ -275,11 +276,16 @@ public class HierarchyBrowseServiceImpl implements HierarchyBrowseService {
         ExtensionPoint<HierarchyProvider> point = Application.get().getExtensionPoint(HierarchyProvider.class);
         ByLanguageValue<List<HierarchyProvider>> get = (ByLanguageValue<List<HierarchyProvider>>)point.getOrBuildCache(CACHE_KEY);
 
+        // the Language.ANY providers are used for a file only
+        boolean withAnyLanguage = element instanceof PsiFile;
         List<HierarchyProvider> providers = get.requiredGet(element.getLanguage());
         HierarchyProvider<?> firstOfKind = null;
         for (HierarchyProvider provider : providers) {
             try {
                 if (!kind.equals(provider.getKind())) {
+                    continue;
+                }
+                if (!withAnyLanguage && provider.getLanguage() == Language.ANY && element.getLanguage() != Language.ANY) {
                     continue;
                 }
                 if (firstOfKind == null) {
