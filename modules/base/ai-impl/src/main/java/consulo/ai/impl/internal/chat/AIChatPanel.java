@@ -1070,6 +1070,11 @@ public class AIChatPanel implements Disposable {
     private void updateWorkingDirectoryTooltip() {
         Path directory = myWorkingDirectory;
         myWorkingDirectoryButton.setToolTipText(AILocalize.labelWorkingDirectory(directory == null ? "" : directory.toString()));
+        // a chat which works elsewhere than the project says where - the agent sees that folder, not the project
+        Path project = projectDirectory();
+        Path name = directory == null ? null : directory.getFileName();
+        boolean elsewhere = directory != null && (project == null || !directory.toAbsolutePath().normalize().equals(project.toAbsolutePath().normalize()));
+        myWorkingDirectoryButton.setText(elsewhere && name != null ? LocalizeValue.of(AIChatTexts.escape(name.toString())) : LocalizeValue.empty());
     }
 
     @Override
