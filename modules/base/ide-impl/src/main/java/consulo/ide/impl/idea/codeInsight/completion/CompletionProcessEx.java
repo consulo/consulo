@@ -14,13 +14,14 @@ import consulo.language.pattern.ElementPattern;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 
+import consulo.util.dataholder.UserDataHolderEx;
 import org.jspecify.annotations.Nullable;
 import java.util.function.Supplier;
 
 /**
  * @author yole
  */
-interface CompletionProcessEx extends CompletionProcess {
+interface CompletionProcessEx extends CompletionProcess, UserDataHolderEx {
   
   Project getProject();
 

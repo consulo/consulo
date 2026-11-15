@@ -28,6 +28,12 @@ public abstract class CompletionService {
    */
   public static final Key<CompletionWeigher> RELEVANCE_KEY = Key.create("completion");
 
+  /**
+   * When set to {@code true} on the completion process (a {@link consulo.util.dataholder.UserDataHolder}, see
+   * {@link CompletionParameters#getProcess()}) or on the original file, the word completion adds no variants.
+   */
+  public static final Key<Boolean> FORBID_WORD_COMPLETION = Key.create("ForbidWordCompletion");
+
   public static CompletionService getCompletionService() {
     return Application.get().getInstance(CompletionService.class);
   }
