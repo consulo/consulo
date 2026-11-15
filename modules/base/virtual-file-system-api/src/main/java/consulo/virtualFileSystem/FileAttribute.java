@@ -52,6 +52,14 @@ public class FileAttribute {
     assert added : "Attribute id='" + id+ "' is not unique";
   }
 
+  /**
+   * Forgets the registered ids after plugins were unloaded at runtime, so they can register their attributes again
+   * when loaded.
+   */
+  public static void resetRegisteredIds() {
+    ourRegisteredIds.clear();
+  }
+
   private FileAttribute(int version, boolean fixedSize,String id) {
     myId = id;
     myVersion = version;

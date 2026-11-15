@@ -17,6 +17,7 @@ package consulo.language;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
+import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointer;
 import org.jspecify.annotations.Nullable;
 
@@ -28,9 +29,18 @@ import java.util.Collection;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public interface LanguageRegistry {
+    static LanguageRegistry getInstance() {
+        return Application.get().getInstance(LanguageRegistry.class);
+    }
+
     @Nullable Language findLanguage(String languageId);
 
     NamedPointer<Language> createLanguagePointer(String languageId);
 
     Collection<Language> getLanguages();
+
+    /**
+     * Changes when languages are registered or unregistered, caches keyed by a language compare it.
+     */
+    long getModificationCount();
 }

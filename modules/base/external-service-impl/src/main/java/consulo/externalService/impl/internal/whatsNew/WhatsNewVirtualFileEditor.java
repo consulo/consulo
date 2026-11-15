@@ -94,7 +94,7 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
             PluginDescriptor plugin = PluginManager.findPlugin(pluginId);
             if (plugin != null) {
-                return PluginIconHolder.get(plugin);
+                return PluginIconHolder.getLarge(plugin);
             }
 
             return null;
@@ -219,8 +219,8 @@ public class WhatsNewVirtualFileEditor extends ConfigurationFileEditor {
 
                 HtmlChunk.Element pluginImg = HtmlChunk.tag("img")
                     .attr("src", HtmlView.IMAGE_SRC_PREFIX + key.getIdString())
-                    .attr("width", PluginIconHolder.ICON_SIZE)
-                    .attr("height", PluginIconHolder.ICON_SIZE);
+                    .attr("width", PluginIconHolder.LARGE_ICON_SIZE)
+                    .attr("height", PluginIconHolder.LARGE_ICON_SIZE);
                 imgTd = imgTd.child(pluginImg);
 
                 HtmlChunk.Element nameTd = HtmlChunk.tag("td").style("padding-left: 10px");

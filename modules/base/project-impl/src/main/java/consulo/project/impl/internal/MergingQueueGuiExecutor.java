@@ -99,6 +99,7 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
     private final LocalizeValue myProgressTitle;
     private final LocalizeValue mySuspendedText;
     private final AtomicInteger myBackgroundTasksSubmitted = new AtomicInteger(0);
+    private final AtomicInteger myStartedTasks = new AtomicInteger();
     private final MutableObservableValue<Integer> myScheduledTasks = MutableObservableValue.of(0);
     private final ExecutorService mySchedulingExecutor;
 
@@ -195,6 +196,7 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
                                 @Override
                                 public void run(ProgressIndicator indicator) {
                                     actionStarted.set(true);
+                                    myStartedTasks.incrementAndGet();
                                     try (ProgressSuspender ignored = ProgressSuspender.markSuspendable(indicator, mySuspendedText)) {
                                         try (task) {
                                             task.run(indicator);
@@ -207,6 +209,7 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
                                         LOG.error("Failed to execute background index update task", t);
                                     }
                                     finally {
+                                        myStartedTasks.decrementAndGet();
                                         // it is important to run onFinish after the task execution and not as a callback
                                         // to Task.Backgroundable because these callbacks are executed on EDT in NON_MODAL,
                                         // while this task can run on background regardless of modality
@@ -288,6 +291,14 @@ public class MergingQueueGuiExecutor<T extends MergeableQueueTask<T>> {
     /**
      * @return state containing {@code true} if some task is currently executed in background thread.
      */
+    /**
+     * @return whether a background process is executing tasks now; a process waiting to start (its progress needs
+     * a non-modal UI thread) does not count
+     */
+    public boolean hasStartedTask() {
+        return myStartedTasks.get() > 0;
+    }
+
     public ObservableValue<Boolean> isRunning() {
         return mySingleTaskExecutor.isRunning();
     }

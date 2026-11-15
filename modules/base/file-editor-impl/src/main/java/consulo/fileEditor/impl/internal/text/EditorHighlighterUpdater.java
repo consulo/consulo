@@ -9,15 +9,11 @@ import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.language.custom.CustomSyntaxTableFileType;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.project.Project;
 import consulo.project.event.DumbModeListener;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeEvent;
 import consulo.virtualFileSystem.fileType.FileTypeListener;
 import org.jspecify.annotations.Nullable;
@@ -80,31 +76,14 @@ public class EditorHighlighterUpdater {
     }
   }
 
-  private void updateHighlightersSynchronously() {
-    if (!myProject.isDisposed() && !myEditor.isDisposed()) {
-      myEditor.setHighlighter(createHighlighter());
-    }
-  }
-
   /**
    * Listen changes of file types. When type of the file changes we need
    * to also change highlighter.
    */
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
-    @RequiredUIAccess
     public void fileTypesChanged(FileTypeEvent event) {
-      UIAccess.assertIsUIThread();
-      // File can be invalid after file type changing. The editor should be removed
-      // by the FileEditorManager if it's invalid.
-      FileType type = event.getRemovedFileType();
-      if (type != null && !(type instanceof CustomSyntaxTableFileType)) {
-        // Plugin is being unloaded, so we need to release plugin classes immediately
-        updateHighlightersSynchronously();
-      }
-      else {
-        updateHighlighters();
-      }
+      updateHighlighters();
     }
   }
 }

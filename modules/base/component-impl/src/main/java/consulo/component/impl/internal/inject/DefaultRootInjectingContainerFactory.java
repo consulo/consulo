@@ -74,6 +74,16 @@ public class DefaultRootInjectingContainerFactory implements RootInjectingContai
     }
 
     @Override
+    public InjectingContainerBuilder appendBuilder() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Object> removeBindings(ClassLoader classLoader) {
+      return List.of();
+    }
+
+    @Override
     public void dispose() {
     }
   };

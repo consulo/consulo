@@ -243,7 +243,7 @@ public class UnifiedNewProjectPanel implements NewProjectWizardData, Disposable 
 
         myMoreViaPlugins = Hyperlink.create(
             LocalizeValue.localizeTODO("More via plugins…"),
-            event -> PluginAdvertiserHelper.getInstance().showDialogForExtension(ExtensionPreview.of(NewModuleBuilder.class, "*"))
+            event -> PluginAdvertiserHelper.getInstance().showPlugins(null, List.of(ExtensionPreview.of(NewModuleBuilder.class, "*")))
         );
 
         WrappedLayout southPanel = WrappedLayout.create(myMoreViaPlugins);

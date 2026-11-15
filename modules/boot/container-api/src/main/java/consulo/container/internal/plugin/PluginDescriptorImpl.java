@@ -440,6 +440,14 @@ public class PluginDescriptorImpl extends PluginDescriptorStub {
         myLoader = loader;
     }
 
+    /**
+     * Drops the class loader and the module layer of a plugin unloaded at runtime.
+     */
+    public void clearRuntimeReferences() {
+        myLoader = null;
+        myModuleLayer = null;
+    }
+
     public void setModuleLayer(ModuleLayer moduleLayer) {
         myModuleLayer = moduleLayer;
     }

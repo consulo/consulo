@@ -20,12 +20,33 @@ import consulo.util.xml.serializer.internal.DefaultValue;
 import org.jspecify.annotations.Nullable;
 import org.jdom.Element;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SkipDefaultValuesSerializationFilters extends SerializationFilterBase {
-  private final Map<Class<?>, Object> myDefaultBeans = new HashMap<>();
+  private static final Set<SkipDefaultValuesSerializationFilters> ourInstances =
+    Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
+
+  private final Map<Class<?>, Object> myDefaultBeans = new ConcurrentHashMap<>();
+
+  {
+    ourInstances.add(this);
+  }
+
+  /**
+   * Forgets default beans of classes from the class loader of an unloaded plugin.
+   */
+  static void dropCachedClasses(ClassLoader classLoader) {
+    synchronized (ourInstances) {
+      for (SkipDefaultValuesSerializationFilters filters : ourInstances) {
+        filters.myDefaultBeans.keySet().removeIf(aClass -> aClass.getClassLoader() == classLoader);
+      }
+    }
+  }
 
   @Override
   protected boolean accepts(Accessor accessor, Object bean, @Nullable Object beanValue) {

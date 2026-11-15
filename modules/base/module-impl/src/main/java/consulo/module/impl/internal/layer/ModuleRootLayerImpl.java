@@ -975,6 +975,61 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         myOrderEntries.clear();
     }
 
+    /**
+     * Extensions of a plugin unloaded at runtime are kept as unknown elements, so they are saved and come back with
+     * the plugin.
+     *
+     * @return whether an enabled extension was removed
+     */
+    public boolean unloadPluginExtensions(ClassLoader classLoader) {
+        boolean enabledRemoved = false;
+        for (Iterator<ModuleExtension> it = myExtensions.values().iterator(); it.hasNext(); ) {
+            ModuleExtension<?> extension = it.next();
+            if (extension.getClass().getClassLoader() != classLoader) {
+                continue;
+            }
+
+            Element state = extension.getState();
+            if (state != null) {
+                myUnknownModuleExtensions.add(state);
+            }
+            enabledRemoved |= extension.isEnabled();
+            if (extension instanceof Disposable disposable) {
+                Disposer.dispose(disposable);
+            }
+            it.remove();
+        }
+        return enabledRemoved;
+    }
+
+    /**
+     * Creates extensions of providers added at runtime, with the state kept from an earlier install.
+     *
+     * @return whether an enabled extension was added
+     */
+    @SuppressWarnings("unchecked")
+    public boolean loadPluginExtensions() {
+        boolean enabledAdded = false;
+        for (ModuleExtensionProvider provider : Application.get().getExtensionPoint(ModuleExtensionProvider.class).getExtensionList()) {
+            String id = provider.getId();
+            if (myExtensions.containsKey(id)) {
+                continue;
+            }
+
+            MutableModuleExtension extension = provider.createMutableExtension(this);
+            for (Iterator<Element> it = myUnknownModuleExtensions.iterator(); it.hasNext(); ) {
+                Element element = it.next();
+                if (id.equals(element.getAttributeValue("id"))) {
+                    extension.loadState(element);
+                    it.remove();
+                }
+            }
+            myExtensions.put(id, extension);
+            enabledAdded |= extension.isEnabled();
+        }
+        return enabledAdded;
+    }
+
     private void removeAllExtensions() {
         for (ModuleExtension<?> extension : myExtensions.values()) {
             if (extension instanceof Disposable) {

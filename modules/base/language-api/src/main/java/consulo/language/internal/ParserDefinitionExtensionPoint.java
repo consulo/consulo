@@ -38,7 +38,7 @@ public class ParserDefinitionExtensionPoint {
 
     public static @Nullable ParserDefinition forLanguage(Application application, Language language) {
         ExtensionValueCache<ParserDefinition> cache = language.getUserData(VALUE_KEY);
-        if (cache != null) {
+        if (cache != null && cache.isUpToDate()) {
             return cache.get();
         }
 

@@ -124,7 +124,7 @@ public class UnifiedCheckoutPanel implements WelcomeSlide {
 
         Hyperlink moreViaPlugins = Hyperlink.create(
             LocalizeValue.localizeTODO("More via plugins…"),
-            event -> PluginAdvertiserHelper.getInstance().showDialogForExtension(ExtensionPreview.of(CheckoutProvider.class, "*"))
+            event -> PluginAdvertiserHelper.getInstance().showPlugins(null, List.of(ExtensionPreview.of(CheckoutProvider.class, "*")))
         );
 
         WrappedLayout southPanel = WrappedLayout.create(moreViaPlugins);

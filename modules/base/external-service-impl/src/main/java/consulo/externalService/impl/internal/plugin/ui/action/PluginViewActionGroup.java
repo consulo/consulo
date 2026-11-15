@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2024 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.plugin;
+package consulo.externalService.impl.internal.plugin.ui.action;
+
+import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.action.DefaultActionGroup;
 
 /**
  * @author VISTALL
- * @since 2024-12-23
+ * @since 2026-11-14
  */
-@Deprecated
-public interface PluginContants {
-    public static final String CONFIGURABLE_ID = PluginsConfigurable.CONFIGURABLE_ID;
+public class PluginViewActionGroup extends DefaultActionGroup implements DumbAware {
+    public PluginViewActionGroup() {
+        super("Show", true);
+    }
 }

@@ -62,8 +62,8 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
         return result;
     }
 
-    private static class Holder {
-        private static final List<FileIncludeProvider> myProviders = FileIncludeProvider.EP_NAME.getExtensionList();
+    private static List<FileIncludeProvider> getProviders() {
+        return FileIncludeProvider.EP_NAME.getExtensionList();
     }
 
     
@@ -82,7 +82,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
 
                 Map<String, List<FileIncludeInfoImpl>> map = FactoryMap.create(key -> new ArrayList<>());
 
-                for (FileIncludeProvider provider : Holder.myProviders) {
+                for (FileIncludeProvider provider : getProviders()) {
                     if (!provider.acceptFile(inputData.getFile())) {
                         continue;
                     }
@@ -143,7 +143,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
                 if (file.getFileSystem() instanceof ArchiveFileSystem) {
                     return false;
                 }
-                for (FileIncludeProvider provider : Holder.myProviders) {
+                for (FileIncludeProvider provider : getProviders()) {
                     if (provider.acceptFile(file)) {
                         return true;
                     }
@@ -153,7 +153,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
 
             @Override
             public void registerFileTypesUsedForIndexing(Consumer<FileType> fileTypeSink) {
-                for (FileIncludeProvider provider : Holder.myProviders) {
+                for (FileIncludeProvider provider : getProviders()) {
                     provider.registerFileTypesUsedForIndexing(fileTypeSink);
                 }
             }
@@ -168,7 +168,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
     @Override
     public int getVersion() {
         int version = BASE_VERSION;
-        for (FileIncludeProvider provider : Holder.myProviders) {
+        for (FileIncludeProvider provider : getProviders()) {
             version = version * 31 + (provider.getVersion() ^ provider.getClass().getName().hashCode());
         }
         return version;

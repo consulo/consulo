@@ -152,6 +152,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
             }
         }
         importPlaces(getDefaultInjections());
+        configurationModified();
     }
 
     private static @Nullable InjectionPlace[] dropKnownInvalidPlaces(InjectionPlace[] places) {
@@ -264,6 +265,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
      */
     protected final void importDefaultInjections() {
         importPlaces(getDefaultInjections());
+        configurationModified();
     }
 
     private int importPlaces(List<BaseInjection> injections) {

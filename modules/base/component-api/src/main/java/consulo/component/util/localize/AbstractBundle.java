@@ -72,6 +72,13 @@ public abstract class AbstractBundle {
 
   private static final Map<ClassLoader, Map<String, ResourceBundle>> ourCache = new ConcurrentHashMap<>();
 
+  /**
+   * Forgets bundles of the class loader of an unloaded plugin.
+   */
+  public static void dropCachedBundles(ClassLoader classLoader) {
+    ourCache.remove(classLoader);
+  }
+
   public static ResourceBundle getResourceBundle(String pathToBundle, ClassLoader loader) {
     Map<String, ResourceBundle> map = ourCache.computeIfAbsent(loader, classLoader -> new ConcurrentHashMap<>());
     return map.computeIfAbsent(pathToBundle, s -> ResourceBundle.getBundle(s, Locale.getDefault(), loader));

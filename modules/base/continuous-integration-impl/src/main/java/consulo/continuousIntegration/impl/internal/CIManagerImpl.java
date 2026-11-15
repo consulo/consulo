@@ -20,6 +20,8 @@ import consulo.accountManagement.AccountListener;
 import consulo.accountManagement.AccountManager;
 import consulo.accountManagement.AccountType;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.plugin.DynamicPluginChange;
+import consulo.application.plugin.DynamicPluginListener;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -61,6 +63,7 @@ public class CIManagerImpl implements CIManager, PersistentStateComponent<Elemen
 
     private volatile List<CIServerEntry> myEntries = List.of();
     private volatile List<CIServer> myServers = List.of();
+    private volatile @Nullable Element myStateBeforeChange;
 
     @Inject
     public CIManagerImpl(Project project, AccountManager accountManager) {
@@ -104,6 +107,22 @@ public class CIManagerImpl implements CIManager, PersistentStateComponent<Elemen
                     rebuildServers();
                 }
             }, this);
+
+            myProject.getMessageBus().connect(this).subscribe(DynamicPluginListener.class, new DynamicPluginListener() {
+                @Override
+                public void beforePluginsChange(DynamicPluginChange change) {
+                    myStateBeforeChange = getState();
+                }
+
+                @Override
+                public void pluginsChanged(DynamicPluginChange change) {
+                    Element state = myStateBeforeChange;
+                    myStateBeforeChange = null;
+                    if (state != null) {
+                        loadState(state);
+                    }
+                }
+            });
         }
         rebuildServers();
     }

@@ -60,6 +60,11 @@ public interface IComponentStore {
   Continuation<?> reinitComponents(Set<String> componentNames);
 
 
+  /**
+   * Forgets components of a plugin unloaded at runtime; their last saved state stays in the storages.
+   */
+  void unloadComponents(ClassLoader classLoader);
+
   StateStorageManager getStateStorageManager();
 
   /**

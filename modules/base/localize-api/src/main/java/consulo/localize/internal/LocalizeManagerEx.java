@@ -28,11 +28,12 @@ public interface LocalizeManagerEx {
     void afterInit();
 
     /**
-     * Reads the texts of a plugin which is on disk but not loaded - one installed during this run, which the application
-     * only loads at its next start. Only the prepared index of the plugin is read, so texts kept in files of their own
-     * stay missing until then.
-     *
-     * @return whether the plugin had an index to read
+     * Reads the texts of a plugin loaded at runtime from the given directory.
      */
-    boolean loadPluginIndex(Path pluginPath);
+    void loadPlugin(Path pluginPath);
+
+    /**
+     * Drops the texts of a plugin unloaded at runtime, which was loaded from the given directory.
+     */
+    void unloadPlugin(Path pluginPath);
 }

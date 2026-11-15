@@ -55,6 +55,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     private static final String ELEMENT_SDK = "sdk";
 
     private final List<SdkImpl> mySdks = new ArrayList<>();
+    private final Map<SdkImpl, Element> myPendingSdkStates = new IdentityHashMap<>();
 
     private final Application myApplication;
 
@@ -244,6 +245,51 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     @Override
     public Sdk createSdk(Path homePath, String name, SdkTypeId sdkType) {
         return new SdkImpl(this, sdkType, homePath, name);
+    }
+
+    /**
+     * SDKs of a type from a plugin unloaded at runtime: predefined ones are removed, the others keep their state, which
+     * is read again with an unknown type after the unload.
+     */
+    public void beforePluginUnload(ClassLoader classLoader) {
+        for (Iterator<SdkImpl> it = mySdks.iterator(); it.hasNext(); ) {
+            SdkImpl sdk = it.next();
+            if (sdk.getSdkType().getClass().getClassLoader() != classLoader) {
+                continue;
+            }
+
+            if (sdk.isPredefined()) {
+                myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkRemoved(sdk);
+                it.remove();
+                myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkRemoved(sdk);
+            }
+            else {
+                Element state = new Element(ELEMENT_SDK);
+                sdk.writeExternal(state);
+                myPendingSdkStates.put(sdk, state);
+            }
+        }
+    }
+
+    /**
+     * Reads SDK states again after plugins were loaded or unloaded at runtime: types of unloaded plugins become unknown,
+     * unknown types of loaded plugins resolve. The SDK objects stay.
+     */
+    public void sdkTypesChanged() {
+        for (SdkImpl sdk : mySdks) {
+            Element state = myPendingSdkStates.remove(sdk);
+            if (state == null
+                && sdk.getSdkType() instanceof UnknownSdkType unknownType
+                && !(findSdkTypeByName(unknownType.getId()) instanceof UnknownSdkType)) {
+                state = new Element(ELEMENT_SDK);
+                sdk.writeExternal(state);
+            }
+
+            if (state != null) {
+                sdk.readExternal(state, this);
+            }
+        }
+        myPendingSdkStates.clear();
     }
 
     @Override

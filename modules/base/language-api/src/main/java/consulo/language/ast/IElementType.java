@@ -165,8 +165,26 @@ public class IElementType {
      * @throws IndexOutOfBoundsException if the index is out of registered elements' range.
      */
     public static IElementType find(short idx) {
-        // volatile read; array always grows, never shrinks, never overwritten
+        // volatile read; array always grows, never shrinks
         return ourRegistry[idx];
+    }
+
+    /**
+     * Removes element types of a plugin unloaded at runtime - of its classes or of its languages. Their indexes are not reused.
+     */
+    @SuppressWarnings("NullAway")
+    public static void unregisterTypes(ClassLoader classLoader) {
+        synchronized (lock) {
+            IElementType[] registry = ourRegistry.clone();
+            for (int i = 0; i < registry.length; i++) {
+                IElementType type = registry[i];
+                if (type != null
+                    && (type.getClass().getClassLoader() == classLoader || type.myLanguage.getClass().getClassLoader() == classLoader)) {
+                    registry[i] = null;
+                }
+            }
+            ourRegistry = registry;
+        }
     }
 
     static short getAllocatedTypesCount() {

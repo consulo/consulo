@@ -109,21 +109,49 @@ public class LocalizeManagerImpl extends LocalizeManager implements LocalizeMana
     }
 
     private void init(List<Runnable> actions) {
-        PluginManager.forEachEnabledPlugin(pluginDescriptor -> actions.add(() -> {
-            if (!loadIndex(pluginDescriptor, Objects.requireNonNull(pluginDescriptor.getNioPath()))) {
-                loadWithoutIndex(pluginDescriptor);
-            }
-        }));
+        PluginManager.forEachEnabledPlugin(pluginDescriptor -> actions.add(() -> loadPluginTexts(pluginDescriptor)));
     }
 
     @Override
-    public boolean loadPluginIndex(Path pluginPath) {
-        boolean loaded = loadIndex(null, pluginPath);
-        if (loaded) {
-            myAutoDetectedLocale.clear();
-            myModificationCount++;
+    public void loadPlugin(Path pluginPath) {
+        PluginDescriptor pluginDescriptor = null;
+        for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+            if (pluginPath.equals(descriptor.getNioPath())) {
+                pluginDescriptor = descriptor;
+                break;
+            }
         }
-        return loaded;
+
+        if (pluginDescriptor == null) {
+            LOG.error("Plugin is not loaded: " + pluginPath);
+            return;
+        }
+
+        loadPluginTexts(pluginDescriptor);
+
+        myAutoDetectedLocale.clear();
+        myModificationCount++;
+    }
+
+    @Override
+    public void unloadPlugin(Path pluginPath) {
+        for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
+            if (pluginPath.equals(descriptor.getNioPath())) {
+                for (Map<String, LocalizeLoader<?>> loaders : myLocalizes.values()) {
+                    loaders.values().removeIf(loader -> loader.isFrom(descriptor));
+                }
+            }
+        }
+
+        myLocalizes.values().removeIf(Map::isEmpty);
+        myAutoDetectedLocale.clear();
+        myModificationCount++;
+    }
+
+    private void loadPluginTexts(PluginDescriptor pluginDescriptor) {
+        if (!loadIndex(pluginDescriptor, Objects.requireNonNull(pluginDescriptor.getNioPath()))) {
+            loadWithoutIndex(pluginDescriptor);
+        }
     }
 
     private boolean loadIndex(@Nullable PluginDescriptor pluginDescriptor, Path pluginPath) {

@@ -18,11 +18,7 @@ package consulo.language.internal;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.language.Language;
 import consulo.language.LanguageRegistry;
-import consulo.util.lang.lazy.ClearableLazyValue;
-import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -33,16 +29,9 @@ class LanguagePointerImpl implements NamedPointer<Language> {
 
     private final LanguageRegistry myLanguageRegistry;
 
-    private final ClearableLazyValue<Language> myValue;
-
     public LanguagePointerImpl(String id, LanguageRegistry languageRegistry) {
         myId = id;
         myLanguageRegistry = languageRegistry;
-        myValue = ClearableLazyValue.nullable(() -> myLanguageRegistry.findLanguage(id));
-    }
-
-    public void reset() {
-        myValue.clear();
     }
 
     @Override
@@ -52,6 +41,6 @@ class LanguagePointerImpl implements NamedPointer<Language> {
 
     @Override
     public @Nullable Language get() {
-        return myValue.get();
+        return myLanguageRegistry.findLanguage(myId);
     }
 }

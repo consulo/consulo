@@ -1,6 +1,7 @@
 // Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.index.impl.internal;
 
+import consulo.component.ProcessCanceledException;
 import consulo.index.io.ID;
 import consulo.index.io.IndexId;
 import consulo.language.index.impl.internal.hints.AcceptAllFilesAndDirectoriesIndexingHint;
@@ -177,6 +178,9 @@ final class RequiredIndexesEvaluator {
     private boolean acceptsInputSafely(ID<?, ?> indexId, Predicate<IndexedFile> filter, IndexedFile indexedFile) {
         try {
             return filter.test(indexedFile);
+        }
+        catch (ProcessCanceledException e) {
+            throw e;
         }
         catch (Throwable t) {
             String message = "Index '" + indexId.getName() + "': input filter failed on '" + indexedFile.getFileName() + "', " +

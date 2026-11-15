@@ -12,6 +12,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.LanguageRegistry;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -131,6 +132,7 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
 
     // used only from tests => no need for complex synchronization
     private volatile ClassMapCachingNulls<MultiHostInjector> cachedInjectors;
+    private volatile long cachedInjectorsModificationCount;
 
     @Override
     public void processInjectableElements(Collection<? extends PsiElement> in, Predicate<? super PsiElement> processor) {
@@ -144,13 +146,19 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
 
     
     private ClassMapCachingNulls<MultiHostInjector> getInjectorMap() {
+        // element classes are cached as keys, so a language plugin unload drops the map too
+        long modificationCount = myProject.getExtensionPoint(MultiHostInjector.class).getModificationCount()
+            + myProject.getApplication().getExtensionPoint(LanguageInjector.class).getModificationCount()
+            + LanguageRegistry.getInstance().getModificationCount();
+
         ClassMapCachingNulls<MultiHostInjector> cached = cachedInjectors;
-        if (cached != null) {
+        if (cached != null && cachedInjectorsModificationCount == modificationCount) {
             return cached;
         }
 
         ClassMapCachingNulls<MultiHostInjector> result = calcInjectorMap();
         cachedInjectors = result;
+        cachedInjectorsModificationCount = modificationCount;
         return result;
     }
 
@@ -175,7 +183,7 @@ public class InjectedLanguageManagerImpl implements InjectedLanguageManagerInter
         return new ClassMapCachingNulls<>(injectors, new MultiHostInjector[0], new ArrayList<>(allInjectors.values()));
     }
 
-    private void clearInjectorCache() {
+    public void clearInjectorCache() {
         cachedInjectors = null;
     }
 

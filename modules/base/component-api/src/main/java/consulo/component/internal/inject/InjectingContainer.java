@@ -61,5 +61,17 @@ public interface InjectingContainer {
   
   InjectingContainerBuilder childBuilder();
 
+  /**
+   * Builder which binds into this container, after it was built - for services of a plugin loaded at runtime.
+   */
+  InjectingContainerBuilder appendBuilder();
+
+  /**
+   * Removes the bindings of api classes from the given class loader - of a plugin unloaded at runtime.
+   *
+   * @return the created instances of the removed bindings
+   */
+  List<Object> removeBindings(ClassLoader classLoader);
+
   void dispose();
 }

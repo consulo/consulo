@@ -19,14 +19,18 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ExtensionAPI;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
+import consulo.component.extension.ExtensionExtender;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.internal.inject.InjectingBindingHolder;
 import consulo.component.internal.inject.InjectingBindingHolderImpl;
 import consulo.component.internal.inject.InjectingBindingLoader;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -69,6 +73,57 @@ public class NewExtensionAreaImpl {
     }
 
     
+    /**
+     * Rebuilds the extension points of the given api classes from the current bindings, after a plugin added or removed
+     * its bindings. Extension points of api classes from the unloaded class loader are dropped.
+     */
+    public void bindingsChanged(Set<String> apiClassNames, @Nullable ClassLoader unloadedClassLoader) {
+        if (unloadedClassLoader != null) {
+            myExtensionPoints.values().removeIf(point -> point.isApiClassFrom(unloadedClassLoader));
+            myExtensionPoints.values().forEach(NewExtensionPointImpl::dropCaches);
+        }
+
+        if (apiClassNames.isEmpty()) {
+            return;
+        }
+
+        InjectingBindingHolder holder = myInjectingBindingLoader.getHolder(ExtensionAPI.class, myComponentScope);
+        Map<String, List<InjectingBinding>> bindings = holder.getBindings();
+
+        Set<String> names = apiClassNames;
+        if (apiClassNames.contains(ExtensionExtender.class.getCanonicalName())) {
+            names = new HashSet<>(bindings.keySet());
+            names.addAll(myExtensionPoints.keySet());
+        }
+        else {
+            // extenders build values from other extensions, which may be the changed ones
+            Set<String> extended = new HashSet<>(names);
+            myApplicationGetter.get().getExtensionPoint(ExtensionExtender.class)
+                .forEachExtensionSafe(extender -> extended.add(extender.getExtensionClass().getCanonicalName()));
+            names = extended;
+        }
+
+        for (String apiClassName : names) {
+            List<InjectingBinding> list = bindings.getOrDefault(apiClassName, List.of());
+
+            NewExtensionPointImpl point = myExtensionPoints.get(apiClassName);
+            if (point != null) {
+                if (list.isEmpty() && unloadedClassLoader != null && point.isApiClassFrom(unloadedClassLoader)) {
+                    myExtensionPoints.remove(apiClassName, point);
+                }
+                else {
+                    point.reset(list);
+                }
+            }
+            else if (!list.isEmpty()) {
+                myExtensionPoints.put(
+                    apiClassName,
+                    new NewExtensionPointImpl(apiClassName, list, myComponentManager, myCheckCanceled, myComponentScope, myApplicationGetter)
+                );
+            }
+        }
+    }
+
     public Collection<? extends ExtensionPoint> getExtensionPoints() {
         return myExtensionPoints.values();
     }

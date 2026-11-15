@@ -15,19 +15,20 @@
  */
 package consulo.component.impl.internal.inject;
 
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Maps;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 
 import org.jspecify.annotations.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 class InstanceContainer {
   private final InstanceContainer myParent;
 
-  private final Map<Class, ComponentAdapter> myInstanceAdapters = Maps.newHashMap(HashingStrategy.identity());
+  private final Map<Class, ComponentAdapter> myInstanceAdapters = new ConcurrentHashMap<>();
 
   private final @Nullable Supplier<CoroutineContext> myCoroutineContext;
 
@@ -100,6 +101,23 @@ class InstanceContainer {
 
   private boolean contains(Class componentKey) {
     return myInstanceAdapters.containsKey(componentKey);
+  }
+
+  /**
+   * @return the created instances of the removed components
+   */
+  @SuppressWarnings("unchecked")
+  public List<Object> removeComponents(ClassLoader classLoader) {
+    List<Object> instances = new ArrayList<>();
+    for (Map.Entry<Class, ComponentAdapter> entry : myInstanceAdapters.entrySet()) {
+      if (entry.getKey().getClassLoader() == classLoader && myInstanceAdapters.remove(entry.getKey(), entry.getValue())) {
+        Object instance = entry.getValue().getComponentInstanceOfCreated(this);
+        if (instance != null) {
+          instances.add(instance);
+        }
+      }
+    }
+    return instances;
   }
 
   public void registerComponent(ComponentAdapter componentAdapter) {

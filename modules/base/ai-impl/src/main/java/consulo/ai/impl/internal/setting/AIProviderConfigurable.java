@@ -25,17 +25,22 @@ import consulo.ai.localize.AILocalize;
 import consulo.ai.impl.internal.setting.state.AISettingsState;
 import consulo.ai.impl.internal.setting.state.ProviderEntry;
 import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.application.plugin.DynamicPluginChange;
+import consulo.application.plugin.DynamicPluginListener;
 import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.MasterDetailsConfigurable;
 import consulo.configurable.StandardConfigurableIds;
 import consulo.configurable.UnifiedMasterDetailsComponent;
+import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.Component;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.Tree;
@@ -154,6 +159,25 @@ public class AIProviderConfigurable extends UnifiedMasterDetailsComponent
                 presentation.append(" (" + AILocalize.labelDefaultProvider().get() + ")", TextAttribute.GRAYED);
             }
         }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public Component createUIComponent(Disposable parentDisposable) {
+        Component component = super.createUIComponent(parentDisposable);
+
+        UIAccess uiAccess = UIAccess.current();
+        Application.get().getMessageBus().connect(parentDisposable).subscribe(DynamicPluginListener.class, new DynamicPluginListener() {
+            @Override
+            public void pluginsChanged(DynamicPluginChange change) {
+                uiAccess.give(() -> {
+                    if (!change.getUnloading().isEmpty() || !isModified()) {
+                        reset();
+                    }
+                });
+            }
+        });
+        return component;
     }
 
     @RequiredUIAccess

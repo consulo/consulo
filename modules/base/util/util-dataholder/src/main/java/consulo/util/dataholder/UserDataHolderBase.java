@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
+import java.util.function.Predicate;
 
 public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolderEx, Cloneable {
     public static final Key<KeyFMap> COPYABLE_USER_MAP_KEY = Key.create("COPYABLE_USER_MAP_KEY");
@@ -149,6 +150,19 @@ public class UserDataHolderBase implements CopyableUserDataHolder, UserDataHolde
 
     public void copyCopyableDataTo(UserDataHolderBase clone) {
         clone.putUserData(COPYABLE_USER_MAP_KEY, getUserData(COPYABLE_USER_MAP_KEY));
+    }
+
+    /**
+     * Removes the values the filter accepts.
+     */
+    @SuppressWarnings("unchecked")
+    protected void removeUserDataIf(Predicate<Object> valueFilter) {
+        for (Key key : getUserMap().getKeys()) {
+            Object value = getUserData(key);
+            if (value != null && valueFilter.test(value)) {
+                putUserData(key, null);
+            }
+        }
     }
 
     protected void clearUserData() {

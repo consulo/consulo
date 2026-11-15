@@ -281,12 +281,14 @@ public class TextEditorComponent implements UiDataProvider, Disposable {
    */
   private final class MyFileTypeListener implements FileTypeListener {
     @Override
-    @RequiredUIAccess
     public void fileTypesChanged(FileTypeEvent event) {
-      assertThread();
       // File can be invalid after file type changing. The editor should be removed
       // by the FileEditorManager if it's invalid.
-      updateValidProperty();
+      myProject.getUIAccess().giveIfNeed(() -> {
+        if (!myDisposed) {
+          updateValidProperty();
+        }
+      });
     }
   }
 

@@ -302,7 +302,11 @@ public final class DaemonListeners implements Disposable {
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
             @Override
             public void fileTypesChanged(FileTypeEvent event) {
-                intentionsUI.get().invalidate();
+                myProject.getUIAccess().giveIfNeed(() -> {
+                    if (!myProject.isDisposed()) {
+                        intentionsUI.get().invalidate();
+                    }
+                });
             }
         });
 

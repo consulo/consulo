@@ -177,11 +177,14 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
     final boolean myIsUnitTestMode;
     private @Nullable ScheduledFuture<?> myFlushingFuture;
+    private @Nullable Runnable myShutDownTask;
+    private final AtomicBoolean myShutdownListenersRegistered = new AtomicBoolean();
+    private volatile @Nullable AdditionalIndexableFileSet myAdditionalIndexableFileSet;
     private final AtomicInteger myLocalModCount = new AtomicInteger();
     private final IndexAccessValidator myAccessValidator = new IndexAccessValidator();
 
     private volatile @Nullable RegisteredIndexes myRegisteredIndexes;
-    private volatile IndexConfiguration myState;
+    private volatile @Nullable IndexConfiguration myState;
     private volatile @Nullable RequiredIndexesEvaluator myRequiredIndexesEvaluator;
 
     private final FilesToUpdateCollector myFilesToUpdateCollector = new FilesToUpdateCollector();
@@ -201,23 +204,25 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     private volatile long myVfsCreationStamp;
 
     private IndexConfiguration getState() {
-        RegisteredIndexes registeredIndexes = myRegisteredIndexes;
-        if (registeredIndexes == null || !registeredIndexes.isInitialized()) {
-            //throw new IndexNotReadyException();
+        RegisteredIndexes registeredIndexes = requireRegisteredIndexes();
+        if (!registeredIndexes.isInitialized()) {
             LOG.error("Unexpected initialization problem");
         }
 
         IndexConfiguration state = myState; // memory barrier
         if (state == null) {
-            myState = state = requireRegisteredIndexes().getConfigurationState();
+            myState = state = registeredIndexes.getConfigurationState();
         }
         return state;
     }
 
+    /**
+     * @throws IndexNotReadyException while the indexes are reloaded, the callers see it as dumb mode
+     */
     private RegisteredIndexes requireRegisteredIndexes() {
         RegisteredIndexes registeredIndexes = myRegisteredIndexes;
         if (registeredIndexes == null) {
-            throw new IllegalStateException("Indexes are not loaded yet");
+            throw IndexNotReadyException.create();
         }
         return registeredIndexes;
     }
@@ -258,6 +263,55 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
     void extensionsDataWasLoaded() {
         myExtensionsRelatedDataWasLoaded = true;
+    }
+
+    /**
+     * @return true for the first indexes loading only, the shutdown listeners outlive the reloads of the indexes
+     */
+    boolean markShutdownListenersRegistered() {
+        return myShutdownListenersRegistered.compareAndSet(false, true);
+    }
+
+    /**
+     * Replaces the additional indexable set of the previous indexes loading, its contributors may have changed since.
+     */
+    void registerAdditionalIndexableSet() {
+        AdditionalIndexableFileSet previous = myAdditionalIndexableFileSet;
+        if (previous != null) {
+            myIndexableSets.remove(previous);
+            myIndexableSetToProjectMap.remove(previous);
+        }
+
+        AdditionalIndexableFileSet set = new AdditionalIndexableFileSet();
+        myAdditionalIndexableFileSet = set;
+        registerIndexableSet(set, null);
+    }
+
+    void dropRegisteredIndexes() {
+        LOG.assertTrue(myFlushingFuture == null);
+        LOG.assertTrue(myTransactionMap.isEmpty());
+        LOG.info("Dropping registered indexes");
+
+        myUpToDateIndicesForUnsavedOrTransactedDocuments.clear();
+        myUnsavedDataUpdateTasks.clear();
+        myIndicesForDirectories.clear();
+        myNotRequiringContentIndices.clear();
+        myRequiringContentIndices.clear();
+        myNoLimitCheckTypes.clear();
+        myExtensionsRelatedDataWasLoaded = false;
+        myRequiredIndexesEvaluator = null;
+        myState = null;
+        myRegisteredIndexes = null;
+    }
+
+    /**
+     * Stores the dirty files of the open projects into their queues, shutting the indexes down clears the in-memory ones.
+     */
+    void persistOpenProjectsDirtyFiles() {
+        for (Map.Entry<Project, SimpleReference<Long>> entry : myLastSeenIndexesInOrphanQueue.entrySet()) {
+            SimpleReference<Long> lastSeenIndex = entry.getValue();
+            persistDirtyFiles(entry.getKey(), lastSeenIndex.isNull() ? 0 : lastSeenIndex.get());
+        }
     }
 
     void setInitializedState(IndexConfiguration state) {
@@ -395,72 +449,17 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         });
 
         connection.subscribe(FileTypeListener.class, new FileTypeListener() {
-            private @Nullable Map<FileType, Set<String>> myTypeToExtensionMap;
-
-            @Override
-            public void beforeFileTypesChanged(FileTypeEvent event) {
-                cleanupProcessedFlag("File types changed");
-                myTypeToExtensionMap = new HashMap<>();
-                FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-                for (FileType type : fileTypeManager.getRegisteredFileTypes()) {
-                    myTypeToExtensionMap.put(type, getExtensions(type, fileTypeManager));
-                }
-            }
-
             @Override
             public void fileTypesChanged(FileTypeEvent event) {
+                // while the index is turned off, turning it on rescans anyway
+                if (myRegisteredIndexes == null) {
+                    return;
+                }
+
                 resetHints();
-                Map<FileType, Set<String>> oldTypeToExtensionsMap = myTypeToExtensionMap;
-                myTypeToExtensionMap = null;
-
-                // file type added
-                if (event.getAddedFileType() != null) {
-                    rebuildAllIndices("The following file type was added: " + event.getAddedFileType());
-                    return;
-                }
-
-                if (oldTypeToExtensionsMap == null) {
-                    return;
-                }
-
-                Map<FileType, Set<String>> newTypeToExtensionsMap = new HashMap<>();
-                FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-                for (FileType type : fileTypeManager.getRegisteredFileTypes()) {
-                    newTypeToExtensionsMap.put(type, getExtensions(type, fileTypeManager));
-                }
-                // file type changes and removals
-                if (!newTypeToExtensionsMap.keySet().containsAll(oldTypeToExtensionsMap.keySet())) {
-                    Set<FileType> removedFileTypes = new HashSet<>(oldTypeToExtensionsMap.keySet());
-                    removedFileTypes.removeAll(newTypeToExtensionsMap.keySet());
-                    rebuildAllIndices("The following file types were removed/are no longer associated: " + removedFileTypes);
-                    return;
-                }
-                for (Map.Entry<FileType, Set<String>> entry : oldTypeToExtensionsMap.entrySet()) {
-                    FileType fileType = entry.getKey();
-                    Set<String> strings = entry.getValue();
-                    if (!newTypeToExtensionsMap.get(fileType).containsAll(strings)) {
-                        Set<String> removedExtensions = new HashSet<>(strings);
-                        removedExtensions.removeAll(newTypeToExtensionsMap.get(fileType));
-                        rebuildAllIndices(
-                            fileType.getDisplayName() + " is no longer associated with extension(s) " + String.join(",", removedExtensions)
-                        );
-                        return;
-                    }
-                }
-            }
-
-            
-            private Set<String> getExtensions(FileType type, FileTypeManager fileTypeManager) {
-                Set<String> set = new HashSet<>();
-                for (FileNameMatcher matcher : fileTypeManager.getAssociations(type)) {
-                    set.add(matcher.getPresentableString());
-                }
-                return set;
-            }
-
-            private void rebuildAllIndices(String reason) {
-                doClearIndices();
-                scheduleIndexRebuild("File type change" + ", " + reason);
+                String message = "File type change: added - " + event.getAddedFileType() + ", removed - " + event.getRemovedFileType();
+                cleanupProcessedFlag(message);
+                scheduleIndexRebuild(message);
             }
         });
 
@@ -478,7 +477,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
         myConnection = connection;
 
-        initComponent();
+        loadIndexes();
     }
 
     void doClearIndices() {
@@ -557,7 +556,15 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
-    private void initComponent() {
+    /**
+     * Registers the indexes of the current index extensions, does nothing while the registered ones are not dropped.
+     */
+    public synchronized void loadIndexes() {
+        if (myRegisteredIndexes != null) {
+            LOG.info("Indexes are already loaded");
+            return;
+        }
+
         LOG.info("Loading indexes");
 
         myRegisteredIndexes = new RegisteredIndexes(this);
@@ -567,6 +574,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         }
     }
 
+    /**
+     * @throws IndexNotReadyException while the indexes are reloaded
+     */
     void waitUntilIndicesAreInitialized() {
         requireRegisteredIndexes().waitUntilIndicesAreInitialized();
     }
@@ -693,17 +703,32 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
 
     void setUpShutDownTask() {
-        ShutDownTracker.getInstance().registerShutdownTask(this::performShutdown);
+        Runnable shutDownTask = this::performShutdown;
+        myShutDownTask = shutDownTask;
+        ShutDownTracker.getInstance().registerShutdownTask(shutDownTask);
     }
 
     void performShutdown() {
+        performShutdown(false, "IDE shutdown");
+    }
+
+    /**
+     * @param keepConnection true when the indexes are loaded again later, the listeners of the application stay subscribed
+     */
+    void performShutdown(boolean keepConnection, String reason) {
         RegisteredIndexes registeredIndexes = myRegisteredIndexes;
         if (registeredIndexes == null || !registeredIndexes.performShutdown()) {
             return; // already shut down
         }
 
+        LOG.info("Index shutdown, reason: " + reason);
         ProgressManager.getInstance().executeNonCancelableSection(registeredIndexes::waitUntilAllIndicesAreInitialized);
         try {
+            Runnable shutDownTask = myShutDownTask;
+            if (shutDownTask != null) {
+                ShutDownTracker.getInstance().unregisterShutdownTask(shutDownTask);
+                myShutDownTask = null;
+            }
             if (myFlushingFuture != null) {
                 myFlushingFuture.cancel(false);
                 myFlushingFuture = null;
@@ -745,7 +770,9 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                     }
                 }
 
-                myConnection.disconnect();
+                if (!keepConnection) {
+                    myConnection.disconnect();
+                }
             }
             catch (Throwable e) {
                 LOG.error("Problems during index shutdown", e);

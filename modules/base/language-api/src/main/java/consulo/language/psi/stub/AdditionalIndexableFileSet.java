@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.stub;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
@@ -27,7 +29,8 @@ import java.util.*;
 public class AdditionalIndexableFileSet implements IndexableFileSet {
     private volatile @Nullable Set<VirtualFile> cachedFiles = null;
     private volatile @Nullable Set<VirtualFile> cachedDirectories = null;
-    private volatile @Nullable List<IndexableSetContributor> myExtensions;
+    private final @Nullable List<IndexableSetContributor> myExtensions;
+    private volatile long myContributorsModificationCount = -1;
 
     public AdditionalIndexableFileSet(@Nullable IndexableSetContributor extension) {
         myExtensions = extension == null ? null : List.of(extension);
@@ -35,7 +38,13 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
 
     private Set<VirtualFile> getDirectories() {
         Set<VirtualFile> directories = cachedDirectories;
-        if (directories == null || filesInvalidated(directories) || filesInvalidated(Objects.requireNonNull(cachedFiles))) {
+        // all contributors: plugins loaded or unloaded at runtime change them
+        boolean contributorsChanged = myExtensions == null
+            && myContributorsModificationCount != Application.get().getExtensionPoint(IndexableSetContributor.class).getModificationCount();
+        if (directories == null
+            || contributorsChanged
+            || filesInvalidated(directories)
+            || filesInvalidated(Objects.requireNonNull(cachedFiles))) {
             directories = collectFilesAndDirectories();
         }
         return directories;
@@ -46,7 +55,9 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
         Set<VirtualFile> directories = new HashSet<>();
         List<IndexableSetContributor> extensionList = myExtensions;
         if (extensionList == null) {
-            myExtensions = extensionList = IndexableSetContributor.EP_NAME.getExtensionList();
+            ExtensionPoint<IndexableSetContributor> point = Application.get().getExtensionPoint(IndexableSetContributor.class);
+            myContributorsModificationCount = point.getModificationCount();
+            extensionList = point.getExtensionList();
         }
         for (IndexableSetContributor provider : extensionList) {
             for (VirtualFile file : provider.getAdditionalRootsToIndex()) {
@@ -68,6 +79,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
     }
 
     public AdditionalIndexableFileSet() {
+        this(null);
     }
 
     @Override

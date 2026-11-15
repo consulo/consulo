@@ -34,6 +34,10 @@ import java.util.*;
 public class BeanBinding extends NullableAccessorBinding {
     private static final Map<Class, List<MutableAccessor>> ourAccessorCache = ContainerUtil.createConcurrentSoftValueMap();
 
+    public static void dropCachedClasses(ClassLoader classLoader) {
+        ourAccessorCache.keySet().removeIf(aClass -> aClass.getClassLoader() == classLoader);
+    }
+
     private final String myTagName;
 
     @SuppressWarnings("FieldAccessedSynchronizedAndUnsynchronized")

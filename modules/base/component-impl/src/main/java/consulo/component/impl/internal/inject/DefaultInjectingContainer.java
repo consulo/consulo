@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -41,7 +42,7 @@ public class DefaultInjectingContainer implements InjectingContainer {
   private static final Logger LOG = Logger.getInstance(DefaultInjectingContainer.class);
 
   private final InstanceContainer myContainer;
-  private final List<InjectingKey<?>> myKeys;
+  private volatile List<InjectingKey<?>> myKeys;
 
   private final Set<Pair<Class, Class>> myGetInstanceWarningSet = new CopyOnWriteArraySet<>();
 
@@ -53,6 +54,15 @@ public class DefaultInjectingContainer implements InjectingContainer {
   void add(InjectingKey<?> key, DefaultInjectingPoint point) {
     myKeys.add(key);
     myContainer.registerComponent(point.getAdapter());
+  }
+
+  synchronized void append(Map<InjectingKey, DefaultInjectingPoint> points) {
+    List<InjectingKey<?>> keys = new ArrayList<>(myKeys);
+    for (Map.Entry<InjectingKey, DefaultInjectingPoint> entry : points.entrySet()) {
+      keys.add(entry.getKey());
+      myContainer.registerComponent(entry.getValue().getAdapter());
+    }
+    myKeys = keys;
   }
 
   
@@ -112,6 +122,19 @@ public class DefaultInjectingContainer implements InjectingContainer {
   @Override
   public InjectingContainerBuilder childBuilder() {
     return new DefaultInjectingContainerBuilder(this);
+  }
+
+  @Override
+  public InjectingContainerBuilder appendBuilder() {
+    return new DefaultInjectingContainerBuilder(this, this);
+  }
+
+  @Override
+  public synchronized List<Object> removeBindings(ClassLoader classLoader) {
+    List<InjectingKey<?>> keys = new ArrayList<>(myKeys);
+    keys.removeIf(key -> key.getTargetClass().getClassLoader() == classLoader);
+    myKeys = keys;
+    return myContainer.removeComponents(classLoader);
   }
 
   @Override

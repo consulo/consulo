@@ -23,7 +23,10 @@ import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 
 import org.jspecify.annotations.Nullable;
+
 import java.io.*;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * @author Eugene Zhuravlev
@@ -34,6 +37,10 @@ public class ID<K, V> extends IndexId<K, V> {
   public static final int MAX_NUMBER_OF_INDICES = Short.MAX_VALUE;
 
   private final short myUniqueId;
+  /**
+   * The class loader of the code which created the id, a plugin's ids go with the plugin.
+   */
+  private final WeakReference<@Nullable ClassLoader> myCreator;
 
   public static void reload() {
     File indices = getEnumFile();
@@ -68,6 +75,7 @@ public class ID<K, V> extends IndexId<K, V> {
   protected ID(String name) {
     super(name);
     myUniqueId = stringToId(name);
+    myCreator = new WeakReference<>(findCreatorClassLoader());
 
     ID old = ourRegistry.put(myUniqueId, this);
     assert old == null : "ID with name '" + name + "' is already registered";
@@ -131,6 +139,36 @@ public class ID<K, V> extends IndexId<K, V> {
 
   public int getUniqueId() {
     return myUniqueId;
+  }
+
+  private static @Nullable ClassLoader findCreatorClassLoader() {
+    return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+      .walk(frames -> frames.map(StackWalker.StackFrame::getDeclaringClass)
+        .filter(type -> !IndexId.class.isAssignableFrom(type))
+        .findFirst()
+        .map(Class::getClassLoader)
+        .orElse(null));
+  }
+
+  /**
+   * Forgets the ids created by the code of a plugin unloaded at runtime.
+   */
+  public static void unloadIdsOf(ClassLoader classLoader) {
+    for (ID id : new ArrayList<>(ourRegistry.values())) {
+      if (id.myCreator.get() == classLoader) {
+        unloadId(id);
+      }
+    }
+  }
+
+  /**
+   * Forgets the ID of an index of a plugin unloaded at runtime, the plugin registers it again when it is loaded. The
+   * number of the name stays.
+   */
+  public static void unloadId(ID<?, ?> id) {
+    if (ourRegistry.get(id.getUniqueId()) == id) {
+      ourRegistry.remove(id.getUniqueId());
+    }
   }
 
   public static ID<?, ?> findById(int id) {

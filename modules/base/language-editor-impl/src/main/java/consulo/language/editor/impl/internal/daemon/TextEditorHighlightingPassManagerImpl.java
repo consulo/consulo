@@ -17,6 +17,7 @@
 package consulo.language.editor.impl.internal.daemon;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.component.extension.ExtensionPoint;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
@@ -107,6 +108,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
     private final List<DirtyScopeTrackingHighlightingPassFactory> myDirtyScopeTrackingFactories = new ArrayList<>();
     private int nextAvailableId = Pass.LAST_PASS + 1;
     private boolean checkedForCycles;
+    private long myRegisteredModificationCount;
     private final Project myProject;
 
     @Inject
@@ -117,14 +119,35 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
             return;
         }
 
-        RegistrarImpl impl = new RegistrarImpl();
+        registerFactories();
+    }
 
-        for (TextEditorHighlightingPassFactory factory : TextEditorHighlightingPassFactory.EP_NAME.getExtensionList(myProject)) {
+    private void registerFactories() {
+        myRegisteredPassFactories.clear();
+        myDirtyScopeTrackingFactories.clear();
+        nextAvailableId = Pass.LAST_PASS + 1;
+        checkedForCycles = false;
+
+        ExtensionPoint<TextEditorHighlightingPassFactory> point = myProject.getExtensionPoint(TextEditorHighlightingPassFactory.class);
+        myRegisteredModificationCount = point.getModificationCount();
+
+        RegistrarImpl impl = new RegistrarImpl();
+        point.forEachExtensionSafe(factory -> {
             int old = myRegisteredPassFactories.size();
             factory.register(impl);
             if (old == myRegisteredPassFactories.size()) {
                 LOG.error(factory.getClass().getName() + " is not registered to manager");
             }
+        });
+    }
+
+    /**
+     * Factories of plugins loaded or unloaded at runtime register again.
+     */
+    private synchronized void ensureFactoriesUpToDate() {
+        if (!myProject.isDefault()
+            && myProject.getExtensionPoint(TextEditorHighlightingPassFactory.class).getModificationCount() != myRegisteredModificationCount) {
+            registerFactories();
         }
     }
 
@@ -136,6 +159,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
         Editor editor,
         int[] passesToIgnore
     ) {
+        ensureFactoriesUpToDate();
         synchronized (this) {
             if (!checkedForCycles) {
                 checkedForCycles = true;
@@ -241,6 +265,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
         Document document,
         HighlightInfoProcessor highlightInfoProcessor
     ) {
+        ensureFactoriesUpToDate();
         Set<TextEditorHighlightingPass> ids = new HashSet<>();
         myRegisteredPassFactories.forEachKey(passId -> {
             PassConfig passConfig = myRegisteredPassFactories.get(passId);
@@ -292,6 +317,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
     
     @Override
     public List<DirtyScopeTrackingHighlightingPassFactory> getDirtyScopeTrackingFactories() {
+        ensureFactoriesUpToDate();
         return myDirtyScopeTrackingFactories;
     }
 }

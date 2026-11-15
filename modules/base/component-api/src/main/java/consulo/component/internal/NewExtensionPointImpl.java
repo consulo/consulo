@@ -89,7 +89,7 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
     private @Nullable Map<Class, Object> myInstanceOfCacheValue = null;
     private @Nullable Map<ExtensionPointCacheKey, Object> myCaches = null;
-    private long myModificationCount;
+    private volatile long myModificationCount;
     private volatile CacheValue<T> myCacheValue;
     private volatile @Nullable Boolean myHasAnyExtension = null;
 
@@ -118,17 +118,38 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         myApiClass = apiClass;
     }
 
+    public boolean isApiClassFrom(ClassLoader classLoader) {
+        Class<T> apiClass = myApiClass;
+        return apiClass != null && apiClass.getClassLoader() == classLoader;
+    }
+
+    /**
+     * Drops the caches built over the extensions, which can hold classes of an unloaded plugin as keys.
+     */
+    public void dropCaches() {
+        synchronized (myCachePublishLock) {
+            myInstanceOfCacheValue = null;
+            myCaches = null;
+        }
+    }
+
+    private static boolean isInClassInitializer() {
+        return StackWalker.getInstance().walk(frames -> frames.anyMatch(frame -> "<clinit>".equals(frame.getMethodName())));
+    }
+
     public void reset(List<InjectingBinding> newBindings) {
-        // reset instanceOf cache
-        myInstanceOfCacheValue = null;
-        // reset other caches
-        myCaches = null;
-        // reset all extension cache
-        myCacheValue = new CacheValue<>(null, new ArrayList<>(newBindings));
-        // reset api class
-        myApiClass = null;
-        // reset hasAnyExtensions
-        myHasAnyExtension = null;
+        synchronized (myCachePublishLock) {
+            // reset instanceOf cache
+            myInstanceOfCacheValue = null;
+            // reset other caches
+            myCaches = null;
+            // reset all extension cache
+            myCacheValue = new CacheValue<>(null, new ArrayList<>(newBindings));
+            // reset hasAnyExtensions
+            myHasAnyExtension = null;
+
+            myModificationCount++;
+        }
     }
 
     @Override
@@ -213,6 +234,8 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
         InjectingContainer injectingContainer = myComponentManager.getInjectingContainer();
 
         List<ExtensionValue<T>> extensions = new ArrayList<>(injectingBindings.size());
+        // a cancellation thrown inside a static initializer breaks that class for good, so it is not checked there
+        boolean checkCanceled = !isInClassInitializer();
         for (InjectingBinding binding : injectingBindings) {
             if (!InjectingBindingHolderImpl.isValid(binding, myComponentManager.getProfiles())) {
                 continue;
@@ -220,7 +243,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
 
             T extension;
             try {
-                myCheckCanceled.run();
+                if (checkCanceled) {
+                    myCheckCanceled.run();
+                }
 
                 boolean isRootManager = myComponentManager.getParent() == null;
 
@@ -313,6 +338,9 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
             CacheValue<T> published = myCacheValue;
             if (published.myExtensionCache != null) {
                 return published;
+            }
+            if (published != cacheValue) {
+                return publishedCacheValue();
             }
             return set(result);
         }

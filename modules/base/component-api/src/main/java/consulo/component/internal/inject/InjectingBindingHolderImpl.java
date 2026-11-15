@@ -47,6 +47,33 @@ public class InjectingBindingHolderImpl implements InjectingBindingHolder {
         myBindings.computeIfAbsent(binding.getApiClassName(), s -> Lists.newLockFreeCopyOnWriteList()).add(binding);
     }
 
+    /**
+     * Removes the bindings of a plugin unloaded at runtime.
+     *
+     * @return removed bindings by api class name
+     */
+    public Map<String, List<InjectingBinding>> removeBindings(ClassLoader classLoader) {
+        Map<String, List<InjectingBinding>> removed = new HashMap<>();
+        for (Map.Entry<String, List<InjectingBinding>> entry : myBindings.entrySet()) {
+            for (InjectingBinding binding : entry.getValue()) {
+                if (binding.getImplClass().getClassLoader() == classLoader) {
+                    removed.computeIfAbsent(entry.getKey(), k -> new ArrayList<>()).add(binding);
+                }
+            }
+        }
+
+        for (Map.Entry<String, List<InjectingBinding>> entry : removed.entrySet()) {
+            List<InjectingBinding> bindings = myBindings.get(entry.getKey());
+            if (bindings != null) {
+                bindings.removeAll(entry.getValue());
+                if (bindings.isEmpty()) {
+                    myBindings.remove(entry.getKey(), bindings);
+                }
+            }
+        }
+        return removed;
+    }
+
     @Override
     public Map<String, List<InjectingBinding>> getBindings() {
         return Collections.unmodifiableMap(myBindings);

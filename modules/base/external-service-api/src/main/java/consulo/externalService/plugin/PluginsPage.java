@@ -13,33 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.impl.internal.pluginAdvertiser;
+package consulo.externalService.plugin;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.component.extension.preview.ExtensionPreview;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
+import consulo.container.plugin.PluginId;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
-
 /**
+ * The page listing installed and repository plugins, shown in an editor tab.
+ *
  * @author VISTALL
- * @since 2026-08-13
+ * @since 2026-11-14
  */
 @ServiceAPI(ComponentScope.APPLICATION)
-public interface PluginAdvertiserDialogFactory {
-    static PluginAdvertiserDialogFactory getInstance() {
-        return Application.get().getInstance(PluginAdvertiserDialogFactory.class);
+public interface PluginsPage {
+    static PluginsPage getInstance() {
+        return Application.get().getInstance(PluginsPage.class);
     }
 
+    /**
+     * Opens the page, or brings its tab to front.
+     *
+     * @param project  the project of the tab, the one of the focused frame when null
+     * @param pluginId the plugin to select, if any
+     */
     @RequiredUIAccess
-    void showDialog(@Nullable Project project, List<PluginDescriptor> allPlugins, List<PluginDescriptor> toInstallPlugins);
+    void open(@Nullable Project project, @Nullable PluginId pluginId);
 
+    /**
+     * Opens the page searching all plugins.
+     *
+     * @param project the project of the tab, the one of the focused frame when null
+     * @param query   search text, with filters like {@code /tag:vcs}, {@code /extension:*.yaml} or
+     *                {@code /extension:<api class>=<id>}
+     */
     @RequiredUIAccess
-    void showDialogForExtension(ExtensionPreview preview, PluginAdvertiserHelper helper);
+    void search(@Nullable Project project, String query);
 }

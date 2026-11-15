@@ -28,4 +28,12 @@ public record TopicBindingLoader(Map<String, TopicBinding> bindings) {
     public @Nullable TopicBinding getBinding(String className) {
         return bindings().get(className);
     }
+
+    public void addBindings(Map<String, TopicBinding> newBindings) {
+        bindings().putAll(newBindings);
+    }
+
+    public void removeBindings(ClassLoader classLoader) {
+        bindings().values().removeIf(binding -> binding.getClass().getClassLoader() == classLoader);
+    }
 }

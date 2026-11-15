@@ -31,6 +31,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
     id = "FileMainSettingsGroup",
     children = {
         @ActionRef(type = ShowSettingsAction.class),
+        @ActionRef(type = ShowPluginManagerAction.class),
         @ActionRef(type = ShowStructureSettingsAction.class),
         @ActionRef(type = FileOtherSettingsGroup.class),
         @ActionRef(type = FilePropertiesGroup.class),

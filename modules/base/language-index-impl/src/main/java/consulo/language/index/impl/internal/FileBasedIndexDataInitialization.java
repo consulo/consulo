@@ -14,7 +14,6 @@ import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
 import consulo.language.index.impl.internal.dependencies.AppIndexingDependenciesService;
 import consulo.language.index.impl.internal.localize.IndexingLocalize;
-import consulo.language.psi.stub.AdditionalIndexableFileSet;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -122,17 +121,11 @@ final class FileBasedIndexDataInitialization
         // at the moment when we write the queue, VFS might have already been disposed via shutdown hook (in the case on emergency shutdown)
         myFileBasedIndex.setVfsCreationStamp(fs.getCreationTimestamp());
 
-        Disposable disposable = myFileBasedIndex::performShutdown;
-        myFileBasedIndex.getApplication().addApplicationListener(
-            new ApplicationListener() {
-                @Override
-                public void writeActionStarted(Object action) {
-                    myFileBasedIndex.clearUpToDateIndexesForUnsavedOrTransactedDocs();
-                }
-            },
-            disposable
-        );
-        Disposer.register((Disposable) fs, disposable);
+        if (myFileBasedIndex.markShutdownListenersRegistered()) {
+            Disposable disposable = myFileBasedIndex::performShutdown;
+            myFileBasedIndex.getApplication().addApplicationListener(createWriteActionListener(myFileBasedIndex), disposable);
+            Disposer.register((Disposable) fs, disposable);
+        }
 
         myCurrentVersionCorrupted = CorruptionMarker.requireInvalidation();
         if (myCurrentVersionCorrupted) {
@@ -189,7 +182,7 @@ final class FileBasedIndexDataInitialization
                 }
             }
 
-            myFileBasedIndex.registerIndexableSet(new AdditionalIndexableFileSet(), null);
+            myFileBasedIndex.registerAdditionalIndexableSet();
             return result;
         }
         finally {
@@ -267,6 +260,18 @@ final class FileBasedIndexDataInitialization
         catch (IOException e) {
             LOG.info(e);
         }
+    }
+
+    /**
+     * Registered for the application lifetime, so it must not hold an initialization: the index reloads on plugin changes.
+     */
+    private static ApplicationListener createWriteActionListener(FileBasedIndexImpl fileBasedIndex) {
+        return new ApplicationListener() {
+            @Override
+            public void writeActionStarted(Object action) {
+                fileBasedIndex.clearUpToDateIndexesForUnsavedOrTransactedDocs();
+            }
+        };
     }
 
     static final class FileBasedIndexDataInitializationResult {

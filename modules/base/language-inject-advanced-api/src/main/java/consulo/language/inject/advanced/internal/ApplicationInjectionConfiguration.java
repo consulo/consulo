@@ -38,7 +38,7 @@ import java.util.List;
 @ServiceAPI(ComponentScope.APPLICATION)
 @ServiceImpl
 public class ApplicationInjectionConfiguration extends Configuration {
-  private final List<BaseInjection> myDefaultInjections;
+  private volatile List<BaseInjection> myDefaultInjections;
   private final AdvancedConfiguration myAdvancedConfiguration;
   private volatile boolean myStateLoaded;
 
@@ -51,6 +51,15 @@ public class ApplicationInjectionConfiguration extends Configuration {
   @Override
   public List<BaseInjection> getDefaultInjections() {
     return myDefaultInjections;
+  }
+
+  /**
+   * Reads the state again after plugins were loaded or unloaded at runtime: the default injections and the injection
+   * supports may have changed, injections of an unloaded support stay as plain ones.
+   */
+  public void reloadState(Element state) {
+    myDefaultInjections = loadDefaultInjections();
+    loadState(state);
   }
 
   @Override

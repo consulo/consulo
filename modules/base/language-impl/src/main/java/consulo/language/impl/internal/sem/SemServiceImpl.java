@@ -20,6 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.RecursionGuard;
 import consulo.application.util.RecursionManager;
+import consulo.component.extension.ExtensionPoint;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiModificationTracker;
@@ -50,6 +51,7 @@ public class SemServiceImpl extends SemService {
     private static final Key<SemData> SEM_CACHE_KEY = Key.create("SEM");
 
     private volatile @Nullable MultiMap<SemKey, Function<PsiElement, ? extends SemElement>> myProducers;
+    private volatile long myProducersModificationCount;
     private final Project myProject;
     private final PsiModificationTracker myPsiModificationTracker;
 
@@ -95,6 +97,14 @@ public class SemServiceImpl extends SemService {
         }
 
         return map;
+    }
+
+    /**
+     * Drops the producers after plugins were unloaded at runtime, they are collected again on the next use.
+     */
+    public void dropProducers() {
+        myProducers = null;
+        clearCache();
     }
 
     @Override
@@ -179,9 +189,15 @@ public class SemServiceImpl extends SemService {
 
     private MultiMap<SemKey, Function<PsiElement, ? extends SemElement>> ensureInitialized() {
         MultiMap<SemKey, Function<PsiElement, ? extends SemElement>> producers = myProducers;
-        if (producers == null) {
+        ExtensionPoint<SemContributor> extensionPoint = myProject.getExtensionPoint(SemContributor.class);
+        if (producers == null || myProducersModificationCount != extensionPoint.getModificationCount()) {
+            boolean reload = producers != null;
             producers = collectProducers();
+            myProducersModificationCount = extensionPoint.getModificationCount();
             myProducers = producers;
+            if (reload) {
+                clearCache();
+            }
         }
         return producers;
     }

@@ -218,7 +218,7 @@ public class FileTypeChooser extends DialogWrapper {
         }
         FileType type = chooser.getSelectedType();
         if (type == null) {
-            PluginAdvertiserHelper.getInstance().showDialog(new PluginAdvertiserHelper.PluginsInfo(chooser.myAllPlugins, chooser.myFeaturePlugins));
+            PluginAdvertiserHelper.getInstance().showPlugins(null, List.of(ExtensionPreview.of(FileTypeFactory.class, fileName)));
             return null;
         }
 

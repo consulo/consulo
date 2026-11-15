@@ -64,7 +64,7 @@ public class EarlyAccessProgramConfigurable implements ApplicationConfigurable, 
 
     @Override
     public @Nullable String getParentId() {
-        return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
+        return StandardConfigurableIds.GENERAL_GROUP;
     }
 
     

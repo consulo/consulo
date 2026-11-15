@@ -18,6 +18,7 @@ package consulo.component.internal.inject;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -35,18 +36,26 @@ public class NewBindingLoader {
     }
 
     public void init(List<Runnable> actions) {
-        PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
-            ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
-            // this is optimization, since in legacy mode it's read META-INF and module-info services
-            // and when load META-INF service loader will skip class, if it from named module (and we have all named)
-            // that why load only from module-info
-            if (moduleLayer != null) {
-                loadInModuleMode(actions, moduleLayer, pluginDescriptor);
-            }
-            else {
-                loadInLegacyMode(actions, pluginDescriptor);
-            }
-        });
+        PluginManager.forEachEnabledPlugin(pluginDescriptor -> load(actions, pluginDescriptor));
+    }
+
+    public void loadPlugin(PluginDescriptor pluginDescriptor) {
+        List<Runnable> actions = new ArrayList<>();
+        load(actions, pluginDescriptor);
+        actions.forEach(Runnable::run);
+    }
+
+    private void load(List<Runnable> actions, PluginDescriptor pluginDescriptor) {
+        ModuleLayer moduleLayer = pluginDescriptor.getModuleLayer();
+        // this is optimization, since in legacy mode it's read META-INF and module-info services
+        // and when load META-INF service loader will skip class, if it from named module (and we have all named)
+        // that why load only from module-info
+        if (moduleLayer != null) {
+            loadInModuleMode(actions, moduleLayer, pluginDescriptor);
+        }
+        else {
+            loadInLegacyMode(actions, pluginDescriptor);
+        }
     }
 
     private <T> void forEachCollector(List<Runnable> actions, Consumer<NewBindingCollector<T>> consumer) {

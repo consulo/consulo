@@ -57,6 +57,38 @@ public class PluginHolderModificator {
     ourPluginLoadOrder.set(new HashMap<PluginId, Integer>(order));
   }
 
+  /**
+   * Adds a plugin loaded at runtime, after every plugin loaded at start.
+   */
+  public static void addPlugin(PluginDescriptor pluginDescriptor) {
+    List<PluginDescriptor> plugins = new ArrayList<PluginDescriptor>(getPlugins());
+    plugins.add(pluginDescriptor);
+
+    Map<PluginId, Integer> order = new HashMap<PluginId, Integer>(ourPluginLoadOrder.get());
+    int max = 0;
+    for (Integer value : order.values()) {
+      max = Math.max(max, value);
+    }
+    order.put(pluginDescriptor.getPluginId(), max + 1);
+
+    ourPluginLoadOrder.set(order);
+    ourPlugins.set(Collections.unmodifiableList(plugins));
+  }
+
+  /**
+   * Removes a plugin unloaded at runtime.
+   */
+  public static void removePlugin(PluginDescriptor pluginDescriptor) {
+    List<PluginDescriptor> plugins = new ArrayList<PluginDescriptor>(getPlugins());
+    plugins.remove(pluginDescriptor);
+
+    Map<PluginId, Integer> order = new HashMap<PluginId, Integer>(ourPluginLoadOrder.get());
+    order.remove(pluginDescriptor.getPluginId());
+
+    ourPlugins.set(Collections.unmodifiableList(plugins));
+    ourPluginLoadOrder.set(order);
+  }
+
   public static int getPluginLoadOrder(PluginId pluginId) {
     Map<PluginId, Integer> map = ourPluginLoadOrder.get();
     if (map == null) {

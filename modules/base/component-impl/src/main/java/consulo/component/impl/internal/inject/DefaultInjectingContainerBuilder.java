@@ -20,6 +20,7 @@ import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.component.internal.inject.InjectingKey;
 import consulo.component.internal.inject.InjectingPoint;
 import consulo.util.concurrent.coroutine.CoroutineContext;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +32,17 @@ import java.util.function.Supplier;
  */
 class DefaultInjectingContainerBuilder implements InjectingContainerBuilder {
   private DefaultInjectingContainer myParent;
+  private @Nullable DefaultInjectingContainer myTarget;
   private Map<InjectingKey, DefaultInjectingPoint> myPoints = new HashMap<>();
   private Supplier<CoroutineContext> myCoroutineContext;
 
   public DefaultInjectingContainerBuilder(DefaultInjectingContainer parent) {
     myParent = parent;
+  }
+
+  public DefaultInjectingContainerBuilder(DefaultInjectingContainer parent, DefaultInjectingContainer target) {
+    myParent = parent;
+    myTarget = target;
   }
 
   @Override
@@ -75,6 +82,13 @@ class DefaultInjectingContainerBuilder implements InjectingContainerBuilder {
 
     Supplier<CoroutineContext> coroutineContext = myCoroutineContext;
     myCoroutineContext = null;
+
+    DefaultInjectingContainer target = myTarget;
+    myTarget = null;
+    if (target != null) {
+      target.append(points);
+      return target;
+    }
 
     DefaultInjectingContainer container = new DefaultInjectingContainer(parent, points.size(), coroutineContext);
     for (Map.Entry<InjectingKey, DefaultInjectingPoint> entry : points.entrySet()) {

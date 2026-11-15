@@ -157,12 +157,112 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
             //noinspection unchecked
             T result = (T)myCustomSettings.get(aClass);
             if (result == null) {
+                result = createMissingCustomSettings(aClass);
+            }
+            if (result == null) {
                 throw new RuntimeException(
                     "Unable to get registered settings of #" + aClass.getSimpleName() + " (" + aClass.getName() + ")"
                 );
             }
             return result;
         }
+    }
+
+    /**
+     * Settings of a provider added after this instance was created - from a plugin loaded at runtime.
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends CustomCodeStyleSettings> @Nullable T createMissingCustomSettings(Class<T> aClass) {
+        Application application = Application.get();
+        CustomCodeStyleSettings created = application.getExtensionPoint(CodeStyleSettingsProvider.class)
+            .computeSafeIfAny(provider -> matchCustomSettings(provider.createCustomSettings(this), aClass));
+        if (created == null) {
+            created = application.getExtensionPoint(LanguageCodeStyleSettingsProvider.class)
+                .computeSafeIfAny(provider -> matchCustomSettings(provider.createCustomSettings(this), aClass));
+        }
+        if (created != null) {
+            restoreCustomSettings(created);
+            myCustomSettings.put(aClass, created);
+        }
+        return (T) created;
+    }
+
+    private void restoreCustomSettings(CustomCodeStyleSettings settings) {
+        Element element = new Element("temp");
+        for (String tagName : settings.getKnownTagNames()) {
+            Element unknown = myUnknownElementWriter.get(tagName);
+            if (unknown != null) {
+                element.addContent(unknown.clone());
+            }
+        }
+        if (element.getChildren().isEmpty()) {
+            return;
+        }
+
+        try {
+            settings.readExternal(element);
+            myUnknownElementWriter = myUnknownElementWriter.without(settings.getKnownTagNames());
+        }
+        catch (InvalidDataException e) {
+            LOG.error(e);
+        }
+    }
+
+    /**
+     * Adds settings of a plugin loaded at runtime.
+     */
+    public void addPluginSettings() {
+        myCommonSettingsManager.addPluginLanguageSettings();
+    }
+
+    /**
+     * Settings of a plugin unloaded at runtime are kept as unknown elements, so they are saved and come back with the plugin.
+     */
+    public void removePluginSettings(ClassLoader classLoader) {
+        myCommonSettingsManager.removePluginLanguageSettings(classLoader);
+
+        synchronized (myCustomSettings) {
+            CodeStyleSettings parentSettings = null;
+            for (CustomCodeStyleSettings settings : new ArrayList<>(myCustomSettings.values())) {
+                if (settings.getClass().getClassLoader() != classLoader) {
+                    continue;
+                }
+
+                if (parentSettings == null) {
+                    parentSettings = new CodeStyleSettings();
+                }
+
+                Element element = new Element("temp");
+                try {
+                    settings.writeExternal(element, parentSettings.getCustomSettings(settings.getClass()));
+                }
+                catch (WriteExternalException e) {
+                    LOG.error(e);
+                }
+                List<Element> children = new ArrayList<>();
+                for (Element child : element.getChildren()) {
+                    children.add(child.clone());
+                }
+                myUnknownElementWriter = myUnknownElementWriter.with(children);
+                myCustomSettings.remove(settings.getClass());
+            }
+        }
+
+        synchronized (myAdditionalIndentOptions) {
+            for (FileType fileType : new ArrayList<>(myAdditionalIndentOptions.keySet())) {
+                if (fileType.getClass().getClassLoader() != classLoader) {
+                    continue;
+                }
+
+                CommonCodeStyleSettings.IndentOptions options = new CommonCodeStyleSettings.IndentOptions();
+                options.copyFrom(myAdditionalIndentOptions.remove(fileType));
+                myAdditionalIndentOptions.put(new TempFileType(fileType.getDefaultExtension()), options);
+            }
+        }
+    }
+
+    private static @Nullable CustomCodeStyleSettings matchCustomSettings(@Nullable CustomCodeStyleSettings settings, Class<?> aClass) {
+        return settings != null && settings.getClass() == aClass ? settings : null;
     }
 
     @Override
