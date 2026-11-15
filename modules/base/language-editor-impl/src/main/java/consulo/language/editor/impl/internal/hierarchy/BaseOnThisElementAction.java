@@ -96,11 +96,9 @@ public final class BaseOnThisElementAction extends AnAction implements AnActionW
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
-            HierarchyBrowser browser = e.getData(HierarchyBrowser.KEY);
-            if (browser == null) {
-                presentation.setEnabledAndVisible(false);
-                return;
-            }
+            presentation.setEnabledAndVisible(e.getData(HierarchyBrowser.KEY) != null);
+        }, presentation -> {
+            HierarchyBrowser browser = e.getRequiredData(HierarchyBrowser.KEY);
 
             ShortcutSet shortcutSet = findShortcutSet(browser.getKind().getShortcutActionId());
             if (shortcutSet != null) {

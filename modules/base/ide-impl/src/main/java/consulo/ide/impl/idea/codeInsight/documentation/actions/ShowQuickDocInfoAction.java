@@ -77,12 +77,11 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
-        return ActionSafeReadLock.run(event, presentation -> {
-                Project project = event.getData(Project.KEY);
-                if (project == null) {
-                    presentation.setEnabled(false);
-                    return;
-                }
+        return ActionSafeReadLock.run(
+            event,
+            presentation -> presentation.setEnabled(event.getData(Project.KEY) != null),
+            presentation -> {
+                Project project = event.getRequiredData(Project.KEY);
 
                 Editor editor = event.getData(EditorKeys.EDITOR_SNAPSHOT);
                 PsiElement element = event.getData(PsiElement.KEY);
@@ -121,8 +120,8 @@ public class ShowQuickDocInfoAction extends BaseCodeInsightAction implements Hin
                         presentation.setEnabled(true);
                     }
                 }
-            })
-            .toCoroutine();
+            }
+        ).toCoroutine();
     }
 
     @Override

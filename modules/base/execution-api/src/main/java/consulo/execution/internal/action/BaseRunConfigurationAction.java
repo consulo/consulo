@@ -65,7 +65,12 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
         if (e == null) {
             return Coroutine.first(CodeExecution.<Object, List<AnAction>>supply(() -> List.of()));
         }
-        return ActionSafeReadLock.apply(e, presentation -> List.of(getChildren(e.getDataContext())))
+        // the presentation is the group's own update result - it is hidden without a project, otherwise it is kept as it is
+        return ActionSafeReadLock.apply(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.setEnabledAndVisible(false);
+            }
+        }, presentation -> List.of(getChildren(e.getDataContext())))
             .toCoroutine();
     }
 
@@ -198,6 +203,8 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return ActionSafeReadLock.run(event, presentation -> {
+            presentation.setEnabledAndVisible(event.getData(Project.KEY) != null);
+        }, presentation -> {
             ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
             RunnerAndConfigurationSettings existing = context.findExisting();
             RunnerAndConfigurationSettings configuration = existing;

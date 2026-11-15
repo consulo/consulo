@@ -73,9 +73,11 @@ public abstract class BaseAnalysisAction extends AnAction implements AnActionWit
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return ActionSafeReadLock.run(event, presentation -> {
+            presentation.setEnabled(event.getData(Project.KEY) != null);
+        }, presentation -> {
             DataContext dataContext = event.getDataContext();
-            Project project = event.getData(Project.KEY);
-            boolean dumbMode = project == null || DumbService.getInstance(project).isDumb();
+            Project project = event.getRequiredData(Project.KEY);
+            boolean dumbMode = DumbService.getInstance(project).isDumb();
             presentation.setEnabled(!dumbMode && getInspectionScope(dataContext) != null);
         }).toCoroutine();
     }

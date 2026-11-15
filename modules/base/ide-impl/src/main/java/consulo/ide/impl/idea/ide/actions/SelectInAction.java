@@ -60,6 +60,8 @@ public class SelectInAction extends DumbAwareAction implements AnActionWithAsync
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(e.hasData(Project.KEY));
+        }, presentation -> {
             presentation.setEnabledAndVisible(SelectInContextImpl.createContext(e) != null);
         }).toCoroutine();
     }

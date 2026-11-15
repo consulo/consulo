@@ -43,6 +43,8 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase imple
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(e.hasData(Project.KEY));
+        }, presentation -> {
             boolean isEnabled = CreateFromTemplateGroup.canCreateFromTemplate(e, myTemplate);
             presentation.setEnabledAndVisible(isEnabled);
         }).toCoroutine();

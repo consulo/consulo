@@ -80,6 +80,9 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware, AnA
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, p -> {
+            // nothing to decide without the lock: the file can be derived from PSI, and the action needs no project
+            p.setEnabledAndVisible(true);
+        }, p -> {
             VirtualFile myFile = e.getData(VirtualFile.KEY);
             boolean enabled = myFile != null && checkEnabled(myFile);
             p.setEnabled(enabled);

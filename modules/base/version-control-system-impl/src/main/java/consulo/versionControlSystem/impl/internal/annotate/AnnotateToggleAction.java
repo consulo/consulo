@@ -74,6 +74,8 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabled(e.getData(Project.KEY) != null);
+        }, presentation -> {
             AnnotateToggleActionProvider provider = getProvider(e);
             presentation.setEnabled(provider != null && !provider.isSuspended(e));
             if (provider != null) {
@@ -85,6 +87,8 @@ public class AnnotateToggleAction extends AsyncToggleAction implements DumbAware
     @Override
     public CoroutineStep<Object, Boolean> isSelectedAsync(AnActionEvent e) {
         return ActionSafeReadLock.apply(e, presentation -> {
+            presentation.setEnabled(e.getData(Project.KEY) != null);
+        }, presentation -> {
             AnnotateToggleActionProvider provider = getProvider(e);
             return provider != null && provider.isAnnotated(e);
         });

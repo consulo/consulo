@@ -57,6 +57,16 @@ public abstract class CopyReferenceActionBase extends DumbAwareAction implements
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.apply(e, presentation -> {
+            // without a project there are no PSI elements to copy, only an editor with a file enables the action then
+            Editor editor = e.getData(Editor.KEY);
+            boolean editorWithFile = editor != null && FileDocumentManager.getInstance().getFile(editor.getDocument()) != null;
+            if (!editorWithFile && e.getData(Project.KEY) == null) {
+                presentation.setEnabled(false);
+                presentation.setVisible(!ActionPlaces.isPopupPlace(e.getPlace()));
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             updateInReadAction(e);
             return null;
         }).toCoroutine();

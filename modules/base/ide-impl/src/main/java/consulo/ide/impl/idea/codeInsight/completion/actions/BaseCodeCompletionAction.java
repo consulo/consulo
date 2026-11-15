@@ -56,7 +56,7 @@ public abstract class BaseCodeCompletionAction extends DumbAwareAction
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> {
+        return ActionSafeReadLock.run(e, presentation -> presentation.setEnabled(e.getData(Editor.KEY) != null), presentation -> {
             presentation.setEnabled(false);
 
             Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);

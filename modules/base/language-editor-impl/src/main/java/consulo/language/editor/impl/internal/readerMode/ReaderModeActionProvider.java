@@ -63,9 +63,13 @@ public class ReaderModeActionProvider implements InspectionWidgetActionProvider 
                 if (textEditor == null) {
                     return;
                 }
+                VirtualFile file = FileDocumentManager.getInstance().getFile(textEditor.getDocument());
+                presentation.setEnabledAndVisible(file != null && ReaderModeSettings.matchFileMode(project, file, textEditor));
+            }, presentation -> {
+                Project project = e.getRequiredData(Project.KEY);
+                Editor textEditor = e.getRequiredData(Editor.KEY);
                 PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(textEditor.getDocument());
-                VirtualFile file = psiFile == null ? null : psiFile.getVirtualFile();
-                presentation.setEnabledAndVisible(file != null && ReaderModeSettings.matchMode(project, file, textEditor));
+                presentation.setEnabledAndVisible(psiFile != null);
             }).toCoroutine();
         }
     }

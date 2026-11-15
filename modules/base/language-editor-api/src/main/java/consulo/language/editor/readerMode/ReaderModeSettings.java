@@ -108,13 +108,20 @@ public interface ReaderModeSettings {
 
     @RequiredReadAction
     static boolean matchMode(Project project, VirtualFile file, @Nullable Editor editor) {
-        if (PsiManager.getInstance(project).findFile(file) == null || editor != null && editor.isDisposed()) {
+        return PsiManager.getInstance(project).findFile(file) != null && matchFileMode(project, file, editor);
+    }
+
+    /**
+     * The part of {@link #matchMode(Project, VirtualFile, Editor)} which needs no read lock: the mode is checked against the file
+     * and the project model only, whether the file has PSI is not.
+     */
+    static boolean matchFileMode(Project project, VirtualFile file, @Nullable Editor editor) {
+        if (editor != null && editor.isDisposed()) {
             return false;
         }
         return matchMode(project, file, editor, getInstance(project).getMode());
     }
 
-    @RequiredReadAction
     private static boolean matchMode(Project project, VirtualFile file, @Nullable Editor editor, ReaderMode mode) {
         Application application = project.getApplication();
         if (application.isHeadlessEnvironment()) {

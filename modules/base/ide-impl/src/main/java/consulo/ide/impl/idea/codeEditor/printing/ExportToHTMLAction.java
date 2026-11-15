@@ -27,7 +27,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 
@@ -62,8 +61,7 @@ public class ExportToHTMLAction extends AnAction implements AnActionWithAsyncUpd
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> {
-            Presentation presentation = e.getPresentation();
+        return ActionSafeReadLock.run(e, presentation -> presentation.setEnabled(e.getData(Project.KEY) != null), presentation -> {
             if (e.getData(PsiElement.KEY) instanceof PsiDirectory) {
                 presentation.setEnabled(true);
                 return;

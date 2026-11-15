@@ -48,7 +48,8 @@ public abstract class LocalHistoryAction extends DumbAwareAction implements AnAc
         }
 
         return ActionSafeReadLock.run(e, presentation -> {
-            presentation.setVisible(true);
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             presentation.setText(getTextValue(e));
 
             LocalHistoryFacade vcs = getVcs();

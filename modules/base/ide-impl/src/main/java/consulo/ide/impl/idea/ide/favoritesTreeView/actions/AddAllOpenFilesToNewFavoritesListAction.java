@@ -51,6 +51,9 @@ class AddAllOpenFilesToNewFavoritesListAction extends AnAction implements AnActi
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
             Project project = e.getData(Project.KEY);
+            presentation.setEnabled(project != null);
+        }, presentation -> {
+            Project project = e.getData(Project.KEY);
             e.getPresentation().setEnabled(project != null && !AddAllOpenFilesToFavorites.getFilesToAdd(project).isEmpty());
         }).toCoroutine();
     }

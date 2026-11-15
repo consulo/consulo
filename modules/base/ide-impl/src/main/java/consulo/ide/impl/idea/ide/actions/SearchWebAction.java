@@ -55,6 +55,9 @@ public class SearchWebAction extends AnAction implements DumbAware, AnActionWith
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            // nothing to decide without the lock: an editor provides its copy provider lazily, and the action needs no project
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             DataContext dataContext = e.getDataContext();
             CopyProvider provider = e.getData(CopyProvider.KEY);
             boolean available = provider != null && provider.isCopyEnabled(dataContext) && provider.isCopyVisible(dataContext);

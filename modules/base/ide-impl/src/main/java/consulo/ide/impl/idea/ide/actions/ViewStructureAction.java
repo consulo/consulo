@@ -116,11 +116,8 @@ public class ViewStructureAction extends DumbAwareAction implements AnActionWith
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
             Project project = e.getData(Project.KEY);
-            if (project == null) {
-                e.getPresentation().setEnabled(false);
-                return;
-            }
-
+            presentation.setEnabled(project != null);
+        }, presentation -> {
             FileEditor fileEditor = e.getData(FileEditor.KEY);
             Editor editor = fileEditor instanceof TextEditor textEditor ? textEditor.getEditor() : e.getData(Editor.KEY);
 

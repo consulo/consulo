@@ -221,19 +221,22 @@ public class OptimizeImportsAction extends AnAction implements AnActionWithAsync
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return ActionSafeReadLock.run(
             event,
-            p -> {
-                Presentation presentation = event.getPresentation();
+            presentation -> {
                 if (!myApplication.getExtensionPoint(ImportOptimizer.class).hasAnyExtensions()) {
                     presentation.setVisible(false);
                     return;
                 }
 
-                DataContext dataContext = event.getDataContext();
-                Project project = dataContext.getData(Project.KEY);
-                if (project == null) {
+                if (event.getData(Project.KEY) == null) {
                     updatePresentationForFiles(presentation, false, Collections.emptyList());
                     return;
                 }
+
+                presentation.setEnabledAndVisible(true);
+            },
+            presentation -> {
+                DataContext dataContext = event.getDataContext();
+                Project project = event.getRequiredData(Project.KEY);
 
                 VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
                 List<PsiFile> psiFiles = new ArrayList<>();

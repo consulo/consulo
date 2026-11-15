@@ -66,7 +66,10 @@ public class AddAllToFavoritesActionGroup extends ActionGroup implements AnActio
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> presentation.setEnabled(AddToFavoritesAction.canCreateNodes(e)))
-            .toCoroutine();
+        return ActionSafeReadLock.run(
+            e,
+            presentation -> presentation.setEnabled(e.hasData(Project.KEY)),
+            presentation -> presentation.setEnabled(AddToFavoritesAction.canCreateNodes(e))
+        ).toCoroutine();
     }
 }

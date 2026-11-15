@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ReaderModeMatcher {
     /**
-     * It's triggered on Reader Mode to check if file matches mode specified.
+     * It's triggered on Reader Mode to check if file matches mode specified. Called without a read lock.
      *
      * @return null if unable to decide
      */

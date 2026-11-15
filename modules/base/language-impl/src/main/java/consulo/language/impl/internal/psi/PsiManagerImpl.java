@@ -42,6 +42,7 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
 
     private final List<PsiTreeChangePreprocessor> myTreeChangePreprocessors = Lists.newLockFreeCopyOnWriteList();
     private final List<PsiTreeChangeListener> myTreeChangeListeners = Lists.newLockFreeCopyOnWriteList();
+    private final List<PsiTreeChangeListener> myTreeChangeListenersBackgroundable = Lists.newLockFreeCopyOnWriteList();
     private boolean myTreeChangeEventIsFiring;
 
     private boolean myIsDisposed;
@@ -197,8 +198,15 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     }
 
     @Override
+    public void addPsiTreeChangeListenerBackgroundable(PsiTreeChangeListener listener, Disposable parentDisposable) {
+        myTreeChangeListenersBackgroundable.add(listener);
+        Disposer.register(parentDisposable, () -> myTreeChangeListenersBackgroundable.remove(listener));
+    }
+
+    @Override
     public void removePsiTreeChangeListener(PsiTreeChangeListener listener) {
         myTreeChangeListeners.remove(listener);
+        myTreeChangeListenersBackgroundable.remove(listener);
     }
 
     private static String logPsi(@Nullable PsiElement element) {
@@ -396,67 +404,74 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
                     LOG.error(e);
                 }
             }
+            for (PsiTreeChangeListener listener : myTreeChangeListenersBackgroundable) {
+                notifyPsiTreeChangeListener(event, listener);
+            }
             for (PsiTreeChangeListener listener : myTreeChangeListeners) {
-                try {
-                    switch (code) {
-                        case BEFORE_CHILD_ADDITION:
-                            listener.beforeChildAddition(event);
-                            break;
-
-                        case BEFORE_CHILD_REMOVAL:
-                            listener.beforeChildRemoval(event);
-                            break;
-
-                        case BEFORE_CHILD_REPLACEMENT:
-                            listener.beforeChildReplacement(event);
-                            break;
-
-                        case BEFORE_CHILD_MOVEMENT:
-                            listener.beforeChildMovement(event);
-                            break;
-
-                        case BEFORE_CHILDREN_CHANGE:
-                            listener.beforeChildrenChange(event);
-                            break;
-
-                        case BEFORE_PROPERTY_CHANGE:
-                            listener.beforePropertyChange(event);
-                            break;
-
-                        case CHILD_ADDED:
-                            listener.childAdded(event);
-                            break;
-
-                        case CHILD_REMOVED:
-                            listener.childRemoved(event);
-                            break;
-
-                        case CHILD_REPLACED:
-                            listener.childReplaced(event);
-                            break;
-
-                        case CHILD_MOVED:
-                            listener.childMoved(event);
-                            break;
-
-                        case CHILDREN_CHANGED:
-                            listener.childrenChanged(event);
-                            break;
-
-                        case PROPERTY_CHANGED:
-                            listener.propertyChanged(event);
-                            break;
-                    }
-                }
-                catch (Throwable e) {
-                    LOG.error(e);
-                }
+                notifyPsiTreeChangeListener(event, listener);
             }
         }
         finally {
             if (isRealTreeChange) {
                 myTreeChangeEventIsFiring = false;
             }
+        }
+    }
+
+    private static void notifyPsiTreeChangeListener(PsiTreeChangeEventImpl event, PsiTreeChangeListener listener) {
+        try {
+            switch (event.getCode()) {
+                case BEFORE_CHILD_ADDITION:
+                    listener.beforeChildAddition(event);
+                    break;
+
+                case BEFORE_CHILD_REMOVAL:
+                    listener.beforeChildRemoval(event);
+                    break;
+
+                case BEFORE_CHILD_REPLACEMENT:
+                    listener.beforeChildReplacement(event);
+                    break;
+
+                case BEFORE_CHILD_MOVEMENT:
+                    listener.beforeChildMovement(event);
+                    break;
+
+                case BEFORE_CHILDREN_CHANGE:
+                    listener.beforeChildrenChange(event);
+                    break;
+
+                case BEFORE_PROPERTY_CHANGE:
+                    listener.beforePropertyChange(event);
+                    break;
+
+                case CHILD_ADDED:
+                    listener.childAdded(event);
+                    break;
+
+                case CHILD_REMOVED:
+                    listener.childRemoved(event);
+                    break;
+
+                case CHILD_REPLACED:
+                    listener.childReplaced(event);
+                    break;
+
+                case CHILD_MOVED:
+                    listener.childMoved(event);
+                    break;
+
+                case CHILDREN_CHANGED:
+                    listener.childrenChanged(event);
+                    break;
+
+                case PROPERTY_CHANGED:
+                    listener.propertyChanged(event);
+                    break;
+            }
+        }
+        catch (Throwable e) {
+            LOG.error(e);
         }
     }
 
@@ -504,12 +519,14 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
 
     @Override
     public void beforeChange(boolean isPhysical) {
+        myProject.getMessageBus().syncPublisher(AnyPsiChangeListenerBackgroundable.class).beforePsiChanged(isPhysical);
         myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).beforePsiChanged(isPhysical);
     }
 
     @Override
     public void afterChange(boolean isPhysical) {
         myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).afterPsiChanged(isPhysical);
+        myProject.getMessageBus().syncPublisher(AnyPsiChangeListenerBackgroundable.class).afterPsiChanged(isPhysical);
     }
 
     @Override

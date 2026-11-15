@@ -107,6 +107,16 @@ public abstract class PsiManager extends UserDataHolderBase {
   public abstract void addPsiTreeChangeListener(PsiTreeChangeListener listener, Disposable parentDisposable);
 
   /**
+   * Same as {@link #addPsiTreeChangeListener(PsiTreeChangeListener, Disposable)}, but the listener runs in place, on the thread that
+   * changes the PSI - which can be a background thread holding the write lock. The listener must not use UI-only API and must keep no
+   * thread-affine state; paired events can arrive on different threads. A listener of {@link #addPsiTreeChangeListener} can be handed a
+   * physical change on the UI thread, which costs the background thread a wait for the UI thread.
+   */
+  public void addPsiTreeChangeListenerBackgroundable(PsiTreeChangeListener listener, Disposable parentDisposable) {
+    addPsiTreeChangeListener(listener, parentDisposable);
+  }
+
+  /**
    * Removes a listener for receiving notifications about all changes in the PSI tree of the project.
    *
    * @param listener the listener instance.

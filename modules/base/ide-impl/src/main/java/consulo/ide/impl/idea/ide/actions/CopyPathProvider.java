@@ -31,7 +31,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.ui.ex.CopyPasteManager;
 import consulo.ui.ex.awt.UIExAWTDataKey;
@@ -84,16 +83,20 @@ public class CopyPathProvider extends DumbAwareAction implements AnActionWithAsy
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> {
+        return ActionSafeReadLock.run(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.putClientProperty(ListPopupStepEx.SECONDARY_TEXT, null);
+                presentation.setEnabledAndVisible(false);
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             Editor editor = e.getData(Editor.KEY);
-            Project project = e.getData(Project.KEY);
+            Project project = e.getRequiredData(Project.KEY);
 
             DataContext dataContext = e.getDataContext();
-            String qualifiedName = project != null
-                ? getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext)
-                : null;
+            String qualifiedName = getQualifiedName(project, CopyReferenceUtil.getElementsToCopy(editor, dataContext), editor, dataContext);
 
-            Presentation presentation = e.getPresentation();
             presentation.putClientProperty(ListPopupStepEx.SECONDARY_TEXT, qualifiedName);
             presentation.setEnabledAndVisible(qualifiedName != null);
         }).toCoroutine();

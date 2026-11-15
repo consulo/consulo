@@ -40,7 +40,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.lang.function.Predicates;
@@ -290,13 +289,8 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> {
-            Presentation presentation = e.getPresentation();
-            Project project = e.getData(Project.KEY);
-            if (project == null) {
-                presentation.setEnabled(false);
-                return;
-            }
+        return ActionSafeReadLock.run(e, presentation -> presentation.setEnabled(e.getData(Project.KEY) != null), presentation -> {
+            Project project = e.getRequiredData(Project.KEY);
 
             Editor editor = e.getData(Editor.KEY);
 

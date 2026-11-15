@@ -69,10 +69,13 @@ public abstract class BrowseHierarchyActionBase extends AnAction implements AnAc
                 presentation.setVisible(false);
             }
             else {
-                boolean enabled = service.isAvailable(myKind, e.getDataContext());
-                presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));
-                presentation.setEnabled(enabled);
+                presentation.setEnabledAndVisible(true);
             }
+        }, presentation -> {
+            HierarchyBrowseService service = HierarchyBrowseService.getInstance(e.getRequiredData(Project.KEY));
+            boolean enabled = service.isAvailable(myKind, e.getDataContext());
+            presentation.setVisible(enabled || !ActionPlaces.isPopupPlace(e.getPlace()));
+            presentation.setEnabled(enabled);
         }).toCoroutine();
     }
 }

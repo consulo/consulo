@@ -63,6 +63,13 @@ public abstract class CompileActionBase extends DumbAwareAction implements AnAct
     @Override
     public final Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            Project project = e.getData(Project.KEY);
+            if (project == null || !project.isInitialized()) {
+                presentation.setEnabled(false);
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             updateInReadAction(e);
         }).toCoroutine();
     }

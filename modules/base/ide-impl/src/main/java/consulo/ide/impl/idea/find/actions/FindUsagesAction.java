@@ -30,6 +30,7 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
@@ -89,7 +90,14 @@ public class FindUsagesAction extends AnAction implements AnActionWithAsyncUpdat
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> FindUsagesInFileAction.updateFindUsagesAction(e)).toCoroutine();
+        return ActionSafeReadLock.run(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.setVisible(!ActionPlaces.isPopupPlace(e.getPlace()));
+                presentation.setEnabled(false);
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> FindUsagesInFileAction.updateFindUsagesAction(e)).toCoroutine();
     }
 
     @RequiredUIAccess

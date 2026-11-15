@@ -75,6 +75,8 @@ public abstract class BaseOpenInBrowserAction extends DumbAwareAction implements
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(e.getData(Project.KEY) != null);
+        }, presentation -> {
             WebBrowser browser = getBrowser(e);
             if (browser == null) {
                 e.getPresentation().setEnabledAndVisible(false);

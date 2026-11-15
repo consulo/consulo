@@ -66,6 +66,8 @@ public abstract class AbstractVcsAction extends DumbAwareAction implements AnAct
     @SuppressWarnings("deprecation")
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(e.getData(Project.KEY) != null);
+        }, presentation -> {
             performUpdate(e.getPresentation(), VcsContextWrapper.createInstanceOn(e, EditorKeys.EDITOR_SNAPSHOT));
         }).toCoroutine();
     }

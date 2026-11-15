@@ -98,6 +98,13 @@ public class ExternalJavaDocAction extends DumbAwareAction implements AnActionWi
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.setEnabled(false);
+                presentation.setVisible(e.getData(Editor.KEY) == null || ActionPlaces.isMainMenuOrActionSearch(e.getPlace()));
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             Editor editor = e.getData(EditorKeys.EDITOR_SNAPSHOT);
             PsiElement element = getElement(e.getDataContext(), editor);
             PsiElement originalElement = getOriginalElement(e.getData(PsiFile.KEY), editor);

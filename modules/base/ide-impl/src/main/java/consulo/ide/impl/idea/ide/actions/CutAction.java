@@ -47,6 +47,15 @@ public class CutAction extends AnAction implements DumbAware, AnActionWithAsyncU
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return ActionSafeReadLock.run(event, presentation -> {
+            // in the editor popup the visibility comes from the cut provider, which needs the lock
+            Project project = event.getData(Project.KEY);
+            if ((project == null || !project.isOpen()) && !event.getPlace().equals(ActionPlaces.EDITOR_POPUP)) {
+                presentation.setEnabled(false);
+                presentation.setVisible(true);
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             DataContext dataContext = event.getDataContext();
             CutProvider provider = event.getData(CutProvider.KEY);
             Project project = event.getData(Project.KEY);

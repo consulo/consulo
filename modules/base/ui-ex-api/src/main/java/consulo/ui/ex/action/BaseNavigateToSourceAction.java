@@ -61,7 +61,11 @@ public abstract class BaseNavigateToSourceAction extends AnAction implements Dum
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> updateInReadAction(e)).toCoroutine();
+        return ActionSafeReadLock.run(
+            e,
+            presentation -> presentation.setEnabledAndVisible(true),
+            presentation -> updateInReadAction(e)
+        ).toCoroutine();
     }
 
     public void updateInReadAction(AnActionEvent e) {

@@ -107,6 +107,13 @@ public class IgnoreFileActionGroup extends AsyncActionGroup implements AnActionW
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.setPerformGroup(false);
+                presentation.setEnabledAndVisible(false);
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             List<AnAction> actions = createActionsFor(e);
             presentation.setPerformGroup(actions.size() == 1);
             presentation.setEnabledAndVisible(!actions.isEmpty());
@@ -128,7 +135,16 @@ public class IgnoreFileActionGroup extends AsyncActionGroup implements AnActionW
         if (e == null) {
             return Coroutine.first(CodeExecution.<Object, List<AnAction>>supply(() -> List.of()));
         }
-        return ActionSafeReadLock.<Object, List<AnAction>>apply(e, presentation -> createActionsFor(e)).toCoroutine();
+        // the presentation is the group's own update result - it is hidden without a project, otherwise it is kept as it is
+        return ActionSafeReadLock.<Object, List<AnAction>>apply(
+            e,
+            presentation -> {
+                if (e.getData(Project.KEY) == null) {
+                    presentation.setEnabledAndVisible(false);
+                }
+            },
+            presentation -> createActionsFor(e)
+        ).toCoroutine();
     }
 
     private static List<VirtualFile> filterSelectedFiles(Project project, List<VirtualFile> files) {

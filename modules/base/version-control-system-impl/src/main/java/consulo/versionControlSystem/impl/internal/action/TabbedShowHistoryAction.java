@@ -61,8 +61,9 @@ public class TabbedShowHistoryAction extends AbstractAsyncVcsAction {
         return ActionSafeReadLock.run(presentation, presentation1 -> {
             Project project = context.getProject();
 
+            presentation.setEnabledAndVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
+        }, presentation1 -> {
             presentation.setEnabled(isEnabled(context));
-            presentation.setVisible(project != null && ProjectLevelVcsManager.getInstance(project).hasActiveVcss());
         }).toCoroutine();
     }
 

@@ -103,7 +103,14 @@ public abstract class CodeInsightAction extends AnAction implements AnActionWith
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         // runs in background under a safe read lock: PSI is guarded by the read action, and the
         // editor state comes from EditorKeys.EDITOR_SNAPSHOT - a check-free imaginary editor
-        return Coroutine.first(ActionSafeReadLock.run(e, presentation -> update(e)));
+        return Coroutine.first(ActionSafeReadLock.run(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.setEnabled(false);
+                return;
+            }
+            // overrides of update(e) may hide the action, so the visibility is reset as well
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> update(e)));
     }
 
     public void update(AnActionEvent e) {

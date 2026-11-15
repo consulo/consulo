@@ -190,7 +190,11 @@ public abstract class BaseRefactoringAction extends AnAction implements AnAction
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> updateInRead(e)).toCoroutine();
+        return ActionSafeReadLock.run(
+            e,
+            p -> p.setEnabledAndVisible(e.getData(Project.KEY) != null),
+            p -> updateInRead(e)
+        ).toCoroutine();
     }
 
     @RequiredReadAction

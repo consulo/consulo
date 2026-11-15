@@ -57,6 +57,8 @@ public abstract class CreateInDirectoryActionBase extends AnAction implements An
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
         return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(e.getData(Project.KEY) != null);
+        }, presentation -> {
             presentation.setEnabledAndVisible(isAvailable(e.getDataContext()));
         }).toCoroutine();
     }

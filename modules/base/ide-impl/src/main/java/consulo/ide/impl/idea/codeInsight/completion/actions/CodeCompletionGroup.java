@@ -19,7 +19,6 @@ import consulo.annotation.component.ActionImpl;
 import consulo.annotation.component.ActionRef;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
@@ -45,27 +44,21 @@ public class CodeCompletionGroup extends DefaultActionGroup implements DumbAware
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> {
-            DataContext dataContext = e.getDataContext();
-            Project project = dataContext.getData(Project.KEY);
-            if (project == null) {
-                presentation.setEnabled(false);
-                return;
-            }
+        return ActionSafeReadLock.run(
+            e,
+            presentation -> presentation.setEnabled(e.getData(Project.KEY) != null && e.getData(Editor.KEY) != null),
+            presentation -> {
+                Project project = e.getRequiredData(Project.KEY);
+                Editor editor = e.getRequiredData(Editor.KEY);
+                PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                if (file == null) {
+                    presentation.setEnabled(false);
+                    return;
+                }
 
-            Editor editor = dataContext.getData(Editor.KEY);
-            if (editor == null) {
-                presentation.setEnabled(false);
-                return;
+                presentation.setEnabled(true);
             }
-            PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
-            if (file == null) {
-                presentation.setEnabled(false);
-                return;
-            }
-
-            presentation.setEnabled(true);
-        }).toCoroutine();
+        ).toCoroutine();
     }
 
     @Override

@@ -80,6 +80,10 @@ public class ExecutorAction extends AnAction implements DumbAware, AnActionWithA
                 return;
             }
 
+            presentation.setEnabled(true);
+        }, presentation -> {
+            Project project = e.getRequiredData(Project.KEY);
+
             RunnerAndConfigurationSettings selectedConfiguration = getConfiguration(project);
             boolean enabled;
 

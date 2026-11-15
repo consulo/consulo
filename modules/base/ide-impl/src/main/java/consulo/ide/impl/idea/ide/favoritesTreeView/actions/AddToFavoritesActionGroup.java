@@ -66,6 +66,10 @@ public class AddToFavoritesActionGroup extends ActionGroup implements AnActionWi
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> p.setVisible(AddToFavoritesAction.canCreateNodes(e))).toCoroutine();
+        return ActionSafeReadLock.run(
+            e,
+            p -> p.setVisible(e.hasData(Project.KEY)),
+            p -> p.setVisible(AddToFavoritesAction.canCreateNodes(e))
+        ).toCoroutine();
     }
 }

@@ -53,7 +53,9 @@ public abstract class XDebuggerActionBase extends AnAction implements AnActionWi
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> updateInReadAction(e)).toCoroutine();
+        return ActionSafeReadLock.run(e, presentation -> {
+            presentation.setEnabledAndVisible(e.getData(Project.KEY) != null);
+        }, presentation -> updateInReadAction(e)).toCoroutine();
     }
 
     @RequiredReadAction

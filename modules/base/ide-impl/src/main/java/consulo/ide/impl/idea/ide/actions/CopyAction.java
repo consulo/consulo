@@ -44,7 +44,8 @@ public class CopyAction extends AnAction implements DumbAware, AnActionWithAsync
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
-        return ActionSafeReadLock.run(event, presentation -> {
+        // the copy provider decides both states, and the editor provides it lazily - nothing is known without the lock
+        return ActionSafeReadLock.run(event, presentation -> presentation.setEnabledAndVisible(true), presentation -> {
             DataContext dataContext = event.getDataContext();
             CopyProvider provider = event.getData(CopyProvider.KEY);
             presentation.setEnabled(provider != null && provider.isCopyEnabled(dataContext));

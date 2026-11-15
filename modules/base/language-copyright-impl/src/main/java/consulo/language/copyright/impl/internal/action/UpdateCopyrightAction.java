@@ -60,6 +60,14 @@ public class UpdateCopyrightAction extends BaseAnalysisAction {
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent event) {
         return ActionSafeReadLock.run(event, (presentation) -> {
+            Project project = event.getData(Project.KEY);
+            boolean enabled = project != null && CopyrightManager.getInstance(project).hasAnyCopyrights();
+            presentation.setEnabled(enabled);
+
+            if (ActionPlaces.isPopupPlace(event.getPlace())) {
+                presentation.setVisible(enabled);
+            }
+        }, (presentation) -> {
             boolean enabled = isEnabled(event);
             presentation.setEnabled(enabled);
 

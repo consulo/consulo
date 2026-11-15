@@ -462,10 +462,11 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
 
             return input;
         })).then(ActionSafeReadLock.run(event, presentation -> {
-            if (!presentation.isEnabled()) {
-                return;
+            // the step above has already disabled the presentation if the event rules the action out - keep that state
+            if (event.getData(Project.KEY) == null) {
+                presentation.setEnabled(false);
             }
-
+        }, presentation -> {
             LocalizeValue actionText = myApplication.getExtensionPoint(GotoDeclarationHandler.class)
                 .computeSafeIfAny(g -> g.getActionText(event.getDataContext()), LocalizeValue::isNotEmpty, LocalizeValue.empty());
 

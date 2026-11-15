@@ -25,8 +25,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -61,14 +61,17 @@ public class ExecutorGroupActionGroup extends ActionGroup implements DumbAware, 
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> {
+        // nothing here needs the read lock, so the group is never disabled by a running write action
+        return Coroutine.first(CodeExecution.<Object, Object>apply(input -> {
+            Presentation presentation = e.getPresentation();
             Project project = e.getData(Project.KEY);
             if (project == null || !project.isInitialized() || project.isDisposed()) {
                 presentation.setEnabled(false);
-                return;
+                return input;
             }
             presentation.setEnabledAndVisible(myExecutorGroup.isApplicable(project));
-        }).toCoroutine();
+            return input;
+        }));
     }
 
     @Override

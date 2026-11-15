@@ -110,7 +110,11 @@ public class AddToFavoritesAction extends AnAction implements AnActionWithAsyncU
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, p -> p.setVisible(AddToFavoritesAction.canCreateNodes(e))).toCoroutine();
+        return ActionSafeReadLock.run(
+            e,
+            p -> p.setVisible(e.hasData(Project.KEY)),
+            p -> p.setVisible(AddToFavoritesAction.canCreateNodes(e))
+        ).toCoroutine();
     }
 
     @RequiredReadAction

@@ -130,7 +130,15 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
 
     @Override
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        return ActionSafeReadLock.run(e, presentation -> updateInReadAction(e)).toCoroutine();
+        return ActionSafeReadLock.run(e, presentation -> {
+            // as updateInReadAction: a hidden presentation stays as it is, a disabled one is hidden
+            if (!presentation.isVisible()) {
+                return;
+            }
+            if (!presentation.isEnabled() || e.getData(Project.KEY) == null) {
+                presentation.setEnabledAndVisible(false);
+            }
+        }, presentation -> updateInReadAction(e)).toCoroutine();
     }
 
     @RequiredReadAction

@@ -26,6 +26,7 @@ import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.execution.internal.ExecutionActionValue;
 import consulo.execution.internal.action.BaseRunConfigurationAction;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -126,6 +127,13 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
         }
 
         return ActionSafeReadLock.run(e, presentation -> {
+            if (e.getData(Project.KEY) == null) {
+                presentation.setVisible(false);
+                presentation.setText(LocalizeValue.empty());
+                return;
+            }
+            presentation.setEnabledAndVisible(true);
+        }, presentation -> {
             LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
             presentation.setVisible(activeText.isNotEmpty());
             presentation.setText(activeText);
