@@ -27,8 +27,10 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.NonTrivialActionGroup;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
+import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.virtualFileSystem.VirtualFile;
 
 @ActionImpl(
@@ -46,17 +48,23 @@ public class LocalHistoryGroup extends NonTrivialActionGroup implements DumbAwar
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Coroutine<?, ?> updateAsync(AnActionEvent e) {
-        Project project = e.getData(Project.KEY);
-        VirtualFile file = e.getData(VirtualFile.KEY);
-        PsiElement element = e.getData(PsiElement.KEY);
-        if (project == null || ActionPlaces.isPopupPlace(e.getPlace())
-            && (file != null && !file.isInLocalFileSystem() || file == null && element != null)) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return Coroutine.empty();
-        }
-
-        return super.updateAsync(e);
+        Presentation presentation = e.getPresentation();
+        return Coroutine.first(ActionSafeReadLock.<Object, Object>run(e, p -> {
+                p.setEnabledAndVisible(e.getData(Project.KEY) != null);
+            }, p -> {
+                // in a popup the history is for a local file, or for a context with neither a file nor PSI
+                if (ActionPlaces.isPopupPlace(e.getPlace())) {
+                    VirtualFile file = e.getData(VirtualFile.KEY);
+                    if (file != null ? !file.isInLocalFileSystem() : e.getData(PsiElement.KEY) != null) {
+                        p.setEnabledAndVisible(false);
+                    }
+                }
+            }))
+            .then(CallSubroutine.call(() -> presentation.isVisible()
+                ? (Coroutine<Object, Object>) super.updateAsync(e)
+                : Coroutine.<Object, Object>empty()));
     }
 }
 

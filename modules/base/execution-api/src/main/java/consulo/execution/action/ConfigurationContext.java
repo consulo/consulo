@@ -201,12 +201,12 @@ public class ConfigurationContext {
                     }
                 }
             }
-            getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class).forEach(producer -> {
+            for (RunConfigurationProducer<?> producer : RunConfigurationProducer.getProducers(getProject())) {
                 RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(this);
                 if (configuration != null && configuration.getConfiguration() == myRuntimeConfiguration) {
                     myExistingConfiguration.set(configuration);
                 }
-            });
+            }
         }
         if (producers != null) {
             for (RuntimeConfigurationProducer producer : producers) {
@@ -216,12 +216,12 @@ public class ConfigurationContext {
                 }
             }
         }
-        getProject().getApplication().getExtensionPoint(RunConfigurationProducer.class).forEach(producer -> {
+        for (RunConfigurationProducer<?> producer : RunConfigurationProducer.getProducers(getProject())) {
             RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(this);
             if (configuration != null) {
                 myExistingConfiguration.set(configuration);
             }
-        });
+        }
         return myExistingConfiguration.get();
     }
 

@@ -22,6 +22,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.action.*;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.logging.Logger;
+import consulo.project.DumbService;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -74,8 +75,8 @@ public class PreferredProducerFind {
     private static List<RuntimeConfigurationProducer> findAllProducers(Location location, ConfigurationContext context) {
         //todo load configuration types if not already loaded
         Application.get().getExtensionList(ConfigurationType.class);
-        List<RuntimeConfigurationProducer> configurationProducers =
-            RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList();
+        List<RuntimeConfigurationProducer> configurationProducers = DumbService.getInstance(context.getProject())
+            .filterByDumbAwareness(RuntimeConfigurationProducer.RUNTIME_CONFIGURATION_PRODUCER.getExtensionList());
         ArrayList<RuntimeConfigurationProducer> producers = new ArrayList<>();
         for (RuntimeConfigurationProducer prototype : configurationProducers) {
             RuntimeConfigurationProducer producer;
@@ -119,10 +120,12 @@ public class PreferredProducerFind {
             configurationsFromContext.add(new ConfigurationFromContextWrapper(producer));
         }
 
-        Application.get().getExtensionPoint(RunConfigurationProducer.class).collectMapped(
-            configurationsFromContext,
-            producer -> producer.findOrCreateConfigurationFromContext(context, preferExisting)
-        );
+        for (RunConfigurationProducer<?> producer : RunConfigurationProducer.getProducers(context.getProject())) {
+            ConfigurationFromContext fromContext = producer.findOrCreateConfigurationFromContext(context, preferExisting);
+            if (fromContext != null) {
+                configurationsFromContext.add(fromContext);
+            }
+        }
 
         if (configurationsFromContext.isEmpty()) {
             return null;

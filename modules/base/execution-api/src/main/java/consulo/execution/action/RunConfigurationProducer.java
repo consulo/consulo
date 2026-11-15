@@ -28,6 +28,8 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -219,6 +221,14 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     @SuppressWarnings("unchecked")
     public static <T extends RunConfigurationProducer> T getInstance(Class<? extends T> aClass) {
         return Application.get().getExtensionPoint(RunConfigurationProducer.class).findExtensionOrFail(aClass);
+    }
+
+    /**
+     * The producers usable now: while indexing only the dumb-aware ones, the others need indexes to recognize a context.
+     */
+    public static List<RunConfigurationProducer> getProducers(Project project) {
+        DumbService dumbService = DumbService.getInstance(project);
+        return dumbService.filterByDumbAwareness(project.getApplication().getExtensionList(RunConfigurationProducer.class));
     }
 
     @SuppressWarnings("unchecked")
