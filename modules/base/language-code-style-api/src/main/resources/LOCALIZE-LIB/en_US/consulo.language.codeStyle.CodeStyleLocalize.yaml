@@ -78,6 +78,12 @@ arrangement.text.type:
     text: Type
 arrangement.title.settings.tab:
     text: Arrangement
+async.formatting.service.cancel:
+    text: Cancel {0}
+async.formatting.service.running:
+    text: Running {0}
+async.formatting.service.timeout:
+    text: '{0} does not respond after {1} seconds.'
 button.delete:
     text: Delete
 button.save.as:
@@ -270,6 +276,8 @@ editbox.right.margin.columns:
     text: 'Right margin (columns):'
 editbox.scheme.name:
     text: 'Scheme:'
+formatting.service.open.file:
+    text: Open File {0}
 group.spaces.after.right.brace:
     text: Before Keywords
 group.spaces.around.operators:

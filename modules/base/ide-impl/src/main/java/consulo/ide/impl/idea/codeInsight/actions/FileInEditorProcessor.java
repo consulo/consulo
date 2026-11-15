@@ -24,6 +24,8 @@ import consulo.dataContext.DataManager;
 import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.impl.internal.service.CoreFormattingService;
+import consulo.language.codeStyle.impl.internal.service.FormattingServiceUtil;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -96,6 +98,11 @@ class FileInEditorProcessor {
 
     private static final Logger LOG = Logger.getInstance(FileInEditorProcessor.class);
 
+    @RequiredReadAction
+    private boolean isExternalFormatterInUse() {
+        return !(FormattingServiceUtil.findService(myFile, true, myProcessWholeFile) instanceof CoreFormattingService);
+    }
+
     private final Editor myEditor;
 
     private boolean myNoChangesDetected = false;
@@ -141,20 +148,24 @@ class FileInEditorProcessor {
         if (shouldNotify()) {
             myProcessor.setCollectInfo(true);
             myProcessor.addPostRunnable(() -> {
-                LocalizeValue message = prepareMessage();
-                if (!myEditor.isDisposed() && myEditor.getComponent().isShowing()) {
-                    HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
-                        @Override
-                        @RequiredUIAccess
-                        protected void hyperlinkActivated(HyperlinkEvent e) {
-                            AnAction action = ActionManager.getInstance().getAction("ShowReformatFileDialog");
-                            DataManager manager = DataManager.getInstance();
-                            DataContext context = manager.getDataContext(myEditor.getContentComponent());
-                            action.actionPerformed(AnActionEvent.createFromAnAction(action, null, "", context));
-                        }
-                    };
-                    showHint(myEditor, message, hyperlinkListener);
+                if (myEditor.isDisposed() || !myEditor.getComponent().isShowing()) {
+                    return;
                 }
+                if (isExternalFormatterInUse()) {
+                    return;
+                }
+                LocalizeValue message = prepareMessage();
+                HyperlinkListener hyperlinkListener = new HyperlinkAdapter() {
+                    @Override
+                    @RequiredUIAccess
+                    protected void hyperlinkActivated(HyperlinkEvent e) {
+                        AnAction action = ActionManager.getInstance().getAction("ShowReformatFileDialog");
+                        DataManager manager = DataManager.getInstance();
+                        DataContext context = manager.getDataContext(myEditor.getContentComponent());
+                        action.actionPerformed(AnActionEvent.createFromAnAction(action, null, "", context));
+                    }
+                };
+                showHint(myEditor, message, hyperlinkListener);
             });
         }
 

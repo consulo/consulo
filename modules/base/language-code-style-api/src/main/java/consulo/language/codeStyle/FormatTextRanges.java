@@ -106,6 +106,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
         return myRanges.size() == 1 && file.getTextRange().equals(myRanges.get(0).getTextRange());
     }
 
+    @Override
     public List<TextRange> getTextRanges() {
         List<TextRange> ranges = ContainerUtil.map(myRanges, FormatTextRange::getTextRange);
         ranges.sort(Segment.BY_START_OFFSET_THEN_END_OFFSET);
@@ -123,6 +124,7 @@ public class FormatTextRanges implements FormattingRangesInfo {
     /**
      * @return A range containing all ranges or null if no ranges.
      */
+    @Override
     public @Nullable TextRange getBoundRange() {
         List<TextRange> ranges = getTextRanges();
         return ranges.size() > 0

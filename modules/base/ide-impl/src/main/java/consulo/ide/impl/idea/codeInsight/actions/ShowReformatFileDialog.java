@@ -18,6 +18,9 @@ package consulo.ide.impl.idea.codeInsight.actions;
 import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.codeStyle.impl.internal.service.CoreFormattingService;
+import consulo.language.codeStyle.impl.internal.service.FormattingServiceUtil;
+import consulo.language.codeStyle.service.FormattingService;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.platform.base.localize.ActionLocalize;
@@ -49,9 +52,8 @@ public class ShowReformatFileDialog extends LegacyDumbAwareAction {
             return;
         }
 
-        if (FormattingModelBuilder.forContext(file) != null) {
-            e.getPresentation().setEnabled(true);
-        }
+        FormattingService service = FormattingServiceUtil.findService(file, true, true);
+        e.getPresentation().setEnabled(!(service instanceof CoreFormattingService) || FormattingModelBuilder.forContext(file) != null);
     }
 
     @Override

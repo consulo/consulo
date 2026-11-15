@@ -246,7 +246,7 @@ public class PomModelImpl extends UserDataHolderBase implements PomModel {
 
             synchronizer.setIgnorePsiEvents(true);
             try {
-                FormattingService.getInstance(file.getProject()).performActionWithFormatterDisabled(changeAction);
+                FormattingServiceHelper.getInstance(file.getProject()).performActionWithFormatterDisabled(changeAction);
             }
             finally {
                 synchronizer.setIgnorePsiEvents(false);

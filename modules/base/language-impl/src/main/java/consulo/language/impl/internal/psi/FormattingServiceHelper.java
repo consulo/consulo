@@ -24,9 +24,9 @@ import consulo.project.Project;
  * @since 17-Feb-22
  */
 @ServiceAPI(ComponentScope.PROJECT)
-public interface FormattingService {
-  static FormattingService getInstance(Project project) {
-    return project.getInstance(FormattingService.class);
+public interface FormattingServiceHelper {
+  static FormattingServiceHelper getInstance(Project project) {
+    return project.getInstance(FormattingServiceHelper.class);
   }
 
   void performActionWithFormatterDisabled(Runnable runnable);

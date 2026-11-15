@@ -20,6 +20,9 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.codeStyle.impl.internal.service.CoreFormattingService;
+import consulo.language.codeStyle.impl.internal.service.FormattingServiceUtil;
+import consulo.language.codeStyle.service.FormattingService;
 import consulo.language.editor.internal.LayoutCodeProcessor;
 import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.localize.LanguageLocalize;
@@ -396,7 +399,7 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
         if (!file.isValid()) {
             return false;
         }
-        if (FormattingModelBuilder.forContext(file) == null) {
+        if (!isFormattable(file)) {
             return false;
         }
         VirtualFile virtualFile = file.getVirtualFile();
@@ -406,6 +409,12 @@ public abstract class AbstractLayoutCodeProcessor implements LayoutCodeProcessor
 
         return !ProjectCoreUtil.isProjectOrWorkspaceFile(virtualFile)
             && !GeneratedSourcesFilter.isGenerated(file.getProject(), virtualFile);
+    }
+
+    @RequiredReadAction
+    private static boolean isFormattable(PsiFile psiFile) {
+        FormattingService formattingService = FormattingServiceUtil.findService(psiFile, true, true);
+        return !(formattingService instanceof CoreFormattingService && FormattingModelBuilder.forContext(psiFile) == null);
     }
 
     private void runLayoutCodeProcess(Runnable readAction, Runnable writeAction) {

@@ -16,6 +16,9 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 public interface FormattingRangesInfo {
     boolean isWhitespaceReadOnly(TextRange range);
@@ -23,4 +26,11 @@ public interface FormattingRangesInfo {
     boolean isReadOnly(TextRange range);
 
     boolean isOnInsertedLine(int offset);
+
+    List<TextRange> getTextRanges();
+
+    /**
+     * @return A range containing all ranges or null if no ranges.
+     */
+    @Nullable TextRange getBoundRange();
 }

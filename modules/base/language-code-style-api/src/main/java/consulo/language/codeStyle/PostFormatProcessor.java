@@ -29,4 +29,12 @@ public interface PostFormatProcessor {
     PsiElement processElement(PsiElement source, CodeStyleSettings settings);
 
     TextRange processText(PsiFile source, TextRange rangeToReformat, CodeStyleSettings settings);
+
+    /**
+     * @return {@code true} if the processor modifies only whitespace, for example, adjusts indentation. The default implementation
+     * returns {@code false}
+     */
+    default boolean isWhitespaceOnly() {
+        return false;
+    }
 }
