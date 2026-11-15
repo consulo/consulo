@@ -70,7 +70,7 @@ module consulo.language.editor.impl {
     exports consulo.language.editor.impl.internal.inspection.setting to consulo.ide.impl, consulo.it;
     exports consulo.language.editor.impl.internal.psi.path to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.template to consulo.ide.impl;
-    exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl;
+    exports consulo.language.editor.impl.internal.highlight to consulo.ide.impl, consulo.it;
     exports consulo.language.editor.impl.internal.rawHighlight to consulo.ide.impl;
     exports consulo.language.editor.impl.internal.richcopy to consulo.desktop.awt.ide.impl, consulo.ide.impl;
     exports consulo.language.editor.impl.internal.richcopy.model to consulo.ide.impl;

@@ -21,7 +21,13 @@ import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationSession;
+import consulo.language.editor.annotation.Annotator;
+import consulo.language.editor.impl.internal.highlight.AnnotationHolderImpl;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
@@ -49,5 +55,12 @@ public class HeadlessLanguageEditorInternalHelper implements LanguageEditorInter
         int endOffset,
         List<? extends TextRange> enabledRanges
     ) {
+    }
+
+    @Override
+    public List<Annotation> runAnnotator(Language language, Annotator annotator, PsiFile file, PsiElement context, boolean batchMode) {
+        AnnotationHolderImpl holder = new AnnotationHolderImpl(language, new AnnotationSession(file), batchMode);
+        holder.runAnnotatorWithContext(context, annotator);
+        return holder;
     }
 }
