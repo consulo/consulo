@@ -107,7 +107,12 @@ public class GenerateAction extends DumbAwareAction implements AnActionWithAsync
                 .then(CodeExecution.<List<AnAction>, List<AnAction>>apply(children -> wrapChildren(children, dumbMode, dataContext)));
         }
 
-        private static List<AnAction> wrapChildren(List<AnAction> children, boolean dumbMode, @Nullable DataContext dataContext) {
+        private static List<AnAction> wrapChildren(@Nullable List<AnAction> children, boolean dumbMode, @Nullable DataContext dataContext) {
+            // a group computing its children with ActionSafeReadLock produces none when its lock-free part rules it out
+            // or a write action holds the lock
+            if (children == null) {
+                return List.of();
+            }
             List<AnAction> result = new ArrayList<>(children.size());
             for (AnAction action : children) {
                 if (dumbMode && !action.isDumbAware()) {
