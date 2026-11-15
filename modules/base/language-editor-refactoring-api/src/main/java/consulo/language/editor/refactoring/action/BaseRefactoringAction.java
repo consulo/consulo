@@ -228,9 +228,11 @@ public abstract class BaseRefactoringAction extends AnAction implements AnAction
             }
         }
         else {
+            boolean availableForAnyLanguage = file != null && isAvailableForAnyLanguage(file);
+            Predicate<Language> languageCondition = availableForAnyLanguage ? language -> true : myLanguageCondition;
             PsiElement element = e.getData(PsiElement.KEY);
             Language[] languages = e.getData(LangDataKeys.CONTEXT_LANGUAGES);
-            if (element == null || !isAvailableForLanguage(element.getLanguage())) {
+            if (element == null || !languageCondition.test(element.getLanguage())) {
                 if (file == null) {
                     hideAction(e);
                     return;
@@ -243,7 +245,7 @@ public abstract class BaseRefactoringAction extends AnAction implements AnAction
                 return;
             }
 
-            boolean isVisible = ContainerUtil.find(languages, myLanguageCondition) != null;
+            boolean isVisible = ContainerUtil.find(languages, languageCondition) != null;
             if (isVisible) {
                 boolean isEnabled = isAvailableOnElementInEditorAndFile(element, editor, file, dataContext);
                 if (!isEnabled) {
@@ -294,6 +296,15 @@ public abstract class BaseRefactoringAction extends AnAction implements AnAction
 
     protected boolean isAvailableForLanguage(Language language) {
         return true;
+    }
+
+    /**
+     * Whether a language-agnostic refactoring support, registered for {@link Language#ANY} (e.g. an LSP server), is available in the file.
+     * Such support cannot be decided by language, so it is checked per file and shows the action in the editor only.
+     */
+    @RequiredReadAction
+    protected boolean isAvailableForAnyLanguage(PsiFile file) {
+        return false;
     }
 
     protected boolean isAvailableForFile(PsiFile file) {

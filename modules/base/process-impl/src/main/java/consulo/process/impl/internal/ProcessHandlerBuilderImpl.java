@@ -87,6 +87,12 @@ public class ProcessHandlerBuilderImpl implements ProcessHandlerBuilder {
 
   
   @Override
+  public ProcessHandlerBuilder readerOptions(BaseOutputReader.Options options) {
+    myReaderOptions = options;
+    return this;
+  }
+
+  @Override
   public ProcessHandlerBuilder consoleType(ProcessConsoleType type) {
     myConsoleType = type;
     return this;

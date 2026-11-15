@@ -27,6 +27,9 @@ import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author yole
  */
@@ -93,12 +96,39 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
         return null;
     }
 
-    protected @Nullable RefactoringActionHandler getHandler(Language language, PsiElement element) {
-        RefactoringSupportProvider provider = RefactoringSupportProvider.forLanguage(language);
-        if (provider.isAvailable(element)) {
-            return getRefactoringHandler(provider, element);
+    protected @Nullable RefactoringActionHandler getHandler(Language language, @Nullable PsiElement element) {
+        if (element == null) {
+            // a Language.ANY provider decides per element, so it cannot answer without one
+            return getRefactoringHandler(RefactoringSupportProvider.forLanguage(language));
+        }
+        for (RefactoringSupportProvider provider : allForLanguageOrAny(language)) {
+            if (provider.isAvailable(element)) {
+                RefactoringActionHandler handler = getRefactoringHandler(provider, element);
+                if (handler != null) {
+                    return handler;
+                }
+            }
         }
         return null;
+    }
+
+    /**
+     * The providers of the language, then the {@link Language#ANY} ones. A language without a provider gets the default one of
+     * {@link RefactoringSupportProvider#forLanguage} first (some actions return a handler for any provider).
+     */
+    private static List<RefactoringSupportProvider> allForLanguageOrAny(Language language) {
+        List<RefactoringSupportProvider> providers = RefactoringSupportProvider.allForLanguage(language);
+        List<RefactoringSupportProvider> anyLanguageProviders = anyLanguageProviders(language);
+        if (providers.isEmpty()) {
+            providers = List.of(RefactoringSupportProvider.forLanguage(language));
+        }
+        if (anyLanguageProviders.isEmpty()) {
+            return providers;
+        }
+        List<RefactoringSupportProvider> result = new ArrayList<>(providers.size() + anyLanguageProviders.size());
+        result.addAll(providers);
+        result.addAll(anyLanguageProviders);
+        return result;
     }
 
     @Override
@@ -117,6 +147,25 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
         RefactoringSupportProvider refactoringSupportProvider = RefactoringSupportProvider.forLanguage(language);
         // any language mean default provider
         return refactoringSupportProvider.getLanguage() != Language.ANY;
+    }
+
+    @Override
+    @RequiredReadAction
+    protected boolean isAvailableForAnyLanguage(PsiFile file) {
+        for (RefactoringSupportProvider provider : anyLanguageProviders()) {
+            if (getRefactoringHandler(provider) != null && provider.isAvailable(file)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<RefactoringSupportProvider> anyLanguageProviders() {
+        return RefactoringSupportProvider.allForLanguage(Language.ANY);
+    }
+
+    private static List<RefactoringSupportProvider> anyLanguageProviders(Language language) {
+        return language == Language.ANY ? List.of() : anyLanguageProviders();
     }
 
     @Override
@@ -147,6 +196,12 @@ public abstract class BasePlatformRefactoringAction extends BaseRefactoringActio
     private boolean calcHidden() {
         for (Language l : Language.getRegisteredLanguages()) {
             if (isAvailableForLanguage(l)) {
+                return false;
+            }
+        }
+        // a Language.ANY provider (e.g. an LSP server) serves any language, decided per file
+        for (RefactoringSupportProvider provider : anyLanguageProviders()) {
+            if (getRefactoringHandler(provider) != null) {
                 return false;
             }
         }

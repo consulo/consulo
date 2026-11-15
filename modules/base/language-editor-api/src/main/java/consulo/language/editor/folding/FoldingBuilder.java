@@ -25,7 +25,7 @@ import java.util.List;
  */
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface FoldingBuilder extends LanguageExtension {
-  ExtensionPointCacheKey<FoldingBuilder, ByLanguageValue<List<FoldingBuilder>>> KEY = ExtensionPointCacheKey.create("FoldingBuilder", LanguageOneToMany.build(false));
+  ExtensionPointCacheKey<FoldingBuilder, ByLanguageValue<List<FoldingBuilder>>> KEY = ExtensionPointCacheKey.create("FoldingBuilder", LanguageOneToMany.buildOrAny());
 
   
   public static List<FoldingBuilder> forLanguage(Language language) {

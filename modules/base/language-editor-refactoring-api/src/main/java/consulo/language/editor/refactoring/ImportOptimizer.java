@@ -40,7 +40,7 @@ import java.util.Set;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ImportOptimizer extends LanguageExtension {
   ExtensionPointCacheKey<ImportOptimizer, ByLanguageValue<List<ImportOptimizer>>> KEY =
-    ExtensionPointCacheKey.create("ImportOptimizer", LanguageOneToMany.build(false));
+    ExtensionPointCacheKey.create("ImportOptimizer", LanguageOneToMany.buildOrAny());
 
   public static List<ImportOptimizer> forLanguage(Language language) {
     return Application.get().getExtensionPoint(ImportOptimizer.class).getOrBuildCache(KEY).requiredGet(language);

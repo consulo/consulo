@@ -31,12 +31,14 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
     private final Map<Language, List<T>> myExtensions = new ConcurrentHashMap<>();
 
     private final boolean myWithAnyLanguage;
+    private final boolean myAnyLanguageLast;
 
     private final List<T> myRawExtensions = new ArrayList<>();
     private final Function<List<T>, List<T>> mySorter;
 
-    public ByLanguageValueImpl(ExtensionWalker<T> walker, boolean withAnyLanguage) {
+    public ByLanguageValueImpl(ExtensionWalker<T> walker, boolean withAnyLanguage, boolean anyLanguageLast) {
       myWithAnyLanguage = withAnyLanguage;
+      myAnyLanguageLast = anyLanguageLast;
       mySorter = walker.sorter();
       walker.walk(myRawExtensions::add);
     }
@@ -61,23 +63,54 @@ public final class LanguageOneToMany<E extends LanguageExtension> implements Fun
             extensions.add(extension);
           }
         }
-        return mySorter.apply(extensions);
+
+        List<T> sorted = mySorter.apply(extensions);
+        if (!myAnyLanguageLast || language == Language.ANY) {
+          return sorted;
+        }
+
+        // extensions of the language (and its base languages) first, then the Language.ANY ones
+        List<T> result = new ArrayList<>(sorted.size());
+        List<T> anyLanguageExtensions = new ArrayList<>();
+        for (T extension : sorted) {
+          if (extension.getLanguage() == Language.ANY) {
+            anyLanguageExtensions.add(extension);
+          }
+          else {
+            result.add(extension);
+          }
+        }
+        result.addAll(anyLanguageExtensions);
+        return result;
       });
     }
   }
 
+  /**
+   * @param withAnyLanguage include the extensions registered for {@link Language#ANY}, sorted together with the language ones
+   */
   public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<List<E1>>> build(boolean withAnyLanguage) {
-    return new LanguageOneToMany<>(withAnyLanguage);
+    return new LanguageOneToMany<>(withAnyLanguage, false);
+  }
+
+  /**
+   * The extensions registered for the language and its base languages first, then the ones registered for {@link Language#ANY}.
+   * So a caller taking the first applicable extension prefers the language-specific ones.
+   */
+  public static <E1 extends LanguageExtension> Function<ExtensionWalker<E1>, ByLanguageValue<List<E1>>> buildOrAny() {
+    return new LanguageOneToMany<>(true, true);
   }
 
   private final boolean myWithAnyLanguage;
+  private final boolean myAnyLanguageLast;
 
-  private LanguageOneToMany(boolean withAnyLanguage) {
+  private LanguageOneToMany(boolean withAnyLanguage, boolean anyLanguageLast) {
     myWithAnyLanguage = withAnyLanguage;
+    myAnyLanguageLast = anyLanguageLast;
   }
 
   @Override
   public ByLanguageValue<List<E>> apply(ExtensionWalker<E> es) {
-    return new ByLanguageValueImpl<>(es, myWithAnyLanguage);
+    return new ByLanguageValueImpl<>(es, myWithAnyLanguage, myAnyLanguageLast);
   }
 }

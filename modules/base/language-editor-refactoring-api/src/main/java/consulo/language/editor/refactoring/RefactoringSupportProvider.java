@@ -24,10 +24,14 @@ import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.extension.ByLanguageValue;
 import consulo.language.extension.LanguageExtension;
+import consulo.language.extension.LanguageOneToMany;
 import consulo.language.extension.LanguageOneToOne;
 import consulo.language.psi.PsiElement;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Allows a custom language plugin to control the operation of refactorings for
@@ -46,9 +50,42 @@ public abstract class RefactoringSupportProvider implements LanguageExtension {
             }
           }));
 
-  
+  private static final ExtensionPointCacheKey<RefactoringSupportProvider, ByLanguageValue<List<RefactoringSupportProvider>>> ALL_KEY =
+          ExtensionPointCacheKey.create("RefactoringSupportProvider#all", LanguageOneToMany.build(false));
+
+  /**
+   * @return the provider of the language (or its base languages), or a default provider without any handlers
+   * ({@link #getLanguage()} is {@link Language#ANY}). The providers registered for {@link Language#ANY} are not returned for other languages,
+   * see {@link #allForLanguageOrAny(Language)}
+   */
   public static RefactoringSupportProvider forLanguage(Language language) {
     return Application.get().getExtensionPoint(RefactoringSupportProvider.class).getOrBuildCache(KEY).requiredGet(language);
+  }
+
+  /**
+   * Returns all providers registered for the language and its base languages.
+   */
+  public static List<RefactoringSupportProvider> allForLanguage(Language language) {
+    return Application.get().getExtensionPoint(RefactoringSupportProvider.class).getOrBuildCache(ALL_KEY).requiredGet(language);
+  }
+
+  /**
+   * Returns all providers registered for the language and its base languages, followed by the ones registered for
+   * {@link Language#ANY}.
+   */
+  public static List<RefactoringSupportProvider> allForLanguageOrAny(Language language) {
+    List<RefactoringSupportProvider> forLanguage = allForLanguage(language);
+    if (language == Language.ANY) {
+      return forLanguage;
+    }
+    List<RefactoringSupportProvider> forAnyLanguage = allForLanguage(Language.ANY);
+    if (forAnyLanguage.isEmpty()) {
+      return forLanguage;
+    }
+    List<RefactoringSupportProvider> result = new ArrayList<>(forLanguage.size() + forAnyLanguage.size());
+    result.addAll(forLanguage);
+    result.addAll(forAnyLanguage);
+    return result;
   }
 
   /**

@@ -31,7 +31,7 @@ import java.util.List;
 @ExtensionAPI(ComponentScope.APPLICATION)
 public interface ParameterInfoHandler<ParameterOwner, ParameterType> extends LanguageExtension {
   ExtensionPointCacheKey<ParameterInfoHandler, ByLanguageValue<List<ParameterInfoHandler>>> KEY =
-          ExtensionPointCacheKey.create("ParameterInfoHandler", LanguageOneToMany.build(false));
+          ExtensionPointCacheKey.create("ParameterInfoHandler", LanguageOneToMany.buildOrAny());
 
   
   static List<ParameterInfoHandler> forLanguage(Language language) {

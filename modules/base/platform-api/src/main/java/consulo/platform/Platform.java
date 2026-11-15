@@ -15,6 +15,7 @@
  */
 package consulo.platform;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.platform.internal.PlatformInternal;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.UserDataHolder;
@@ -61,6 +62,7 @@ public interface Platform extends UserDataHolder {
         return false;
     }
 
+    @UsedInPlugin
     default boolean moveToTrash(Path path) {
         return false;
     }
