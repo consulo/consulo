@@ -27,6 +27,7 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.impl.internal.FileEditorManagerImpl;
 import consulo.fileEditor.structureView.*;
+import consulo.fileEditor.structureView.event.StructureViewChangedListener;
 import consulo.ide.impl.idea.ide.structureView.newStructureView.StructureViewComponent;
 import consulo.ide.localize.IdeLocalize;
 import consulo.language.content.ProjectRootsUtil;
@@ -130,6 +131,15 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       }
     });
     Disposer.register(myToolWindow.getContentManager(), this);
+    project.getApplication().getMessageBus().connect(this).subscribe(StructureViewChangedListener.class, this::clearCaches);
+  }
+
+  private void clearCaches() {
+    StructureViewComponent.clearStructureViewState(myProject);
+    if (myStructureView != null) {
+      myStructureView.disableStoreState();
+    }
+    scheduleRebuild();
   }
 
   private void checkUpdate() {
