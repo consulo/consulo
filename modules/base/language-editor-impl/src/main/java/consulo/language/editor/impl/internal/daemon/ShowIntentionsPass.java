@@ -3,7 +3,10 @@
 package consulo.language.editor.impl.internal.daemon;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
@@ -11,6 +14,7 @@ import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.highlight.TextEditorHighlightingPass;
 import consulo.language.editor.impl.internal.daemon.DaemonCodeAnalyzerImpl;
 import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
@@ -27,11 +31,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.HasFocus;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.Pair;
 
 import java.util.ArrayList;
@@ -41,6 +47,8 @@ import consulo.language.editor.impl.internal.intention.IntentionActionOptionProv
 import consulo.language.editor.impl.internal.intention.ShowIntentionActionsHandler;
 
 public class ShowIntentionsPass extends TextEditorHighlightingPass {
+    private static final Logger LOG = Logger.getInstance(ShowIntentionsPass.class);
+
     private final Editor myEditor;
 
     private final PsiFile myFile;
@@ -208,16 +216,11 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
 
     /**
      * Returns the list of actions to show in the Alt-Enter popup at the caret offset in the given editor.
-     *
-     * @param includeSyncActions whether EDT-only providers should be queried, if {@code true}, this method should be invoked in EDT
      */
-    @RequiredUIAccess
-    public static IntentionsInfo getActionsToShow(Editor hostEditor, PsiFile hostFile, boolean includeSyncActions) {
+    @RequiredReadAction
+    public static IntentionsInfo getActionsToShow(Editor hostEditor, PsiFile hostFile) {
         IntentionsInfo result = new IntentionsInfo();
         getActionsToShow(hostEditor, hostFile, result, -1);
-        if (includeSyncActions) {
-            getActionsToShowSync(hostEditor, hostFile, result, -1);
-        }
         return result;
     }
 
@@ -225,7 +228,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
      * Collects intention actions from providers intended to be invoked in EDT.
      */
     @RequiredUIAccess
-    private static void getActionsToShowSync(
+    public static void getActionsToShowSync(
         Editor hostEditor,
         PsiFile hostFile,
         IntentionsInfo intentions,
@@ -242,7 +245,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
     /**
      * Collects intention actions from providers intended to be invoked in a background thread.
      */
-    @RequiredUIAccess
+    @RequiredReadAction
     public static void getActionsToShow(
         Editor hostEditor,
         PsiFile hostFile,
@@ -282,8 +285,13 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
         }
 
         if (queryIntentionActions) {
+            ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
             PsiFile injectedFile = InjectedLanguageManager.getInstance(project).findInjectedPsiNoCommit(hostFile, offset);
             for (IntentionAction action : IntentionManager.getInstance().getAvailableIntentionActions()) {
+                ProgressManager.checkCanceled();
+                if (indicator != null) {
+                    indicator.setText(action.getText());
+                }
                 Pair<PsiFile, Editor> place = ShowIntentionActionsHandler.chooseBetweenHostAndInjected(
                     hostFile,
                     hostEditor,
@@ -304,9 +312,23 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
                 }
             }
 
-            project.getApplication().getExtensionPoint(IntentionMenuContributor.class).forEach(
-                extension -> extension.collectActions(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, offset)
-            );
+            if (indicator != null) {
+                indicator.setText(CodeInsightLocalize.progressTextSearchingForAdditionalIntentionActionsQuickFixes());
+            }
+            for (IntentionMenuContributor extension : project.getApplication().getExtensionList(IntentionMenuContributor.class)) {
+                ProgressManager.checkCanceled();
+                try {
+                    extension.collectActions(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, offset);
+                }
+                catch (IndexNotReadyException ignored) {
+                }
+                catch (Throwable e) {
+                    if (e instanceof ControlFlowException) {
+                        throw e;
+                    }
+                    LOG.error(e);
+                }
+            }
         }
 
         intentions.filterActions(hostFile);

@@ -877,6 +877,10 @@ progress.reformat.stage.wrapping.blocks:
     text: Preparing...
 progress.text.optimizing.imports:
     text: Optimizing imports...
+progress.text.searching.for.additional.intention.actions.quick.fixes:
+    text: Searching for additional intention actions & quick-fixes
+progress.title.searching.for.context.actions:
+    text: Searching for Context Actions…
 prompt.remove.coverage:
     text: Do you want to remove ''{0}'' coverage data?
 property.has.more.parameters.than.passed:
