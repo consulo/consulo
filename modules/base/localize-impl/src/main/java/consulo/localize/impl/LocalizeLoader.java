@@ -51,6 +51,10 @@ public abstract class LocalizeLoader<V> {
         return myValue.get();
     }
 
+    public boolean isFrom(PluginDescriptor pluginDescriptor) {
+        return myPluginDescriptor == pluginDescriptor;
+    }
+
     public abstract @Nullable String getValue(LocalizeKey key);
 
     protected abstract V getInvalidValue();

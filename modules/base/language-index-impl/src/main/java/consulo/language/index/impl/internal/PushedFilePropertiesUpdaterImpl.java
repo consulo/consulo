@@ -40,6 +40,7 @@ import consulo.project.ProjectCoreUtil;
 import consulo.project.ProjectManager;
 import consulo.project.RootsChangeRescanningInfo;
 import consulo.ui.UIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.event.VFileCopyEvent;
@@ -286,7 +287,14 @@ public final class PushedFilePropertiesUpdaterImpl implements PushedFileProperti
         queueTasks(List.of(() -> doPushAll(List.of(pushers))), "Push all on " + Arrays.toString(pushers));
     }
 
-    private List<Runnable> doPushAll(List<? extends FilePropertyPusher<?>> pushers) {
+    private List<Runnable> doPushAll(List<? extends FilePropertyPusher<?>> requestedPushers) {
+        // a queued request may outlive the plugin of its pushers
+        List<FilePropertyPusher<?>> registered = getAllPushers(myProject.getApplication());
+        List<? extends FilePropertyPusher<?>> pushers = ContainerUtil.filter(requestedPushers, registered::contains);
+        if (pushers.isEmpty()) {
+            return List.of();
+        }
+
         return generateScanTasks(myProject, module -> {
             Object[] moduleValues = getModuleImmediateValues(pushers, module);
             return fileOrDir -> {

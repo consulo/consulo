@@ -17,6 +17,7 @@ package consulo.component.persist;
 
 import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -34,6 +35,35 @@ public class UnknownElementWriter {
     myUnknownElements = unknownElements;
   }
 
+  public @Nullable Element get(String name) {
+    return myUnknownElements.get(name);
+  }
+
+  /**
+   * @return a writer which also keeps the given elements
+   */
+  public UnknownElementWriter with(Collection<Element> elements) {
+    if (elements.isEmpty()) {
+      return this;
+    }
+    Map<String, Element> unknownElements = new LinkedHashMap<>(myUnknownElements);
+    for (Element element : elements) {
+      unknownElements.put(element.getName(), element);
+    }
+    return new UnknownElementWriter(unknownElements);
+  }
+
+  /**
+   * @return a writer which no longer keeps elements of the given names
+   */
+  public UnknownElementWriter without(Collection<String> names) {
+    Map<String, Element> unknownElements = new LinkedHashMap<>(myUnknownElements);
+    if (!unknownElements.keySet().removeAll(names)) {
+      return this;
+    }
+    return unknownElements.isEmpty() ? EMPTY : new UnknownElementWriter(unknownElements);
+  }
+
   public <T> void write(Element outElement, Collection<T> items, Function<T, String> itemToTagName, Consumer<T> writer) {
     Map<String, T> knownNameToWriter = new HashMap<>(items.size());
     for (T item : items) {
@@ -48,7 +78,7 @@ public class UnknownElementWriter {
       names = knownNameToWriter.keySet();
     }
     else {
-      names = new HashSet<>(myUnknownElements.size());
+      names = new HashSet<>(myUnknownElements.keySet());
       names.addAll(knownNameToWriter.keySet());
     }
 

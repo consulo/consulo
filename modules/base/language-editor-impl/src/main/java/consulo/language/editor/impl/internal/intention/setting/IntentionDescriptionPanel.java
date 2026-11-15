@@ -22,14 +22,14 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.configurable.Settings;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.dataContext.DataManager;
 import consulo.document.Document;
-import consulo.externalService.plugin.PluginsConfigurable;
+import consulo.externalService.plugin.PluginsPage;
+import consulo.project.Project;
 import consulo.language.editor.internal.intention.IntentionActionMetaData;
 import consulo.language.editor.internal.intention.ResourceTextDescriptor;
 import consulo.language.editor.internal.intention.TextDescriptor;
@@ -166,16 +166,10 @@ public class IntentionDescriptionPanel {
         }
 
         Hyperlink link = Hyperlink.create(CodeInsightLocalize.poweredByPlugin(plugin.getName()), event -> {
-            Settings settings = DataManager.getInstance().getDataContext(myPoweredBy).getData(Settings.KEY);
-            if (settings == null) {
-                return;
+            Project project = DataManager.getInstance().getDataContext(myPoweredBy).getData(Project.KEY);
+            if (project != null) {
+                PluginsPage.getInstance().open(project, pluginId);
             }
-
-            settings.select(PluginsConfigurable.class).whenComplete((configurable, error) -> {
-                if (configurable != null) {
-                    configurable.selectInstalled(pluginId);
-                }
-            });
         });
         myPoweredBy.left(link);
         myPoweredBy.setVisible(true);

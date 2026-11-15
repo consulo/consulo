@@ -268,6 +268,13 @@ public class DisposableWrapperList<E> extends AbstractList<E> implements Disposa
     return unwrapped;
   }
 
+  /**
+   * @return the element a wrapper of a list holds, null for other disposables
+   */
+  public static @Nullable Object getWrappedElement(Disposable disposable) {
+    return disposable instanceof DisposableWrapperList<?>.DisposableWrapper wrapper ? wrapper.delegate : null;
+  }
+
   private class DisposableWrapper extends AtomicBoolean implements Disposable {
     private final E delegate;
     private boolean removeFromContainer;

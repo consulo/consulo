@@ -57,6 +57,27 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     }
   }
 
+  void removeHandlers(ClassLoader classLoader) {
+    synchronized (myPendingMessages) {
+      SmartFMap<Class<?>, Object> subscriptions = mySubscriptions;
+      for (Class<?> topic : new ArrayList<>(subscriptions.keySet())) {
+        Object handler = subscriptions.get(topic);
+        if (topic.getClassLoader() == classLoader) {
+          subscriptions = subscriptions.minus(topic);
+        }
+        else if (handler instanceof List<?> list) {
+          List<Object> kept = new ArrayList<>(list);
+          kept.removeIf(it -> it.getClass().getClassLoader() == classLoader);
+          subscriptions = kept.isEmpty() ? subscriptions.minus(topic) : subscriptions.plus(topic, kept);
+        }
+        else if (handler != null && handler.getClass().getClassLoader() == classLoader) {
+          subscriptions = subscriptions.minus(topic);
+        }
+      }
+      mySubscriptions = subscriptions;
+    }
+  }
+
   // avoid notifyOnSubscription and map modification for each handler
   <L> void subscribe(Class<L> topic, List<Object> handlers) {
     boolean notifyBusAboutTopic = false;
@@ -115,7 +136,8 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
           myBus.invokeListener(message, o);
         }
       }
-      else {
+      // null when the handlers of an unloaded plugin were removed
+      else if (handler != null) {
         myBus.invokeListener(message, handler);
       }
     }

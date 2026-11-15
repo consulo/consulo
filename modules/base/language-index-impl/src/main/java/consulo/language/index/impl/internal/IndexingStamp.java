@@ -129,7 +129,6 @@ public final class IndexingStamp {
         }
     }
 
-    @TestOnly
     public static void dropTimestampMemoryCaches() {
         flushCaches();
         ourTimestampsCache.clear();

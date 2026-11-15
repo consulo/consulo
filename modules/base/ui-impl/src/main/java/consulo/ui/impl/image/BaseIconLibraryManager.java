@@ -157,6 +157,19 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     public void visitPlugins(List<Runnable> actions) {
         Set<String> analyzedGroups = ConcurrentHashMap.newKeySet();
 
+        PluginManager.forEachEnabledPlugin(pluginDescriptor -> actions.add(() -> visitPlugin(pluginDescriptor, analyzedGroups)));
+    }
+
+    /**
+     * Registers the icons of a plugin loaded at runtime.
+     */
+    public void loadPlugin(PluginDescriptor pluginDescriptor) {
+        visitPlugin(pluginDescriptor, ConcurrentHashMap.newKeySet());
+
+        myModificationCount.incrementAndGet();
+    }
+
+    private void visitPlugin(PluginDescriptor pluginDescriptor, Set<String> analyzedGroups) {
         Consumer<String> path = file -> {
             try {
                 analyzeLibraryJar(file, analyzedGroups);
@@ -166,48 +179,44 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
             }
         };
 
-        PluginManager.forEachEnabledPlugin(pluginDescriptor -> {
-            actions.add(() -> {
-                Path indexFile = Objects.requireNonNull(pluginDescriptor.getNioPath()).resolve("icon-index.bin");
-                boolean processToSearch = true;
+        Path indexFile = Objects.requireNonNull(pluginDescriptor.getNioPath()).resolve("icon-index.bin");
+        boolean processToSearch = true;
 
-                if (Files.exists(indexFile)) {
-                    try (InputStream stream = Files.newInputStream(indexFile)) {
-                        IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
+        if (Files.exists(indexFile)) {
+            try (InputStream stream = Files.newInputStream(indexFile)) {
+                IconIndex.IconGroupIndex from = IconIndex.IconGroupIndex.parseFrom(stream);
 
-                        for (IconIndex.IconGroup group : from.getIconGroupsList()) {
-                            String groupId = group.getId();
+                for (IconIndex.IconGroup group : from.getIconGroupsList()) {
+                    String groupId = group.getId();
 
-                            BaseIconLibraryImpl lib =
-                                (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
+                    BaseIconLibraryImpl lib =
+                        (BaseIconLibraryImpl) myLibraries.computeIfAbsent(group.getTheme(), it -> createLibrary(groupId));
 
-                            group.getIconsList().parallelStream().forEach(icon -> {
-                                boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
+                    group.getIconsList().parallelStream().forEach(icon -> {
+                        boolean isSVG = icon.getType() == IconIndex.IconType.SVG;
 
-                                IconIndex.IconData x1 = icon.getX1();
+                        IconIndex.IconData x1 = icon.getX1();
 
-                                lib.registerIcon(
-                                    groupId,
-                                    icon.getId(),
-                                    x1.getData().toByteArray(),
-                                    icon.hasX2() ? icon.getX2().getData().toByteArray() : null,
-                                    isSVG
-                                );
-                            });
-                        }
-
-                        processToSearch = false;
-                    }
-                    catch (Exception e) {
-                        LOG.warn("Failed to read " + indexFile, e);
-                    }
+                        lib.registerIcon(
+                            groupId,
+                            icon.getId(),
+                            x1.getData().toByteArray(),
+                            icon.hasX2() ? icon.getX2().getData().toByteArray() : null,
+                            isSVG
+                        );
+                    });
                 }
 
-                if (processToSearch) {
-                    searchMarkerInClassLoaderMarker(pluginDescriptor, path, BaseIconLibraryManager.ICON_DIRECTORY);
-                }
-            });
-        });
+                processToSearch = false;
+            }
+            catch (Exception e) {
+                LOG.warn("Failed to read " + indexFile, e);
+            }
+        }
+
+        if (processToSearch) {
+            searchMarkerInClassLoaderMarker(pluginDescriptor, path, BaseIconLibraryManager.ICON_DIRECTORY);
+        }
     }
 
     public void afterInit() {

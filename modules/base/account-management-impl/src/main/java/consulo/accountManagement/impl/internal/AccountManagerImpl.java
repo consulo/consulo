@@ -549,7 +549,7 @@ public class AccountManagerImpl implements AccountManager {
         Disposer.register(parentDisposable, () -> myListeners.remove(listener));
     }
 
-    private void fireAccountsChanged() {
+    void fireAccountsChanged() {
         for (AccountListener listener : myListeners) {
             listener.accountsChanged();
         }

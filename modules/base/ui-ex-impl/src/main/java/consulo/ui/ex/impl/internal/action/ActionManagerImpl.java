@@ -163,6 +163,90 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
     @Override
     public void loadActions() {
+        InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
+
+        List<InjectingBinding> actionBindings = new ArrayList<>();
+        for (Collection<InjectingBinding> bindingList : holder.getBindings().values()) {
+            actionBindings.addAll(bindingList);
+        }
+
+        List<PluginDescriptor> plugins = new ArrayList<>();
+        PluginManager.forEachEnabledPlugin(plugins::add);
+
+        loadActions(actionBindings, plugins);
+    }
+
+    /**
+     * Registers actions of a plugin loaded at runtime - its {@code @ActionImpl} bindings and its plugin.xml actions.
+     */
+    public void loadPluginActions(PluginDescriptor pluginDescriptor) {
+        if (!myInitialized.get()) {
+            return;
+        }
+
+        synchronized (myLock) {
+            InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
+
+            List<InjectingBinding> actionBindings = new ArrayList<>();
+            for (Collection<InjectingBinding> bindingList : holder.getBindings().values()) {
+                for (InjectingBinding binding : bindingList) {
+                    Class<?> implClass = binding.getImplClass();
+                    ActionImpl actionImpl = implClass.getAnnotation(ActionImpl.class);
+                    if (PluginManager.getPlugin(implClass) == pluginDescriptor
+                        && actionImpl != null
+                        && !myId2Action.containsKey(actionImpl.id())) {
+                        actionBindings.add(binding);
+                    }
+                }
+            }
+
+            loadActions(actionBindings, List.of(pluginDescriptor));
+        }
+    }
+
+    /**
+     * Unregisters actions of a plugin unloaded at runtime and removes them from every group.
+     */
+    public void unloadPluginActions(PluginDescriptor pluginDescriptor) {
+        synchronized (myLock) {
+            Set<String> actionIds = new LinkedHashSet<>(myPlugin2Id.get(pluginDescriptor.getPluginId()));
+            // stubs and actions registered without the plugin mapping
+            ClassLoader classLoader = pluginDescriptor.getPluginClassLoader();
+            for (Map.Entry<String, AnAction> entry : myId2Action.entrySet()) {
+                AnAction action = entry.getValue();
+                if (action instanceof ActionStubBase stub ? pluginDescriptor.getPluginId().equals(stub.getPluginId())
+                    : action.getClass().getClassLoader() == classLoader) {
+                    actionIds.add(entry.getKey());
+                }
+            }
+            if (actionIds.isEmpty()) {
+                return;
+            }
+
+            List<AnAction> actions = new ArrayList<>();
+            for (String actionId : actionIds) {
+                AnAction action = myId2Action.get(actionId);
+                if (action != null) {
+                    actions.add(action);
+                }
+            }
+
+            for (AnAction groupAction : new ArrayList<>(myId2Action.values())) {
+                if (groupAction instanceof DefaultActionGroup group && !actions.contains(group)) {
+                    for (AnAction action : actions) {
+                        group.remove(action);
+                    }
+                }
+            }
+
+            for (String actionId : actionIds) {
+                unregisterAction(actionId, false);
+            }
+            myPlugin2Id.remove(pluginDescriptor.getPluginId());
+        }
+    }
+
+    private void loadActions(Collection<InjectingBinding> actionBindings, List<PluginDescriptor> plugins) {
         List<InjectingBindingActionStubBase> bindings = new ArrayList<>();
         List<Map.Entry<String, ActionRef>> shortcutRegisters = new ArrayList<>();
 
@@ -170,52 +254,47 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
         StatCollector injectStat = new StatCollector();
         injectStat.markWith("register", () -> {
-            InjectingBindingHolder holder =
-                myComponentBinding.injectingBindingLoader().getHolder(ActionAPI.class, ComponentScope.APPLICATION);
-
             String actionGroupClassName = ActionGroup.class.getName();
-            for (Collection<InjectingBinding> bindingList : holder.getBindings().values()) {
-                for (InjectingBinding binding : bindingList) {
-                    try {
-                        if (!InjectingBindingHolderImpl.isValid(binding, profiles)) {
-                            continue;
-                        }
+            for (InjectingBinding binding : actionBindings) {
+                try {
+                    if (!InjectingBindingHolderImpl.isValid(binding, profiles)) {
+                        continue;
+                    }
 
-                        Class<?> actionImplClass = binding.getImplClass();
-                        ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
+                    Class<?> actionImplClass = binding.getImplClass();
+                    ActionImpl actionImpl = actionImplClass.getAnnotation(ActionImpl.class);
 
-                        boolean isGroup = actionGroupClassName.equals(binding.getApiClassName());
-                        if (isGroup) {
-                            InjectingBindingActionGroupStub groupStub = new InjectingBindingActionGroupStub(actionImpl, binding);
-                            registerAction(actionImpl.id(), groupStub, groupStub.getPluginId());
+                    boolean isGroup = actionGroupClassName.equals(binding.getApiClassName());
+                    if (isGroup) {
+                        InjectingBindingActionGroupStub groupStub = new InjectingBindingActionGroupStub(actionImpl, binding);
+                        registerAction(actionImpl.id(), groupStub, groupStub.getPluginId());
 
-                            bindings.add(groupStub);
-                        }
-                        else {
-                            InjectingBindingActionStub actionStub = new InjectingBindingActionStub(actionImpl, binding);
-                            registerAction(actionImpl.id(), actionStub, actionStub.getPluginId());
+                        bindings.add(groupStub);
+                    }
+                    else {
+                        InjectingBindingActionStub actionStub = new InjectingBindingActionStub(actionImpl, binding);
+                        registerAction(actionImpl.id(), actionStub, actionStub.getPluginId());
 
-                            if (actionImpl.parents().length > 0) {
-                                bindings.add(actionStub);
-                            }
-                        }
-
-                        ActionRef[] shortcutRefs = actionImpl.shortcutFrom();
-                        if (shortcutRefs.length > 0) {
-                            shortcutRegisters.add(Map.entry(actionImpl.id(), shortcutRefs[0]));
+                        if (actionImpl.parents().length > 0) {
+                            bindings.add(actionStub);
                         }
                     }
-                    catch (Throwable t) {
-                        PluginExceptionUtil.logPluginError(LOG, "Failed to build: " + binding, t, binding.getClass());
+
+                    ActionRef[] shortcutRefs = actionImpl.shortcutFrom();
+                    if (shortcutRefs.length > 0) {
+                        shortcutRegisters.add(Map.entry(actionImpl.id(), shortcutRefs[0]));
                     }
+                }
+                catch (Throwable t) {
+                    PluginExceptionUtil.logPluginError(LOG, "Failed to build: " + binding, t, binding.getClass());
                 }
             }
         });
 
         StatCollector xmlAnalyze = new StatCollector();
-        PluginManager.forEachEnabledPlugin(plugin -> {
+        for (PluginDescriptor plugin : plugins) {
             xmlAnalyze.markWith(plugin.getPluginId().toString(), () -> registerPluginActions(plugin));
-        });
+        }
 
         xmlAnalyze.dump("ActionManager:xml.analyze", LOG::info);
 

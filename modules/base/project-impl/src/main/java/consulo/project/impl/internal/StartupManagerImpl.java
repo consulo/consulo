@@ -145,6 +145,52 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         //}, this);
     }
 
+    /**
+     * Runs the post-startup and background activities of a plugin loaded at runtime, when this project has passed them already.
+     */
+    public void runActivitiesOfLoadedPlugin(PluginDescriptor loadedPlugin, UIAccess uiAccess) {
+        if (!postStartupActivityPassed() || myProject.isDisposedOrDisposeInProgress()) {
+            return;
+        }
+
+        AtomicBoolean uiFreezeWarned = new AtomicBoolean();
+        DumbService dumbService = DumbService.getInstance(myProject);
+        myApplication.getExtensionPoint(PostStartupActivity.class).processWithPluginDescriptor((extension, pluginDescriptor) -> {
+            if (pluginDescriptor != loadedPlugin) {
+                return;
+            }
+
+            if (DumbService.isDumbAware(extension)) {
+                runActivity(uiFreezeWarned, uiAccess, extension, pluginDescriptor);
+            }
+            else {
+                dumbService.runWhenSmart(() -> runActivity(uiFreezeWarned, uiAccess, extension, pluginDescriptor));
+            }
+        });
+
+        List<BackgroundStartupActivity> activities = new ArrayList<>();
+        myApplication.getExtensionPoint(BackgroundStartupActivity.class).processWithPluginDescriptor((extension, pluginDescriptor) -> {
+            if (pluginDescriptor == loadedPlugin) {
+                activities.add(extension);
+            }
+        });
+        if (activities.isEmpty()) {
+            return;
+        }
+
+        AppExecutorUtil.getAppExecutorService().execute(() -> BackgroundTaskUtil.runUnderDisposeAwareIndicator(this, () -> {
+            for (StartupActivity activity : activities) {
+                ProgressManager.checkCanceled();
+
+                if (myProject.isDisposedOrDisposeInProgress()) {
+                    return;
+                }
+
+                activity.runActivity(myProject, uiAccess);
+            }
+        }));
+    }
+
     private void runActivity(AtomicBoolean uiFreezeWarned, UIAccess uiAccess, StartupActivity extension, PluginDescriptor pluginDescriptor) {
         ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
         if (indicator != null) {

@@ -55,7 +55,7 @@ public class UpdatesConfigurable extends SimpleConfigurableByProperties implemen
 
     @Override
     public @Nullable String getParentId() {
-        return StandardConfigurableIds.PLATFORM_AND_PLUGINS_GROUP;
+        return StandardConfigurableIds.GENERAL_GROUP;
     }
 
     @RequiredUIAccess

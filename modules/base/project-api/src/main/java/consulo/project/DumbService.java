@@ -504,7 +504,7 @@ public abstract class DumbService {
 
     /**
      * Cancels all queued and running dumb tasks and waits until the running one has finished.
-     * Must be called from the UI thread without a write action.
+     * Must be called without a write action, from the UI thread or from a background thread without a read action.
      */
     public abstract void cancelAllTasksAndWait();
 

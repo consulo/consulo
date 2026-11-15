@@ -1799,15 +1799,19 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      */
     private final class MyFileTypeListener implements FileTypeListener {
         @Override
-        @RequiredUIAccess
         public void fileTypesChanged(FileTypeEvent event) {
-            assertDispatchThread();
-            VirtualFile[] openFiles = getOpenFiles();
-            for (int i = openFiles.length - 1; i >= 0; i--) {
-                VirtualFile file = openFiles[i];
-                LOG.assertTrue(file != null);
-                updateFileIconAsync(file);
-            }
+            myProject.getUIAccess().giveIfNeed(() -> {
+                if (myProject.isDisposed()) {
+                    return;
+                }
+
+                VirtualFile[] openFiles = getOpenFiles();
+                for (int i = openFiles.length - 1; i >= 0; i--) {
+                    VirtualFile file = openFiles[i];
+                    LOG.assertTrue(file != null);
+                    updateFileIconAsync(file);
+                }
+            });
         }
     }
 

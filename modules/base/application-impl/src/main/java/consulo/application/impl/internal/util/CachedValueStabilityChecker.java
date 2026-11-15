@@ -59,7 +59,7 @@ import java.util.function.Supplier;
  * user data, you're still prone to the very same issues with capturing unstable values from the context,
  * but no checks can catch that for you, you're on your own.
  */
-final class CachedValueStabilityChecker {
+public final class CachedValueStabilityChecker {
     private static final Logger LOG = Logger.getInstance(CachedValueStabilityChecker.class);
     private static final Set<String> ourReportedKeys = ContainerUtil.newConcurrentSet();
     private static final ConcurrentMap<Class<?>, List<Field>> ourFieldCache = ConcurrentFactoryMap.createMap(ReflectionUtil::collectFields);
@@ -207,7 +207,7 @@ final class CachedValueStabilityChecker {
         return "kotlin.jvm.internal.Lambda".equals(superclass.getName());
     }
 
-    static void cleanupFieldCache() {
+    public static void cleanupFieldCache() {
         ourFieldCache.clear();
     }
 }

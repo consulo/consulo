@@ -20,8 +20,11 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -44,9 +47,11 @@ public interface PluginAdvertiserHelper {
 
     CompletableFuture<PluginsInfo> findPluginsForSuggest(ExtensionPreview extensionPreview);
 
+    /**
+     * Opens the plugins page searching the plugins with any of the extensions.
+     *
+     * @param project the project of the page tab, the one of the focused frame when null
+     */
     @RequiredUIAccess
-    void showDialog(PluginsInfo pluginsInfo);
-
-    @RequiredUIAccess
-    void showDialogForExtension(ExtensionPreview preview);
+    void showPlugins(@Nullable Project project, Collection<ExtensionPreview> previews);
 }

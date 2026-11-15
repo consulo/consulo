@@ -59,6 +59,8 @@ import java.util.function.Supplier;
 public abstract class BaseComponentManager extends UserDataHolderBase implements ComponentManager, Disposable {
     private static final Logger LOG = Logger.getInstance(BaseComponentManager.class);
 
+    private static final Set<BaseComponentManager> ourLiveManagers = Collections.newSetFromMap(new WeakHashMap<>());
+
     private volatile InjectingContainer myInjectingContainer;
 
     private MessageBusImpl myMessageBus;
@@ -132,6 +134,122 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         builder.coroutineContext(this::createCoroutineContext);
 
         myInjectingContainer = builder.build();
+
+        synchronized (ourLiveManagers) {
+            ourLiveManagers.add(this);
+        }
+    }
+
+    /**
+     * Managers which are built and not disposed, parents before children.
+     */
+    public static List<BaseComponentManager> getLiveManagers() {
+        List<BaseComponentManager> managers;
+        synchronized (ourLiveManagers) {
+            managers = new ArrayList<>(ourLiveManagers);
+        }
+        managers.sort(Comparator.comparingInt(BaseComponentManager::getDepth));
+        return managers;
+    }
+
+    private int getDepth() {
+        int depth = 0;
+        ComponentManager parent = myParent;
+        while (parent != null) {
+            depth++;
+            parent = parent.getParent();
+        }
+        return depth;
+    }
+
+    /**
+     * Binds services of a plugin loaded at runtime into the built container.
+     *
+     * @return the not lazy services, to create once every manager has the services bound
+     */
+    public List<Class> bindPluginServices(Map<String, List<InjectingBinding>> bindings) {
+        InjectingContainer container = myInjectingContainer;
+        if (container == null || bindings.isEmpty()) {
+            return List.of();
+        }
+
+        List<Class> notLazyServices = new ArrayList<>();
+        InjectingContainerBuilder builder = container.appendBuilder();
+        loadServices(bindings, notLazyServices, builder);
+        builder.build();
+        return notLazyServices;
+    }
+
+    public void initPluginServices(List<Class> notLazyServices) {
+        InjectingContainer container = myInjectingContainer;
+        if (container == null) {
+            return;
+        }
+
+        for (Class serviceClass : notLazyServices) {
+            try {
+                container.getInstance(serviceClass);
+            }
+            catch (Throwable e) {
+                LOG.error("Fail to create service " + serviceClass.getName(), e);
+            }
+        }
+    }
+
+    /**
+     * Subscribes topic listeners of a plugin loaded at runtime.
+     */
+    public void topicBindingsAdded(Map<String, List<InjectingBinding>> bindings) {
+        MessageBusImpl messageBus = myMessageBus;
+        if (messageBus == null || bindings.isEmpty()) {
+            return;
+        }
+
+        MultiMap<String, InjectingBinding> mapByTopic = new MultiMap<>();
+        for (Map.Entry<String, List<InjectingBinding>> entry : bindings.entrySet()) {
+            for (InjectingBinding binding : entry.getValue()) {
+                if (InjectingBindingHolderImpl.isValid(binding, getProfiles())) {
+                    mapByTopic.putValue(entry.getKey(), binding);
+                }
+            }
+        }
+
+        messageBus.addLazyListeners(mapByTopic);
+    }
+
+    /**
+     * Rebuilds the extension points of the given api classes, after a plugin added or removed its bindings.
+     */
+    public void extensionBindingsChanged(Set<String> apiClassNames, @Nullable ClassLoader unloadedClassLoader) {
+        NewExtensionAreaImpl extensionArea = myExtensionArea;
+        if (extensionArea != null) {
+            extensionArea.bindingsChanged(apiClassNames, unloadedClassLoader);
+        }
+    }
+
+    /**
+     * Removes listeners and services of a plugin unloaded at runtime, the created services are disposed.
+     */
+    public void unloadPlugin(ClassLoader classLoader) {
+        MessageBusImpl messageBus = myMessageBus;
+        if (messageBus != null) {
+            messageBus.removeListeners(classLoader);
+        }
+
+        InjectingContainer container = myInjectingContainer;
+        if (container != null) {
+            for (Object instance : container.removeBindings(classLoader)) {
+                if (instance instanceof Disposable disposable) {
+                    Disposer.dispose(disposable);
+                }
+            }
+        }
+
+        myChecker.keySet().removeIf(type -> type.getClassLoader() == classLoader);
+        myNotLazyServices.removeIf(type -> type.getClassLoader() == classLoader);
+
+        // plugins cache their objects in the user data of the application or a project
+        removeUserDataIf(value -> value.getClass().getClassLoader() == classLoader);
     }
 
     /**
@@ -218,13 +336,17 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
         InjectingBindingHolder holder = myComponentBinding.injectingBindingLoader().getHolder(ServiceAPI.class, getComponentScope());
 
+        loadServices(holder.getBindings(), notLazyServices, builder);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadServices(Map<String, List<InjectingBinding>> bindings, List<Class> notLazyServices, InjectingContainerBuilder builder) {
         int profiles = getProfiles();
 
-        for (Map.Entry<String, List<InjectingBinding>> entry : holder.getBindings().entrySet()) {
+        for (Map.Entry<String, List<InjectingBinding>> entry : bindings.entrySet()) {
             Collection<InjectingBinding> listOfBindings = entry.getValue();
             try {
                 InjectingBinding injectingBinding = InjectingBindingHolderImpl.findValid(listOfBindings, profiles);
@@ -440,6 +562,10 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     @Override
     public void dispose() {
         myDisposeState = ThreeState.UNSURE;
+
+        synchronized (ourLiveManagers) {
+            ourLiveManagers.remove(this);
+        }
 
         if (myMessageBus != null) {
             Disposer.dispose((Disposable) myMessageBus);

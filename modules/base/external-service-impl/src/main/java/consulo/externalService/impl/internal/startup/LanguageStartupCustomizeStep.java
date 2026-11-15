@@ -15,6 +15,9 @@
  */
 package consulo.externalService.impl.internal.startup;
 
+import consulo.application.Application;
+import consulo.application.internal.plugin.DynamicPluginManager;
+import consulo.application.internal.plugin.DynamicPluginSessionResult;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.plugin.PluginDescriptor;
@@ -27,7 +30,6 @@ import consulo.externalService.internal.startup.StartupCustomizeUI;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
-import consulo.localize.internal.LocalizeManagerEx;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Label;
@@ -170,7 +172,7 @@ public class LanguageStartupCustomizeStep implements StartupCustomizeStep {
 
         if (pack == null || locale.equals(Locale.US)) {
             Path unpacked = myUnpackedPath;
-            if (unpacked != null) {
+            if (unpacked != null && PluginManager.findPlugin(pack.getPluginId()) == null) {
                 myUnpackedPath = null;
                 FileUtil.delete(unpacked.toFile());
             }
@@ -188,10 +190,10 @@ public class LanguageStartupCustomizeStep implements StartupCustomizeStep {
 
         setStatus(ExternalServiceLocalize.startupCustomizeLanguageDownloading());
         CompletableFuture<?> download = CompletableFuture.supplyAsync(() -> unpack(pack, myStatusLabel), AppExecutorUtil.getAppExecutorService())
-            .thenAccept(path -> {
+            .thenAcceptAsync(path -> {
                 myUnpackedPath = path;
                 LocalizeManager.get().setLocale(locale, true);
-            });
+            }, uiAccess);
         download.whenComplete((ignored, error) -> {
             Label label = myStatusLabel;
             UIAccess labelAccess = label == null ? null : label.getUIAccess();
@@ -230,8 +232,9 @@ public class LanguageStartupCustomizeStep implements StartupCustomizeStep {
             downloader.download(new EmptyProgressIndicator(), uiOwner);
 
             Path path = downloader.installNow();
-            if (!((LocalizeManagerEx) LocalizeManager.get()).loadPluginIndex(path)) {
-                LOG.warn("Language pack without an index, its texts show after the restart: " + path);
+            DynamicPluginSessionResult result = Application.get().getInstance(DynamicPluginManager.class).createSession().install(path).apply();
+            if (result.getLoaded().isEmpty()) {
+                LOG.warn("Language pack can't be loaded without restart, its texts show after the restart: " + path);
             }
             return path;
         }

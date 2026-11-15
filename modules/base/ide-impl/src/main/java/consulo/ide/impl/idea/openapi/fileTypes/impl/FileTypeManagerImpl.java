@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
@@ -14,6 +15,8 @@ import consulo.component.persist.*;
 import consulo.component.persist.scheme.BaseSchemeProcessor;
 import consulo.component.persist.scheme.SchemeManager;
 import consulo.component.persist.scheme.SchemeManagerFactory;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;
 import consulo.document.util.FileContentUtilCore;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
@@ -36,6 +39,7 @@ import consulo.util.io.URLUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
 import consulo.util.xml.serializer.JDOMExternalizer;
+import consulo.virtualFileSystem.internal.CachedFileType;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -224,9 +228,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
         myIgnoredPatterns.setIgnoreMasks(DEFAULT_IGNORED);
     }
 
-    @VisibleForTesting
-    void initStandardFileTypes() {
-        FileTypeConsumer consumer = new FileTypeConsumer() {
+    private FileTypeConsumer createStandardConsumer(Map<String, StandardFileType> target) {
+        return new FileTypeConsumer() {
             @Override
             public void consume(FileType fileType) {
                 register(fileType, parse(fileType.getDefaultExtension()));
@@ -243,15 +246,102 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
             }
 
             private void register(FileType fileType, List<FileNameMatcher> fileNameMatchers) {
-                StandardFileType type = myStandardFileTypes.get(fileType.getId());
+                StandardFileType type = target.get(fileType.getId());
                 if (type != null) {
                     type.matchers.addAll(fileNameMatchers);
                 }
                 else {
-                    myStandardFileTypes.put(fileType.getId(), new StandardFileType(fileType, fileNameMatchers));
+                    target.put(fileType.getId(), new StandardFileType(fileType, fileNameMatchers));
                 }
             }
         };
+    }
+
+    /**
+     * Registers file types of plugins loaded at runtime, with one file types change for all of them.
+     *
+     * @param detectorsChanged file type detectors were added or removed, files are detected again
+     */
+    @RequiredWriteAction
+    public void registerPluginFileTypes(Collection<PluginDescriptor> pluginDescriptors, boolean detectorsChanged) {
+        Set<PluginDescriptor> plugins = Collections.newSetFromMap(new IdentityHashMap<>());
+        plugins.addAll(pluginDescriptors);
+
+        Map<String, StandardFileType> added = new LinkedHashMap<>();
+        if (!plugins.isEmpty()) {
+            FileTypeConsumer consumer = createStandardConsumer(added);
+            FileTypeFactory.FILE_TYPE_FACTORY_EP.forEachExtensionSafe(factory -> {
+                if (plugins.contains(PluginManager.getPlugin(factory.getClass()))) {
+                    factory.createFileTypes(consumer);
+                }
+            });
+        }
+
+        if (added.isEmpty() && !detectorsChanged) {
+            return;
+        }
+
+        if (detectorsChanged) {
+            myDetectionService.clearCaches();
+            CachedFileType.clearCache();
+        }
+
+        fireBeforeFileTypesChanged();
+
+        FileType firstAdded = null;
+        for (StandardFileType type : added.values()) {
+            myStandardFileTypes.put(type.fileType.getId(), type);
+            registerFileTypeWithoutNotification(type.fileType, type.matchers, true);
+            bindUnresolvedMappings(type.fileType);
+            if (firstAdded == null) {
+                firstAdded = type.fileType;
+            }
+        }
+
+        fireFileTypesChanged(firstAdded, null);
+    }
+
+    /**
+     * @return registered standard file types whose class is from the given class loader
+     */
+    public List<FileType> getStandardFileTypesOf(ClassLoader classLoader) {
+        List<FileType> result = new ArrayList<>();
+        for (StandardFileType type : myStandardFileTypes.values()) {
+            if (type.fileType.getClass().getClassLoader() == classLoader) {
+                result.add(type.fileType);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Unregisters file types of plugins unloaded at runtime, with one file types change for all of them. Their associations are kept as unresolved mappings, so they
+     * come back with the plugin.
+     */
+    @RequiredWriteAction
+    public void unregisterPluginFileTypes(List<FileType> fileTypes) {
+        if (fileTypes.isEmpty()) {
+            return;
+        }
+
+        fireBeforeFileTypesChanged();
+
+        for (FileType fileType : fileTypes) {
+            for (FileNameMatcher matcher : myPatternsTable.getAssociations(fileType)) {
+                myUnresolvedMappings.put(matcher, fileType.getId());
+            }
+            unregisterFileTypeWithoutNotification(fileType);
+            myStandardFileTypes.remove(fileType.getId());
+        }
+
+        CachedFileType.clearCache();
+
+        fireFileTypesChanged(null, fileTypes.get(0));
+    }
+
+    @VisibleForTesting
+    void initStandardFileTypes() {
+        FileTypeConsumer consumer = createStandardConsumer(myStandardFileTypes);
 
         FileTypeFactory.FILE_TYPE_FACTORY_EP.forEachExtensionSafe(factory -> factory.createFileTypes(consumer));
 

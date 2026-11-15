@@ -117,6 +117,10 @@ public class XmlSerializerImpl {
         return binding;
     }
 
+    public static void dropCachedBindings() {
+        ourBindings = null;
+    }
+
     private static Map<Pair<Type, @Nullable MutableAccessor>, Binding> getBindingCacheMap() {
         Map<Pair<Type, @Nullable MutableAccessor>, Binding> map = consulo.util.lang.ref.SoftReference.dereference(ourBindings);
         if (map == null) {

@@ -35,6 +35,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator {
     private final SdkRoots myRoots;
     private SdkImpl myOrigin;
     private SdkAdditionalData myAdditionalData;
+    private @Nullable Element myUnknownAdditionalData;
     private final SdkTable mySdkTable;
     private SdkTypeId mySdkType;
     public static final String ELEMENT_NAME = "name";
@@ -247,6 +248,8 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator {
         else {
             myAdditionalData = null;
         }
+        // kept for the plugin of the type, which may come back
+        myUnknownAdditionalData = additional != null && mySdkType instanceof UnknownSdkType ? additional.clone() : null;
     }
 
 
@@ -293,6 +296,9 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator {
         if (myAdditionalData != null) {
             LOG.assertTrue(mySdkType != null);
             mySdkType.saveAdditionalData(myAdditionalData, additional);
+        }
+        else if (myUnknownAdditionalData != null) {
+            additional = myUnknownAdditionalData.clone();
         }
         element.addContent(additional);
     }

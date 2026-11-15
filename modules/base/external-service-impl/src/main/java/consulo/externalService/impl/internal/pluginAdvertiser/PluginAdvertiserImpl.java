@@ -20,6 +20,8 @@ import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.preview.ExtensionPreview;
+import consulo.externalService.impl.internal.plugin.ui.unified.PluginSearchQuery;
+import consulo.externalService.plugin.PluginsPage;
 import consulo.component.extension.preview.ExtensionPreviewAcceptor;
 import consulo.component.internal.PluginDescriptorWithExtensionPreview;
 import consulo.container.plugin.PluginDescriptor;
@@ -138,7 +140,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
             .content(ExternalServiceLocalize.messagePluginsSuggestionNotification())
             .addClosingAction(
                 ExternalServiceLocalize.actionPluginsSuggestionInstallText(),
-                () -> PluginAdvertiserDialogFactory.getInstance().showDialog(myProject, allDescriptors, new ArrayList<>(ids))
+                () -> PluginsPage.getInstance().search(myProject, PluginSearchQuery.of(previews))
             )
             .addClosingAction(
                 ExternalServiceLocalize.actionPluginsSuggestionIgnoreText(),
@@ -181,7 +183,7 @@ public class PluginAdvertiserImpl implements PluginAdvertiser {
     }
 
     
-    private static ExtensionPreviewAcceptor<?> findAcceptor(ExtensionPreview feature) {
+    public static ExtensionPreviewAcceptor<?> findAcceptor(ExtensionPreview feature) {
         ExtensionPoint<ExtensionPreviewAcceptor> extensionPoint = Application.get().getExtensionPoint(ExtensionPreviewAcceptor.class);
 
         ExtensionPreviewAcceptor acceptor = extensionPoint.findFirstSafe(

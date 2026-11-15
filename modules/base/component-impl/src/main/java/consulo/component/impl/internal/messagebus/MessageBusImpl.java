@@ -52,7 +52,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   private final List<MessageBusImpl> myChildBuses = Lists.newLockFreeCopyOnWriteList();
 
   
-  private MultiMap<String, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
+  private volatile MultiMap<String, InjectingBinding> myTopicClassToListenerClass = MultiMap.empty();
 
   private MessageBusImpl myParentBus;
 
@@ -99,6 +99,94 @@ public class MessageBusImpl implements MessageBus, Disposable {
       throw new IllegalStateException("Already set: " + myTopicClassToListenerClass);
     }
     myTopicClassToListenerClass = map;
+  }
+
+  /**
+   * Adds listeners of a plugin loaded at runtime: topics without a publisher yet get them lazily, the others right away.
+   */
+  public void addLazyListeners(MultiMap<String, InjectingBinding> map) {
+    for (Map.Entry<String, Collection<InjectingBinding>> entry : map.entrySet()) {
+      Class<?> topicClass = findPublishedTopic(entry.getKey());
+      if (topicClass == null) {
+        synchronized (this) {
+          MultiMap<String, InjectingBinding> lazy = myTopicClassToListenerClass;
+          if (lazy == MultiMap.<String, InjectingBinding>empty()) {
+            lazy = new MultiMap<>();
+          }
+          else {
+            lazy = new MultiMap<>(lazy);
+          }
+          lazy.putValues(entry.getKey(), entry.getValue());
+          myTopicClassToListenerClass = lazy;
+        }
+        continue;
+      }
+
+      List<Object> listeners = new ArrayList<>(entry.getValue().size());
+      for (InjectingBinding binding : entry.getValue()) {
+        try {
+          listeners.add(myOwner.getInjectingContainer().getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create));
+        }
+        catch (ProcessCanceledException e) {
+          throw e;
+        }
+        catch (Throwable e) {
+          LOG.error("Cannot create listener", e);
+        }
+      }
+
+      if (!listeners.isEmpty()) {
+        subscribeAll(myLazyConnection != null ? myLazyConnection : connect(), topicClass, listeners);
+      }
+    }
+  }
+
+  /**
+   * Removes listeners and topics of a plugin unloaded at runtime.
+   */
+  public void removeListeners(ClassLoader classLoader) {
+    synchronized (this) {
+      MultiMap<String, InjectingBinding> lazy = myTopicClassToListenerClass;
+      if (lazy != MultiMap.<String, InjectingBinding>empty()) {
+        MultiMap<String, InjectingBinding> kept = new MultiMap<>();
+        for (Map.Entry<String, Collection<InjectingBinding>> entry : lazy.entrySet()) {
+          for (InjectingBinding binding : entry.getValue()) {
+            if (binding.getImplClass().getClassLoader() != classLoader) {
+              kept.putValue(entry.getKey(), binding);
+            }
+          }
+        }
+        myTopicClassToListenerClass = kept;
+      }
+    }
+
+    if (myLazyConnection != null) {
+      myLazyConnection.removeHandlers(classLoader);
+    }
+    // handlers of the plugin subscribed through connections of their own, to platform topics too
+    Set<MessageBusConnectionImpl> connections = Collections.newSetFromMap(new IdentityHashMap<>());
+    for (List<MessageBusConnectionImpl> list : mySubscribers.values()) {
+      connections.addAll(list);
+    }
+    for (MessageBusConnectionImpl connection : connections) {
+      connection.removeHandlers(classLoader);
+    }
+    myPublishers.keySet().removeIf(topic -> topic.getClassLoader() == classLoader);
+    mySubscribers.keySet().removeIf(topic -> topic.getClassLoader() == classLoader);
+    myRootBus.clearSubscriberCache();
+  }
+
+  private static <L> void subscribeAll(MessageBusConnectionImpl connection, Class<L> topicClass, List<Object> listeners) {
+    connection.subscribe(topicClass, listeners);
+  }
+
+  private @Nullable Class<?> findPublishedTopic(String topicClassName) {
+    for (Class<?> topicClass : myPublishers.keySet()) {
+      if (topicClassName.equals(topicClass.getCanonicalName())) {
+        return topicClass;
+      }
+    }
+    return null;
   }
 
   @Override

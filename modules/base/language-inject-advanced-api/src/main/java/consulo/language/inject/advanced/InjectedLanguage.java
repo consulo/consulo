@@ -17,15 +17,11 @@ package consulo.language.inject.advanced;
 
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
-import consulo.util.collection.ArrayUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 public final class InjectedLanguage {
-    private static Map<String, Language> ourLanguageCache;
-    private static int ourLanguageCount;
-
     private final String myID;
     private final String myPrefix;
     private final String mySuffix;
@@ -65,49 +61,27 @@ public final class InjectedLanguage {
         if (langID == null || langID.length() == 0) {
             return null;
         }
-        synchronized (InjectedLanguage.class) {
-            if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {
-                initLanguageCache();
-            }
-            return ourLanguageCache.get(langID);
-        }
+        Language language = Language.findLanguageByID(langID);
+        return language != null && LanguageUtil.isInjectableLanguage(language) ? language : null;
     }
 
     public static String[] getAvailableLanguageIDs() {
-        synchronized (InjectedLanguage.class) {
-            if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {
-                initLanguageCache();
-            }
-            Set<String> keys = ourLanguageCache.keySet();
-            return ArrayUtil.toStringArray(keys);
+        Language[] languages = getAvailableLanguages();
+        String[] ids = new String[languages.length];
+        for (int i = 0; i < languages.length; i++) {
+            ids[i] = languages[i].getID();
         }
+        return ids;
     }
 
     public static Language[] getAvailableLanguages() {
-        synchronized (InjectedLanguage.class) {
-            if (ourLanguageCache == null || ourLanguageCount != Language.getRegisteredLanguages().size()) {
-                initLanguageCache();
-            }
-            Collection<Language> keys = ourLanguageCache.values();
-            return keys.toArray(new Language[keys.size()]);
-        }
-    }
-
-    private static void initLanguageCache() {
-        ourLanguageCache = new HashMap<>();
-
-        Collection<Language> registeredLanguages;
-        do {
-            registeredLanguages = new ArrayList<>(Language.getRegisteredLanguages());
-            for (Language language : registeredLanguages) {
-                if (LanguageUtil.isInjectableLanguage(language)) {
-                    ourLanguageCache.put(language.getID(), language);
-                }
+        List<Language> result = new ArrayList<>();
+        for (Language language : Language.getRegisteredLanguages()) {
+            if (LanguageUtil.isInjectableLanguage(language)) {
+                result.add(language);
             }
         }
-        while (Language.getRegisteredLanguages().size() != registeredLanguages.size());
-
-        ourLanguageCount = registeredLanguages.size();
+        return result.toArray(new Language[result.size()]);
     }
 
     @Override

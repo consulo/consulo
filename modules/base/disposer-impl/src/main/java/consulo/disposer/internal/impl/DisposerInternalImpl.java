@@ -26,6 +26,7 @@ import consulo.util.collection.Maps;
 import consulo.util.lang.ObjectUtil;
 
 import org.jspecify.annotations.Nullable;
+import java.util.List;
 import java.util.Map;
 
 public class DisposerInternalImpl extends DisposerInternal {
@@ -78,6 +79,19 @@ public class DisposerInternalImpl extends DisposerInternal {
       myKeyDisposables.put(key, child);
 
       register(child, () -> myKeyDisposables.remove(key));
+    }
+  }
+
+  @Override
+  public void disposeObjectsOf(ClassLoader classLoader) {
+    List<Disposable> objects = myTree.findObjects(object -> {
+      Object element = DisposableWrapperList.getWrappedElement(object);
+      return (element != null ? element : object).getClass().getClassLoader() == classLoader;
+    });
+    for (Disposable object : objects) {
+      if (!isDisposed(object)) {
+        dispose(object);
+      }
     }
   }
 

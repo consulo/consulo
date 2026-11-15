@@ -40,4 +40,9 @@ public interface PluginFilterHost {
 
     @RequiredUIAccess
     void setTagFilter(@Nullable String tag);
+
+    PluginView getView();
+
+    @RequiredUIAccess
+    void setView(PluginView view);
 }

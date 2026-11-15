@@ -20,6 +20,8 @@ import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.component.extension.preview.ExtensionPreview;
+import consulo.externalService.impl.internal.plugin.ui.unified.PluginSearchQuery;
+import consulo.externalService.plugin.PluginsPage;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
 import consulo.externalService.impl.internal.plugin.ui.action.InstallPluginAction;
@@ -144,7 +146,7 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
                     allPlugins,
                     false,
                     p -> myProject.getUIAccess().give(() -> {
-                        if (PluginInstallUtil.showRestartDialog() == Messages.YES) {
+                        if (PluginInstallUtil.isRestartRequired(p) && PluginInstallUtil.showRestartDialog() == Messages.YES) {
                             myProject.getApplication().restart(true);
                         }
                     })
@@ -154,7 +156,10 @@ public class PluginAdvertiserEditorNotificationProvider implements EditorNotific
         else {
             builder.withAction(
                 ExternalServiceLocalize.pluginAdvestiserNotificationInstallLink(plugins.size()),
-                i -> PluginAdvertiserDialogFactory.getInstance().showDialog(null, allPlugins, new ArrayList<>(plugins))
+                i -> PluginsPage.getInstance().search(
+                    myProject,
+                    PluginSearchQuery.of(List.of(ExtensionPreview.of(FileTypeFactory.class, virtualFile.getName())))
+                )
             );
         }
 

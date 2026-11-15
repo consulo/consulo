@@ -49,15 +49,30 @@ public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
   private final Map<List<Class>, PatternCompiler> myCompilers = ConcurrentFactoryMap.createMap(PatternCompilerImpl::new);
 
   
+  private volatile long myModificationCount = -1;
+
   @Override
   public Class[] getPatternClasses(String alias) {
+    dropCachesIfProvidersChanged();
     return myClasses.get(alias);
   }
 
-  
   @Override
   @SuppressWarnings("unchecked")
   public <T> PatternCompiler<T> getPatternCompiler(Class[] patternClasses) {
+    dropCachesIfProvidersChanged();
     return myCompilers.get(List.of(patternClasses));
+  }
+
+  /**
+   * Pattern classes come from plugins, which may be loaded or unloaded at runtime.
+   */
+  public void dropCachesIfProvidersChanged() {
+    long modificationCount = Application.get().getExtensionPoint(PatternClassProvider.class).getModificationCount();
+    if (modificationCount != myModificationCount) {
+      myClasses.clear();
+      myCompilers.clear();
+      myModificationCount = modificationCount;
+    }
   }
 }

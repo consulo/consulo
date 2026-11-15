@@ -150,6 +150,79 @@ class CommonCodeStyleSettingsManager {
     }
 
     
+    /**
+     * Adds settings of languages of a plugin loaded at runtime, read from the kept unknown settings if there are any.
+     */
+    void addPluginLanguageSettings() {
+        synchronized (this) {
+            if (myCommonSettingsMap == null) {
+                return;
+            }
+
+            Map<Language, CommonCodeStyleSettings> map = new LinkedHashMap<>(myCommonSettingsMap);
+            Application.get().getExtensionPoint(LanguageCodeStyleSettingsProvider.class).forEachExtensionSafe(provider -> {
+                Language target = provider.getLanguage();
+                if (map.containsKey(target)) {
+                    return;
+                }
+
+                CommonCodeStyleSettings settings = safelyGetDefaults(provider);
+                if (settings == null) {
+                    return;
+                }
+
+                if (myUnknownSettingsMap.get(target.getID()) instanceof Element unknown) {
+                    try {
+                        settings.readExternal(unknown);
+                        myUnknownSettingsMap.remove(target.getID());
+                    }
+                    catch (InvalidDataException e) {
+                        LOG.error(e);
+                    }
+                }
+                settings.setRootSettings(myParentSettings);
+                map.put(target, settings);
+            });
+            myCommonSettingsMap = map;
+        }
+    }
+
+    /**
+     * Settings of languages of a plugin unloaded at runtime are kept as unknown settings, so they are saved and come back
+     * with the plugin.
+     */
+    void removePluginLanguageSettings(ClassLoader classLoader) {
+        synchronized (this) {
+            if (myCommonSettingsMap == null) {
+                return;
+            }
+
+            Map<Language, CommonCodeStyleSettings> map = new LinkedHashMap<>(myCommonSettingsMap);
+            boolean changed = map.entrySet().removeIf(entry -> {
+                Language language = entry.getKey();
+                if (language.getClass().getClassLoader() != classLoader) {
+                    return false;
+                }
+
+                Element element = new Element(COMMON_SETTINGS_TAG);
+                try {
+                    entry.getValue().writeExternal(element);
+                }
+                catch (WriteExternalException e) {
+                    LOG.error(e);
+                }
+                element.setAttribute(LANGUAGE_ATTR, language.getID());
+                if (!element.getChildren().isEmpty()) {
+                    myUnknownSettingsMap.put(language.getID(), JDOMInterner.internElement(element));
+                }
+                return true;
+            });
+            if (changed) {
+                myCommonSettingsMap = map;
+            }
+        }
+    }
+
     public CommonCodeStyleSettingsManager clone(CodeStyleSettings parentSettings) {
         synchronized (this) {
             CommonCodeStyleSettingsManager settingsManager = new CommonCodeStyleSettingsManager(parentSettings);

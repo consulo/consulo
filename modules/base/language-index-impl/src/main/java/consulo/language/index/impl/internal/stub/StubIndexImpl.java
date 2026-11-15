@@ -18,7 +18,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.util.ModificationTracker;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentHashMap;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.file.LanguageFileType;
@@ -54,11 +53,13 @@ import consulo.virtualFileSystem.ManagingFS;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.internal.PersistentFS;
 import gnu.trove.TObjectIntHashMap;
+import consulo.application.dumb.IndexNotReadyException;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -76,8 +77,8 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     private static final Logger LOG = Logger.getInstance(StubIndexImpl.class);
 
     private static class AsyncState {
-        private final Map<StubIndexKey<?, ?>, UpdatableIndex<?, Void, FileContent, ?>> myIndices = new HashMap<>();
-        private final Map<StubIndexKey<?, ?>, HashingStrategy<?>> myKeyHashingStrategies = new HashMap<>();
+        private final Map<StubIndexKey<?, ?>, UpdatableIndex<?, Void, FileContent, ?>> myIndices = new ConcurrentHashMap<>();
+        private final Map<StubIndexKey<?, ?>, HashingStrategy<?>> myKeyHashingStrategies = new ConcurrentHashMap<>();
         private final TObjectIntHashMap<ID<?, ?>> myIndexIdToVersionMap = new TObjectIntHashMap<>();
     }
 
@@ -95,11 +96,11 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
     private final StubProcessingHelper myStubProcessingHelper;
     private final IndexAccessValidator myAccessValidator = new IndexAccessValidator();
-    private volatile Future<AsyncState> myStateFuture;
-    private volatile AsyncState myState;
+    private volatile @Nullable Future<AsyncState> myStateFuture;
+    private volatile @Nullable AsyncState myState;
     private volatile boolean myInitialized;
 
-    private StubIndexState myPreviouslyRegistered;
+    private @Nullable StubIndexState myPreviouslyRegistered;
 
     public StubIndexImpl() {
         myStubProcessingHelper = new StubProcessingHelper();
@@ -115,8 +116,13 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     private AsyncState getAsyncState() {
         AsyncState state = myState; // memory barrier
         if (state == null) {
+            Future<AsyncState> stateFuture = myStateFuture;
+            if (stateFuture == null) {
+                // the stub indexes are reloaded together with the file based indexes
+                throw IndexNotReadyException.create();
+            }
             try {
-                myState = state = myStateFuture.get();
+                myState = state = stateFuture.get();
             }
             catch (Throwable t) {
                 throw new RuntimeException(t);
@@ -627,13 +633,25 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
     @Override
     public void afterLoad(boolean first) {
+        initializeStubIndexes();
+    }
+
+    /**
+     * Registers the stub indexes of the current stub index extensions, does nothing while the registered ones are not disposed.
+     */
+    public synchronized void initializeStubIndexes() {
+        if (myStateFuture != null) {
+            return;
+        }
+
         // ensure that FileBasedIndex task "FileIndexDataInitialization" submitted first
         FileBasedIndex.getInstance();
-        myStateFuture = IndexInfrastructure.submitGenesisTask(new StubIndexInitialization());
+        Future<AsyncState> stateFuture = IndexInfrastructure.submitGenesisTask(new StubIndexInitialization());
+        myStateFuture = stateFuture;
 
         if (!IndexInfrastructure.ourDoAsyncIndicesInitialization) {
             try {
-                myStateFuture.get();
+                stateFuture.get();
             }
             catch (Throwable t) {
                 LOG.error(t);
@@ -648,10 +666,37 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
         }
     }
 
-    public void dispose() {
-        for (UpdatableIndex<?, ?, ?, ?> index : getAsyncState().myIndices.values()) {
-            index.dispose();
+    public synchronized void dispose() {
+        if (myStateFuture == null) {
+            return;
         }
+
+        try {
+            AsyncState state = getAsyncState();
+            myPreviouslyRegistered = new StubIndexState(state.myIndices.keySet());
+            for (UpdatableIndex<?, ?, ?, ?> index : state.myIndices.values()) {
+                try {
+                    index.dispose();
+                }
+                catch (Throwable e) {
+                    LOG.error(e);
+                }
+            }
+        }
+        finally {
+            clearState();
+        }
+    }
+
+    private void clearState() {
+        myCachedStubIds.clear();
+        if (Application.get().getInstanceIfCreated(SerializationManager.class) instanceof SerializationManagerImpl serializationManager) {
+            serializationManager.dropSerializerData();
+        }
+        myStateFuture = null;
+        myState = null;
+        myInitialized = false;
+        LOG.info("StubIndexExtension-s were unloaded");
     }
 
     void setDataBufferingEnabled(boolean enabled) {
@@ -709,7 +754,10 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
             LOG.info("Dropping indices:" + StringUtil.join(indicesToDrop, ","));
 
             for (String s : indicesToDrop) {
-                FileUtil.delete(IndexInfrastructure.getIndexRootDir(StubIndexKey.createIndexKey(s)));
+                StubIndexKey<?, ?> key = StubIndexKey.createIndexKey(s);
+                FileUtil.delete(IndexInfrastructure.getIndexRootDir(key));
+                // the key only names the directory: the plugin of the index registers it when loaded again
+                ID.unloadId(key);
             }
             return true;
         }
@@ -717,9 +765,9 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     }
 
     @Override
-    public StubIndexState getState() {
+    public @Nullable StubIndexState getState() {
         if (!myInitialized) {
-            return null;
+            return myPreviouslyRegistered;
         }
         return new StubIndexState(getAsyncState().myIndices.keySet());
     }

@@ -25,18 +25,16 @@ import consulo.ui.ex.action.DumbAwareAction;
  * @since 2026-08-13
  */
 public class UnifiedReloadAllAction extends DumbAwareAction {
-    private final UnifiedPluginTab[] myTabs;
+    private final UnifiedPluginsPage myPage;
 
-    public UnifiedReloadAllAction(UnifiedPluginTab... tabs) {
+    public UnifiedReloadAllAction(UnifiedPluginsPage page) {
         super("Reload Plugins", null, PlatformIconGroup.actionsRefresh());
-        myTabs = tabs;
+        myPage = page;
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        for (UnifiedPluginTab tab : myTabs) {
-            tab.reload();
-        }
+        myPage.reload();
     }
 }

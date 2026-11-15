@@ -19,21 +19,18 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.application.Application;
 import consulo.language.file.LanguageFileType;
+import consulo.language.internal.LanguageRegistryImpl;
 import consulo.language.version.LanguageVersion;
 import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 /**
  * The base class for all programming language support implementations. Specific language implementations should inherit from this class
@@ -44,18 +41,12 @@ import java.util.function.Supplier;
  * with {@link #findInstance(Class)}.
  */
 public abstract class Language extends UserDataHolderBase {
-    private static final Logger LOG = Logger.getInstance(Language.class);
-
     public static final Language[] EMPTY_ARRAY = new Language[0];
 
     public static final Key<Language> KEY = Key.create(Language.class);
 
     public static final Comparator<Language> DISPLAY_NAME_COMPARATOR =
         Comparator.comparing(Language::getDisplayName, LocalizeValue.comparator());
-
-    // this fields must be before ANY field due registration
-    private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages = new ConcurrentHashMap<>();
-    private static final Map<String, Language> ourRegisteredIDs = new ConcurrentHashMap<>();
 
     public static final Language ANY = new Language("") {
         @Override
@@ -64,41 +55,12 @@ public abstract class Language extends UserDataHolderBase {
         }
     };
 
-    private static final Supplier<MultiMap<String, LanguageVersion>> ourRegisteredMimeTypesValue = LazyValue.notNull(() -> {
-        MultiMap<String, LanguageVersion> mimeTypesMap = new MultiMap<>();
-
-        Collection<Language> registeredLanguages = getRegisteredLanguages();
-
-        for (Language language : registeredLanguages) {
-            LanguageVersion[] versions = language.getVersions();
-            for (LanguageVersion version : versions) {
-                for (String mimeType : version.getMimeTypes()) {
-                    mimeTypesMap.putValue(mimeType, version);
-                }
-            }
-
-            String[] mimeTypes = language.getMimeTypes();
-            for (String mimeType : mimeTypes) {
-                for (LanguageVersion version : versions) {
-                    mimeTypesMap.putValue(mimeType, version);
-                }
-            }
-        }
-
-        return mimeTypesMap;
-    });
-
     private final @Nullable Language myBaseLanguage;
     private final String myID;
     private final String[] myMimeTypes;
 
-    private Supplier<LanguageVersion[]> myVersions = LazyValue.notNull(() -> {
-        LanguageVersion[] versions = findVersions();
-        if (versions.length == 0) {
-            throw new IllegalArgumentException("Language version is empty for language: " + Language.this);
-        }
-        return versions;
-    });
+    private volatile LanguageVersion @Nullable [] myVersions;
+    private volatile long myVersionsModificationCount = -1;
 
     private LocalizeValue myDisplayNameFromId = LocalizeValue.empty();
 
@@ -114,16 +76,7 @@ public abstract class Language extends UserDataHolderBase {
         myBaseLanguage = baseLanguage;
         myID = ID;
         myMimeTypes = mimeTypes;
-        Class<? extends Language> langClass = getClass();
-        Language prev = ourRegisteredLanguages.put(langClass, this);
-        if (prev != null) {
-            LOG.error("Language of '" + langClass + "' is already registered: " + prev);
-            return;
-        }
-        prev = ourRegisteredIDs.put(ID, this);
-        if (prev != null) {
-            LOG.error("Language with ID '" + ID + "' is already registered: " + prev.getClass());
-        }
+        LanguageRegistryImpl.registerLanguage(this);
     }
 
     /**
@@ -141,7 +94,7 @@ public abstract class Language extends UserDataHolderBase {
     @Deprecated
     @DeprecationInfo("Use LanguageRegistry")
     public static Collection<Language> getRegisteredLanguages() {
-        return Collections.unmodifiableCollection(ourRegisteredLanguages.values());
+        return LanguageRegistryImpl.getRegisteredLanguages();
     }
 
     /**
@@ -150,7 +103,7 @@ public abstract class Language extends UserDataHolderBase {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Language> @Nullable T findInstance(Class<T> klass) {
-        return (T) ourRegisteredLanguages.get(klass);
+        return LanguageRegistryImpl.findLanguageByClass(klass);
     }
 
     /**
@@ -163,7 +116,7 @@ public abstract class Language extends UserDataHolderBase {
             return Collections.emptyList();
         }
 
-        Collection<LanguageVersion> versions = ourRegisteredMimeTypesValue.get().get(mimeType);
+        Collection<LanguageVersion> versions = LanguageRegistryImpl.getVersionsByMimeType().get(mimeType);
         Set<Language> languages = new HashSet<>();
         for (LanguageVersion version : versions) {
             languages.add(version.getLanguage());
@@ -176,7 +129,7 @@ public abstract class Language extends UserDataHolderBase {
         if (mimeType == null) {
             return Collections.emptyList();
         }
-        MultiMap<String, LanguageVersion> map = ourRegisteredMimeTypesValue.get();
+        MultiMap<String, LanguageVersion> map = LanguageRegistryImpl.getVersionsByMimeType();
         return Collections.unmodifiableCollection(map.get(mimeType));
     }
 
@@ -264,7 +217,36 @@ public abstract class Language extends UserDataHolderBase {
     }
 
     public final LanguageVersion[] getVersions() {
-        return myVersions.get();
+        // versions come from extensions, plugins loaded or unloaded at runtime change them
+        long modificationCount = Application.get().getExtensionPoint(LanguageVersion.class).getModificationCount();
+        LanguageVersion[] versions = myVersions;
+        if (versions != null && myVersionsModificationCount == modificationCount) {
+            return versions;
+        }
+
+        LanguageVersion[] found = findVersions();
+        if (found.length == 0) {
+            throw new IllegalArgumentException("Language version is empty for language: " + this);
+        }
+        // keep the instances when nothing changed for this language, files hold them
+        if (versions == null || !isSameVersions(versions, found)) {
+            versions = found;
+        }
+        myVersions = versions;
+        myVersionsModificationCount = modificationCount;
+        return versions;
+    }
+
+    private static boolean isSameVersions(LanguageVersion[] cached, LanguageVersion[] found) {
+        if (cached.length != found.length) {
+            return false;
+        }
+        for (int i = 0; i < cached.length; i++) {
+            if (cached[i] != found[i] && !(cached[i].getClass() == LanguageVersion.class && found[i].getClass() == LanguageVersion.class)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -320,12 +302,6 @@ public abstract class Language extends UserDataHolderBase {
     @Deprecated
     @DeprecationInfo("Use LanguageRegistry")
     public static @Nullable Language findLanguageByID(String id) {
-        Collection<Language> languages = getRegisteredLanguages();
-        for (Language language : languages) {
-            if (language.getID().equals(id)) {
-                return language;
-            }
-        }
-        return null;
+        return LanguageRegistryImpl.findLanguageById(id);
     }
 }

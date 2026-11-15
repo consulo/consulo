@@ -579,6 +579,91 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
         myBaseProfile = ((InspectionProfileImpl) profile).myBaseProfile;
     }
 
+    /**
+     * Adds tools of a plugin loaded at runtime, with their settings kept from an earlier install.
+     */
+    public void addPluginTools(@Nullable Project project) {
+        if (myBaseProfile != null) {
+            myBaseProfile.addPluginTools(project);
+        }
+
+        synchronized (myExternalInfo) {
+            if (!myInitialized || mySource != null) {
+                return;
+            }
+
+            Map<String, ToolsImpl> tools = new HashMap<>(myTools);
+            for (InspectionToolWrapper<?> toolWrapper : myRegistrar.get()) {
+                String shortName = toolWrapper.getShortName();
+                if (tools.containsKey(shortName)) {
+                    continue;
+                }
+
+                HighlightDisplayKey key = toolWrapper.getHighlightDisplayKey();
+                HighlightDisplayLevel level = myBaseProfile != null && myBaseProfile.myTools.containsKey(shortName)
+                    ? myBaseProfile.getErrorLevel(key, project)
+                    : toolWrapper.getDefaultLevel();
+                boolean enabled = myBaseProfile != null && myBaseProfile.myTools.containsKey(shortName)
+                    ? myBaseProfile.isToolEnabled(key)
+                    : toolWrapper.isEnabledByDefault();
+                ToolsImpl toolsList = new ToolsImpl(toolWrapper, level, !myLockedProfile && enabled, enabled);
+                Element element = myUninstalledInspectionsSettings.remove(shortName);
+                if (element != null) {
+                    try {
+                        toolsList.readExternal(element, this, new HashMap<>());
+                    }
+                    catch (InvalidDataException e) {
+                        LOG.error("Can't read settings for " + toolWrapper, e);
+                    }
+                }
+                tools.put(shortName, toolsList);
+            }
+            myTools = tools;
+            myDisplayLevelMap = null;
+        }
+    }
+
+    /**
+     * Tools of a plugin unloaded at runtime leave the profile, their changed settings are kept as uninstalled ones,
+     * so they are saved and come back with the plugin.
+     */
+    public void removePluginTools(ClassLoader classLoader) {
+        synchronized (myExternalInfo) {
+            if (myInitialized) {
+                // compared with the base profile, which still has the tools
+                Map<String, Boolean> displayLevelMap = getDisplayLevelMap();
+                Map<String, ToolsImpl> tools = new HashMap<>(myTools);
+                boolean changed = tools.values().removeIf(toolList -> {
+                    if (toolList.getTool().getTool().getClass().getClassLoader() != classLoader) {
+                        return false;
+                    }
+
+                    String shortName = toolList.getShortName();
+                    if (displayLevelMap != null && (myLockedProfile || !displayLevelMap.getOrDefault(shortName, true))) {
+                        Element element = new Element(INSPECTION_TOOL_TAG);
+                        element.setAttribute(CLASS_TAG, shortName);
+                        try {
+                            toolList.writeExternal(element);
+                            myUninstalledInspectionsSettings.put(shortName, element);
+                        }
+                        catch (WriteExternalException e) {
+                            LOG.error(e);
+                        }
+                    }
+                    return true;
+                });
+                if (changed) {
+                    myTools = tools;
+                    myDisplayLevelMap = null;
+                }
+            }
+        }
+
+        if (myBaseProfile != null) {
+            myBaseProfile.removePluginTools(classLoader);
+        }
+    }
+
     private void copyToolsConfigurations(InspectionProfileImpl profile, @Nullable Project project) {
         try {
             for (ToolsImpl toolList : profile.myTools.values()) {

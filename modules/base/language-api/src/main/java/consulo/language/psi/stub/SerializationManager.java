@@ -45,5 +45,15 @@ public abstract class SerializationManager {
     }
   }
 
+  /**
+   * Forgets the registered serializers, the next {@link #initSerializers()} registers the current stub element types again.
+   */
+  protected void dropSerializerData() {
+    //noinspection SynchronizeOnThis
+    synchronized (this) {
+      mySerializersLoaded = false;
+    }
+  }
+
   public abstract String internString(String string);
 }

@@ -31,6 +31,11 @@ public abstract class DisposerInternal {
 
   public abstract void register(Disposable parent, Disposable child, @Nullable String key);
 
+  /**
+   * Disposes the registered objects of an unloaded plugin, including its listeners held by disposable lists.
+   */
+  public abstract void disposeObjectsOf(ClassLoader classLoader);
+
   public abstract boolean isDisposed(Disposable disposable);
 
   public abstract boolean isDisposing(Disposable disposable);

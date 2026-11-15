@@ -15,9 +15,13 @@
  */
 package consulo.externalService.impl.internal.plugin.ui.unified;
 
+import consulo.application.Application;
+import consulo.application.internal.plugin.DynamicPluginManager;
 import consulo.application.internal.start.StartupActionScriptManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.internal.PluginValidator;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginInstallUtil;
@@ -37,7 +41,9 @@ import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
@@ -46,11 +52,11 @@ import java.util.Objects;
 public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
     private static final Logger LOG = Logger.getInstance(UnifiedInstallPluginFromDiskAction.class);
 
-    private final UnifiedPluginsPanel myPanel;
+    private final UnifiedPluginsPage myPage;
 
-    public UnifiedInstallPluginFromDiskAction(UnifiedPluginsPanel panel) {
+    public UnifiedInstallPluginFromDiskAction(UnifiedPluginsPage page) {
         super("Install plugin from disk…", null, PlatformIconGroup.nodesPlugin());
-        myPanel = panel;
+        myPage = page;
     }
 
     @Override
@@ -110,18 +116,41 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
         PluginDescriptor alreadyInstalledPlugin = PluginManager.findPlugin(pluginDescriptor.getPluginId());
 
         try {
-            if (alreadyInstalledPlugin != null) {
-                File oldFile = alreadyInstalledPlugin.getPath();
-                if (oldFile != null) {
-                    StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
-                }
-                state.updateExistingPlugin(pluginDescriptor, alreadyInstalledPlugin);
+            DynamicPluginManager dynamicPluginManager = Application.get().getInstance(DynamicPluginManager.class);
+            if (alreadyInstalledPlugin == null && dynamicPluginManager.isEnabled()) {
+                Path path = PluginDownloader.installNow(file, file.getName());
+                PluginId pluginId = pluginDescriptor.getPluginId();
+                CompletableFuture.supplyAsync(
+                        () -> dynamicPluginManager.createSession().install(path).apply(),
+                        AppExecutorUtil.getAppExecutorService()
+                    )
+                    .whenCompleteAsync((result, error) -> {
+                        if (error != null) {
+                            LOG.error(error);
+                        }
+
+                        if (result == null || result.getRestartRequired().contains(pluginId)) {
+                            state.getAllPlugins().add(pluginDescriptor);
+                            state.getInstalledPlugins().add(pluginId);
+                        }
+                        myPage.select(pluginId);
+                    }, UIAccess.current());
+                return;
             }
             else {
-                state.getAllPlugins().add(pluginDescriptor);
-            }
+                if (alreadyInstalledPlugin != null) {
+                    File oldFile = alreadyInstalledPlugin.getPath();
+                    if (oldFile != null) {
+                        StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(oldFile));
+                    }
+                    state.updateExistingPlugin(pluginDescriptor, alreadyInstalledPlugin);
+                }
+                else {
+                    state.getAllPlugins().add(pluginDescriptor);
+                }
 
-            PluginDownloader.install(file, file.getName(), false);
+                PluginDownloader.install(file, file.getName(), false);
+            }
         }
         catch (IOException ex) {
             LOG.warn(ex);
@@ -131,6 +160,6 @@ public class UnifiedInstallPluginFromDiskAction extends DumbAwareAction {
 
         state.getInstalledPlugins().add(pluginDescriptor.getPluginId());
 
-        myPanel.selectInstalled(pluginDescriptor.getPluginId());
+        myPage.select(pluginDescriptor.getPluginId());
     }
 }

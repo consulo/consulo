@@ -16,13 +16,13 @@
 package consulo.ide.impl.idea.ide.actions;
 
 import consulo.annotation.component.ActionImpl;
-import consulo.externalService.plugin.PluginContants;
-import consulo.ide.setting.ShowSettingsUtil;
+import consulo.externalService.plugin.PluginsPage;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DumbAwareAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -31,22 +31,30 @@ import jakarta.inject.Provider;
  * @author max
  */
 @ActionImpl(id = "WelcomeScreen.Plugins")
-public class ShowPluginManagerAction extends DumbAwareAction {
-    private final Provider<ShowSettingsUtil> myShowSettingsUtilProvider;
+public class ShowPluginManagerAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+    private final Provider<PluginsPage> myPluginsPageProvider;
 
     @Inject
-    public ShowPluginManagerAction(Provider<ShowSettingsUtil> showSettingsUtilProvider) {
+    public ShowPluginManagerAction(Provider<PluginsPage> pluginsPageProvider) {
         super(
             ActionLocalize.actionWelcomescreenPluginsText(),
             ActionLocalize.actionWelcomescreenPluginsDescription(),
             PlatformIconGroup.nodesPlugin()
         );
-        myShowSettingsUtilProvider = showSettingsUtilProvider;
+        myPluginsPageProvider = pluginsPageProvider;
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        myShowSettingsUtilProvider.get().showSettingsDialog(e.getData(Project.KEY), PluginContants.CONFIGURABLE_ID, "");
+        Project project = e.getData(Project.KEY);
+        if (project != null) {
+            myPluginsPageProvider.get().open(project, null);
+        }
+    }
+
+    @Override
+    public void update(AnActionEvent e) {
+        e.getPresentation().setEnabledAndVisible(e.hasData(Project.KEY));
     }
 }

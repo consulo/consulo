@@ -29,7 +29,7 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
   private final boolean myUnmodifiable;
   private final AtomicBoolean myShutdownPerformed = new AtomicBoolean(false);
   private PersistentStringEnumerator myNameStorage;
-  private StubSerializationHelper myStubSerializationHelper;
+  private volatile StubSerializationHelper myStubSerializationHelper;
 
   @Inject
   public SerializationManagerImpl() {
@@ -93,6 +93,24 @@ public final class SerializationManagerImpl extends SerializationManagerEx imple
   public void flushNameStorage() {
     if (myNameStorage.isDirty()) {
       myNameStorage.force();
+    }
+  }
+
+  /**
+   * Forgets the serializers of the stub element types, the ones of unloaded plugins go away and the next
+   * {@link #initSerializers()} registers the current ones. The enumerated names stay, so the stored stubs keep their ids.
+   */
+  @Override
+  public void dropSerializerData() {
+    //noinspection SynchronizeOnThis
+    synchronized (this) {
+      if (myShutdownPerformed.get()) {
+        return;
+      }
+
+      myStubSerializationHelper = new StubSerializationHelper(myNameStorage, myUnmodifiable, this);
+      registerSerializer(PsiFileStubImpl.TYPE);
+      super.dropSerializerData();
     }
   }
 

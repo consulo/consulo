@@ -45,9 +45,6 @@ public final class PluginDescriptionMarkup {
     public static final String TITLE_CLASS = "title";
     public static final String DESCRIPTION_CLASS = "description";
 
-    private static final String HTML_PREFIX = "<a href=\"";
-    private static final String HTML_SUFFIX = "</a>";
-
     private static final String SECTION_START = "<div>";
     private static final String SECTION_END = "</div>";
 
@@ -57,38 +54,11 @@ public final class PluginDescriptionMarkup {
     private PluginDescriptionMarkup() {
     }
 
-    public static StringBuilder buildBody(PluginDescriptor plugin, List<PluginDescriptor> allPlugins) {
+    /**
+     * The description and the change notes of the plugin.
+     */
+    public static StringBuilder buildDescription(PluginDescriptor plugin) {
         StringBuilder sb = new StringBuilder();
-
-        title(sb, "Version:");
-        sb.append(SECTION_START).append("&nbsp;&nbsp;").append(StringUtil.notNullize(plugin.getVersion(), "N/A")).append(SECTION_END);
-
-        if (PluginIds.isPlatformPlugin(plugin.getPluginId())) {
-            return sb;
-        }
-
-        title(sb, "Permissions:");
-        sb.append(SECTION_START);
-        boolean noPermissions = true;
-        for (PluginPermissionType type : PluginPermissionType.values()) {
-            PluginPermissionDescriptor pluginPermissionDescriptor = plugin.getPermissionDescriptor(type);
-            if (pluginPermissionDescriptor != null) {
-                if (!noPermissions) {
-                    sb.append("<br>");
-                }
-                noPermissions = false;
-
-                sb.append("&nbsp;&nbsp;").append(type.name());
-            }
-        }
-
-        if (noPermissions) {
-            sb.append("&nbsp;&nbsp;<span style=\"color: gray\">");
-            XmlStringUtil.escapeText("<no special permissions>", sb);
-            sb.append("</span>");
-        }
-        sb.append(SECTION_END);
-
         sb.append("<div class=\"").append(DESCRIPTION_CLASS).append("\">");
         String description = plugin.getDescription();
         if (!isEmptyOrSpaces(description)) {
@@ -106,140 +76,6 @@ public final class PluginDescriptionMarkup {
             title(sb, "Change Notes");
             sb.append(SECTION_START).append(changeNotes).append(SECTION_END);
         }
-
-        String vendor = plugin.getVendor();
-        String vendorEmail = plugin.getVendorEmail();
-        String vendorUrl = plugin.getVendorUrl();
-        if (!isEmptyOrSpaces(vendor) || !isEmptyOrSpaces(vendorEmail) || !isEmptyOrSpaces(vendorUrl)) {
-            title(sb, "Vendor");
-            sb.append(SECTION_START);
-
-            if (!isEmptyOrSpaces(vendor)) {
-                sb.append("&nbsp;&nbsp;").append(vendor);
-            }
-            if (!isEmptyOrSpaces(vendorEmail)) {
-                sb.append("&nbsp;")
-                    .append(HTML_PREFIX)
-                    .append("mailto:")
-                    .append(vendorEmail)
-                    .append("\">")
-                    .append(vendorEmail)
-                    .append(HTML_SUFFIX);
-            }
-            if (!isEmptyOrSpaces(vendorUrl)) {
-                sb.append("&nbsp;").append(composeHref(vendorUrl));
-            }
-            sb.append(SECTION_END);
-        }
-
-        String pluginDescriptorUrl = plugin.getUrl();
-        if (!isEmptyOrSpaces(pluginDescriptorUrl)) {
-            title(sb, "Plugin homepage");
-            sb.append(SECTION_START).append(composeHref(pluginDescriptorUrl)).append(SECTION_END);
-        }
-
-        String size = plugin instanceof PluginNode pluginNode ? pluginNode.getSize() : null;
-        if (!isEmptyOrSpaces(size)) {
-            title(sb, "Size");
-            sb.append(SECTION_START).append(getFormattedSize(size)).append(SECTION_END);
-        }
-
-        Map<PluginDescriptor, Boolean> depends = new LinkedHashMap<>();
-        for (PluginId pluginId : plugin.getDependentPluginIds()) {
-            if (PluginIds.isPlatformPlugin(pluginId)) {
-                continue;
-            }
-
-            PluginDescriptor temp = findPlugin(allPlugins, pluginId);
-            if (temp != null) {
-                depends.put(temp, Boolean.FALSE);
-            }
-        }
-
-        for (PluginId pluginId : plugin.getOptionalDependentPluginIds()) {
-            if (PluginIds.isPlatformPlugin(pluginId)) {
-                continue;
-            }
-            PluginDescriptor temp = findPlugin(allPlugins, pluginId);
-            if (temp != null) {
-                depends.put(temp, Boolean.TRUE);
-            }
-        }
-
-        if (!depends.isEmpty()) {
-            title(sb, "Depends on plugins:");
-            sb.append(SECTION_START);
-
-            boolean first = true;
-            for (Map.Entry<PluginDescriptor, Boolean> entry : depends.entrySet()) {
-                PluginDescriptor key = entry.getKey();
-                Boolean optional = entry.getValue();
-
-                if (!first) {
-                    sb.append("<br>");
-                }
-                first = false;
-
-                sb.append("&nbsp;&nbsp;");
-                sb.append("<a href=\"").append(PLUGIN_PREFIX).append(key.getPluginId()).append("\">").append(key.getName());
-                if (optional) {
-                    sb.append("&nbsp;(optional)");
-                }
-                sb.append("</a>");
-            }
-            sb.append(SECTION_END);
-        }
-
-        Map<PluginId, PluginDescriptor> dependentPlugins = new TreeMap<>();
-        for (PluginDescriptor descriptor : allPlugins) {
-            if (ArrayUtil.contains(plugin.getPluginId(), descriptor.getDependentPluginIds())) {
-                dependentPlugins.put(descriptor.getPluginId(), descriptor);
-            }
-
-            if (ArrayUtil.contains(plugin.getPluginId(), descriptor.getOptionalDependentPluginIds())) {
-                dependentPlugins.put(descriptor.getPluginId(), descriptor);
-            }
-        }
-
-        if (!dependentPlugins.isEmpty()) {
-            title(sb, "Dependent plugins:");
-            sb.append(SECTION_START);
-
-            boolean first = true;
-            for (PluginDescriptor pluginDescriptor : dependentPlugins.values()) {
-                if (!first) {
-                    sb.append("<br>");
-                }
-                first = false;
-
-                sb.append("&nbsp;&nbsp;");
-                sb.append("<a href=\"")
-                    .append(PLUGIN_PREFIX)
-                    .append(pluginDescriptor.getPluginId())
-                    .append("\">")
-                    .append(pluginDescriptor.getName());
-                sb.append("</a>");
-            }
-            sb.append(SECTION_END);
-        }
-
-        Set<String> tags = plugin.getTags();
-        if (!tags.isEmpty()) {
-            title(sb, "Tags:");
-            sb.append(SECTION_START);
-
-            boolean first = true;
-            for (String tag : tags) {
-                if (!first) {
-                    sb.append("<br>");
-                }
-                first = false;
-
-                sb.append("&nbsp;&nbsp;").append(PluginTagUtil.getTagLocalizeValue(tag).get());
-            }
-            sb.append(SECTION_END);
-        }
-
         return sb;
     }
 
@@ -263,11 +99,4 @@ public final class PluginDescriptionMarkup {
         return size;
     }
 
-    private static @Nullable PluginDescriptor findPlugin(List<PluginDescriptor> allPlugins, PluginId pluginId) {
-        return ContainerUtil.find(allPlugins, it -> it.getPluginId() == pluginId);
-    }
-
-    private static String composeHref(String vendorUrl) {
-        return HTML_PREFIX + vendorUrl + "\">" + vendorUrl + HTML_SUFFIX;
-    }
 }

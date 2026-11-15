@@ -16,10 +16,14 @@
 package consulo.project.ui.impl.internal.wm;
 
 import consulo.application.dumb.DumbAwareRunnable;
+import consulo.application.plugin.DynamicPluginChange;
+import consulo.application.plugin.DynamicPluginListener;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponentWithAsyncGet;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.ui.Component;
 import consulo.ui.LightPopup;
 import consulo.ui.PopupPosition;
@@ -330,6 +334,28 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
             @Override
             public void exitDumbMode() {
                 myProject.getUIAccess().give(() -> revalidateToolWindows());
+            }
+        });
+        connection.subscribe(DynamicPluginListener.class, new DynamicPluginListener() {
+            @Override
+            public void pluginsChanged(DynamicPluginChange change) {
+                if (!change.getLoading().isEmpty()) {
+                    myProject.getUIAccess().give(() -> revalidateToolWindows());
+                }
+            }
+
+            @Override
+            public void beforePluginUnload(PluginDescriptor pluginDescriptor) {
+                myProject.getUIAccess().giveAndWait(() -> unregisterToolWindowsOf(pluginDescriptor));
+            }
+        });
+    }
+
+    @RequiredUIAccess
+    private void unregisterToolWindowsOf(PluginDescriptor pluginDescriptor) {
+        myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).forEach(factory -> {
+            if (PluginManager.getPlugin(factory.getClass()) == pluginDescriptor) {
+                unregisterToolWindow(factory.getId());
             }
         });
     }

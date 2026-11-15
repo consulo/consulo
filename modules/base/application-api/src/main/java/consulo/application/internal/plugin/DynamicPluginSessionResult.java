@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2025 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.externalService.plugin;
+package consulo.application.internal.plugin;
 
-import consulo.configurable.UnnamedConfigurable;
+import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
- * @since 2025-01-30
+ * @since 2026-11-13
  */
-public interface PluginsConfigurable extends UnnamedConfigurable {
-    String CONFIGURABLE_ID = "platformAndPlugins";
+public interface DynamicPluginSessionResult {
+    /**
+     * @return installed plugins which are loaded now
+     */
+    List<PluginDescriptor> getLoaded();
 
-    void selectInstalled(PluginId pluginId);
+    /**
+     * @return uninstalled plugins which are unloaded and deleted now
+     */
+    Set<PluginId> getUninstalled();
+
+    /**
+     * @return installed or uninstalled plugins which need a restart
+     */
+    Set<PluginId> getRestartRequired();
 }

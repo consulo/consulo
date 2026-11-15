@@ -18,14 +18,19 @@ package consulo.externalService.impl.internal.pluginAdvertiser;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.extension.preview.ExtensionPreview;
+import consulo.externalService.impl.internal.plugin.ui.unified.PluginSearchQuery;
+import consulo.externalService.plugin.PluginsPage;
+import consulo.project.Project;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.externalService.pluginAdvertiser.PluginAdvertiserHelper;
 import consulo.ui.annotation.RequiredUIAccess;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -69,14 +74,7 @@ public class PluginAdvertiserHelperImpl implements PluginAdvertiserHelper {
 
     @Override
     @RequiredUIAccess
-    public void showDialog(PluginsInfo pluginsInfo) {
-        PluginAdvertiserDialogFactory.getInstance()
-            .showDialog(null, pluginsInfo.allPlugins(), new ArrayList<>(pluginsInfo.featurePlugins()));
-    }
-
-    @RequiredUIAccess
-    @Override
-    public void showDialogForExtension(ExtensionPreview preview) {
-        PluginAdvertiserDialogFactory.getInstance().showDialogForExtension(preview, this);
+    public void showPlugins(@Nullable Project project, Collection<ExtensionPreview> previews) {
+        PluginsPage.getInstance().search(project, PluginSearchQuery.of(previews));
     }
 }

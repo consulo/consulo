@@ -86,6 +86,11 @@ public abstract class ComponentStoreImpl implements IComponentStore {
   }
 
   @Override
+  public void unloadComponents(ClassLoader classLoader) {
+    myComponents.values().removeIf(info -> info.getComponent().getClass().getClassLoader() == classLoader);
+  }
+
+  @Override
   public @Nullable StateComponentInfo loadStateIfStorable(Object component) {
     StateComponentInfo componentInfo = registerIfStorable(component);
     if (componentInfo == null) {

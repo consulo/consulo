@@ -32,6 +32,15 @@ import java.util.Objects;
 import java.util.Set;
 
 public class XmlSerializer {
+    /**
+     * Forgets cached bindings of classes from the class loader of an unloaded plugin.
+     */
+    public static void dropCachedClasses(ClassLoader classLoader) {
+        BeanBinding.dropCachedClasses(classLoader);
+        SkipDefaultValuesSerializationFilters.dropCachedClasses(classLoader);
+        XmlSerializerImpl.dropCachedBindings();
+    }
+
   private static final SerializationFilter TRUE_FILTER = (accessor, bean) -> true;
 
   private XmlSerializer() {

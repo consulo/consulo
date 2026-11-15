@@ -53,6 +53,8 @@ public abstract class IStubElementType<StubT extends StubElement, PsiT extends P
   
   @SuppressWarnings("unchecked")
   public static List<ObjectStubSerializerProvider> loadRegisteredStubElementTypes() {
+    ourInitializedStubs = false;
+
     List<ObjectStubSerializerProvider> result = new ArrayList<>();
     Set<String> lazyIds = new HashSet<>();
 

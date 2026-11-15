@@ -677,8 +677,9 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
 
     @Override
     public void cancelAllTasksAndWait() {
-        if (!((ApplicationEx) myApplication).isWriteThread() || myApplication.isWriteAccessAllowed()) {
-            throw new AssertionError("Must be called on write thread without write action");
+        ApplicationEx application = (ApplicationEx) myApplication;
+        if (application.isWriteAccessAllowed() || (!application.isWriteThread() && application.holdsReadLock())) {
+            throw new AssertionError("Must be called on write thread or a thread without read action, without write action");
         }
 
         LOG.info("Purge dumb task queue");
@@ -688,7 +689,8 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             // isRunning will be false eventually, because we are on EDT, and no new task can be queued outside the EDT
             // (we only wait for a currently running task to terminate).
             myGuiDumbTaskRunner.cancelAllTasks();
-            while (myGuiDumbTaskRunner.isRunning().get() && !myProject.isDisposed()) {
+            // a process which did not start yet (a modal dialog holds back its progress) runs the queue later
+            while (myGuiDumbTaskRunner.hasStartedTask() && !myProject.isDisposed()) {
                 PingProgress.interactWithEdtProgress();
                 LockSupport.parkNanos(50_000_000);
             }

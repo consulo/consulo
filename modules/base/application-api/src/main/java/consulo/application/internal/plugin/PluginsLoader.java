@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.StartupProgress;
+import consulo.application.internal.start.StartupActionScriptManager;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.component.util.BuildNumber;
 import consulo.component.util.graph.*;
@@ -34,11 +35,13 @@ import consulo.container.plugin.*;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.IntConsumer;
 
@@ -119,7 +122,6 @@ public class PluginsLoader {
 
         List<PluginDescriptorImpl> pluginDescriptors = loadPluginDescriptors(progress, isHeadlessMode);
 
-        ClassLoader parentLoader = Application.class.getClassLoader();
 
         List<PluginDescriptorImpl> result = new ArrayList<>();
         Map<PluginId, String> disabledPluginNames = new HashMap<>();
@@ -213,26 +215,7 @@ public class PluginsLoader {
             }
             else {
                 try {
-                    PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
-                    ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
-
-                    ClassLoader pluginClassLoader = Objects.requireNonNull(createPluginClassLoader(
-                        idToDescriptorMap.keySet(),
-                        parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader},
-                        pluginDescriptor
-                    ));
-
-                    if (System.getProperty("jdk.module.path") != null) {
-                        List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
-
-                        pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(
-                            parentModuleLayer,
-                            pluginDescriptor.getClassPathFiles(idToDescriptorMap.keySet()),
-                            pluginClassLoader
-                        ));
-                    }
-
-                    pluginDescriptor.setLoader(pluginClassLoader);
+                    initPluginLoader(idToDescriptorMap, pluginDescriptor);
                 }
                 catch (Throwable e) {
                     pluginDescriptor.setStatus(PluginDescriptorStatus.ERROR_WHILE_LOADING);
@@ -249,6 +232,154 @@ public class PluginsLoader {
         PluginHolderModificator.initialize(pluginDescriptors);
 
         return info;
+    }
+
+    /**
+     * Reads a plugin unpacked into the plugins directory during this run and creates its class loader.
+     *
+     * @return null when the plugin can only be loaded at the next start
+     */
+    public static @Nullable PluginDescriptor prepareRuntimePlugin(Path pluginPath) {
+        PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(pluginPath.toFile(), false, C_LOG);
+        if (descriptor == null) {
+            getLogger().warn("Can't read plugin descriptor: " + pluginPath);
+            return null;
+        }
+
+        PluginId pluginId = descriptor.getPluginId();
+        PluginDescriptor existing = PluginManager.findPlugin(pluginId);
+        if (existing != null) {
+            if (existing.getStatus() == PluginDescriptorStatus.OK) {
+                getLogger().info("Plugin " + pluginId + " is already loaded, restart required");
+                return null;
+            }
+            PluginHolderModificator.removePlugin(existing);
+        }
+
+        if (PluginValidator.isIncompatible(descriptor)) {
+            getLogger().info("Plugin " + pluginId + " is incompatible");
+            return null;
+        }
+
+        Map<PluginId, PluginDescriptor> idToDescriptorMap = new HashMap<>();
+        for (PluginDescriptor plugin : PluginManager.getPlugins()) {
+            if (plugin.getStatus() == PluginDescriptorStatus.OK) {
+                idToDescriptorMap.put(plugin.getPluginId(), plugin);
+            }
+        }
+
+        Set<PluginId> optionalIds = Set.of(descriptor.getOptionalDependentPluginIds());
+        for (PluginId dependencyId : descriptor.getDependentPluginIds()) {
+            if (!optionalIds.contains(dependencyId) && !idToDescriptorMap.containsKey(dependencyId)) {
+                getLogger().info("Plugin " + pluginId + " depends on not loaded " + dependencyId + ", restart required");
+                return null;
+            }
+        }
+
+        idToDescriptorMap.put(pluginId, descriptor);
+
+        try {
+            initPluginLoader(idToDescriptorMap, descriptor);
+        }
+        catch (Throwable e) {
+            getLogger().error("Fail to create class loader for plugin " + pluginId, e);
+            return null;
+        }
+        return descriptor;
+    }
+
+    /**
+     * Makes a plugin prepared by {@link #prepareRuntimePlugin(Path)} visible in the plugin list.
+     */
+    public static void registerRuntimePlugin(PluginDescriptor pluginDescriptor) {
+        PluginHolderModificator.addPlugin(pluginDescriptor);
+    }
+
+    /**
+     * Lists a plugin which stays on disk but is not loaded, because a plugin it requires was unloaded.
+     */
+    public static void registerNotLoadedPlugin(Path pluginPath) {
+        PluginDescriptorImpl descriptor = PluginDescriptorLoader.loadDescriptor(pluginPath.toFile(), false, C_LOG);
+        if (descriptor != null) {
+            PluginDescriptor existing = PluginManager.findPlugin(descriptor.getPluginId());
+            if (existing != null && existing.getStatus() != PluginDescriptorStatus.OK) {
+                PluginHolderModificator.removePlugin(existing);
+            }
+            descriptor.setStatus(PluginDescriptorStatus.DEPENDENCY_NOT_LOADED);
+            PluginHolderModificator.addPlugin(descriptor);
+        }
+    }
+
+    public static int getLoadOrder(PluginId pluginId) {
+        return PluginHolderModificator.getPluginLoadOrder(pluginId);
+    }
+
+    /**
+     * Removes an unloaded plugin from the plugin list.
+     */
+    public static void unregisterRuntimePlugin(PluginDescriptor pluginDescriptor) {
+        PluginHolderModificator.removePlugin(pluginDescriptor);
+    }
+
+    /**
+     * Deletes the directory of an unloaded plugin, at the next start when a file is still locked.
+     */
+    public static void deleteRuntimePlugin(Path pluginPath) {
+        if (FileUtil.delete(pluginPath)) {
+            return;
+        }
+
+        getLogger().info("Can't delete " + pluginPath + ", will be deleted at the next start");
+        try {
+            StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.DeleteCommand(pluginPath.toFile()));
+        }
+        catch (IOException e) {
+            getLogger().error(e);
+        }
+    }
+
+    /**
+     * Drops a plugin prepared by {@link #prepareRuntimePlugin(Path)}, which will be loaded at the next start.
+     */
+    public static void discardRuntimePlugin(PluginDescriptor pluginDescriptor) {
+        if (pluginDescriptor.getPluginClassLoader() instanceof AutoCloseable closeable) {
+            try {
+                closeable.close();
+            }
+            catch (Exception e) {
+                getLogger().warn(e);
+            }
+        }
+
+        if (pluginDescriptor instanceof PluginDescriptorImpl descriptorImpl) {
+            descriptorImpl.clearRuntimeReferences();
+        }
+    }
+
+    /**
+     * Creates the class loader and the module layer of a plugin, which parents are the loaded plugins it depends on.
+     */
+    public static void initPluginLoader(Map<PluginId, ? extends PluginDescriptor> idToDescriptorMap, PluginDescriptorImpl pluginDescriptor) {
+        PluginId[] dependentPluginIds = pluginDescriptor.getDependentPluginIds();
+        ClassLoader[] parentLoaders = getParentLoaders(idToDescriptorMap, dependentPluginIds);
+
+        ClassLoader pluginClassLoader = Objects.requireNonNull(createPluginClassLoader(
+            idToDescriptorMap.keySet(),
+            parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{Application.class.getClassLoader()},
+            pluginDescriptor
+        ));
+
+        if (System.getProperty("jdk.module.path") != null) {
+            List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
+
+            pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(
+                parentModuleLayer,
+                pluginDescriptor.getClassPathFiles(idToDescriptorMap.keySet()),
+                pluginClassLoader
+            ));
+        }
+
+        pluginDescriptor.setLoader(pluginClassLoader);
     }
 
     static void prepareLoadingPluginsErrorMessage(PluginsInitializeInfo info, List<CompositeMessage> problems, boolean isHeadlessMode) {

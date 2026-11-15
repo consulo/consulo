@@ -16,8 +16,10 @@
 package consulo.language.impl.internal.psi.resolve.reference;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.Language;
+import consulo.language.LanguageRegistry;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
@@ -26,6 +28,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.impl.map.ConcurrentHashMap;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ControlFlowException;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -38,10 +41,32 @@ public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
     private static final Comparator<ProviderBinding.ProviderInfo<PsiReferenceProvider, ProcessingContext>> PRIORITY_COMPARATOR = (o1, o2) -> Comparing
         .compare(o2.priority, o1.priority);
 
+    private final Application myApplication;
+    private final LanguageRegistry myLanguageRegistry;
+
     private final Map<Language, PsiReferenceRegistrarImpl> myRegistrars = new ConcurrentHashMap<>();
+    private volatile long myRegistrarsModificationCount = -1;
+
+    @Inject
+    public ReferenceProvidersRegistryImpl(Application application, LanguageRegistry languageRegistry) {
+        myApplication = application;
+        myLanguageRegistry = languageRegistry;
+    }
+
+    private long getRegistrarsModificationCount() {
+        return myLanguageRegistry.getModificationCount()
+            + myApplication.getExtensionPoint(PsiReferenceContributor.class).getModificationCount()
+            + myApplication.getExtensionPoint(PsiReferenceProviderByPattern.class).getModificationCount();
+    }
 
     @Override
     public PsiReferenceRegistrarImpl getRegistrar(Language in) {
+        long modificationCount = getRegistrarsModificationCount();
+        if (modificationCount != myRegistrarsModificationCount) {
+            myRegistrars.clear();
+            myRegistrarsModificationCount = modificationCount;
+        }
+
         return myRegistrars.computeIfAbsent(in, language -> {
             PsiReferenceRegistrarImpl registrar = new PsiReferenceRegistrarImpl();
             for (PsiReferenceContributor contributor : PsiReferenceContributor.forLanguage(language)) {

@@ -18,6 +18,7 @@ package consulo.externalService.impl.internal.plugin.ui.action;
 import consulo.application.dumb.DumbAware;
 import consulo.externalService.impl.internal.plugin.ui.PluginFilterHost;
 import consulo.externalService.impl.internal.plugin.ui.PluginSorter;
+import consulo.externalService.impl.internal.plugin.ui.PluginView;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.BadgeIconSupplier;
@@ -46,7 +47,13 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
             sortBy.add(new PluginSorterAction(sorter));
         }
 
+        PluginViewActionGroup show = new PluginViewActionGroup();
+        for (PluginView view : PluginView.values()) {
+            show.add(new PluginViewAction(view));
+        }
+
         PluginSortFilterGroup group = new PluginSortFilterGroup();
+        group.add(show);
         group.add(sortBy);
         group.add(new PluginTagFilterGroup());
         return group;
@@ -67,7 +74,7 @@ public class PluginSortFilterGroup extends DefaultActionGroup implements DumbAwa
         PluginFilterHost host = e.getRequiredData(PluginFilterHost.KEY);
 
         Presentation presentation = e.getPresentation();
-        if (host.getSorter() != PluginSorter.DEFAULT_SORTER || host.getTagFilter() != null) {
+        if (host.getSorter() != PluginSorter.DEFAULT_SORTER || host.getTagFilter() != null || host.getView() != PluginView.ALL) {
             presentation.setIcon(BadgeIconSupplier.withIconBadge(getTemplateIcon(), ComponentColors.ICON_BADGE_SUCCESS));
         } else {
             presentation.setIcon(getTemplateIcon());

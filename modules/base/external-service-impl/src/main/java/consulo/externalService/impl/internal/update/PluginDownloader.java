@@ -266,21 +266,32 @@ public class PluginDownloader {
 
     /**
      * Unpacks the downloaded plugin into the directory plugins are installed to right away, instead of leaving it to the
-     * next start - for a plugin carrying data only, which nothing loads before that start anyway.
+     * next start - for a plugin loaded without restart. A plugin which can't be loaded so, is loaded at the next start.
      *
      * @return the directory of the unpacked plugin
      */
     public Path installNow() throws IOException {
         File file = Objects.requireNonNull(myFile, "Plugin is not downloaded");
 
-        Path installPath = Path.of(ContainerPathManager.get().getInstallPluginsPath());
-        String folder = topFolder(file);
-        Path target = folder != null ? installPath : installPath.resolve(getPluginName());
-
-        new StartupActionScriptManager.UnzipCommand(file, target.toFile()).execute(LOG);
+        Path path = installNow(file, getPluginName());
 
         FileUtil.delete(file);
         myFile = null;
+
+        return path;
+    }
+
+    /**
+     * Unpacks a plugin archive into the directory plugins are installed to right away.
+     *
+     * @return the directory of the unpacked plugin
+     */
+    public static Path installNow(File fromFile, String pluginName) throws IOException {
+        Path installPath = Path.of(ContainerPathManager.get().getInstallPluginsPath());
+        String folder = topFolder(fromFile);
+        Path target = folder != null ? installPath : installPath.resolve(pluginName);
+
+        new StartupActionScriptManager.UnzipCommand(fromFile, target.toFile()).execute(LOG);
 
         return folder != null ? installPath.resolve(folder) : target;
     }

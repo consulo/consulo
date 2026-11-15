@@ -48,13 +48,12 @@ import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
 import consulo.externalService.impl.internal.PlatformOrPluginsNotificationGroupContributor;
 import consulo.externalService.localize.ExternalServiceLocalize;
-import consulo.externalService.plugin.PluginsConfigurable;
+import consulo.externalService.plugin.PluginsPage;
 import consulo.externalService.statistic.UsageTrigger;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.RecentProjectsManagerImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.ide.localize.IdeLocalize;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
@@ -350,11 +349,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
                             String description = event.getDescription();
                             if (PluginsInitializeInfo.EDIT.equals(description)) {
                                 IdeFrame ideFrame = WindowManagerEx.getInstanceEx().findFrameFor(null);
-                                ShowSettingsUtil.getInstance().showSettingsDialog(
-                                    ideFrame == null ? null : ideFrame.getProject(),
-                                    PluginsConfigurable.CONFIGURABLE_ID,
-                                    ""
-                                );
+                                Project project = ideFrame == null ? null : ideFrame.getProject();
+                                if (project != null) {
+                                    PluginsPage.getInstance().open(project, null);
+                                }
                             }
                         })
                     .notify(null);

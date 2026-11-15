@@ -17,11 +17,15 @@ package consulo.externalService.impl.internal.update;
 
 import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.internal.plugin.DynamicPluginManager;
+import consulo.application.internal.plugin.DynamicPluginSession;
+import consulo.application.internal.plugin.DynamicPluginSessionResult;
 import consulo.application.plugin.PluginActionListener;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginManager;
 import consulo.externalService.impl.internal.plugin.InstalledPluginsState;
 import consulo.externalService.impl.internal.plugin.PluginNode;
 import consulo.externalService.impl.internal.pluginHistory.UpdateHistory;
@@ -36,6 +40,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -105,7 +110,11 @@ public final class PlatformOrPluginInstallProcess {
 
             UpdateHistory updateHistory = application.getInstance(UpdateHistory.class);
 
+            DynamicPluginManager dynamicPluginManager = application.getInstance(DynamicPluginManager.class);
+            boolean loadWithoutRestart = type == PlatformOrPluginUpdateResultType.PLUGIN_INSTALL && dynamicPluginManager.isEnabled();
+
             InstalledPluginsState installedPluginsState = InstalledPluginsState.getInstance();
+            Map<PluginDescriptor, Path> toLoad = new LinkedHashMap<>();
             for (PluginDownloader downloader : forInstall) {
                 try {
                     // already was installed
@@ -115,9 +124,13 @@ public final class PlatformOrPluginInstallProcess {
 
                     installedPluginsState.getUpdatedPlugins().add(downloader.getPluginId());
 
-                    downloader.install(indicator, true);
-
                     PluginDescriptor pluginDescriptor = downloader.getPluginDescriptor();
+                    if (loadWithoutRestart && PluginManager.findPlugin(downloader.getPluginId()) == null) {
+                        toLoad.put(pluginDescriptor, downloader.installNow());
+                    }
+                    else {
+                        downloader.install(indicator, true);
+                    }
 
                     if (pluginDescriptor instanceof PluginNode pluginNode) {
                         pluginNode.setInstallStatus(PluginNode.STATUS_DOWNLOADED);
@@ -133,6 +146,19 @@ public final class PlatformOrPluginInstallProcess {
                     LOG.warn("Installation failed", e);
                     uiAccess.give(() -> MessageBoxes.okError(e).showAsync());
                     return;
+                }
+            }
+
+            if (!toLoad.isEmpty()) {
+                DynamicPluginSession session = dynamicPluginManager.createSession();
+                toLoad.values().forEach(session::install);
+                DynamicPluginSessionResult result = session.apply();
+                for (PluginDescriptor pluginDescriptor : toLoad.keySet()) {
+                    if (pluginDescriptor instanceof PluginNode pluginNode
+                        && PluginManager.findPlugin(pluginDescriptor.getPluginId()) != null
+                        && !result.getRestartRequired().contains(pluginDescriptor.getPluginId())) {
+                        pluginNode.setInstallStatus(PluginNode.STATUS_INSTALLED);
+                    }
                 }
             }
 

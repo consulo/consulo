@@ -76,6 +76,18 @@ public class PluginInstallUtil {
 
     @Messages.YesNoResult
     @RequiredUIAccess
+    /**
+     * @return whether some of the installed plugins wait for a restart - the others were loaded right away
+     */
+    public static boolean isRestartRequired(Collection<PluginDescriptor> installed) {
+        for (PluginDescriptor descriptor : installed) {
+            if (!(descriptor instanceof PluginNode node) || node.getInstallStatus() != PluginNode.STATUS_INSTALLED) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static int showRestartDialog() {
         return showRestartDialog(ExternalServiceLocalize.titlePluginsChanged());
     }

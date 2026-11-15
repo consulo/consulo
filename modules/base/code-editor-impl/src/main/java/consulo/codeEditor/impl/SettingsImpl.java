@@ -41,7 +41,6 @@ import java.util.Objects;
  */
 public class SettingsImpl implements EditorSettings {
     protected final @Nullable EditorEx myEditor;
-    private final @Nullable Language myLanguage;
     private Boolean myIsCamelWords;
 
     // This group of settings does not have UI
@@ -111,7 +110,6 @@ public class SettingsImpl implements EditorSettings {
 
     public SettingsImpl(@Nullable EditorEx editor, @Nullable Project project, EditorKind kind) {
         myEditor = editor;
-        myLanguage = editor != null && project != null ? getDocumentLanguage(project, editor.getDocument()) : null;
         if (EditorKind.CONSOLE.equals(kind)) {
             mySoftWrapAppliancePlace = SoftWrapAppliancePlaces.CONSOLE;
         }
@@ -228,10 +226,14 @@ public class SettingsImpl implements EditorSettings {
 
     @Override
     public int getRightMargin(Project project) {
-        return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(myLanguage);
+        return myRightMargin != null ? myRightMargin : CodeStyle.getProjectOrDefaultSettings(project).getRightMargin(getLanguage());
     }
 
     @RequiredReadAction
+    private @Nullable Language getLanguage() {
+        return myEditor == null ? null : getDocumentLanguage(myEditor.getProject(), myEditor.getDocument());
+    }
+
     private static @Nullable Language getDocumentLanguage(@Nullable Project project, Document document) {
         if (project != null) {
             PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
@@ -248,7 +250,7 @@ public class SettingsImpl implements EditorSettings {
         if (myWrapWhenTypingReachesRightMargin != null) {
             return myWrapWhenTypingReachesRightMargin;
         }
-        return myEditor == null ? CodeStyle.getDefaultSettings().isWrapOnTyping(myLanguage) : CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).isWrapOnTyping(myLanguage);
+        return myEditor == null ? CodeStyle.getDefaultSettings().isWrapOnTyping(getLanguage()) : CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).isWrapOnTyping(getLanguage());
     }
 
     @Override
@@ -274,8 +276,8 @@ public class SettingsImpl implements EditorSettings {
         }
         return
             myEditor == null ?
-                CodeStyle.getDefaultSettings().getSoftMargins(myLanguage) :
-                CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).getSoftMargins(myLanguage);
+                CodeStyle.getDefaultSettings().getSoftMargins(getLanguage()) :
+                CodeStyle.getSettings(myEditor.getProject(), myEditor.getDocument()).getSoftMargins(getLanguage());
     }
 
     @Override

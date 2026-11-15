@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public final class ObjectTree {
     private static final ThreadLocal<Throwable> ourTopmostDisposeTrace = new ThreadLocal<>();
@@ -273,6 +274,21 @@ public final class ObjectTree {
                 return null;
             }
             return parentNode.findChildEqualTo(object);
+        }
+    }
+
+    /**
+     * @return the registered objects the filter accepts
+     */
+    public List<Disposable> findObjects(Predicate<Disposable> filter) {
+        synchronized (treeLock) {
+            List<Disposable> result = new ArrayList<>();
+            for (Disposable object : myObject2NodeMap.keySet()) {
+                if (filter.test(object)) {
+                    result.add(object);
+                }
+            }
+            return result;
         }
     }
 

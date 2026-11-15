@@ -39,6 +39,10 @@ enum RebuildStatus {
     ourRebuildStatus.put(indexId, new AtomicReference<>(OK));
   }
 
+  static void reset() {
+    ourRebuildStatus.clear();
+  }
+
   static boolean isOk(ID<?, ?> indexId) {
     return ourRebuildStatus.get(indexId).get() == OK;
   }

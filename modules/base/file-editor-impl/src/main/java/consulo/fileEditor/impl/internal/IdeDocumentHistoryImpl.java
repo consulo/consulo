@@ -61,6 +61,8 @@ import jakarta.inject.Singleton;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.Executor;
 
@@ -83,7 +85,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     private final LinkedList<PlaceInfo> myForwardPlaces = new LinkedList<>(); // LinkedList of PlaceInfo's
     private boolean myBackInProgress;
     private boolean myForwardInProgress;
-    private Object myLastGroupId;
+    private @Nullable Reference<Object> myLastGroupId;
     private boolean myRegisteredBackPlaceInLastGroup;
 
     // change's navigation
@@ -296,10 +298,14 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     }
 
     final void onCommandFinished(Project project, Object commandGroupId) {
-        if (!ApplicationUndoManager.getInstance().canMergeGroup(commandGroupId, myLastGroupId)) {
+        Object lastGroupId = myLastGroupId == null ? null : myLastGroupId.get();
+        if (!ApplicationUndoManager.getInstance().canMergeGroup(commandGroupId, lastGroupId)) {
             myRegisteredBackPlaceInLastGroup = false;
         }
-        myLastGroupId = commandGroupId;
+        if (commandGroupId != lastGroupId) {
+            // weak: a group id may hold the document of a closed dialog
+            myLastGroupId = commandGroupId == null ? null : new WeakReference<>(commandGroupId);
+        }
 
         if (myCommandStartPlace != null && myCurrentCommandIsNavigation && myCurrentCommandHasMoves) {
             if (!myBackInProgress) {

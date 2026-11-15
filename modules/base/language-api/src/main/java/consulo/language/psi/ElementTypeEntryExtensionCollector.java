@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.language.ast.IElementType;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
@@ -30,8 +31,21 @@ import java.util.function.Predicate;
  */
 public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType>> {
   
+  private static final Set<ElementTypeEntryExtensionCollector<?>> ourCollectors = ConcurrentHashMap.newKeySet();
+
   public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(Class<E> clazz) {
-    return new ElementTypeEntryExtensionCollector<>(clazz);
+    ElementTypeEntryExtensionCollector<E> collector = new ElementTypeEntryExtensionCollector<>(clazz);
+    ourCollectors.add(collector);
+    return collector;
+  }
+
+  /**
+   * Drops the cached values, for example when a plugin is unloaded and its element types or extensions are gone.
+   */
+  public static void clearAll() {
+    for (ElementTypeEntryExtensionCollector<?> collector : ourCollectors) {
+      collector.myMap.clear();
+    }
   }
 
   private final Class<E> myExtensionClass;

@@ -47,14 +47,19 @@ class StubVersionMap {
   private long myStubIndexStamp;
 
   StubVersionMap() throws IOException {
+    collectVersionOwners();
+
+    updateState();
+  }
+
+  private void collectVersionOwners() {
+    fileTypeToVersionOwner.clear();
     for (FileType fileType : FileTypeRegistry.getInstance().getRegisteredFileTypes()) {
       Object owner = getVersionOwner(fileType);
       if (owner != null) {
         fileTypeToVersionOwner.put(fileType, owner);
       }
     }
-
-    updateState();
   }
 
   private void updateState() throws IOException {
@@ -184,6 +189,7 @@ class StubVersionMap {
   void clear() {
     fileTypeToVersion.clear();
     versionToFileType.clear();
+    collectVersionOwners();
     try {
       updateState();
     }
