@@ -29,7 +29,10 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.impl.internal.CodeStyleSchemeImpl;
 import consulo.language.codeStyle.impl.internal.CodeStyleSchemesModelImpl;
 import consulo.language.codeStyle.localize.CodeStyleLocalize;
+import consulo.language.Language;
+import consulo.language.codeStyle.setting.CodeStyleSettingsBase;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.Component;
@@ -289,10 +292,25 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
             }
         });
 
+        // a language provider's own page, unless a CodeStyleSettingsProvider already has one for its language
+        Set<Language> languagesWithPages = new HashSet<>();
+        myProject.getApplication().getExtensionPoint(CodeStyleSettingsProvider.class).forEach(provider -> {
+            if (provider.hasSettingsPage() && provider.getLanguage() != null) {
+                languagesWithPages.add(provider.getLanguage());
+            }
+        });
+        for (LanguageCodeStyleSettingsProvider provider : LanguageCodeStyleSettingsProvider.getSettingsPagesProviders()) {
+            if (provider.hasSettingsPage() && languagesWithPages.add(provider.getLanguage())) {
+                CodeStyleConfigurableWrapper wrapper = buildWrapper(provider);
+                myPanels.add(wrapper);
+                result.add(wrapper);
+            }
+        }
+
         return result.toArray(new Configurable[result.size()]);
     }
 
-    private CodeStyleConfigurableWrapper buildWrapper(CodeStyleSettingsProvider provider) {
+    private CodeStyleConfigurableWrapper buildWrapper(CodeStyleSettingsBase provider) {
         return new CodeStyleConfigurableWrapper(
             provider,
             new CodeStyleSettingsPanelFactory() {
@@ -352,10 +370,10 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
     public class CodeStyleConfigurableWrapper implements SearchableConfigurable, NoScroll, NoMargin, OptionsContainingConfigurable {
         private boolean myInitialResetInvoked;
         private CodeStyleMainPanel myPanel;
-        private final CodeStyleSettingsProvider myProvider;
+        private final CodeStyleSettingsBase myProvider;
         private final CodeStyleSettingsPanelFactory myFactory;
 
-        public CodeStyleConfigurableWrapper(CodeStyleSettingsProvider provider, CodeStyleSettingsPanelFactory factory) {
+        public CodeStyleConfigurableWrapper(CodeStyleSettingsBase provider, CodeStyleSettingsPanelFactory factory) {
             myProvider = provider;
             myFactory = factory;
             myInitialResetInvoked = false;
