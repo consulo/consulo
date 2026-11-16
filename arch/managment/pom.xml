@@ -66,7 +66,7 @@
         <commons.compress.version>1.28.0</commons.compress.version>
         <maven.checkstyle.plugin>3.6.0</maven.checkstyle.plugin>
         <maven.compiler.plugin>3.15.0</maven.compiler.plugin>
-        <maven.consulo.plugin>3.36</maven.consulo.plugin>
+        <maven.consulo.plugin>3.37</maven.consulo.plugin>
         <maven.jar.plugin>3.3.0</maven.jar.plugin>
         <maven.source.plugin>3.2.1</maven.source.plugin>
         <maven.surefire.plugin>3.1.0</maven.surefire.plugin>
@@ -78,7 +78,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
-        <compiler.apt.version>4.9</compiler.apt.version>
+        <compiler.apt.version>4.10</compiler.apt.version>
 
         <dsl.json.version>3.0.7</dsl.json.version>
 
