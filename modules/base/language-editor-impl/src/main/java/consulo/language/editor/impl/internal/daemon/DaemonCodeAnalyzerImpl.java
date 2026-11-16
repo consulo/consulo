@@ -197,6 +197,24 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerInternal implement
     }
 
     @Override
+    @RequiredReadAction
+    public boolean hasFileLevelHighlights(int group, PsiFile psiFile) {
+        VirtualFile vFile = psiFile.getViewProvider().getVirtualFile();
+        for (FileEditor fileEditor : FileEditorManager.getInstance(myProject).getEditors(vFile)) {
+            List<HighlightInfoImpl> infos = fileEditor.getUserData(FILE_LEVEL_HIGHLIGHTS);
+            if (infos == null) {
+                continue;
+            }
+            for (HighlightInfoImpl info : infos) {
+                if (info.getGroup() == group) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
     @RequiredUIAccess
     public void removeFileLevelHighlight(Project project, HighlightInfo highlightInfo, PsiFile psiFile) {
         if (psiFile == null) {

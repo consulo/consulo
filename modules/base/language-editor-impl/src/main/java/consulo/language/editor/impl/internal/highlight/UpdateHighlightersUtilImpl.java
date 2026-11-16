@@ -24,8 +24,8 @@ import consulo.language.editor.impl.internal.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.logging.Logger;
 import consulo.language.editor.internal.HighlightersRecycler;
-import consulo.language.editor.internal.intention.IntentionActionDescriptor;
 import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.language.editor.rawHighlight.HighlightInfoPostFilter;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiDocumentManager;
@@ -36,7 +36,6 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.Pair;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -45,7 +44,32 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class UpdateHighlightersUtilImpl {
-    private static final Logger LOG = Logger.getInstance(UpdateHighlightersUtilImpl.class);
+    static final Logger LOG = Logger.getInstance(UpdateHighlightersUtilImpl.class);
+
+    public static final class HighlightInfoPostFilters {
+        private HighlightInfoPostFilters() {
+        }
+
+        public static boolean accept(Project project, HighlightInfo info) {
+            for (HighlightInfoPostFilter filter : project.getExtensionList(HighlightInfoPostFilter.class)) {
+                if (!filter.accept(info)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        static List<HighlightInfo> applyPostFilter(Project project, List<? extends HighlightInfo> highlightInfos) {
+            List<HighlightInfo> result = new ArrayList<>(highlightInfos.size());
+            for (HighlightInfo info : highlightInfos) {
+                if (accept(project, info)) {
+                    result.add(info);
+                }
+            }
+            return result;
+        }
+    }
 
     static void disposeWithFileLevelIgnoreErrors(HighlightInfo info, HighlightingSession session) {
         if (info.isFileLevelAnnotation()) {
@@ -131,7 +155,7 @@ public class UpdateHighlightersUtilImpl {
         }
     }
 
-    private static final Comparator<HighlightInfo> BY_START_OFFSET_NODUPS = (t1, t2) -> {
+    static final Comparator<HighlightInfo> BY_START_OFFSET_NODUPS = (t1, t2) -> {
         HighlightInfoImpl o1 = (HighlightInfoImpl) t1;
         HighlightInfoImpl o2 = (HighlightInfoImpl) t2;
 
@@ -258,7 +282,7 @@ public class UpdateHighlightersUtilImpl {
         assertMarkupConsistent(markup, project);
     }
 
-    private static boolean isWarningCoveredByError(
+    static boolean isWarningCoveredByError(
         HighlightInfo info,
         Collection<HighlightInfo> overlappingIntervals,
         SeverityRegistrar severityRegistrar
@@ -348,23 +372,7 @@ public class UpdateHighlightersUtilImpl {
             finalHighlighter.setGutterIconRenderer((GutterIconRenderer) renderer);
 
             ranges2markersCache.put(finalInfoRange, info.getHighlighter());
-            List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionRanges = info.myQuickFixActionRanges;
-            if (quickFixActionRanges != null) {
-                List<Pair<IntentionActionDescriptor, RangeMarker>> list = new ArrayList<>(quickFixActionRanges.size());
-                for (Pair<IntentionActionDescriptor, TextRange> pair : quickFixActionRanges) {
-                    TextRange textRange = pair.second;
-                    RangeMarker marker = getOrCreate(document, ranges2markersCache, textRange);
-                    list.add(Pair.create(pair.first, marker));
-                }
-                info.myQuickFixActionMarkers = Lists.newLockFreeCopyOnWriteList(list);
-            }
-            ProperTextRange fixRange = info.getFixTextRange();
-            if (finalInfoRange.equals(fixRange)) {
-                info.myFixMarker = null; // null means it the same as highlighter's
-            }
-            else {
-                info.myFixMarker = getOrCreate(document, ranges2markersCache, fixRange);
-            }
+            info.updateQuickFixFields(document, ranges2markersCache, finalInfoRange);
         };
 
         if (highlighter == null) {
@@ -394,7 +402,7 @@ public class UpdateHighlightersUtilImpl {
         }
     }
 
-    private static int getLayer(HighlightInfoImpl info, SeverityRegistrar severityRegistrar) {
+    static int getLayer(HighlightInfoImpl info, SeverityRegistrar severityRegistrar) {
         HighlightSeverity severity = info.getSeverity();
         int layer;
         if (severity == HighlightSeverity.WARNING) {
@@ -418,14 +426,6 @@ public class UpdateHighlightersUtilImpl {
         return layer;
     }
 
-    private static RangeMarker getOrCreate(
-        Document document,
-        Map<TextRange, RangeMarker> ranges2markersCache,
-        TextRange textRange
-    ) {
-        return ranges2markersCache.computeIfAbsent(textRange, __ -> document.createRangeMarker(textRange));
-    }
-
     private static final Key<Boolean> TYPING_INSIDE_HIGHLIGHTER_OCCURRED = Key.create("TYPING_INSIDE_HIGHLIGHTER_OCCURRED");
 
     public static boolean isWhitespaceOptimizationAllowed(Document document) {
@@ -436,7 +436,7 @@ public class UpdateHighlightersUtilImpl {
         document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, Boolean.TRUE);
     }
 
-    private static void clearWhiteSpaceOptimizationFlag(Document document) {
+    static void clearWhiteSpaceOptimizationFlag(Document document) {
         document.putUserData(TYPING_INSIDE_HIGHLIGHTER_OCCURRED, null);
     }
 

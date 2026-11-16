@@ -12,9 +12,11 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.document.util.TextRangeScalarUtil;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.HighlightSeverity;
@@ -40,7 +42,9 @@ import consulo.util.lang.xml.XmlStringUtil;
 import org.jspecify.annotations.Nullable;
 import org.intellij.lang.annotations.MagicConstant;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.function.BiConsumer;
@@ -402,6 +406,36 @@ public class HighlightInfoImpl implements HighlightInfo {
 
     public void setGroup(int group) {
         myGroup = group;
+    }
+
+    /**
+     * Binds the quick fix ranges and the fix range of this info to range markers in {@code document}, reusing the markers
+     * of {@code range2markerCache} for equal ranges.
+     */
+    public void updateQuickFixFields(Document document, Map<TextRange, RangeMarker> range2markerCache, TextRange finalHighlighterRange) {
+        List<Pair<IntentionActionDescriptor, TextRange>> quickFixActionRanges = myQuickFixActionRanges;
+        if (quickFixActionRanges != null) {
+            List<Pair<IntentionActionDescriptor, RangeMarker>> list = new ArrayList<>(quickFixActionRanges.size());
+            for (Pair<IntentionActionDescriptor, TextRange> pair : quickFixActionRanges) {
+                TextRange textRange = pair.second;
+                RangeMarker marker = getOrCreate(document, range2markerCache, textRange);
+                list.add(Pair.create(pair.first, marker));
+            }
+            myQuickFixActionMarkers = Lists.newLockFreeCopyOnWriteList(list);
+        }
+        TextRange fixRange = TextRangeScalarUtil.create(
+            TextRangeScalarUtil.coerceRange(myFixStartOffset, myFixEndOffset, 0, document.getTextLength())
+        );
+        if (finalHighlighterRange.equals(fixRange)) {
+            myFixMarker = null; // null means it the same as highlighter's
+        }
+        else {
+            myFixMarker = getOrCreate(document, range2markerCache, fixRange);
+        }
+    }
+
+    private static RangeMarker getOrCreate(Document document, Map<TextRange, RangeMarker> range2markerCache, TextRange textRange) {
+        return range2markerCache.computeIfAbsent(textRange, __ -> document.createRangeMarker(textRange));
     }
 
     static boolean isAcceptedByFilters(HighlightInfoImpl info, @Nullable PsiElement psiElement) {
