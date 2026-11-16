@@ -85,7 +85,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     private final Map<String, RunnerAndConfigurationSettings> myConfigurations = new LinkedHashMap<>();
     // template configurations are not included here
     private final Map<String, Boolean> mySharedConfigurations = new HashMap<>();
-    private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = ContainerUtil.createWeakMap();
+    private final Map<RunConfiguration, List<BeforeRunTask>> myConfigurationToBeforeTasksMap = ContainerUtil.createConcurrentWeakMap();
 
     // When readExternal not all configuration may be loaded, so we need to remember the selected configuration
     // so that when it is eventually loaded, we can mark is as a selected.
