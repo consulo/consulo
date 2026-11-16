@@ -25,7 +25,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.HasFocus;
-import consulo.ui.HtmlLabel;
+import consulo.ui.HtmlView;
 import consulo.ui.Label;
 import consulo.ui.Table;
 import consulo.ui.TextAttribute;
@@ -53,7 +53,6 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.layout.SplitLayoutPosition;
 import consulo.ui.layout.TwoComponentSplitLayout;
-import consulo.ui.layout.VerticalLayout;
 import consulo.ui.style.ComponentColors;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
@@ -111,6 +110,7 @@ import consulo.versionControlSystem.versionBrowser.CommittedChangeListForRevisio
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -129,12 +129,15 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
     private static final int ROOT_COLUMN_WIDTH = 8;
     private static final int REF_LABEL_SIZE = 16;
     private static final int TEXT_FILTER_LENGTH = 20;
+    private static final String DETAILS_CSS = """
+        body { margin: 8px; }
+        """;
 
     private final VcsLogCommitModel myCommitModel;
     private final UnifiedVcsLogRowModel myRowModel;
     private final VcsLogClassicFilterUi myFilterUi;
     private final Table<Integer> myTable;
-    private final HtmlLabel myDetails;
+    private final HtmlView myDetails;
     private final VcsChangesBrowser myChangesBrowser;
     private final DockLayout myRoot;
     private final List<VcsLogHighlighter> myHighlighters = new ArrayList<>();
@@ -151,7 +154,6 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
     private @Nullable TextBox myTextFilter;
     private final DockLayout myRightArea;
     private final TwoComponentSplitLayout myDetailsSplitter;
-    private final Component myDetailsScroll;
     private int myHoveredRow = -1;
     private @Nullable PrintElement myHoveredElement;
 
@@ -195,10 +197,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         myTable.addContextMenuListener(this::showContextMenu);
         myTable.setSpeedSearchConverter(row -> row < myCommitModel.getRowCount() ? myCommitModel.getShortDetails(row).getSubject() : "");
 
-        myDetails = HtmlLabel.create(LocalizeValue.empty());
-        VerticalLayout detailsContent = VerticalLayout.create();
-        detailsContent.add(myDetails);
-        detailsContent.paddingBuilder().allSet(Space.LARGE).apply();
+        myDetails = HtmlView.create();
 
         myChangesBrowser = project.getApplication().getInstance(VcsChangesDialogFactory.class)
             .changesBrowser(project)
@@ -207,7 +206,6 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
             .build(this);
 
         myDetailsSplitter = TwoComponentSplitLayout.create(SplitLayoutPosition.VERTICAL).withProportion(70);
-        myDetailsScroll = ScrollableLayout.create(detailsContent);
         myRightArea = DockLayout.create(Space.NONE);
 
         DockLayout tableArea = DockLayout.create();
@@ -231,6 +229,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
             myRoot.center(splitter);
         }
         myRoot.putUserData(UiDataProvider.KEY, this::uiDataSnapshot);
+        myTable.putUserData(UiDataProvider.KEY, sink -> sink.set(CopyProvider.KEY, new LogCopyProvider()));
 
         project.getExtensionPoint(VcsLogHighlighterFactory.class)
             .forEach(factory -> myHighlighters.add(factory.createHighlighter(logData, this)));
@@ -449,7 +448,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         mySelectionRequest = request;
 
         if (rows.isEmpty()) {
-            myDetails.setText(LocalizeValue.empty());
+            myDetails.render(new HtmlView.RenderData("", DETAILS_CSS, new URL[0]));
             myChangesBrowser.setEmptyText(VersionControlSystemLogLocalize.textNoCommitsSelected());
             myChangesBrowser.setChanges(List.of());
             return;
@@ -484,7 +483,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         }
 
         myChangesBrowser.setChanges(ChangesBrowserUtil.zipChanges(changes));
-        myDetails.setText(LocalizeValue.of(html.toString()));
+        myDetails.render(new HtmlView.RenderData(html.toString(), DETAILS_CSS, new URL[0]));
     }
 
     private static void appendDetails(StringBuilder html, VcsFullCommitDetails detail) {
@@ -683,7 +682,7 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
         if (myUiProperties.get(MainVcsLogUiProperties.SHOW_DETAILS)) {
             myRightArea.center(myDetailsSplitter);
             myDetailsSplitter.setFirstComponent(changes);
-            myDetailsSplitter.setSecondComponent(myDetailsScroll);
+            myDetailsSplitter.setSecondComponent(myDetails);
         }
         else {
             myDetailsSplitter.setFirstComponent(null);
@@ -757,7 +756,6 @@ public class UnifiedVcsLogUi extends AbstractVcsLogUi {
     private void uiDataSnapshot(DataSink sink) {
         sink.set(VcsLog.KEY, myLog);
         sink.set(VcsLogCommitSelection.KEY, new VcsLogCommitSelectionImpl(myLog, getSelectedRows(), getCommitModel()));
-        sink.set(CopyProvider.KEY, new LogCopyProvider());
         sink.set(VcsLogUi.KEY, this);
         sink.set(VcsLogDataProvider.KEY, myLogData);
         sink.set(VcsLogInternalDataKeys.LOG_UI_PROPERTIES, myUiProperties);
