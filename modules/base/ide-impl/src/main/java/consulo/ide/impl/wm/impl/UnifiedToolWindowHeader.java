@@ -98,6 +98,7 @@ public class UnifiedToolWindowHeader implements Disposable {
     private @Nullable ToolWindowContentUiType myRenderedContentUiType;
 
     private final Map<Content, ActionToolbar> myCloseToolbars = new HashMap<>();
+    private final Map<Content, DockLayout> myTabHolders = new HashMap<>();
 
     private final PropertyChangeListener myContentPropertyListener = event -> {
         String propertyName = event.getPropertyName();
@@ -107,6 +108,12 @@ public class UnifiedToolWindowHeader implements Disposable {
             UIAccess uiAccess = myLayout.getUIAccess();
             if (uiAccess != null) {
                 uiAccess.giveIfNeed(this::rebuildTabs);
+            }
+        }
+        else if (Content.PROP_COMPONENT.equals(propertyName) && event.getSource() instanceof Content content) {
+            UIAccess uiAccess = myLayout.getUIAccess();
+            if (uiAccess != null) {
+                uiAccess.giveIfNeed(() -> updateTabComponent(content));
             }
         }
         else if (Content.PROP_PINNED.equals(propertyName) && event.getSource() instanceof Content content) {
@@ -325,6 +332,7 @@ public class UnifiedToolWindowHeader implements Disposable {
         }
         myTabs.clear();
         myCloseToolbars.clear();
+        myTabHolders.clear();
 
         UnifiedToolWindowContentUI contentUI = getContentUI();
         if (contentUI != null) {
@@ -342,6 +350,7 @@ public class UnifiedToolWindowHeader implements Disposable {
                 if (contentManager.getIndexOfContent(entry.getKey()) < 0) {
                     myTabbedLayout.removeTab(entry.getValue());
                     myCloseToolbars.remove(entry.getKey());
+                    myTabHolders.remove(entry.getKey());
                     iterator.remove();
                 }
             }
@@ -353,7 +362,10 @@ public class UnifiedToolWindowHeader implements Disposable {
                 if (tab == null) {
                     tab = createTab(content);
                     myTabs.put(content, tab);
-                    myTabbedLayout.addTab(tab, content.getUIComponent(), i);
+                    DockLayout holder = DockLayout.create(Space.NONE);
+                    centerTabComponent(holder, content);
+                    myTabHolders.put(content, holder);
+                    myTabbedLayout.addTab(tab, holder, i);
                 }
 
                 updateCloseToolbar(contentManager, content, tab);
@@ -368,6 +380,25 @@ public class UnifiedToolWindowHeader implements Disposable {
         }
         finally {
             myUpdatingTabs = false;
+        }
+    }
+
+    @RequiredUIAccess
+    private void updateTabComponent(Content content) {
+        DockLayout holder = myTabHolders.get(content);
+        if (holder == null) {
+            return;
+        }
+
+        holder.removeAll();
+        centerTabComponent(holder, content);
+    }
+
+    @RequiredUIAccess
+    private static void centerTabComponent(DockLayout holder, Content content) {
+        Component component = content.getUIComponent();
+        if (component != null) {
+            holder.center(component);
         }
     }
 

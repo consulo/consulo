@@ -254,6 +254,9 @@ public class UnifiedToolWindowContentUI implements ToolWindowContentUI, Property
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if (Content.PROP_COMPONENT.equals(evt.getPropertyName())) {
+            ensureSelectedContentVisible();
+        }
         update();
     }
 
