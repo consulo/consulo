@@ -51,12 +51,14 @@ public class SelectionTest {
     private static final List<ChannelId<String>> ALL_CHANNELS =
         Arrays.asList(CHANNEL_A, CHANNEL_B, CHANNEL_C);
 
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1502", todo = "Remove explicit casts")
     private static final Coroutine<@Nullable Void, String> SELECT_ABC = Coroutine.first(
-        select(receive(CHANNEL_A)).or(receive(CHANNEL_B)).or(receive(CHANNEL_C))
+        ((Select<@Nullable Void, String>)select(receive(CHANNEL_A))).or(receive(CHANNEL_B)).or(receive(CHANNEL_C))
     );
 
+    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1502", todo = "Remove explicit casts")
     private static final Coroutine<@Nullable Void, Collection<String>> COLLECT_ABC = Coroutine.first(
-        collect(receive(CHANNEL_A)).and(receive(CHANNEL_B)).and(receive(CHANNEL_C))
+        ((Collect<@Nullable Void, String>)collect(receive(CHANNEL_A))).and(receive(CHANNEL_B)).and(receive(CHANNEL_C))
     );
 
     /**
