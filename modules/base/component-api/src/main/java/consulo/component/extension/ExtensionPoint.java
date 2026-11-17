@@ -242,9 +242,8 @@ public interface ExtensionPoint<E> extends ModificationTracker, Iterable<E> {
         });
     }
 
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1500", todo = "Remove explicit casts")
     default void forEachBreakable(@InheritCallerContext Function<? super E, Flow> breakableConsumer) {
-        computeSafeIfAny((Function<E, @Nullable Flow>) value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
+        computeSafeIfAny(value -> breakableConsumer.apply(value) != Flow.BREAK ? null : Flow.BREAK);
     }
 
     @Override
