@@ -329,13 +329,6 @@
             <reference ref="NextDiff"/>
         </group>
 
-        <group id="ChangeScheme">
-            <action id="ChangeColorScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeColorSchemeAction"/>
-            <action id="ChangeKeymap" class="consulo.ide.impl.idea.ide.actions.QuickChangeKeymapAction"/>
-            <reference id="ChangeLaf"/>
-            <reference id="ChangeLocalization"/>
-        </group>
-
         <action id="MaintenanceAction" class="consulo.ide.impl.idea.ide.actions.MaintenanceAction"/>
 
         <group id="MaintenanceGroup"/>
@@ -611,10 +604,6 @@
                     icon="consulo.platform.base.PlatformIconGroup@actions.back"
                     use-shortcut-of="RecentFiles"/>
         </group>
-
-        <action id="ChangeCodeStyleScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeCodeStyleSchemeAction">
-            <add-to-group group-id="ChangeScheme" anchor="after" relative-to-action="ChangeColorScheme"/>
-        </action>
 
         <reference ref="TypeHierarchyBase.BaseOnThisType"/>
         <reference ref="TypeHierarchy.Class"/>
