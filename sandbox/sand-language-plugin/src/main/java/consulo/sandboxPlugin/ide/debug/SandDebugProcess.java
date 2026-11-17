@@ -22,6 +22,8 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.step.HasForceStepInto;
+import consulo.execution.debug.step.HasRunToPosition;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputType;
@@ -33,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author VISTALL
  * @since 2026-10-12
  */
-public class SandDebugProcess extends XDebugProcess {
+public class SandDebugProcess extends XDebugProcess implements HasForceStepInto, HasRunToPosition {
     private static final long STEP_DELAY = 300L;
     private static final long RESUME_DELAY = 2000L;
 

@@ -39,6 +39,9 @@ import consulo.execution.debug.impl.internal.evaluate.XDebuggerEditorLinePainter
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.execution.debug.step.HasForceStepInto;
+import consulo.execution.debug.step.HasRunToPosition;
+import consulo.execution.debug.step.HasStepIntoMyCode;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.execution.debug.ui.XDebugSessionData;
@@ -545,19 +548,33 @@ public class XDebugSessionImpl implements XDebugSession {
             return;
         }
 
-        myDebugProcess.startForceStepInto(doResume());
+        if (myDebugProcess instanceof HasForceStepInto hasForceStepInto) {
+            hasForceStepInto.startForceStepInto(doResume());
+        }
+        else {
+            myDebugProcess.startStepInto(doResume());
+        }
+    }
+
+    @Override
+    public void stepIntoMyCode() {
+        if (!(myDebugProcess instanceof HasStepIntoMyCode hasStepIntoMyCode) || !myDebugProcess.checkCanPerformCommands()) {
+            return;
+        }
+
+        hasStepIntoMyCode.startStepIntoMyCode(doResume());
     }
 
     @Override
     public void runToPosition(XSourcePosition position, boolean ignoreBreakpoints) {
-        if (!myDebugProcess.checkCanPerformCommands()) {
+        if (!(myDebugProcess instanceof HasRunToPosition hasRunToPosition) || !myDebugProcess.checkCanPerformCommands()) {
             return;
         }
 
         if (ignoreBreakpoints) {
             disableBreakpoints();
         }
-        myDebugProcess.runToPosition(position, doResume());
+        hasRunToPosition.runToPosition(position, doResume());
     }
 
     @Override

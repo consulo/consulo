@@ -7,7 +7,9 @@ import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.step.ForceSmartStepIntoSource;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -16,6 +18,11 @@ public class XDebuggerStepIntoHandler extends XDebuggerSmartStepIntoHandler {
     @Override
     protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
         return session.isSuspended();
+    }
+
+    @Override
+    public boolean isHidden(Project project, AnActionEvent event) {
+        return false;
     }
 
     @Override

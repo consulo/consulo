@@ -128,6 +128,10 @@ action.run.to.cursor.description:
     text: Run to the line where the caret is
 action.run.to.cursor.text:
     text: Run to _Cursor
+action.set.next.statement.description:
+    text: Jump to the line where the caret is
+action.set.next.statement.text:
+    text: _Jump To Cursor
 action.set.value.description:
     text: Modify value of selected node
 action.set.value.text:
@@ -146,6 +150,10 @@ action.smart.step.into.text:
     text: Smart Ste_p Into
 action.step.into.description:
     text: Step to the next line executed
+action.step.into.my.code.description:
+    text: Step to the next line executed ignoring libraries
+action.step.into.my.code.text:
+    text: Step Into My Code
 action.step.into.text:
     text: Step _Into
 action.step.out.description:

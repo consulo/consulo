@@ -31,6 +31,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
     children = {
         @ActionRef(type = StepOverAction.class),
         @ActionRef(type = StepIntoAction.class),
+        @ActionRef(type = StepIntoMyCodeAction.class),
         @ActionRef(type = StepOutAction.class)
     }
 )

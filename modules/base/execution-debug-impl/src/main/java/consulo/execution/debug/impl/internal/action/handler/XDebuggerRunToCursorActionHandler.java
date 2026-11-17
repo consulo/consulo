@@ -19,6 +19,9 @@ import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.impl.internal.XDebuggerUtilImpl;
+import consulo.execution.debug.step.HasRunToPosition;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author nik
@@ -32,6 +35,11 @@ public class XDebuggerRunToCursorActionHandler extends XDebuggerSuspendedActionH
 
   protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
     return super.isEnabled(session, dataContext) && XDebuggerUtilImpl.getCaretPosition(session.getProject(), dataContext) != null;
+  }
+
+  @Override
+  public boolean isHidden(Project project, AnActionEvent event) {
+    return isHiddenWithout(HasRunToPosition.class, project, event, false);
   }
 
   protected void perform(XDebugSession session, DataContext dataContext) {

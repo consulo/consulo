@@ -19,13 +19,11 @@ package consulo.execution.debug;
 import consulo.execution.debug.breakpoint.XBreakpointHandler;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
-import consulo.execution.debug.frame.XDropFrameHandler;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.frame.XValueMarkerProvider;
 import consulo.execution.debug.internal.UnsupportedDebuggerEditorsProvider;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.ExecutionConsole;
@@ -45,6 +43,11 @@ import javax.swing.event.HyperlinkListener;
  * and call {@link XDebuggerManager#startSession} from {@link ProgramRunner#execute} method
  * <p>
  * Otherwise use method {@link XDebuggerManager#startSessionAndShowTab} to start new debugging session
+ * <p>
+ * Optional actions are supported by implementing their interfaces - the actions are hidden for processes which do not:
+ * {@link consulo.execution.debug.step.HasForceStepInto}, {@link consulo.execution.debug.step.HasSmartStepInto},
+ * {@link consulo.execution.debug.step.HasStepIntoMyCode}, {@link consulo.execution.debug.step.HasRunToPosition},
+ * {@link consulo.execution.debug.step.HasSetNextStatement}, {@link consulo.execution.debug.frame.HasDropFrame}
  *
  * @author nik
  */
@@ -112,26 +115,6 @@ public abstract class XDebugProcess {
     }
 
     /**
-     * @deprecated Use {@link #startForceStepInto(XSuspendContext)} instead
-     */
-    @Deprecated
-    public void startForceStepInto() {
-        //noinspection deprecation
-        startStepInto();
-    }
-
-    /**
-     * Steps into suppressed call
-     * <p>
-     * Resume execution and call {@link XDebugSession#positionReached}
-     * when next line is reached.
-     * Do not call this method directly. Use {@link XDebugSession#forceStepInto} instead
-     */
-    public void startForceStepInto(@Nullable XSuspendContext context) {
-        startStepInto(context);
-    }
-
-    /**
      * @deprecated Use {@link #startStepInto(XSuspendContext)} instead
      */
     @Deprecated
@@ -168,22 +151,6 @@ public abstract class XDebugProcess {
     }
 
     /**
-     * Implement {@link consulo.ide.impl.idea.xdebugger.stepping.XSmartStepIntoHandler} and return its instance from this method to enable Smart Step Into action
-     *
-     * @return {@link consulo.ide.impl.idea.xdebugger.stepping.XSmartStepIntoHandler} instance
-     */
-    public @Nullable XSmartStepIntoHandler<?> getSmartStepIntoHandler() {
-        return null;
-    }
-
-    /**
-     * Implement {@link XDropFrameHandler} and return its instance from this method to enable the Drop Frame action.
-     */
-    public @Nullable XDropFrameHandler getDropFrameHandler() {
-        return null;
-    }
-
-    /**
      * Stop debugging and dispose resources.
      * Do not call this method directly. Use {@link XDebugSession#stop} instead
      */
@@ -212,26 +179,6 @@ public abstract class XDebugProcess {
     public void resume(@Nullable XSuspendContext context) {
         //noinspection deprecation
         resume();
-    }
-
-    /**
-     * @deprecated Use {@link #runToPosition(XSourcePosition, XSuspendContext)} instead
-     */
-    @Deprecated
-    public void runToPosition(XSourcePosition position) {
-        throw new AbstractMethodError();
-    }
-
-    /**
-     * Resume execution and call {@link XDebugSession#positionReached(XSuspendContext)}
-     * when <code>position</code> is reached.
-     * Do not call this method directly. Use {@link XDebugSession#runToPosition} instead
-     *
-     * @param position position in source code
-     */
-    public void runToPosition(XSourcePosition position, @Nullable XSuspendContext context) {
-        //noinspection deprecation
-        runToPosition(position);
     }
 
     /**

@@ -23,6 +23,9 @@ import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.execution.debug.step.HasForceStepInto;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author nik
@@ -33,6 +36,11 @@ public class ForceStepIntoAction extends XDebuggerActionBase {
         @Override
         protected void perform(XDebugSession session, DataContext dataContext) {
             session.forceStepInto();
+        }
+
+        @Override
+        public boolean isHidden(Project project, AnActionEvent event) {
+            return isHiddenWithout(HasForceStepInto.class, project, event, false);
         }
     };
 

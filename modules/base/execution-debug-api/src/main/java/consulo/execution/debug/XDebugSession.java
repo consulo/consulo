@@ -81,6 +81,11 @@ public interface XDebugSession extends AbstractDebuggerSession {
 
     void forceStepInto();
 
+    /**
+     * Steps to the next line executed in the code of the project - requires {@link consulo.execution.debug.step.HasStepIntoMyCode}
+     */
+    void stepIntoMyCode();
+
     void runToPosition(XSourcePosition position, boolean ignoreBreakpoints);
 
     void pause();

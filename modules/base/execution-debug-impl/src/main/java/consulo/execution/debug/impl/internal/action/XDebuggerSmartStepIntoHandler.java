@@ -21,14 +21,17 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
+import consulo.execution.debug.step.HasSmartStepInto;
 import consulo.execution.debug.step.XSmartStepIntoHandler;
 import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
@@ -48,13 +51,20 @@ public class XDebuggerSmartStepIntoHandler extends XDebuggerSuspendedActionHandl
 
     @Override
     protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
-        return super.isEnabled(session, dataContext) && session.getDebugProcess().getSmartStepIntoHandler() != null;
+        return super.isEnabled(session, dataContext) && session.getDebugProcess() instanceof HasSmartStepInto;
+    }
+
+    @Override
+    public boolean isHidden(Project project, AnActionEvent event) {
+        return isHiddenWithout(HasSmartStepInto.class, project, event, false);
     }
 
     @Override
     @RequiredUIAccess
     protected void perform(XDebugSession session, DataContext dataContext) {
-        XSmartStepIntoHandler<?> handler = session.getDebugProcess().getSmartStepIntoHandler();
+        XSmartStepIntoHandler<?> handler = session.getDebugProcess() instanceof HasSmartStepInto hasSmartStepInto
+            ? hasSmartStepInto.getSmartStepIntoHandler()
+            : null;
         XSourcePosition position = session.getTopFramePosition();
         if (position != null && handler != null) {
             FileEditor editor = FileEditorManager.getInstance(session.getProject()).getSelectedEditor(position.getFile());
