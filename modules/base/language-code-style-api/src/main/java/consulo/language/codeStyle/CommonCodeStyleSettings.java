@@ -74,7 +74,7 @@ public class CommonCodeStyleSettings {
         this(language, language == null ? null : language.getAssociatedFileType());
     }
 
-    void setRootSettings(CodeStyleSettings rootSettings) {
+    protected void setRootSettings(CodeStyleSettings rootSettings) {
         myRootSettings = rootSettings;
     }
 
@@ -1075,7 +1075,7 @@ public class CommonCodeStyleSettings {
         return mySoftMargins.getValues();
     }
 
-    void setSoftMargins(List<Integer> values) {
+    protected void setSoftMargins(List<Integer> values) {
         mySoftMargins.setValues(values);
     }
 }
