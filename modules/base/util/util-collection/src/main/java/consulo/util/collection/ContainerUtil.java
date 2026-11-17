@@ -136,7 +136,7 @@ public class ContainerUtil {
 
     public static <T> List<T> collect(Iterator<T> iterator) {
         if (!iterator.hasNext()) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<T> list = new ArrayList<>();
         addAll(list, iterator);
@@ -224,7 +224,7 @@ public class ContainerUtil {
 
     public static <E> List<E> reverse(List<E> elements) {
         if (elements.isEmpty()) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         return new AbstractList<>() {
@@ -303,7 +303,7 @@ public class ContainerUtil {
      */
     public static <T, V> List<V> map2List(Collection<? extends T> collection, Function<T, V> mapper) {
         if (collection.isEmpty()) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<V> list = new ArrayList<>(collection.size());
         for (T t : collection) {
@@ -432,7 +432,7 @@ public class ContainerUtil {
      */
     public static <T, V> List<V> map(Collection<? extends T> iterable, Function<T, V> mapping) {
         if (iterable.isEmpty()) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<V> result = new ArrayList<>(iterable.size());
         for (T t : iterable) {
@@ -491,7 +491,7 @@ public class ContainerUtil {
 
     public static <T> List<T> findAll(Collection<? extends T> collection, Predicate<? super T> condition) {
         if (collection.isEmpty()) {
-            return List.of();
+            return Collections.emptyList();
         }
         List<T> result = new ArrayList<>();
         for (T t : collection) {
@@ -925,7 +925,7 @@ public class ContainerUtil {
             size += each.size();
         }
         if (size == 0) {
-            return List.of();
+            return Collections.emptyList();
         }
         int finalSize = size;
         return new AbstractList<>() {
@@ -1076,7 +1076,7 @@ public class ContainerUtil {
      */
     public static <T, V> List<V> mapNotNull(Collection<? extends T> iterable, Function<T, @Nullable V> mapping) {
         if (iterable.isEmpty()) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         List<V> result = new ArrayList<>(iterable.size());
