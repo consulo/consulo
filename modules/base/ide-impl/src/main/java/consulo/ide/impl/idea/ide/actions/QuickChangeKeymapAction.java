@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.ui.ex.internal.KeymapManagerEx;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
@@ -29,12 +32,15 @@ import consulo.ui.ex.keymap.KeymapManager;
 /**
  * @author max
  */
+@ActionImpl(id = "ChangeKeymap")
 public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
+    public QuickChangeKeymapAction() {
+        super(ActionLocalize.actionChangekeymapText(), ActionLocalize.actionChangekeymapDescription());
+    }
+
     @Override
-    protected void fillActions(Project project,
-                               ActionGroup.Builder group,
-                               DataContext dataContext) {
-        KeymapManagerEx manager = (KeymapManagerEx)KeymapManager.getInstance();
+    protected void fillActions(Project project, ActionGroup.Builder group, DataContext dataContext) {
+        KeymapManagerEx manager = (KeymapManagerEx) KeymapManager.getInstance();
         Keymap current = manager.getActiveKeymap();
         for (Keymap keymap : manager.getAllKeymaps()) {
             addKeymapAction(group, manager, current, keymap, false);
@@ -48,7 +54,11 @@ public class QuickChangeKeymapAction extends QuickSwitchSchemeAction {
         Keymap keymap,
         boolean addScheme
     ) {
-        group.add(new AnAction(keymap.getPresentableName(), "", keymap == current ? ourCurrentAction : ourNotCurrentAction) {
+        group.add(new AnAction(
+            LocalizeValue.of(keymap.getPresentableName()),
+            LocalizeValue.empty(),
+            keymap == current ? ourCurrentAction : ourNotCurrentAction
+        ) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(AnActionEvent e) {

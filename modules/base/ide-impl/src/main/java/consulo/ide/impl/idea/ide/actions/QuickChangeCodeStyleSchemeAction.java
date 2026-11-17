@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.codeEditor.EditorFactory;
 import consulo.dataContext.DataContext;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,17 +33,19 @@ import consulo.ui.ex.action.AnActionEvent;
 /**
  * @author max
  */
+@ActionImpl(id = "ChangeCodeStyleScheme")
 public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
+    public QuickChangeCodeStyleSchemeAction() {
+        super(ActionLocalize.actionChangecodestyleschemeText(), ActionLocalize.actionChangecodestyleschemeDescription());
+    }
+
     @Override
-    protected void fillActions(Project project,
-                               ActionGroup.Builder group,
-                               DataContext dataContext) {
+    protected void fillActions(Project project, ActionGroup.Builder group, DataContext dataContext) {
         CodeStyleSettingsManager manager = CodeStyleSettingsManager.getInstance(project);
         if (manager.PER_PROJECT_SETTINGS != null) {
-            //noinspection HardCodedStringLiteral
             group.add(new AnAction(
-                "<project>",
-                "",
+                LocalizeValue.localizeTODO("<project>"),
+                LocalizeValue.empty(),
                 manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
             ) {
                 @Override
@@ -65,8 +70,8 @@ public class QuickChangeCodeStyleSchemeAction extends QuickSwitchSchemeAction {
         boolean addScheme
     ) {
         group.add(new AnAction(
-            scheme.getName(),
-            "",
+            LocalizeValue.of(scheme.getName()),
+            LocalizeValue.empty(),
             scheme == currentScheme && !manager.USE_PER_PROJECT_SETTINGS ? ourCurrentAction : ourNotCurrentAction
         ) {
             @Override

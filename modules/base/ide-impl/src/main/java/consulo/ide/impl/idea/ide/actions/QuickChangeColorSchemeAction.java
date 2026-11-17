@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.ide.actions;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.project.ui.action.QuickSwitchSchemeAction;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -29,24 +32,26 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author max
  */
+@ActionImpl(id = "ChangeColorScheme")
 public class QuickChangeColorSchemeAction extends QuickSwitchSchemeAction {
+    public QuickChangeColorSchemeAction() {
+        super(ActionLocalize.actionChangecolorschemeText(), ActionLocalize.actionChangecolorschemeDescription());
+    }
+
     @Override
-    protected void fillActions(Project project,
-                               ActionGroup.Builder group,
-                               DataContext dataContext) {
+    protected void fillActions(Project project, ActionGroup.Builder group, DataContext dataContext) {
         EditorColorsScheme current = EditorColorsManager.getInstance().getGlobalScheme();
         for (EditorColorsScheme scheme : EditorColorsManager.getInstance().getAllSchemes()) {
             addScheme(group, current, scheme, false);
         }
     }
 
-    private static void addScheme(
-        ActionGroup.Builder group,
-        EditorColorsScheme current,
-        EditorColorsScheme scheme,
-        boolean addScheme
-    ) {
-        group.add(new DumbAwareAction(scheme.getName(), "", scheme == current ? ourCurrentAction : ourNotCurrentAction) {
+    private static void addScheme(ActionGroup.Builder group, EditorColorsScheme current, EditorColorsScheme scheme, boolean addScheme) {
+        group.add(new DumbAwareAction(
+            LocalizeValue.of(scheme.getName()),
+            LocalizeValue.empty(),
+            scheme == current ? ourCurrentAction : ourNotCurrentAction
+        ) {
             @Override
             @RequiredUIAccess
             public void actionPerformed(@Nullable AnActionEvent e) {

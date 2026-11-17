@@ -50,11 +50,7 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
         this(text, description, false);
     }
 
-    protected QuickSwitchSchemeAction(
-        LocalizeValue text,
-        LocalizeValue description,
-        boolean showPopupWithNoActions
-    ) {
+    protected QuickSwitchSchemeAction(LocalizeValue text, LocalizeValue description, boolean showPopupWithNoActions) {
         super(text, description);
         myShowPopupWithNoActions = showPopupWithNoActions;
     }
@@ -68,9 +64,7 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
         showPopup(e, builder);
     }
 
-    protected abstract void fillActions(@Nullable Project project,
-                                        ActionGroup.Builder group,
-                                        DataContext dataContext);
+    protected abstract void fillActions(@Nullable Project project, ActionGroup.Builder group, DataContext dataContext);
 
     private void showPopup(AnActionEvent e, ActionGroup.Builder builder) {
         if (!myShowPopupWithNoActions && builder.isEmpty()) {
@@ -97,7 +91,6 @@ public abstract class QuickSwitchSchemeAction extends AnAction implements DumbAw
         return JBPopupFactory.ActionSelectionAid.NUMBERING;
     }
 
-    
     protected LocalizeValue getPopupTitle(AnActionEvent e) {
         return e.getPresentation().getTextValue();
     }
