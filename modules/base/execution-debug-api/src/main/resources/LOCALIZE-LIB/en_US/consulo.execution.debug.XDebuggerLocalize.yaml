@@ -94,6 +94,10 @@ action.mark.object.text:
     text: Mark Object…
 action.mark.object.unmark.text:
     text: Unmark Object
+action.memory.jump.to.type.source.text:
+    text: Jump to Source
+action.memory.show.instances.text:
+    text: Show Instances
 action.memory.view.settings.text:
     text: Memory View Settings
 action.mute.breakpoints.description:
@@ -246,6 +250,8 @@ debugger.session.tab.log.content.name:
     text: 'Log: {0}'
 debugger.session.tab.show.watches.in.variables:
     text: Show watches in variables tab
+debugger.session.tab.memory.title:
+    text: Memory
 debugger.session.tab.threads.title:
     text: Threads
 debugger.session.tab.variables.title:

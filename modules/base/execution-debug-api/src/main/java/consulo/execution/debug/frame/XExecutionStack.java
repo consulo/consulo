@@ -18,7 +18,9 @@ package consulo.execution.debug.frame;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.execution.debug.Obsolescent;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -30,9 +32,14 @@ import java.util.List;
  * @author nik
  */
 public abstract class XExecutionStack {
+  /**
+   * The execution stacks selected in a view of the threads, for the actions of the threads.
+   */
+  public static final Key<List<XExecutionStack>> SELECTED_STACKS = Key.create("XExecutionStacks");
+
   public static final XExecutionStack[] EMPTY_ARRAY = new XExecutionStack[0];
   private final String myDisplayName;
-  private final Image myIcon;
+  private volatile @Nullable Image myIcon;
 
   /**
    * @param displayName presentable name of the thread to be shown in the combobox in 'Frames' tab
@@ -60,6 +67,20 @@ public abstract class XExecutionStack {
   }
 
   /**
+   * Changes the icon, for example when the state of the thread changes - the views show it when they are rebuilt.
+   */
+  public final void setIcon(@Nullable Image icon) {
+    myIcon = icon;
+  }
+
+  /**
+   * Additional information shown after the name of the thread, the state of the thread for example.
+   */
+  public @Nullable AdditionalDisplayInfo getAdditionalDisplayInfo() {
+    return null;
+  }
+
+  /**
    * Override this method to provide an icon with optional tooltip and popup actions. This icon will be shown on the editor gutter to the
    * left of the execution line when this thread is selected in 'Frames' tab.
    * @return
@@ -80,6 +101,24 @@ public abstract class XExecutionStack {
    * @param container callback
    */
   public abstract void computeStackFrames(XStackFrameContainer container);
+
+  public static class AdditionalDisplayInfo {
+    private final LocalizeValue myText;
+    private final LocalizeValue myTooltip;
+
+    public AdditionalDisplayInfo(LocalizeValue text, LocalizeValue tooltip) {
+      myText = text;
+      myTooltip = tooltip;
+    }
+
+    public LocalizeValue getText() {
+      return myText;
+    }
+
+    public LocalizeValue getTooltip() {
+      return myTooltip;
+    }
+  }
 
   public interface XStackFrameContainer extends Obsolescent, XValueCallback {
     /**

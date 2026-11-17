@@ -8,19 +8,15 @@ import consulo.execution.debug.event.XDebugSessionListener;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.ui.tree.XDebuggerTreeState;
-import consulo.execution.debug.memory.InstancesProvider;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.awt.JBPanel;
 
 import java.awt.*;
 
 public abstract class InstancesViewBase extends JBPanel implements Disposable {
-    private final InstancesProvider myInstancesProvider;
-
-    public InstancesViewBase(LayoutManager layout, XDebugSession session, InstancesProvider instancesProvider) {
+    public InstancesViewBase(LayoutManager layout, XDebugSession session) {
         super(layout);
 
-        myInstancesProvider = instancesProvider;
         session.addSessionListener(new MySessionListener(), this);
     }
 
@@ -34,10 +30,6 @@ public abstract class InstancesViewBase extends JBPanel implements Disposable {
 
     @Override
     public void dispose() {
-    }
-
-    public InstancesProvider getInstancesProvider() {
-        return myInstancesProvider;
     }
 
     private class MySessionListener implements XDebugSessionListener {

@@ -24,6 +24,8 @@ import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import consulo.execution.debug.impl.internal.frame.*;
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
+import consulo.execution.debug.frame.HasRunningExecutionStacks;
+import consulo.execution.debug.memory.HasMemoryView;
 import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.execution.debug.ui.XDebugTabLayouter;
@@ -110,6 +112,18 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         setSession(session, environment, icon);
 
         myUi.addContent(createFramesContent(), 0, PlaceInGrid.left, false);
+        if (session.getDebugProcess() instanceof HasRunningExecutionStacks) {
+            Content threadsContent = createThreadsContent();
+            if (threadsContent != null) {
+                myUi.addContent(threadsContent, 0, PlaceInGrid.right, true);
+            }
+        }
+        if (session.getDebugProcess() instanceof HasMemoryView) {
+            Content memoryContent = XDebugSessionTabViewFactory.getInstance().createMemoryView(session, myUi);
+            if (memoryContent != null) {
+                myUi.addContent(memoryContent, 0, PlaceInGrid.right, true);
+            }
+        }
         addVariablesAndWatches(session);
 
         attachToSession(session);
@@ -194,6 +208,16 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
         XDebugSessionTabViewFactory.ViewContent frames = XDebugSessionTabViewFactory.getInstance().createFramesView(mySession, myUi);
         registerView(DebuggerContentInfo.FRAME_CONTENT, frames.view());
         return frames.content();
+    }
+
+    @RequiredUIAccess
+    private @Nullable Content createThreadsContent() {
+        XDebugSessionTabViewFactory.ViewContent threads = XDebugSessionTabViewFactory.getInstance().createThreadsView(mySession, myUi);
+        if (threads == null) {
+            return null;
+        }
+        registerView(DebuggerContentInfo.THREADS_CONTENT, threads.view());
+        return threads.content();
     }
 
     public void rebuildViews() {

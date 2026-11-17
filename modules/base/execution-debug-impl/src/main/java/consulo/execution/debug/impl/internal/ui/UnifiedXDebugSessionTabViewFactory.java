@@ -27,6 +27,7 @@ import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
+import org.jspecify.annotations.Nullable;
 import jakarta.inject.Singleton;
 
 /**
@@ -64,6 +65,21 @@ public class UnifiedXDebugSessionTabViewFactory implements XDebugSessionTabViewF
         );
         content.setCloseable(false);
         return new ViewContent(variablesView, content);
+    }
+
+    /**
+     * The threads are switched in the frames view here.
+     */
+    @RequiredUIAccess
+    @Override
+    public @Nullable ViewContent createThreadsView(XDebugSessionImpl session, RunnerLayoutUi ui) {
+        return null;
+    }
+
+    @RequiredUIAccess
+    @Override
+    public @Nullable Content createMemoryView(XDebugSessionImpl session, RunnerLayoutUi ui) {
+        return null;
     }
 
     /**

@@ -47,7 +47,8 @@ import javax.swing.event.HyperlinkListener;
  * Optional actions are supported by implementing their interfaces - the actions are hidden for processes which do not:
  * {@link consulo.execution.debug.step.HasForceStepInto}, {@link consulo.execution.debug.step.HasSmartStepInto},
  * {@link consulo.execution.debug.step.HasStepIntoMyCode}, {@link consulo.execution.debug.step.HasRunToPosition},
- * {@link consulo.execution.debug.step.HasSetNextStatement}, {@link consulo.execution.debug.frame.HasDropFrame}
+ * {@link consulo.execution.debug.step.HasSetNextStatement}, {@link consulo.execution.debug.frame.HasDropFrame},
+ * {@link consulo.execution.debug.frame.HasRunningExecutionStacks}
  *
  * @author nik
  */

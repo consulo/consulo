@@ -21,27 +21,37 @@ import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.frame.HasRunningExecutionStacks;
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XExecutionStackGroup;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.memory.HasMemoryView;
+import consulo.execution.debug.memory.XMemoryViewHandler;
 import consulo.execution.debug.step.HasForceStepInto;
 import consulo.execution.debug.step.HasRunToPosition;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputType;
+import consulo.ui.image.Image;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author VISTALL
  * @since 2026-10-12
  */
-public class SandDebugProcess extends XDebugProcess implements HasForceStepInto, HasRunToPosition {
+public class SandDebugProcess extends XDebugProcess implements HasForceStepInto, HasRunToPosition, HasRunningExecutionStacks, HasMemoryView {
     private static final long STEP_DELAY = 300L;
     private static final long RESUME_DELAY = 2000L;
 
     private final ExecutionResult myExecutionResult;
 
     private volatile int myStep;
+
+    private final SandMemoryViewHandler myMemoryViewHandler = new SandMemoryViewHandler();
 
     public SandDebugProcess(XDebugSession session, ExecutionResult executionResult) {
         super(session);
@@ -100,6 +110,36 @@ public class SandDebugProcess extends XDebugProcess implements HasForceStepInto,
     }
 
     @Override
+    public XMemoryViewHandler getMemoryViewHandler() {
+        return myMemoryViewHandler;
+    }
+
+    @Override
+    public void computeRunningExecutionStacks(XSuspendContext.XExecutionStackGroupContainer container, @Nullable XSuspendContext suspendContext) {
+        if (!(suspendContext instanceof SandSuspendContext sandContext)) {
+            container.addExecutionStack(List.of(), true);
+            return;
+        }
+        List<XExecutionStack> stacks = sandContext.getStacks();
+        container.addExecutionStackGroups(List.of(new XExecutionStackGroup("main") {
+            @Override
+            public Image getIcon() {
+                return ExecutionDebugIconGroup.threadThreadgroup();
+            }
+
+            @Override
+            public List<XExecutionStack> getStacks() {
+                return stacks;
+            }
+
+            @Override
+            public List<XExecutionStackGroup> getGroups() {
+                return List.of();
+            }
+        }), true);
+    }
+
+    @Override
     public void resume(@Nullable XSuspendContext context) {
         print("Resumed\n");
         myStep++;
@@ -131,7 +171,7 @@ public class SandDebugProcess extends XDebugProcess implements HasForceStepInto,
                 return;
             }
             print("Suspended at step " + step + "\n");
-            getSession().positionReached(new SandSuspendContext(step));
+            getSession().positionReached(new SandSuspendContext(step, this::print));
         }, delay, TimeUnit.MILLISECONDS);
     }
 }

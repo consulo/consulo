@@ -38,6 +38,10 @@ public class SandValue extends XNamedValue {
         this(name, type, value, List.of());
     }
 
+    public String getType() {
+        return myType;
+    }
+
     public SandValue(String name, String type, String value, List<SandValue> children) {
         super(name);
         myType = type;
