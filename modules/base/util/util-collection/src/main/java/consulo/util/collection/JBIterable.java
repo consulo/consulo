@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.collection.impl.SingletonIterator;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.function.Functions;
@@ -936,8 +935,6 @@ public abstract class JBIterable<E extends @Nullable Object> implements Iterable
      * Returns a {@code Map} for which the keys and values are defined by the specified converters.
      * {@code {@link java.util.LinkedHashMap}} is used, so the order is preserved.
      */
-    @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1799", todo = "Remove NullAway suppression")
-    @SuppressWarnings("NullAway")
     public final <K, V extends @Nullable Object> Map<K, V> toMap(Function<E, K> toKey, Function<E, V> toValue) {
         Map<K, V> map = new LinkedHashMap<>();
         for (E e : this) {

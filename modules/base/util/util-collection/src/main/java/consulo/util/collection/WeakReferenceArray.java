@@ -15,7 +15,6 @@
  */
 package consulo.util.collection;
 
-import consulo.annotation.ReviewAfterIssueFix;
 import consulo.util.lang.LoggerAssert;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -280,8 +279,6 @@ public class WeakReferenceArray<T> {
             myIndex = index;
         }
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1800", todo = "Remove NullAway suppression")
-        @SuppressWarnings("NullAway")
         public boolean removeFrom(@Nullable MyWeakReference[] array) {
             LoggerAssert.assertTrue(LOG, array[myIndex] == this);
             clear();
@@ -290,8 +287,6 @@ public class WeakReferenceArray<T> {
             return enqueue();
         }
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1800", todo = "Remove NullAway suppression")
-        @SuppressWarnings("NullAway")
         public void moveTo(@Nullable MyWeakReference[] fromArray, @Nullable MyWeakReference[] toArray, int newIndex) {
             LoggerAssert.assertTrue(LOG, fromArray[myIndex] == this);
             fromArray[myIndex] = null;
@@ -300,8 +295,6 @@ public class WeakReferenceArray<T> {
             myIndex = newIndex;
         }
 
-        @ReviewAfterIssueFix(value = "github.com/uber/NullAway/issues/1800", todo = "Remove NullAway suppression")
-        @SuppressWarnings("NullAway")
         public void setNull(@Nullable MyWeakReference[] array) {
             LoggerAssert.assertTrue(LOG, get() == null);
             if (myIndex == -1) {
