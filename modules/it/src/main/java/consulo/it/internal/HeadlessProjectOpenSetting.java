@@ -19,6 +19,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.project.internal.ProjectOpenSetting;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Headless {@code ProjectOpenSetting}: the production impl lives in {@code ide-impl}. Always opens a
@@ -33,6 +34,7 @@ import jakarta.inject.Singleton;
 public class HeadlessProjectOpenSetting implements ProjectOpenSetting {
     private volatile int myConfirmOpenNewProject = OPEN_PROJECT_NEW_WINDOW;
     private volatile boolean myReuseWelcomeFrame;
+    private volatile @Nullable Boolean myShowWelcomeOnLastProjectClose;
 
     @Override
     public int getConfirmOpenNewProject() {
@@ -52,5 +54,15 @@ public class HeadlessProjectOpenSetting implements ProjectOpenSetting {
     @Override
     public void setReuseWelcomeFrame(boolean reuseWelcomeFrame) {
         myReuseWelcomeFrame = reuseWelcomeFrame;
+    }
+
+    @Override
+    public @Nullable Boolean getShowWelcomeOnLastProjectClose() {
+        return myShowWelcomeOnLastProjectClose;
+    }
+
+    @Override
+    public void setShowWelcomeOnLastProjectClose(@Nullable Boolean showWelcomeOnLastProjectClose) {
+        myShowWelcomeOnLastProjectClose = showWelcomeOnLastProjectClose;
     }
 }

@@ -21,9 +21,10 @@ import consulo.desktop.qt.ui.impl.DesktopQtWindowImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.ui.impl.internal.wm.statusBar.UnifiedStatusBarImpl;
-import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectType;
+import consulo.project.internal.ProjectOpenSetting;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.project.ui.wm.IdeFrameState;
@@ -136,7 +137,7 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
         ProjectManager projectManager = ProjectManager.getInstance();
 
         Project[] openProjects = projectManager.getOpenProjects();
-        if (openProjects.length > 1 || openProjects.length == 1 && Platform.current().os().isMac()) {
+        if (openProjects.length > 1 || openProjects.length == 1 && !isWelcomeProject() && Application.get().getInstance(ProjectOpenSetting.class).isShowWelcomeOnLastProjectClose()) {
             if (myProject.isOpen()) {
                 projectManager.closeAndDisposeAsync(myProject, UIAccess.current())
                     .whenComplete((closed, throwable) -> frameClosed());
@@ -243,6 +244,10 @@ public class DesktopQtIdeFrameImpl implements IdeFrameEx, Disposable {
     @Override
     public @Nullable Project getProject() {
         return myProject;
+    }
+
+    private boolean isWelcomeProject() {
+        return myProject != null && myProject.getType() == ProjectType.WELCOME;
     }
 
     @Override

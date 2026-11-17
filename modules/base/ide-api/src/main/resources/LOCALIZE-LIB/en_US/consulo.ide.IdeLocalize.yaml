@@ -516,6 +516,8 @@ checkbox.autodetect.utf:
     text: Autodetect UTF-encoded files
 checkbox.confirm.application.exit:
     text: Confirm application exit
+checkbox.show.welcome.on.last.project.close:
+    text: Show welcome screen after closing the last project
 checkbox.copy.javadoc:
     text: Copy &JavaDoc
 checkbox.customfiletype.comment.only.at.line.start:

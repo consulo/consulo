@@ -19,6 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.project.internal.ProjectOpenSetting;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -52,5 +53,15 @@ public class ProjectOpenSettingImpl implements ProjectOpenSetting {
     @Override
     public void setReuseWelcomeFrame(boolean reuseWelcomeFrame) {
         myGeneralSettings.setReuseWelcomeFrame(reuseWelcomeFrame);
+    }
+
+    @Override
+    public @Nullable Boolean getShowWelcomeOnLastProjectClose() {
+        return myGeneralSettings.getShowWelcomeOnLastProjectClose();
+    }
+
+    @Override
+    public void setShowWelcomeOnLastProjectClose(@Nullable Boolean showWelcomeOnLastProjectClose) {
+        myGeneralSettings.setShowWelcomeOnLastProjectClose(showWelcomeOnLastProjectClose);
     }
 }

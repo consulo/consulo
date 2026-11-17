@@ -35,6 +35,8 @@ import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.project.ProjectType;
+import consulo.project.internal.ProjectOpenSetting;
 import consulo.project.ui.internal.IdeFrameEx;
 import consulo.project.ui.wm.*;
 import consulo.proxy.EventDispatcher;
@@ -371,7 +373,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
                 ProjectManager projectManager = ProjectManager.getInstance();
 
                 Project[] openProjects = projectManager.getOpenProjects();
-                if (openProjects.length > 1 || openProjects.length == 1 && Platform.current().os().isMac()) {
+                if (openProjects.length > 1 || openProjects.length == 1 && !isWelcomeProject() && Application.get().getInstance(ProjectOpenSetting.class).isShowWelcomeOnLastProjectClose()) {
                     Runnable afterClose = () -> {
                         Application.get().getMessageBus().syncPublisher(AppLifecycleListener.class).projectFrameClosed();
                         WelcomeFrameManager.getInstance().showIfNoProjectOpened();
@@ -500,6 +502,10 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
     @Override
     public Project getProject() {
         return myProject;
+    }
+
+    private boolean isWelcomeProject() {
+        return myProject != null && myProject.getType() == ProjectType.WELCOME;
     }
 
     private boolean isTemporaryDisposed() {
