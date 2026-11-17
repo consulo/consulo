@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Provides services for working with the modules of a project.
@@ -55,7 +56,20 @@ public abstract class ModuleManager {
    * @return the module instance.
    */
   @RequiredWriteAction
-  public abstract Module newModule(String name, String dirPath);
+  public Module newModule(String name, String dirPath) {
+    return newModule(name, dirPath, null);
+  }
+
+  /**
+   * Like {@link #newModule(String, String)}, with the id of the new module.
+   *
+   * @param name the module name
+   * @param dirPath the path at which the module is created.
+   * @param id the module id, or null to generate one. An id already used by another module is replaced by a generated one.
+   * @return the module instance.
+   */
+  @RequiredWriteAction
+  public abstract Module newModule(String name, String dirPath, @Nullable UUID id);
 
   /**
    * Disposes of the specified module and removes it from the project.
@@ -80,6 +94,16 @@ public abstract class ModuleManager {
    */
   @RequiredReadAction
   public abstract @Nullable Module findModuleByName(String name);
+
+  /**
+   * Returns the project module with the specified id.
+   *
+   * @param id the id of the module to find.
+   * @return the module instance, or null if no module with such id exists.
+   * @see Module#getId()
+   */
+  @RequiredReadAction
+  public abstract @Nullable Module findModuleById(UUID id);
 
   /**
    * Returns the list of modules sorted by dependency (the modules which do not depend

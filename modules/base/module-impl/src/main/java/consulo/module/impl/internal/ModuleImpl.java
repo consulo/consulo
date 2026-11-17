@@ -34,6 +34,7 @@ import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author max
@@ -42,11 +43,14 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     
     private String myName;
 
+    private final UUID myId;
+
     private final @Nullable VirtualFilePointer myDirVirtualFilePointer;
 
-    public ModuleImpl(String name, @Nullable String dirUrl, Project project, ComponentBinding componentBinding) {
+    public ModuleImpl(String name, UUID id, @Nullable String dirUrl, Project project, ComponentBinding componentBinding) {
         super(project, "Module " + name, ComponentScope.MODULE, componentBinding);
         myName = name;
+        myId = id;
         myDirVirtualFilePointer = dirUrl == null ? null : VirtualFilePointerManager.getInstance().create(dirUrl, this, null);
     }
 
@@ -109,6 +113,11 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
     
     public String getName() {
         return myName;
+    }
+
+    @Override
+    public UUID getId() {
+        return myId;
     }
 
     @Override

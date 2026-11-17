@@ -105,6 +105,19 @@ public class CompilerManagerStateTest {
     }
 
     @Test
+    public void moduleIdIsWrittenBack() throws Exception {
+        String xml = """
+            <state>
+              <module id="6f1c3e1a-8f2b-4c55-9b1e-2a7d3c4e5f60" exclude="false" />
+            </state>""";
+
+        CompilerManagerState state = deserialize(xml);
+        assertEquals("6f1c3e1a-8f2b-4c55-9b1e-2a7d3c4e5f60", state.modules.get(0).id);
+        assertNull(state.modules.get(0).name);
+        assertEquals(xml, serialize(state));
+    }
+
+    @Test
     public void emptyStateIsNotSerialized() {
         assertNull(XmlSerializer.serializeIfNotDefault(new CompilerManagerState(), new SkipDefaultValuesSerializationFilters()));
     }

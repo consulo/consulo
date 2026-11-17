@@ -22,6 +22,7 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,7 +37,10 @@ import java.util.Objects;
 @Tag("module")
 public class CompilerManagerModuleState {
     @Attribute
-    public String name;
+    public @Nullable String name;
+
+    @Attribute
+    public @Nullable String id;
 
     @Attribute
     public boolean exclude = true;

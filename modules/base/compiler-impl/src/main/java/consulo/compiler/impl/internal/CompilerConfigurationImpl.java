@@ -24,6 +24,7 @@ import consulo.component.persist.Storage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.module.Module;
+import consulo.module.ModuleManager;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
@@ -34,9 +35,7 @@ import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -54,29 +53,17 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
 
     private final ExcludedEntriesConfiguration myExcludedEntriesConfiguration = new ExcludedEntriesConfiguration();
 
-    private final Map<String, CompilerManagerModuleState> myModulesConfiguration = new ConcurrentSkipListMap<>();
+    private final CompilerModuleStateRegistry myModuleStates;
 
     @Inject
     public CompilerConfigurationImpl(Project project) {
         myProject = project;
+        myModuleStates = new CompilerModuleStateRegistry(id -> isLoadedModuleId(project, id));
 
         project.getMessageBus().connect(this).subscribe(ModuleListener.class, new ModuleListener() {
             @Override
             public void moduleRemoved(Project project, Module module) {
-                myModulesConfiguration.remove(module.getName());
-            }
-
-            @Override
-            public void modulesRenamed(Project project, Map<Module, String> modulesWithOldName) {
-                for (Map.Entry<Module, String> entry : modulesWithOldName.entrySet()) {
-                    Module module = entry.getKey();
-                    String oldName = entry.getValue();
-
-                    CompilerManagerModuleState managerModuleState = forModule(oldName);
-                    if (managerModuleState != null) {
-                        managerModuleState.name = module.getName();
-                    }
-                }
+                myModuleStates.moduleRemoved(module);
             }
         });
         
@@ -87,16 +74,21 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
     public void dispose() {
     }
 
-    public @Nullable CompilerManagerModuleState forModule(String moduleName) {
-        return myModulesConfiguration.get(moduleName);
+    private static boolean isLoadedModuleId(Project project, UUID id) {
+        for (Module module : ModuleManager.getInstance(project).getModules()) {
+            if (module.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void editModuleState(String moduleName, Consumer<CompilerManagerModuleState> consumer) {
-        consumer.accept(myModulesConfiguration.computeIfAbsent(moduleName, s -> {
-            CompilerManagerModuleState state = new CompilerManagerModuleState();
-            state.name = moduleName;
-            return state;
-        }));
+    public @Nullable CompilerManagerModuleState forModule(Module module) {
+        return myModuleStates.get(module);
+    }
+
+    public void editModuleState(Module module, Consumer<CompilerManagerModuleState> consumer) {
+        consumer.accept(myModuleStates.getOrCreate(module));
     }
 
     @Override
@@ -145,9 +137,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
             state.excludeFromCompilation = myExcludedEntriesConfiguration.getState();
         }
 
-        for (CompilerManagerModuleState managerModuleState : myModulesConfiguration.values()) {
-            state.modules.add(managerModuleState);
-        }
+        state.modules.addAll(myModuleStates.getAll());
 
         return state;
     }
@@ -162,16 +152,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration implements 
             myExcludedEntriesConfiguration.loadState(state.excludeFromCompilation);
         }
 
-        myModulesConfiguration.clear();
-
-        for (CompilerManagerModuleState moduleState : state.modules) {
-            String name = moduleState.name;
-            if (name == null) {
-                continue;
-            }
-
-            myModulesConfiguration.put(name, moduleState);
-        }
+        myModuleStates.load(state.modules);
     }
 
     @Override

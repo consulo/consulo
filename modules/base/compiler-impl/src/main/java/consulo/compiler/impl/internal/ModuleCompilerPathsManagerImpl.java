@@ -48,11 +48,11 @@ public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager {
     }
 
     private CompilerManagerModuleState get() {
-        return Objects.requireNonNullElse(myCompilerConfiguration.forModule(myModule.getName()), DEFAULT_VALUE);
+        return Objects.requireNonNullElse(myCompilerConfiguration.forModule(myModule), DEFAULT_VALUE);
     }
 
     private void doChange(Consumer<CompilerManagerModuleState> consumer) {
-        myCompilerConfiguration.editModuleState(myModule.getName(), consumer);
+        myCompilerConfiguration.editModuleState(myModule, consumer);
     }
 
     @Override

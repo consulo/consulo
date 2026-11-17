@@ -27,6 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a module in an Consulo project.
@@ -72,6 +73,14 @@ public interface Module extends ComponentManager, Disposable, Named {
   default Application getApplication() {
     return getProject().getApplication();
   }
+
+  /**
+   * Returns the stable id of this module. It is stored with the module, shared through the project files
+   * and does not change when the module is renamed.
+   *
+   * @return the module id.
+   */
+  UUID getId();
 
   /**
    * Returns the name of this module.
