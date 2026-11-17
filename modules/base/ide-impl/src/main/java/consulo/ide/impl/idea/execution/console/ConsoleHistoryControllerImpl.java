@@ -27,6 +27,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.TextRange;
+import consulo.execution.internal.ConsoleHistoryControllerInternal;
 import consulo.execution.ui.console.ConsoleHistoryController;
 import consulo.execution.ui.console.ConsoleRootType;
 import consulo.execution.ui.console.language.LanguageConsoleView;
@@ -52,7 +53,6 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
-import consulo.util.dataholder.Key;
 import consulo.util.io.PathUtil;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.*;
@@ -72,7 +72,6 @@ import java.util.*;
  * @author gregsh
  */
 public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
-    private static final Key<ConsoleHistoryControllerImpl> CONTROLLER_KEY = Key.create("CONTROLLER_KEY");
 
     private static final Logger LOG = Logger.getInstance(ConsoleHistoryControllerImpl.class);
 
@@ -163,11 +162,11 @@ public class ConsoleHistoryControllerImpl implements ConsoleHistoryController {
         Application.get().getMessageBus().connect(myConsole).subscribe(ProjectExListener.class, listener);
         myConsole.getProject().getMessageBus().connect(myConsole).subscribe(FileDocumentManagerListener.class, listener);
 
-        myConsole.getVirtualFile().putUserData(CONTROLLER_KEY, this);
+        myConsole.getVirtualFile().putUserData(ConsoleHistoryControllerInternal.CONTROLLER_KEY, this);
         Disposer.register(
             myConsole,
             () -> {
-                myConsole.getVirtualFile().putUserData(CONTROLLER_KEY, null);
+                myConsole.getVirtualFile().putUserData(ConsoleHistoryControllerInternal.CONTROLLER_KEY, null);
                 saveHistory();
             }
         );
