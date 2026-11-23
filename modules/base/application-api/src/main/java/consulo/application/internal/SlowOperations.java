@@ -19,12 +19,12 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 import consulo.util.collection.FList;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
@@ -229,8 +229,8 @@ public final class SlowOperations {
      * Otherwise, file a ticket and use {@link #knownIssue(String)} if not possible.
      */
     @Deprecated
-    public static <T, E extends Throwable> T allowSlowOperations(ThrowableComputable<T, E> computable) throws E {
-        return computable.compute();
+    public static <T, E extends Throwable> T allowSlowOperations(ThrowableSupplier<T, E> computable) throws E {
+        return computable.get();
     }
 
     /**

@@ -26,31 +26,18 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 
 public abstract class DiffContentFactoryEx extends DiffContentFactory {
-  
-  public static DiffContentFactoryEx getInstanceEx() {
-    return (DiffContentFactoryEx)DiffContentFactory.getInstance();
-  }
+    public static DiffContentFactoryEx getInstanceEx() {
+        return (DiffContentFactoryEx) DiffContentFactory.getInstance();
+    }
 
-  
-  public abstract DocumentContent create(@Nullable Project project, String text, DiffFilePath filePath);
+    public abstract DocumentContent create(@Nullable Project project, String text, DiffFilePath filePath);
 
-  
-  public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              byte[] content,
-                                              DiffFilePath filePath) throws IOException;
+    public abstract DiffContent createFromBytes(@Nullable Project project, byte[] content, DiffFilePath filePath) throws IOException;
 
-  
-  public abstract DiffContent createFromBytes(@Nullable Project project,
-                                              byte[] content,
-                                              VirtualFile highlightFile) throws IOException;
+    @Override
+    public abstract DiffContent createFromBytes(@Nullable Project project, byte[] content, VirtualFile highlightFile) throws IOException;
 
-  
-  public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,
-                                                          byte[] content,
-                                                          DiffFilePath filePath);
+    public abstract DocumentContent createDocumentFromBytes(@Nullable Project project, byte[] content, DiffFilePath filePath);
 
-  
-  public abstract DocumentContent createDocumentFromBytes(@Nullable Project project,
-                                                          byte[] content,
-                                                          VirtualFile highlightFile);
+    public abstract DocumentContent createDocumentFromBytes(@Nullable Project project, byte[] content, VirtualFile highlightFile);
 }

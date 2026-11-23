@@ -5,7 +5,6 @@ import com.uber.nullaway.annotations.Contract;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.index.io.*;
 import consulo.index.io.data.DataInputOutputUtil;
@@ -23,17 +22,14 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.FileAttribute;
 import consulo.virtualFileSystem.impl.internal.entry.VfsDependentEnum;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualDirectoryImpl;
 import consulo.virtualFileSystem.impl.internal.entry.VirtualFileSystemEntry;
-import consulo.virtualFileSystem.internal.CachedFileType;
-import consulo.virtualFileSystem.internal.FSRecordsProxy;
-import consulo.virtualFileSystem.internal.FlushingDaemon;
-import consulo.virtualFileSystem.internal.NameId;
-import consulo.virtualFileSystem.internal.PersistentFS;
-import org.jspecify.annotations.Nullable;
+import consulo.virtualFileSystem.internal.*;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,11 +40,8 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -999,12 +992,12 @@ public class FSRecords {
         return readAndHandleErrors(() -> findAttributePage(id, ourChildrenAttr, false) != 0);
     }
 
-    private static <T> T readAndHandleErrors(ThrowableComputable<T, ?> action) {
+    private static <T> T readAndHandleErrors(ThrowableSupplier<T, ?> action) {
         assert lock.getReadHoldCount() == 0; // otherwise DbConnection.handleError(e) (requires write lock) could fail
         try {
             r.lock();
             try {
-                return action.compute();
+                return action.get();
             }
             finally {
                 r.unlock();
@@ -1016,10 +1009,10 @@ public class FSRecords {
         }
     }
 
-    private static <T> T writeAndHandleErrors(ThrowableComputable<T, ?> action) {
+    private static <T> T writeAndHandleErrors(ThrowableSupplier<T, ?> action) {
         try {
             w.lock();
-            return action.compute();
+            return action.get();
         }
         catch (Throwable e) {
             DbConnection.handleError(e);
@@ -1129,12 +1122,12 @@ public class FSRecords {
     }
 
     static @Nullable VirtualFileSystemEntry findFileById(int id, ConcurrentIntObjectMap<VirtualFileSystemEntry> idToDirCache) {
-        class ParentFinder implements ThrowableComputable<Void, Throwable> {
+        class ParentFinder implements ThrowableSupplier<Void, Throwable> {
             private @Nullable IntList path;
             private VirtualFileSystemEntry foundParent;
 
             @Override
-            public Void compute() {
+            public Void get() {
                 int currentId = id;
                 while (true) {
                     int parentId = getRecordInt(currentId, PARENT_OFFSET);

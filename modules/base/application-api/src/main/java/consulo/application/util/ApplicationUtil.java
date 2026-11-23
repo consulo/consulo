@@ -15,6 +15,7 @@
  */
 package consulo.application.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -34,83 +35,84 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 public class ApplicationUtil {
-  /**
-   * @throws CannotRunReadActionException if can't grab read action right now
-   */
-  public static <T extends @Nullable Object> T tryRunReadAction(Supplier<T> computable) throws CannotRunReadActionException {
-    RequiredReference<T> result = RequiredReference.empty();
-    tryRunReadAction(() -> result.set(computable.get()));
-    return result.get();
-  }
-
-  public static void tryRunReadAction(Runnable computable) throws CannotRunReadActionException {
-    if (!Application.get().tryRunReadAction(computable)) {
-      throw CannotRunReadActionException.create();
-    }
-  }
-
-  /**
-   * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
-   * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
-   */
-  public static <T> @Nullable T runWithCheckCanceled(Callable<T> callable, ProgressIndicator indicator) throws Exception {
-    SimpleReference<T> result = SimpleReference.create();
-    SimpleReference<Throwable> error = SimpleReference.create();
-
-    Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(
-      () -> {
-        try {
-          result.set(callable.call());
-        }
-        catch (Throwable t) {
-          error.set(t);
-        }
-      },
-      indicator
-    ));
-
-    while (true) {
-      try {
-        indicator.checkCanceled();
-      }
-      catch (ProcessCanceledException e) {
-        future.cancel(true);
-        throw e;
-      }
-
-      try {
-        future.get(200, TimeUnit.MILLISECONDS);
-        ExceptionUtil.rethrowAll(error.get());
+    /**
+     * @throws CannotRunReadActionException if can't grab read action right now
+     */
+    public static <T extends @Nullable Object> T tryRunReadAction(@RequiredReadAction Supplier<T> computable)
+        throws CannotRunReadActionException {
+        RequiredReference<T> result = RequiredReference.empty();
+        tryRunReadAction(() -> result.set(computable.get()));
         return result.get();
-      }
-      catch (TimeoutException ignored) {
-      }
-    }
-  }
-
-  public static void invokeLaterSomewhere(Application application, Runnable r) {
-    application.getLastUIAccess().give(r);
-  }
-
-  public static void invokeAndWaitSomewhere(Application application, Runnable r) {
-    if (!UIAccess.isUIThread() && application.isDispatchThread()) {
-      Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
     }
 
-    application.getLastUIAccess().giveAndWaitIfNeed(r);
-  }
-
-  public static class CannotRunReadActionException extends ProcessCanceledException {
-    // When ForkJoinTask joins task which was exceptionally completed from the other thread
-    // it tries to re-create that exception (by reflection) and sets its cause to the original exception.
-    // That horrible hack causes all sorts of confusion when we try to analyze the exception cause, e.g. in GlobalInspectionContextImpl.inspectFile().
-    // To prevent creation of unneeded wrapped exception we restrict constructor visibility to private so that stupid ForkJoinTask has no choice
-    // but to use the original exception. (see ForkJoinTask.getThrowableException())
-    public static CannotRunReadActionException create() {
-      return new CannotRunReadActionException();
+    public static void tryRunReadAction(@RequiredReadAction Runnable computable) throws CannotRunReadActionException {
+        if (!Application.get().tryRunReadAction(computable)) {
+            throw CannotRunReadActionException.create();
+        }
     }
 
-    private CannotRunReadActionException() {
+    /**
+     * Allows to interrupt a process which does not performs checkCancelled() calls by itself.
+     * Note that the process may continue to run in background indefinitely - so <b>avoid using this method unless absolutely needed</b>.
+     */
+    public static <T> @Nullable T runWithCheckCanceled(Callable<T> callable, ProgressIndicator indicator) throws Exception {
+        SimpleReference<T> result = SimpleReference.create();
+        SimpleReference<Throwable> error = SimpleReference.create();
+
+        Future<?> future = PooledThreadExecutor.getInstance().submit(() -> ProgressManager.getInstance().executeProcessUnderProgress(
+            () -> {
+                try {
+                    result.set(callable.call());
+                }
+                catch (Throwable t) {
+                    error.set(t);
+                }
+            },
+            indicator
+        ));
+
+        while (true) {
+            try {
+                indicator.checkCanceled();
+            }
+            catch (ProcessCanceledException e) {
+                future.cancel(true);
+                throw e;
+            }
+
+            try {
+                future.get(200, TimeUnit.MILLISECONDS);
+                ExceptionUtil.rethrowAll(error.get());
+                return result.get();
+            }
+            catch (TimeoutException ignored) {
+            }
+        }
     }
-  }
+
+    public static void invokeLaterSomewhere(Application application, Runnable r) {
+        application.getLastUIAccess().give(r);
+    }
+
+    public static void invokeAndWaitSomewhere(Application application, Runnable r) {
+        if (!UIAccess.isUIThread() && application.isDispatchThread()) {
+            Logger.getInstance(ApplicationUtil.class).error("Can't invokeAndWait from WT to EDT: probably leads to deadlock");
+        }
+
+        application.getLastUIAccess().giveAndWaitIfNeed(r);
+    }
+
+    public static class CannotRunReadActionException extends ProcessCanceledException {
+        // When ForkJoinTask joins task which was exceptionally completed from the other thread
+        // it tries to re-create that exception (by reflection) and sets its cause to the original exception.
+        // That horrible hack causes all sorts of confusion when we try to analyze the exception cause, e.g. in GlobalInspectionContextImpl.inspectFile().
+        // To prevent creation of unneeded wrapped exception we restrict constructor visibility to private so that stupid ForkJoinTask has no choice
+        // but to use the original exception. (see ForkJoinTask.getThrowableException())
+        public static CannotRunReadActionException create() {
+            return new CannotRunReadActionException();
+        }
+
+        private CannotRunReadActionException() {
+        }
+    }
 }

@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.ide.impl.idea.codeEditor.printing;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.configurable.ConfigurationException;
 import consulo.dataContext.DataContext;
-import consulo.webBrowser.BrowserUtil;
 import consulo.language.editor.action.PrintOption;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
@@ -32,7 +29,9 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.webBrowser.BrowserUtil;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -136,7 +135,7 @@ class ExportToHTMLManager {
     Map<PsiFile, PsiFile> filesMap
   ) {
     try {
-      return project.getApplication().runReadAction((ThrowableComputable<Boolean, FileNotFoundException>)() -> {
+      return project.getApplication().runReadAction((ThrowableSupplier<Boolean, FileNotFoundException>)() -> {
         ExportToHTMLSettings exportToHTMLSettings = ExportToHTMLSettings.getInstance(project);
 
         if (psiFile instanceof PsiBinaryFile) {
@@ -249,7 +248,7 @@ class ExportToHTMLManager {
       boolean isRecursive = myExportToHTMLSettings.isIncludeSubdirectories();
 
       try {
-        myProject.getApplication().runReadAction((ThrowableComputable<Void, FileNotFoundException>)() -> {
+        myProject.getApplication().runReadAction((ThrowableSupplier<Void, FileNotFoundException>)() -> {
           addToPsiFileList(myPsiDirectory, filesList, isRecursive, myOutputDirectoryName);
           return null;
         });

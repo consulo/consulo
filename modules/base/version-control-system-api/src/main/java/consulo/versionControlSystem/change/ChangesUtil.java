@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.versionControlSystem.change;
 
-import consulo.application.AccessRule;
-import consulo.application.ApplicationManager;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -28,8 +26,6 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.ObjectUtil;
-import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -74,11 +70,10 @@ public class ChangesUtil {
 
     public static final Comparator<LocalChangeList> CHANGELIST_COMPARATOR =
         Comparator.<LocalChangeList>comparingInt(list -> list.isDefault() ? -1 : 0)
-            .thenComparing(list -> list.getName(), String::compareToIgnoreCase);
+            .thenComparing(LocalChangeList::getName, String::compareToIgnoreCase);
 
     private ChangesUtil() {
     }
-
 
     public static FilePath getFilePath(Change change) {
         ContentRevision revision = change.getAfterRevision();
@@ -106,7 +101,6 @@ public class ChangesUtil {
         return result != null ? result : ProjectLevelVcsManager.getInstance(project).getVcsFor(getFilePath(change));
     }
 
-
     public static Set<AbstractVcs> getAffectedVcses(Collection<Change> changes, Project project) {
         return ContainerUtil.map2SetNotNull(changes, change -> getVcsForChange(change, project));
     }
@@ -119,11 +113,9 @@ public class ChangesUtil {
         return ProjectLevelVcsManager.getInstance(project).getVcsFor(VcsUtil.getFilePath(file));
     }
 
-
     public static List<FilePath> getPaths(Collection<Change> changes) {
         return iteratePaths(changes).toList();
     }
-
 
     public static JBIterable<FilePath> iteratePaths(Iterable<? extends Change> changes) {
         return JBIterable.from(changes).flatMap(ChangesUtil::iteratePathsCaseSensitive);
@@ -178,11 +170,9 @@ public class ChangesUtil {
             .toList();
     }
 
-
     public static Navigatable[] getNavigatableArray(Project project, VirtualFile[] files) {
         return getNavigatableArray(project, Stream.of(files));
     }
-
 
     public static Navigatable[] getNavigatableArray(Project project, Stream<VirtualFile> files) {
         return files.filter(file -> !file.isDirectory())
@@ -215,20 +205,19 @@ public class ChangesUtil {
 
     public static FilePath getLocalPath(Project project, FilePath filePath) {
         // check if the file has just been renamed (IDEADEV-15494)
-        ThrowableSupplier<Change, RuntimeException> action = () -> {
+        Change change = ReadAction.compute(() -> {
             if (project.isDisposed()) {
                 throw new ProcessCanceledException();
             }
             return ChangeListManager.getInstance(project).getChange(filePath);
-        };
-        Change change = AccessRule.read(action);
+        });
         if (change != null) {
             ContentRevision beforeRevision = change.getBeforeRevision();
             ContentRevision afterRevision = change.getAfterRevision();
-            if (beforeRevision != null && afterRevision != null && !beforeRevision.getFile()
-                .equals(afterRevision.getFile()) && beforeRevision.getFile()
-                .equals(
-                    filePath)) {
+            if (beforeRevision != null
+                && afterRevision != null
+                && !beforeRevision.getFile().equals(afterRevision.getFile())
+                && beforeRevision.getFile().equals(filePath)) {
                 return afterRevision.getFile();
             }
         }
@@ -243,7 +232,7 @@ public class ChangesUtil {
     public static @Nullable VirtualFile findValidParentAccurately(FilePath filePath) {
         VirtualFile result = filePath.getVirtualFile();
 
-        if (result == null && !ApplicationManager.getApplication().isReadAccessAllowed()) {
+        if (result == null && !Application.get().isReadAccessAllowed()) {
             result = LocalFileSystem.getInstance().refreshAndFindFileByPath(filePath.getPath());
         }
         if (result == null) {
@@ -254,7 +243,7 @@ public class ChangesUtil {
     }
 
     private static @Nullable VirtualFile getValidParentUnderReadAction(FilePath filePath) {
-        ThrowableComputable<VirtualFile, RuntimeException> action = () -> {
+        return ReadAction.compute(() -> {
             VirtualFile result = null;
             FilePath parent = filePath;
             LocalFileSystem lfs = LocalFileSystem.getInstance();
@@ -265,8 +254,7 @@ public class ChangesUtil {
             }
 
             return result;
-        };
-        return AccessRule.read(action);
+        });
     }
 
     public static @Nullable String getProjectRelativePath(Project project, @Nullable File fileName) {
@@ -308,9 +296,7 @@ public class ChangesUtil {
         AbstractVcs getVcsFor(T item);
     }
 
-    public static <T> void processItemsByVcs(Collection<T> items,
-                                             VcsSeparator<T> separator,
-                                             PerVcsProcessor<T> processor) {
+    public static <T> void processItemsByVcs(Collection<T> items, VcsSeparator<T> separator, PerVcsProcessor<T> processor) {
         Map<AbstractVcs, List<T>> changesByVcs = new HashMap<>();
 
         for (T item : items) {
@@ -330,24 +316,17 @@ public class ChangesUtil {
         }
     }
 
-    public static void processChangesByVcs(Project project,
-                                           Collection<Change> changes,
-                                           PerVcsProcessor<Change> processor) {
+    public static void processChangesByVcs(Project project, Collection<Change> changes, PerVcsProcessor<Change> processor) {
         processItemsByVcs(changes, change -> getVcsForChange(change, project), processor);
     }
 
-    public static void processVirtualFilesByVcs(Project project,
-                                                Collection<VirtualFile> files,
-                                                PerVcsProcessor<VirtualFile> processor) {
+    public static void processVirtualFilesByVcs(Project project, Collection<VirtualFile> files, PerVcsProcessor<VirtualFile> processor) {
         processItemsByVcs(files, file -> getVcsForFile(file, project), processor);
     }
 
-    public static void processFilePathsByVcs(Project project,
-                                             Collection<FilePath> files,
-                                             PerVcsProcessor<FilePath> processor) {
+    public static void processFilePathsByVcs(Project project, Collection<FilePath> files, PerVcsProcessor<FilePath> processor) {
         processItemsByVcs(files, filePath -> ProjectLevelVcsManager.getInstance(project).getVcsFor(filePath), processor);
     }
-
 
     public static boolean hasFileChanges(Collection<Change> changes) {
         return changes.stream().map(ChangesUtil::getFilePath).anyMatch(path -> !path.isDirectory());
@@ -396,11 +375,10 @@ public class ChangesUtil {
     private static @Nullable File getCommonBeforeAfterAncestor(Change change) {
         FilePath before = getBeforePath(change);
         FilePath after = getAfterPath(change);
-        return before == null ? ObjectUtil.assertNotNull(after)
-            .getIOFile() : after == null ? before.getIOFile() : FileUtil.findAncestor(before.getIOFile(),
-            after.getIOFile());
+        return before == null
+            ? Objects.requireNonNull(after).getIOFile()
+            : after == null ? before.getIOFile() : FileUtil.findAncestor(before.getIOFile(), after.getIOFile());
     }
-
 
     public static JBIterable<VirtualFile> iterateAfterRevisionFiles(Iterable<? extends Change> changes) {
         return JBIterable.from(changes)
@@ -421,13 +399,6 @@ public class ChangesUtil {
         }
 
         List<LocalChangeList> changeLists = changeListManager.getChangeLists();
-        if (changeLists.size() != 1) {
-            return true;
-        }
-        if (!changeLists.get(0).isBlank()) {
-            return true;
-        }
-
-        return false;
+        return changeLists.size() != 1 || !changeLists.get(0).isBlank();
     }
 }

@@ -16,9 +16,8 @@
 package consulo.find;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.document.util.TextRange;
 import consulo.language.findUsage.FindUsagesProvider;
@@ -91,13 +90,11 @@ public class FindUsagesHelper {
         Predicate<UsageInfo> processor,
         UsageInfoFactory factory
     ) {
-        ThrowableComputable<PsiSearchHelper, RuntimeException> action1 = () -> PsiSearchHelper.getInstance(element.getProject());
-        PsiSearchHelper helper = AccessRule.read(action1);
+        PsiSearchHelper helper = ReadAction.compute(() -> PsiSearchHelper.getInstance(element.getProject()));
 
         return helper.processUsagesInNonJavaFiles(element, stringToSearch, (psiFile, startOffset, endOffset) -> {
                 try {
-                    ThrowableComputable<UsageInfo, RuntimeException> action = () -> factory.createUsageInfo(psiFile, startOffset, endOffset);
-                    UsageInfo usageInfo = AccessRule.read(action);
+                    UsageInfo usageInfo = ReadAction.compute(() -> factory.createUsageInfo(psiFile, startOffset, endOffset));
                     return usageInfo == null || processor.test(usageInfo);
                 }
                 catch (ProcessCanceledException e) {

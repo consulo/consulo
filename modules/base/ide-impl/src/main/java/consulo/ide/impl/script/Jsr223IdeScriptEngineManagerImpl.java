@@ -17,7 +17,6 @@ package consulo.ide.impl.script;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
@@ -25,8 +24,9 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringHash;
-import org.jspecify.annotations.Nullable;
+import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.inject.Singleton;
+import org.jspecify.annotations.Nullable;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
@@ -198,7 +198,7 @@ public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
 
         @Override
         public Object eval(String script) throws IdeScriptException {
-            return ClassLoaderUtil.runWithClassLoader(myLoader, (ThrowableComputable<Object, IdeScriptException>) () -> {
+            return ClassLoaderUtil.runWithClassLoader(myLoader, (ThrowableSupplier<Object, IdeScriptException>) () -> {
                 try {
                     return myEngine.eval(script);
                 }

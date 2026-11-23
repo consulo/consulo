@@ -15,7 +15,7 @@
  */
 package consulo.versionControlSystem.impl.internal.patch.apply;
 
-import consulo.application.util.function.ThrowableComputable;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.ContainerUtil;
@@ -23,6 +23,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
@@ -148,6 +149,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return mySkipped;
   }
 
+  @RequiredWriteAction
   public List<FilePatch> execute() {
     List<FilePatch> failedPatches = new ArrayList<>();
     try {
@@ -209,14 +211,17 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     );
   }
 
+  @RequiredUIAccess
   private boolean isFileTypeOk(VirtualFile file) {
     FileType fileType = file.getFileType();
     if (fileType == UnknownFileType.INSTANCE) {
       fileType = FileTypeRegistry.getInstance().getKnownFileTypeOrAssociate(file.getName());
       if (fileType == null) {
-        PatchApplier
-                .showError(myProject, "Cannot apply content for " + file.getPresentableName() + " file from patch because its type not defined.",
-                           true);
+        PatchApplier.showError(
+          myProject,
+          "Cannot apply content for " + file.getPresentableName() + " file from patch because its type not defined.",
+          true
+        );
         return false;
       }
     }
@@ -422,6 +427,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return VcsLocalize.cannotApplyFileAlreadyExists(path).get();
   }
 
+  @RequiredWriteAction
   private void revert(String errorMessage) {
     PatchApplier.showError(myProject, errorMessage, true);
 
@@ -465,6 +471,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     myWritableFiles.clear();*/
   }
 
+  @RequiredWriteAction
   private static VirtualFile createFile(VirtualFile parent, String name) throws IOException {
     return parent.createChildData(PatchApplier.class, name);
     /*final Ref<IOException> ioExceptionRef = new Ref<IOException>();
@@ -485,6 +492,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return result.get();*/
   }
 
+  @RequiredWriteAction
   private static VirtualFile moveFile(VirtualFile file, VirtualFile newParent) throws IOException {
     file.move(FilePatch.class, newParent);
     return file;
@@ -505,6 +513,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     return file;*/
   }
 
+  @RequiredWriteAction
   private @Nullable VirtualFile makeSureParentPathExists(String[] pieces) throws IOException {
     VirtualFile child = myBaseDirectory;
 
@@ -547,7 +556,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
     MovedFileData movedFile = myMovedFiles.get(file);
     if (movedFile != null) {
       myBeforePaths.add(VcsUtil.getFilePath(file));
-      myProject.getApplication().runWriteAction((ThrowableComputable<VirtualFile, IOException>)() -> movedFile.doMove());
+      myProject.getApplication().runWriteAction((ThrowableSupplier<VirtualFile, IOException>) movedFile::doMove);
     }
   }
 
@@ -574,6 +583,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return myNewName;
     }
 
+    @RequiredWriteAction
     public VirtualFile doMove() throws IOException {
       VirtualFile oldParent = myCurrent.getParent();
       boolean needRename = !Comparing.equal(myCurrent.getName(), myNewName);
@@ -596,6 +606,7 @@ public class PathsVerifier<BinaryType extends FilePatch> {
       return myCurrent;
     }
 
+    @RequiredWriteAction
     private void performRenameWithConflicts(File oldParent) throws IOException {
       File tmpFileWithUniqueName = FileUtil.createTempFile(oldParent, "tempFileToMove", null, false);
       File newParentFile = VirtualFileUtil.virtualToIoFile(myNewParent);

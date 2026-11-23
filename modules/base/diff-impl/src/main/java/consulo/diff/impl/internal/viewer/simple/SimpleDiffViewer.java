@@ -18,7 +18,6 @@ package consulo.diff.impl.internal.viewer.simple;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -60,24 +59,15 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
-
-import static consulo.util.lang.ObjectUtil.assertNotNull;
 
 public class SimpleDiffViewer extends TwosideTextDiffViewer {
     public static final Logger LOG = Logger.getInstance(SimpleDiffViewer.class);
@@ -222,9 +212,8 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
             Document document1 = getContent1().getDocument();
             Document document2 = getContent2().getDocument();
 
-            ThrowableComputable<CharSequence[], RuntimeException> action =
-                () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-            CharSequence[] texts = ReadAction.compute(action);
+            CharSequence[] texts =
+                ReadAction.compute(() -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()});
 
             List<LineFragment> lineFragments = null;
             if (getHighlightPolicy().isShouldCompare()) {
@@ -284,7 +273,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         };
     }
 
-    private Runnable applyNotification(Supplier<Component> notification) {
+    private Runnable applyNotification(@RequiredUIAccess Supplier<Component> notification) {
         return () -> {
             clearDiffPresentation();
             myFoldingModel.destroy();
@@ -292,6 +281,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         };
     }
 
+    @RequiredUIAccess
     private void clearDiffPresentation() {
         myAlignedDiffModel.clear();
         myStatusPanel.setBusy(false);
@@ -311,6 +301,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
     // Impl
     //
 
+    @RequiredUIAccess
     private void destroyChangedBlocks() {
         myIsContentsEqual = false;
 
@@ -375,6 +366,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         return true;
     }
 
+    @RequiredUIAccess
     private void doScrollToChange(SimpleDiffChange change, boolean animated) {
         int line1 = change.getStartLine(Side.LEFT);
         int line2 = change.getStartLine(Side.RIGHT);
@@ -500,6 +492,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         }
 
         @Override
+        @RequiredUIAccess
         protected void scrollToChange(SimpleDiffChange change) {
             doScrollToChange(change, true);
         }
@@ -563,7 +556,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
         @RequiredUIAccess
         public void actionPerformed(AnActionEvent e) {
             Editor editor = e.getData(Editor.KEY);
-            Side side = assertNotNull(Side.fromValue(getEditors(), editor));
+            Side side = Objects.requireNonNull(Side.fromValue(getEditors(), editor));
             List<SimpleDiffChange> selectedChanges = getSelectedChanges(side);
             if (selectedChanges.isEmpty()) {
                 return;
@@ -612,7 +605,7 @@ public class SimpleDiffViewer extends TwosideTextDiffViewer {
 
         protected abstract String getText(Side side);
 
-        protected abstract consulo.ui.image.@Nullable Image getIcon(Side side);
+        protected abstract @Nullable Image getIcon(Side side);
 
         @RequiredWriteAction
         protected abstract void apply(List<SimpleDiffChange> changes);

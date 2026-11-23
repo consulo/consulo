@@ -20,5 +20,5 @@ package consulo.util.lang.function;
  */
 @FunctionalInterface
 public interface ThrowableRunnable<T extends Throwable> {
-  void run() throws T;
+    void run() throws T;
 }

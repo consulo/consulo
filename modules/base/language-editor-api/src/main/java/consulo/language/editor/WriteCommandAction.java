@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.BaseActionRunnable;
 import consulo.application.Result;
 import consulo.application.RunResult;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -31,6 +30,7 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.undoRedo.builder.CommandBuilder;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -47,15 +47,13 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     private static final String DEFAULT_GROUP_ID = null;
 
     public interface Builder {
-        
         Builder withName(@Nullable String name);
 
-        
         Builder withGroupId(@Nullable String groupId);
 
         <E extends Throwable> void run(ThrowableRunnable<E> action) throws E;
 
-        <R, E extends Throwable> R compute(ThrowableComputable<R, E> action) throws E;
+        <R, E extends Throwable> R compute(ThrowableSupplier<R, E> action) throws E;
     }
 
     private static class BuilderImpl implements Builder {
@@ -69,14 +67,12 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
             myFiles = files;
         }
 
-        
         @Override
         public Builder withName(String name) {
             myCommandName = name;
             return this;
         }
 
-        
         @Override
         public Builder withGroupId(String groupId) {
             myGroupId = groupId;
@@ -96,22 +92,20 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
         @Override
         @RequiredUIAccess
-        public <R, E extends Throwable> R compute(final ThrowableComputable<R, E> action) throws E {
+        public <R, E extends Throwable> R compute(final ThrowableSupplier<R, E> action) throws E {
             return new WriteCommandAction<R>(myProject, myCommandName, myGroupId, myFiles) {
                 @Override
                 protected void run(Result<R> result) throws Throwable {
-                    result.setResult(action.compute());
+                    result.setResult(action.get());
                 }
             }.execute().getResultObject();
         }
     }
 
-    
     public static Builder writeCommandAction(Project project) {
         return new BuilderImpl(project);
     }
 
-    
     public static Builder writeCommandAction(PsiFile first, PsiFile... others) {
         return new BuilderImpl(first.getProject(), ArrayUtil.prepend(first, others));
     }
@@ -132,7 +126,7 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
     protected WriteCommandAction(
         @Nullable Project project,
         @Nullable String commandName,
-        @Nullable String groupID, /*@NotNull*/
+        @Nullable String groupID,
         PsiFile... files
     ) {
         myCommandName = commandName;
@@ -156,7 +150,6 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
         return myGroupID;
     }
 
-    
     @Override
     @RequiredUIAccess
     public RunResult<T> execute() {
@@ -292,19 +285,16 @@ public abstract class WriteCommandAction<T> extends BaseActionRunnable<T> {
 
     @SuppressWarnings("LambdaUnfriendlyMethodOverload")
     @RequiredUIAccess
-    public static <T, E extends Throwable> T runWriteCommandAction(
-        Project project,
-        final ThrowableComputable<T, E> computable
-    ) throws E {
+    public static <T, E extends Throwable> T runWriteCommandAction(Project project, final ThrowableSupplier<T, E> computable) throws E {
         RunResult<T> result = new WriteCommandAction<T>(project, "") {
             @Override
             protected void run(Result<T> result) throws Throwable {
-                result.setResult(computable.compute());
+                result.setResult(computable.get());
             }
         }.execute();
         Throwable t = result.getThrowable();
         if (t != null) {
-            @SuppressWarnings("unchecked") E e = (E)t;
+            @SuppressWarnings("unchecked") E e = (E) t;
             throw e;
         }
         return result.throwException().getResultObject();

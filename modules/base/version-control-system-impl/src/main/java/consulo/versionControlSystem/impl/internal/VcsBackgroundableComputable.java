@@ -18,9 +18,9 @@ package consulo.versionControlSystem.impl.internal;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
@@ -32,130 +32,166 @@ import org.jspecify.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class VcsBackgroundableComputable<T> extends Task.Backgroundable {
-  private final String myErrorTitle;
+    private final String myErrorTitle;
 
-  private boolean mySilent;
-  private final Project myProject;
-  private final BackgroundableActionEnabledHandler myHandler;
-  private final Object myActionParameter;
-  private final ThrowableComputable<T, VcsException> myBackgroundable;
+    private boolean mySilent;
+    private final Project myProject;
+    private final BackgroundableActionEnabledHandler myHandler;
+    private final Object myActionParameter;
+    private final ThrowableSupplier<T, VcsException> myBackgroundable;
 
-  private final Consumer<T> myAwtSuccessContinuation;
-  private final Runnable myAwtErrorContinuation;
+    private final Consumer<T> myAwtSuccessContinuation;
+    private final Runnable myAwtErrorContinuation;
 
-  private VcsException myException;
-  private T myResult;
+    private VcsException myException;
+    private T myResult;
 
-  private VcsBackgroundableComputable(Project project, String title,
-                                      String errorTitle,
-                                      ThrowableComputable<T, VcsException> backgroundable,
-                                      Consumer<T> awtSuccessContinuation,
-                                      Runnable awtErrorContinuation,
-                                      BackgroundableActionEnabledHandler handler,
-                                      Object actionParameter) {
-    super(project, title, true, BackgroundFromStartOption.getInstance());
-    myErrorTitle = errorTitle;
-    myBackgroundable = backgroundable;
-    myAwtSuccessContinuation = awtSuccessContinuation;
-    myAwtErrorContinuation = awtErrorContinuation;
-    myProject = project;
-    myHandler = handler;
-    myActionParameter = actionParameter;
-  }
-
-  public static <T> void createAndRunSilent(Project project, @Nullable VcsBackgroundableActions actionKey,
-                                            @Nullable Object actionParameter, String title,
-                                            ThrowableComputable<T, VcsException> backgroundable,
-                                            @Nullable Consumer<T> awtSuccessContinuation) {
-    createAndRun(project, actionKey, actionParameter, title, null, backgroundable, awtSuccessContinuation, null, true);
-  }
-
-  public static <T> void createAndRun(Project project, @Nullable VcsBackgroundableActions actionKey,
-                                      @Nullable Object actionParameter,
-                                      String title,
-                                      String errorTitle,
-                                      ThrowableComputable<T, VcsException> backgroundable) {
-    createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, null, null);
-  }
-
-  public static <T> void createAndRun(Project project, @Nullable VcsBackgroundableActions actionKey,
-                                      @Nullable Object actionParameter,
-                                      String title,
-                                      String errorTitle,
-                                      ThrowableComputable<T, VcsException> backgroundable,
-                                      @Nullable Consumer<T> awtSuccessContinuation,
-                                      @Nullable Runnable awtErrorContinuation) {
-    createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation, false);
-  }
-
-  private static <T> void createAndRun(Project project, @Nullable VcsBackgroundableActions actionKey,
-                                       @Nullable Object actionParameter,
-                                       String title,
-                                       String errorTitle,
-                                       ThrowableComputable<T, VcsException> backgroundable,
-                                       @Nullable Consumer<T> awtSuccessContinuation,
-                                       @Nullable Runnable awtErrorContinuation, boolean silent) {
-    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
-    BackgroundableActionEnabledHandler handler;
-    if (actionKey != null) {
-      handler = vcsManager.getBackgroundableActionHandler(actionKey);
-      // fo not start same action twice
-      if (handler.isInProgress(actionParameter)) return;
-    } else {
-      handler = null;
+    private VcsBackgroundableComputable(
+        Project project,
+        String title,
+        String errorTitle,
+        ThrowableSupplier<T, VcsException> backgroundable,
+        Consumer<T> awtSuccessContinuation,
+        Runnable awtErrorContinuation,
+        BackgroundableActionEnabledHandler handler,
+        Object actionParameter
+    ) {
+        super(project, title, true, BackgroundFromStartOption.getInstance());
+        myErrorTitle = errorTitle;
+        myBackgroundable = backgroundable;
+        myAwtSuccessContinuation = awtSuccessContinuation;
+        myAwtErrorContinuation = awtErrorContinuation;
+        myProject = project;
+        myHandler = handler;
+        myActionParameter = actionParameter;
     }
 
-    VcsBackgroundableComputable<T> backgroundableComputable =
-      new VcsBackgroundableComputable<T>(project, title, errorTitle, backgroundable, awtSuccessContinuation, awtErrorContinuation,
-                                  handler, actionParameter);
-    backgroundableComputable.setSilent(silent);
-    if (handler != null) {
-      handler.register(actionParameter);
+    public static <T> void createAndRunSilent(
+        Project project,
+        @Nullable VcsBackgroundableActions actionKey,
+        @Nullable Object actionParameter,
+        String title,
+        ThrowableSupplier<T, VcsException> backgroundable,
+        @Nullable Consumer<T> awtSuccessContinuation
+    ) {
+        createAndRun(project, actionKey, actionParameter, title, null, backgroundable, awtSuccessContinuation, null, true);
     }
-    ProgressManager.getInstance().run(backgroundableComputable);
-  }
 
-  public void run(ProgressIndicator indicator) {
-    try {
-      myResult = myBackgroundable.compute();
+    public static <T> void createAndRun(
+        Project project,
+        @Nullable VcsBackgroundableActions actionKey,
+        @Nullable Object actionParameter,
+        String title,
+        String errorTitle,
+        ThrowableSupplier<T, VcsException> backgroundable
+    ) {
+        createAndRun(project, actionKey, actionParameter, title, errorTitle, backgroundable, null, null);
     }
-    catch (VcsException e) {
-      myException = e;
-    }
-  }
 
-  @RequiredUIAccess
-  @Override
-  public void onCancel() {
-    commonFinish();
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void onSuccess() {
-    commonFinish();
-    if (myException == null) {
-      if (myAwtSuccessContinuation != null) {
-        myAwtSuccessContinuation.accept(myResult);
-      }
-    } else {
-      if (myAwtErrorContinuation != null) {
-        myAwtErrorContinuation.run();
-      }
+    public static <T> void createAndRun(
+        Project project, @Nullable VcsBackgroundableActions actionKey,
+        @Nullable Object actionParameter,
+        String title,
+        String errorTitle,
+        ThrowableSupplier<T, VcsException> backgroundable,
+        @Nullable Consumer<T> awtSuccessContinuation,
+        @Nullable Runnable awtErrorContinuation
+    ) {
+        createAndRun(
+            project,
+            actionKey,
+            actionParameter,
+            title,
+            errorTitle,
+            backgroundable,
+            awtSuccessContinuation,
+            awtErrorContinuation,
+            false
+        );
     }
-  }
 
-  private void commonFinish() {
-    if (myHandler != null) {
-      myHandler.completed(myActionParameter);
-    }
-    
-    if ((! mySilent) && (myException != null)) {
-      AbstractVcsHelper.getInstance(myProject).showError(myException, myErrorTitle);
-    }
-  }
+    private static <T> void createAndRun(
+        Project project, @Nullable VcsBackgroundableActions actionKey,
+        @Nullable Object actionParameter,
+        String title,
+        String errorTitle,
+        ThrowableSupplier<T, VcsException> backgroundable,
+        @Nullable Consumer<T> awtSuccessContinuation,
+        @Nullable Runnable awtErrorContinuation, boolean silent
+    ) {
+        ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl) ProjectLevelVcsManager.getInstance(project);
+        BackgroundableActionEnabledHandler handler;
+        if (actionKey != null) {
+            handler = vcsManager.getBackgroundableActionHandler(actionKey);
+            // fo not start same action twice
+            if (handler.isInProgress(actionParameter)) {
+                return;
+            }
+        }
+        else {
+            handler = null;
+        }
 
-  public void setSilent(boolean silent) {
-    mySilent = silent;
-  }
+        VcsBackgroundableComputable<T> backgroundableComputable = new VcsBackgroundableComputable<>(
+            project,
+            title,
+            errorTitle,
+            backgroundable,
+            awtSuccessContinuation,
+            awtErrorContinuation,
+            handler,
+            actionParameter
+        );
+        backgroundableComputable.setSilent(silent);
+        if (handler != null) {
+            handler.register(actionParameter);
+        }
+        ProgressManager.getInstance().run(backgroundableComputable);
+    }
+
+    @Override
+    public void run(ProgressIndicator indicator) {
+        try {
+            myResult = myBackgroundable.get();
+        }
+        catch (VcsException e) {
+            myException = e;
+        }
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void onCancel() {
+        commonFinish();
+    }
+
+    @RequiredUIAccess
+    @Override
+    public void onSuccess() {
+        commonFinish();
+        if (myException == null) {
+            if (myAwtSuccessContinuation != null) {
+                myAwtSuccessContinuation.accept(myResult);
+            }
+        }
+        else {
+            if (myAwtErrorContinuation != null) {
+                myAwtErrorContinuation.run();
+            }
+        }
+    }
+
+    private void commonFinish() {
+        if (myHandler != null) {
+            myHandler.completed(myActionParameter);
+        }
+
+        if (!mySilent && myException != null) {
+            AbstractVcsHelper.getInstance(myProject).showError(myException, myErrorTitle);
+        }
+    }
+
+    public void setSilent(boolean silent) {
+        mySilent = silent;
+    }
 }

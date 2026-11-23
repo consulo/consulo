@@ -16,12 +16,11 @@
 package consulo.language.editor.refactoring.extractMethod;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.LogicalPosition;
@@ -40,6 +39,7 @@ import consulo.ui.ex.awt.ReplacePromptDialog;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.Pair;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -98,11 +98,9 @@ public class ExtractMethodHelper {
         try {
             //noinspection RedundantCast
             return ProgressManager.getInstance().runProcessWithProgressSynchronously(
-                (ThrowableComputable<List<SimpleMatch>, RuntimeException>)() -> {
+                (ThrowableSupplier<List<SimpleMatch>, RuntimeException>)() -> {
                     ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
-                    ThrowableComputable<List<SimpleMatch>, RuntimeException> action =
-                        () -> finder.findDuplicates(searchScopes, generatedMethod);
-                    return AccessRule.read(action);
+                    return ReadAction.compute(() -> finder.findDuplicates(searchScopes, generatedMethod));
                 },
                 RefactoringLocalize.searchingForDuplicates(),
                 true,
