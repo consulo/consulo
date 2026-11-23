@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.CollectionListModel;
@@ -27,71 +28,67 @@ import java.awt.*;
 import java.util.Collection;
 
 public abstract class SchemesToImportPopup<T> {
-  private final Component myParent;
+    private final Component myParent;
 
-  public SchemesToImportPopup(Component parent) {
-    myParent = parent;
-  }
-
-  public void show(Collection<T> schemes) {
-    if (schemes.isEmpty()) {
-      Messages.showMessageDialog("There are no available schemes to import", "Import", Messages.getWarningIcon());
-      return;
+    public SchemesToImportPopup(Component parent) {
+        myParent = parent;
     }
 
-    final JList list = new JBList(new CollectionListModel<T>(schemes));
-    list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    list.setCellRenderer(new SchemesToImportListCellRenderer());
+    @RequiredUIAccess
+    public void show(Collection<T> schemes) {
+        if (schemes.isEmpty()) {
+            Messages.showMessageDialog("There are no available schemes to import", "Import", UIUtil.getWarningIcon());
+            return;
+        }
 
-    Runnable selectAction = new Runnable() {
-      @Override
-      public void run() {
-        onSchemeSelected((T)list.getSelectedValue());
-      }
-    };
+        JList<T> list = new JBList<>(new CollectionListModel<>(schemes));
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setCellRenderer(new SchemesToImportListCellRenderer<>());
 
-    showList(list, selectAction);
-  }
+        Runnable selectAction = () -> onSchemeSelected(list.getSelectedValue());
 
-  private void showList(JList list, Runnable selectAction) {
-    new PopupChooserBuilder(list).
-            setTitle("Import Scheme").
-            setItemChoosenCallback(selectAction).
-            createPopup().
-            showInCenterOf(myParent);
-  }
-
-  private static class SchemesToImportListCellRenderer implements ListCellRenderer {
-    private final JPanel myPanel = new JPanel(new BorderLayout());
-    private final JLabel myNameLabel = new JLabel("", SwingConstants.LEFT);
-
-    public SchemesToImportListCellRenderer() {
-      myPanel.add(myNameLabel, BorderLayout.CENTER);
+        showList(list, selectAction);
     }
 
-    @Override
-    public Component getListCellRendererComponent(JList list, Object val, int i, boolean isSelected, boolean cellHasFocus) {
-      Named c = (Named)val;
-      myNameLabel.setText(c.getName());
-
-      updateColors(isSelected);
-      return myPanel;
+    private void showList(JList list, Runnable selectAction) {
+        new PopupChooserBuilder(list)
+            .setTitle("Import Scheme")
+            .setItemChoosenCallback(selectAction)
+            .createPopup()
+            .showInCenterOf(myParent);
     }
 
-    private void updateColors(boolean isSelected) {
-      Color bg = isSelected ? UIUtil.getTableSelectionBackground() : UIUtil.getTableBackground();
-      Color fg = isSelected ? UIUtil.getTableSelectionForeground() : UIUtil.getTableForeground();
+    private static class SchemesToImportListCellRenderer<E> implements ListCellRenderer<E> {
+        private final JPanel myPanel = new JPanel(new BorderLayout());
+        private final JLabel myNameLabel = new JLabel("", SwingConstants.LEFT);
 
-      setColors(bg, fg, myPanel, myNameLabel);
+        public SchemesToImportListCellRenderer() {
+            myPanel.add(myNameLabel, BorderLayout.CENTER);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object val, int i, boolean isSelected, boolean cellHasFocus) {
+            Named c = (Named) val;
+            myNameLabel.setText(c.getName());
+
+            updateColors(isSelected);
+            return myPanel;
+        }
+
+        private void updateColors(boolean isSelected) {
+            Color bg = isSelected ? UIUtil.getTableSelectionBackground() : UIUtil.getTableBackground();
+            Color fg = isSelected ? UIUtil.getTableSelectionForeground() : UIUtil.getTableForeground();
+
+            setColors(bg, fg, myPanel, myNameLabel);
+        }
+
+        private static void setColors(Color bg, Color fg, JComponent... cc) {
+            for (JComponent c : cc) {
+                c.setBackground(bg);
+                c.setForeground(fg);
+            }
+        }
     }
 
-    private static void setColors(Color bg, Color fg, JComponent... cc) {
-      for (JComponent c : cc) {
-        c.setBackground(bg);
-        c.setForeground(fg);
-      }
-    }
-  }
-
-  abstract protected void onSchemeSelected(T scheme);
+    abstract protected void onSchemeSelected(T scheme);
 }

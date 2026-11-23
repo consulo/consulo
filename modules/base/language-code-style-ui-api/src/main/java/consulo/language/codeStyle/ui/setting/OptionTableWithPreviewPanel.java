@@ -19,8 +19,8 @@ import consulo.application.localize.ApplicationLocalize;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
-import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.TreeTableSpeedSearch;
@@ -45,8 +45,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -68,6 +68,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     private boolean myShowAllStandardOptions;
     protected boolean isFirstUpdate = true;
 
+    @RequiredUIAccess
     public OptionTableWithPreviewPanel(CodeStyleSettings settings) {
         super(settings);
     }
@@ -350,12 +351,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
         addOption(fieldName, title, null);
     }
 
-    protected void addOption(
-        String fieldName,
-        String title,
-        String[] options,
-        int[] values
-    ) {
+    protected void addOption(String fieldName, String title, String[] options, int[] values) {
         addOption(fieldName, title, null, options, values);
     }
 
@@ -487,9 +483,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     }
 
     private class SelectionOption extends FieldOption {
-        
         final String[] options;
-        
         final int[] values;
 
         public SelectionOption(
@@ -614,11 +608,7 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     public final ColumnInfo TITLE = new ColumnInfo("TITLE") {
         @Override
         public Object valueOf(Object o) {
-            if (o instanceof MyTreeNode) {
-                MyTreeNode node = (MyTreeNode) o;
-                return node.getText();
-            }
-            return o.toString();
+            return o instanceof MyTreeNode node ? node.getText() : o.toString();
         }
 
         @Override
@@ -669,7 +659,6 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
     private final TreeCellRenderer myTitleRenderer = new TreeCellRenderer() {
         private final JLabel myLabel = new JLabel();
 
-        
         @Override
         public Component getTreeCellRendererComponent(
             JTree tree,
@@ -772,12 +761,11 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
             myRow = row;
             myColumn = column;
             boolean isEnabled = true;
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) ((TreeTable) table).getTree().
-                getPathForRow(row).getLastPathComponent();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) ((TreeTable) table).getTree().getPathForRow(row).getLastPathComponent();
             Option key = null;
-            if (node instanceof MyTreeNode) {
-                isEnabled = ((MyTreeNode) node).isEnabled();
-                key = ((MyTreeNode) node).getKey();
+            if (node instanceof MyTreeNode myTreeNode) {
+                isEnabled = myTreeNode.isEnabled();
+                key = myTreeNode.getKey();
             }
             if (!table.isEnabled()) {
                 isEnabled = false;
@@ -923,20 +911,19 @@ public abstract class OptionTableWithPreviewPanel extends CustomizableLanguageCo
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            DefaultMutableTreeNode defaultNode = (DefaultMutableTreeNode) ((TreeTable) table).getTree().
-                getPathForRow(row).getLastPathComponent();
+            DefaultMutableTreeNode defaultNode = (DefaultMutableTreeNode) ((TreeTable) table).getTree()
+                .getPathForRow(row)
+                .getLastPathComponent();
             myCurrentEditor = null;
             myCurrentNode = null;
-            if (defaultNode instanceof MyTreeNode) {
-                MyTreeNode node = (MyTreeNode) defaultNode;
+            if (defaultNode instanceof MyTreeNode node) {
                 myCurrentNode = node;
                 if (node.getKey() instanceof BooleanOption) {
                     myCurrentEditor = myBooleanEditor;
                     myBooleanEditor.setSelected(node.getValue() == Boolean.TRUE);
                     myBooleanEditor.setEnabled(node.isEnabled());
                 }
-                else if (node.getKey() instanceof IntOption) {
-                    IntOption intOption = (IntOption) node.getKey();
+                else if (node.getKey() instanceof IntOption intOption) {
                     myCurrentEditor = myIntOptionsEditor;
                     myIntOptionsEditor.setCanBeEmpty(true);
                     myIntOptionsEditor.setMinValue(intOption.getMinValue());

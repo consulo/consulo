@@ -2776,8 +2776,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
          */
         static int tieBreakOrder(@Nullable Object a, @Nullable Object b) {
             int d;
-            if (a == null || b == null || (d = a.getClass().getName().
-                compareTo(b.getClass().getName())) == 0) {
+            if (a == null || b == null || (d = a.getClass().getName().compareTo(b.getClass().getName())) == 0) {
                 d = (System.identityHashCode(a) <= System.identityHashCode(b) ? -1 : 1);
             }
             return d;

@@ -70,7 +70,7 @@ public interface PropertiesComponent {
      */
     void setValue(String name, boolean value, boolean defaultValue);
 
-    @Nullable String[] getValues(String name);
+    String @Nullable [] getValues(String name);
 
     void setValues(String name, String[] values);
 

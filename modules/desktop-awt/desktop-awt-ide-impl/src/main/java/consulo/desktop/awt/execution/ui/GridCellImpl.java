@@ -33,6 +33,7 @@ import consulo.desktop.awt.ui.impl.tabs.singleRow.ScrollableSingleRowLayout;
 import consulo.desktop.awt.ui.impl.tabs.singleRow.SingleRowLayout;
 import consulo.ui.Point2D;
 import consulo.ui.Size2D;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.awt.NonOpaquePanel;
@@ -46,7 +47,6 @@ import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.collection.MutualMap;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.dataholder.Key;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -77,6 +77,7 @@ public class GridCellImpl implements GridCell {
         myPlaceholder = placeholder;
         myTabs = new JBEditorTabs(myContext.getProject(), myContext.getActionManager(), myContext.getFocusManager(), container) {
             @Override
+            @RequiredUIAccess
             protected SingleRowLayout createSingleRowLayout() {
                 return new ScrollableSingleRowLayout(this);
             }
@@ -116,11 +117,16 @@ public class GridCellImpl implements GridCell {
                 sink.set(ViewContext.CONTEXT_KEY, myContext);
                 TabInfo target = myTabs.getTargetInfo();
                 if (target != null) {
-                    sink.set(ViewContext.CONTENT_KEY, new Content[]{getContentFor(target)});
+                    sink.set(Content.KEY_OF_ARRAY, new Content[]{getContentFor(target)});
                 }
             }
         });
-        myTabs.getPresentation().setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal()).setStealthTabMode(true).setFocusCycle(false).setPaintFocus(true).setTabDraggingEnabled(true)
+        myTabs.getPresentation()
+            .setSideComponentVertical(!context.getLayoutSettings().isToolbarHorizontal())
+            .setStealthTabMode(true)
+            .setFocusCycle(false)
+            .setPaintFocus(true)
+            .setTabDraggingEnabled(true)
             .setSideComponentOnTabs(false);
 
         myTabs.addTabMouseListener(new MouseAdapter() {
@@ -134,7 +140,6 @@ public class GridCellImpl implements GridCell {
         });
         rebuildPopupGroup();
         myTabs.addListener(new TabsListener.Adapter() {
-
             @Override
             public void beforeSelectionChanged(TabInfo oldSelection, TabInfo newSelection) {
                 if (oldSelection != null && myContext.isStateBeingRestored()) {
@@ -218,9 +223,10 @@ public class GridCellImpl implements GridCell {
     }
 
     private TabInfo createTabInfoFor(Content content) {
-        TabInfo tabInfo =
-            updatePresentation(new TabInfo(new ProviderWrapper(content, myContext)), content).setObject(content).setPreferredFocusableComponent(content.getPreferredFocusableComponent())
-                .setActionsContextComponent(content.getActionsContextComponent());
+        TabInfo tabInfo = updatePresentation(new TabInfo(new ProviderWrapper(content, myContext)), content)
+            .setObject(content)
+            .setPreferredFocusableComponent(content.getPreferredFocusableComponent())
+            .setActionsContextComponent(content.getActionsContextComponent());
 
         myContents.remove(content);
         myContents.put(content, tabInfo);
@@ -236,12 +242,12 @@ public class GridCellImpl implements GridCell {
             return null;
         }
 
-        return info.
-            setIcon(content.getIcon()).
-            setText(content.getDisplayName()).
-            setTooltipText(content.getDescription()).
-            setActionsContextComponent(content.getActionsContextComponent()).
-            setActions(content.getActions(), content.getPlace());
+        return info
+            .setIcon(content.getIcon())
+            .setText(content.getDisplayName())
+            .setTooltipText(content.getDescription())
+            .setActionsContextComponent(content.getActionsContextComponent())
+            .setActions(content.getActions(), content.getPlace());
     }
 
     public ActionCallback select(Content content, boolean requestFocus) {
@@ -293,7 +299,7 @@ public class GridCellImpl implements GridCell {
 
         @Override
         public void uiDataSnapshot(DataSink sink) {
-            sink.set(ViewContext.CONTENT_KEY, new Content[]{myContent});
+            sink.set(Content.KEY_OF_ARRAY, new Content[]{myContent});
             sink.set(ViewContext.CONTEXT_KEY, myContext);
         }
     }

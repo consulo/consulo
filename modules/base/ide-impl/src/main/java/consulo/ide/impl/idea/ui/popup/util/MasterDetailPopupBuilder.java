@@ -145,15 +145,15 @@ public class MasterDetailPopupBuilder implements MasterController {
         footerPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         footerPanel.add(myPathLabel);
 
-        PopupChooserBuilder builder = createInnerBuilder().
-            setMovable(true).
-            setResizable(true).
-            setAutoselectOnMouseMove(false).
-            setHeaderLeftActions(myActions).
-            setSouthComponent(footerPanel).
-            setCancelOnWindowDeactivation(myCancelOnWindowDeactivation).
-            setCancelOnClickOutside(myCancelOnClickOutside).
-            setUseDimensionServiceForXYLocation(myUseDimensionServiceForXYLocation);
+        PopupChooserBuilder builder = createInnerBuilder()
+            .setMovable(true)
+            .setResizable(true)
+            .setAutoselectOnMouseMove(false)
+            .setHeaderLeftActions(myActions)
+            .setSouthComponent(footerPanel)
+            .setCancelOnWindowDeactivation(myCancelOnWindowDeactivation)
+            .setCancelOnClickOutside(myCancelOnClickOutside)
+            .setUseDimensionServiceForXYLocation(myUseDimensionServiceForXYLocation);
 
         if (myDoneRunnable != null) {
             builder.setHeaderRightActions(List.of(
@@ -210,8 +210,8 @@ public class MasterDetailPopupBuilder implements MasterController {
     }
 
     private void setupRenderer() {
-        if (myChooserComponent instanceof JList list) {
-            list.setCellRenderer(new ListItemRenderer(myDelegate, myProject));
+        if (myChooserComponent instanceof JList<?> list) {
+            list.setCellRenderer(new ListItemRenderer<>(myDelegate, myProject));
         }
     }
 
@@ -388,7 +388,7 @@ public class MasterDetailPopupBuilder implements MasterController {
         void removeSelectedItemsInTree();
     }
 
-    public static class ListItemRenderer extends JPanel implements ListCellRenderer {
+    public static class ListItemRenderer<E> extends JPanel implements ListCellRenderer<E> {
         private final Project myProject;
         private final ColoredListCellRenderer myRenderer;
         private final Delegate myDelegate;
