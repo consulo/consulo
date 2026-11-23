@@ -165,7 +165,6 @@ public abstract class AmendComponent {
         }
     }
 
-    
     private Map<VirtualFile, String> getLastCommitMessages() throws VcsException {
         Map<VirtualFile, String> messagesForRoots = new HashMap<>();
         // load all vcs roots visible in the commit dialog (not only selected ones), to avoid another loading task if selection changes
@@ -178,19 +177,17 @@ public abstract class AmendComponent {
 
     
     protected Collection<VirtualFile> getAffectedRoots() {
-        return myRepoManager.getRepositories().stream().
-            filter(repo -> !repo.isFresh()).
-            map(Repository::getRoot).
-            filter(root -> myCheckinPanel.getRoots().contains(root)).
-            collect(Collectors.toList());
+        return myRepoManager.getRepositories().stream()
+            .filter(repo -> !repo.isFresh())
+            .map(Repository::getRoot)
+            .filter(root -> myCheckinPanel.getRoots().contains(root))
+            .collect(Collectors.toList());
     }
 
-    
     private List<FilePath> getSelectedFilePaths() {
         return ContainerUtil.map(myCheckinPanel.getFiles(), VcsUtil::getFilePath);
     }
 
-    
     protected abstract Set<VirtualFile> getVcsRoots(Collection<FilePath> files);
 
     protected abstract @Nullable String getLastCommitMessage(VirtualFile repo) throws VcsException;

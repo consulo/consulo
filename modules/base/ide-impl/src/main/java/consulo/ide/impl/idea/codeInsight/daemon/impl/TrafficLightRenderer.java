@@ -44,6 +44,7 @@ import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -77,16 +78,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
-    
     private final Project myProject;
-    
     private final Document myDocument;
     private final DaemonCodeAnalyzerImpl myDaemonCodeAnalyzer;
     private final SeverityRegistrarImpl mySeverityRegistrar;
     private Image icon;
     String statistics;
-    String statusLabel;
-    String statusExtraLine;
+    LocalizeValue statusLabel = LocalizeValue.empty();
+    LocalizeValue statusExtraLine = LocalizeValue.empty();
     boolean passStatusesVisible;
     Map<ProgressableTextEditorHighlightingPass, Pair<JProgressBar, JLabel>> passes = new LinkedHashMap<>();
     static final int MAX = 100;
@@ -140,7 +139,6 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         return ReadAction.compute(() -> PsiDocumentManager.getInstance(myProject).getPsiFile(myDocument));
     }
 
-    
     public SeverityRegistrar getSeverityRegistrar() {
         return mySeverityRegistrar;
     }
@@ -181,9 +179,9 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         List<ProgressableTextEditorHighlightingPass> passes = Collections.emptyList();
         public int[] errorCount = ArrayUtil.EMPTY_INT_ARRAY;
         // Used in Rider
-        public String reasonWhyDisabled;
+        public LocalizeValue reasonWhyDisabled = LocalizeValue.empty();
         // Used in Rider
-        public String reasonWhySuspended;
+        public LocalizeValue reasonWhySuspended = LocalizeValue.empty();
 
         private HeavyProcessLatch.Type heavyProcessType;
 
@@ -215,33 +213,33 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         DaemonCodeAnalyzerStatus status = new DaemonCodeAnalyzerStatus();
         PsiFile psiFile = getPsiFile();
         if (psiFile == null) {
-            status.reasonWhyDisabled = DaemonLocalize.processTitleNoFile().get();
+            status.reasonWhyDisabled = DaemonLocalize.processTitleNoFile();
             status.errorAnalyzingFinished = true;
             return status;
         }
         if (myProject.isDisposed()) {
-            status.reasonWhyDisabled = DaemonLocalize.processTitleProjectIsDisposed().get();
+            status.reasonWhyDisabled = DaemonLocalize.processTitleProjectIsDisposed();
             status.errorAnalyzingFinished = true;
             return status;
         }
         if (!myDaemonCodeAnalyzer.isHighlightingAvailable(psiFile)) {
             if (!psiFile.isPhysical()) {
-                status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsGenerated().get();
+                status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsGenerated();
                 status.errorAnalyzingFinished = true;
                 return status;
             }
             if (psiFile instanceof PsiCompiledElement) {
-                status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsDecompiled().get();
+                status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsDecompiled();
                 status.errorAnalyzingFinished = true;
                 return status;
             }
             FileType fileType = psiFile.getFileType();
             if (fileType.isBinary()) {
-                status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsBinary().get();
+                status.reasonWhyDisabled = DaemonLocalize.processTitleFileIsBinary();
                 status.errorAnalyzingFinished = true;
                 return status;
             }
-            status.reasonWhyDisabled = DaemonLocalize.processTitleHighlightingIsDisabledForThisFile().get();
+            status.reasonWhyDisabled = DaemonLocalize.processTitleHighlightingIsDisabledForThisFile();
             status.errorAnalyzingFinished = true;
             return status;
         }
@@ -257,7 +255,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             status.minimumLevel = status.minimumLevel.compareTo(level) < 0 ? status.minimumLevel : level;
         }
         if (!shouldHighlight) {
-            status.reasonWhyDisabled = DaemonLocalize.processTitleHighlightingLevelIsNone().get();
+            status.reasonWhyDisabled = DaemonLocalize.processTitleHighlightingLevelIsNone();
             status.errorAnalyzingFinished = true;
             return status;
         }
@@ -266,7 +264,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             HeavyProcessLatch.Operation op =
                 ContainerUtil.find(HeavyProcessLatch.INSTANCE.getRunningOperations(), o -> o.getType() != HeavyProcessLatch.Type.Syncing);
             if (op == null) {
-                status.reasonWhySuspended = DaemonLocalize.processTitleHeavyOperationIsRunning().get();
+                status.reasonWhySuspended = DaemonLocalize.processTitleHeavyOperationIsRunning();
                 status.heavyProcessType = HeavyProcessLatch.Type.Processing;
             }
             else {
@@ -284,19 +282,16 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
 
         status.errorAnalyzingFinished = myDaemonCodeAnalyzer.isAllAnalysisFinished(psiFile);
         status.reasonWhySuspended = myDaemonCodeAnalyzer.isUpdateByTimerEnabled()
-            ? null : DaemonLocalize.processTitleHighlightingIsPausedTemporarily().get();
+            ? LocalizeValue.empty()
+            : DaemonLocalize.processTitleHighlightingIsPausedTemporarily();
         fillDaemonCodeAnalyzerErrorsStatus(status, severityRegistrar);
 
         return status;
     }
 
-    protected void fillDaemonCodeAnalyzerErrorsStatus(
-        DaemonCodeAnalyzerStatus status,
-        SeverityRegistrar severityRegistrar
-    ) {
+    protected void fillDaemonCodeAnalyzerErrorsStatus(DaemonCodeAnalyzerStatus status, SeverityRegistrar severityRegistrar) {
     }
 
-    
     protected final Project getProject() {
         return myProject;
     }
@@ -313,11 +308,13 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         return HighlightDisplayLevel.getEmptyIconDim();
     }
 
-    
     private Image getIcon(DaemonCodeAnalyzerStatus status) {
         updatePanel(status);
         Image icon = this.icon;
-        if (PowerSaveMode.isEnabled() || status.reasonWhySuspended != null || status.reasonWhyDisabled != null || status.errorAnalyzingFinished) {
+        if (PowerSaveMode.isEnabled()
+            || status.reasonWhySuspended.isNotEmpty()
+            || status.reasonWhyDisabled.isNotEmpty()
+            || status.errorAnalyzingFinished) {
             return icon;
         }
         return PlatformIconGroup.generalInspectionseye();
@@ -329,8 +326,8 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         progressBarsCompleted = null;
         statistics = "";
         passStatusesVisible = false;
-        statusLabel = null;
-        statusExtraLine = null;
+        statusLabel = LocalizeValue.empty();
+        statusExtraLine = LocalizeValue.empty();
 
         boolean result = false;
         if (!status.passes.equals(new ArrayList<>(passes.keySet()))) {
@@ -340,22 +337,22 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         }
 
         if (PowerSaveMode.isEnabled()) {
-            statusLabel = DaemonLocalize.labelCodeAnalysisIsDisabledInPowerSaveMode().get();
+            statusLabel = DaemonLocalize.labelCodeAnalysisIsDisabledInPowerSaveMode();
             status.errorAnalyzingFinished = true;
             icon = PlatformIconGroup.generalInspectionspowersavemode();
             return result;
         }
-        if (status.reasonWhyDisabled != null) {
-            statusLabel = DaemonLocalize.labelNoAnalysisHasBeenPerformed().get();
-            statusExtraLine = "(" + status.reasonWhyDisabled + ")";
+        if (status.reasonWhyDisabled.isNotEmpty()) {
+            statusLabel = DaemonLocalize.labelNoAnalysisHasBeenPerformed();
+            statusExtraLine = LocalizeValue.join(LocalizeValue.of("("), status.reasonWhyDisabled, LocalizeValue.of(")"));
             passStatusesVisible = true;
             progressBarsCompleted = Boolean.FALSE;
             icon = PlatformIconGroup.generalInspectionstrafficoff();
             return result;
         }
-        if (status.reasonWhySuspended != null) {
-            statusLabel = DaemonLocalize.labelCodeAnalysisHasBeenSuspended().get();
-            statusExtraLine = "(" + status.reasonWhySuspended + ")";
+        if (status.reasonWhySuspended.isNotEmpty()) {
+            statusLabel = DaemonLocalize.labelCodeAnalysisHasBeenSuspended();
+            statusExtraLine = LocalizeValue.join(LocalizeValue.of("("), status.reasonWhySuspended, LocalizeValue.of(")"));
             passStatusesVisible = true;
             progressBarsCompleted = Boolean.FALSE;
             icon = PlatformIconGroup.generalInspectionspause();
@@ -370,16 +367,16 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         if (status.errorAnalyzingFinished) {
             boolean isDumb = DumbService.isDumb(myProject);
             if (isDumb) {
-                statusLabel = DaemonLocalize.labelShallowAnalysisCompleted().get();
-                statusExtraLine = DaemonLocalize.labelCompleteResultsWillBeAvailableAfterIndexing().get();
+                statusLabel = DaemonLocalize.labelShallowAnalysisCompleted();
+                statusExtraLine = DaemonLocalize.labelCompleteResultsWillBeAvailableAfterIndexing();
             }
             else {
-                statusLabel = "";
+                statusLabel = LocalizeValue.empty();
             }
             progressBarsCompleted = Boolean.TRUE;
         }
         else {
-            statusLabel = DaemonLocalize.performingCodeAnalysis().get();
+            statusLabel = DaemonLocalize.performingCodeAnalysis();
             passStatusesVisible = true;
             progressBarsEnabled = true;
             progressBarsCompleted = null;
@@ -433,8 +430,8 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
         if (PowerSaveMode.isEnabled()) {
             return new AnalyzerStatus(
                 PlatformIconGroup.generalInspectionspowersavemode(),
-                "Code analysis is disabled in power save mode",
-                "",
+                DaemonLocalize.labelCodeAnalysisIsDisabledInPowerSaveMode(),
+                LocalizeValue.empty(),
                 () -> createUIController(editor)
             );
         }
@@ -443,17 +440,17 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
             List<StatusItem> statusItems = new ArrayList<>();
             Image mainIcon = null;
 
-            String title = "";
-            String details = "";
+            LocalizeValue title = LocalizeValue.empty();
+            LocalizeValue details = LocalizeValue.empty();
             boolean isDumb = DumbService.isDumb(myProject);
             if (status.errorAnalyzingFinished) {
                 if (isDumb) {
-                    title = DaemonLocalize.shallowAnalysisCompleted().get();
-                    details = DaemonLocalize.shallowAnalysisCompletedDetails().get();
+                    title = DaemonLocalize.shallowAnalysisCompleted();
+                    details = DaemonLocalize.shallowAnalysisCompletedDetails();
                 }
             }
             else {
-                title = DaemonLocalize.performingCodeAnalysis().get();
+                title = DaemonLocalize.performingCodeAnalysis();
             }
 
             int[] errorCount = status.errorCount;
@@ -467,7 +464,7 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     }
 
                     Image icon = mySeverityRegistrar.getRendererIconByIndex(i);
-                    statusItems.add(new StatusItem(Integer.toString(count), icon, name));
+                    statusItems.add(new StatusItem(LocalizeValue.of(Integer.toString(count)), icon, name));
 
                     if (mainIcon == null) {
                         mainIcon = icon;
@@ -479,33 +476,35 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                 if (mainIcon == null) {
                     mainIcon = PlatformIconGroup.generalInspectionsok();
                 }
-                AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, "", () -> createUIController(editor)).
-                    withNavigation().
-                    withExpandedStatus(statusItems);
+                AnalyzerStatus result = new AnalyzerStatus(mainIcon, title, LocalizeValue.empty(), () -> createUIController(editor))
+                    .withNavigation()
+                    .withExpandedStatus(statusItems);
 
                 //noinspection ConstantConditions
-                return status.errorAnalyzingFinished ? result : result.withAnalyzingType(AnalyzingType.PARTIAL).
-                    withPasses(ContainerUtil.map(
-                        status.passes,
-                        p -> new PassWrapper(p.getPresentableName(), p.getProgress(), p.isFinished())
-                    ));
+                return status.errorAnalyzingFinished
+                    ? result
+                    : result.withAnalyzingType(AnalyzingType.PARTIAL)
+                        .withPasses(ContainerUtil.map(
+                            status.passes,
+                            p -> new PassWrapper(p.getPresentableName(), p.getProgress(), p.isFinished())
+                        ));
             }
-            if (StringUtil.isNotEmpty(status.reasonWhyDisabled)) {
+            if (status.reasonWhyDisabled.isNotEmpty()) {
                 return new AnalyzerStatus(
                     PlatformIconGroup.generalInspectionstrafficoff(),
-                    DaemonLocalize.noAnalysisPerformed().get(),
+                    DaemonLocalize.noAnalysisPerformed(),
                     status.reasonWhyDisabled,
                     () -> createUIController(editor)
-                ).withTextStatus(DaemonLocalize.iwStatusOff().get());
+                ).withTextStatus(DaemonLocalize.iwStatusOff());
             }
-            if (StringUtil.isNotEmpty(status.reasonWhySuspended)) {
+            if (status.reasonWhySuspended.isNotEmpty()) {
                 return new AnalyzerStatus(
                     PlatformIconGroup.generalInspectionspause(),
-                    DaemonLocalize.analysisSuspended().get(),
+                    DaemonLocalize.analysisSuspended(),
                     status.reasonWhySuspended,
                     () -> createUIController(editor)
                 ).withTextStatus(
-                    status.heavyProcessType != null ? status.heavyProcessType.toString() : DaemonLocalize.iwStatusPaused().get()
+                    status.heavyProcessType != null ? status.heavyProcessType.getDisplayName() : DaemonLocalize.iwStatusPaused()
                 );
             }
             if (status.errorAnalyzingFinished) {
@@ -514,22 +513,22 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
                     : PlatformIconGroup.generalInspectionsokempty();
                 return isDumb
                     ? new AnalyzerStatus(
-                    PlatformIconGroup.generalInspectionspause(),
-                    title,
-                    details,
-                    () -> createUIController(editor)
-                ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing().get())
+                        PlatformIconGroup.generalInspectionspause(),
+                        title,
+                        details,
+                        () -> createUIController(editor)
+                    ).withTextStatus(DaemonLocalize.heavyprocessTypeIndexing())
                     : new AnalyzerStatus(
-                    inspectionsCompletedIcon,
-                    DaemonLocalize.noErrorsOrWarningsFound().get(),
-                    details,
-                    () -> createUIController(editor)
-                );
+                        inspectionsCompletedIcon,
+                        DaemonLocalize.noErrorsOrWarningsFound(),
+                        details,
+                        () -> createUIController(editor)
+                    );
             }
 
             //noinspection ConstantConditions
             return new AnalyzerStatus(PlatformIconGroup.generalInspectionseye(), title, details, () -> createUIController(editor))
-                .withTextStatus(DaemonLocalize.iwStatusAnalyzing().get())
+                .withTextStatus(DaemonLocalize.iwStatusAnalyzing())
                 .withAnalyzingType(AnalyzingType.EMPTY)
                 .withPasses(ContainerUtil.map(
                     status.passes,

@@ -395,8 +395,8 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
             .setItemChoosenCallback(() -> processChosenFromCompletion(false))
             .setCancelKeyEnabled(false)
             .setAlpha(0.1f)
-            .setFocusOwners(new Component[]{myPathTextField}).
-            createPopup();
+            .setFocusOwners(new Component[]{myPathTextField})
+            .createPopup();
 
         if (result.myPreselected != null) {
             myList.setSelectedValue(result.myPreselected, false);
@@ -416,7 +416,6 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
         );
     }
 
-    
     protected String getPathVariablesSeparatorText() {
         return IdeLocalize.fileChooserCompletionPathVariablesText().get();
     }

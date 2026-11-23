@@ -15,25 +15,22 @@
  */
 package consulo.versionControlSystem.impl.internal.history;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.AbstractVcs;
 import consulo.versionControlSystem.FilePath;
 import consulo.versionControlSystem.ProjectLevelVcsManager;
 import consulo.versionControlSystem.VcsException;
-import consulo.versionControlSystem.annotate.AnnotationProvider;
-import consulo.versionControlSystem.annotate.CacheableAnnotationProvider;
-import consulo.versionControlSystem.annotate.FileAnnotation;
-import consulo.versionControlSystem.annotate.VcsAnnotation;
-import consulo.versionControlSystem.annotate.VcsCacheableAnnotationProvider;
+import consulo.versionControlSystem.annotate.*;
 import consulo.versionControlSystem.change.ContentRevision;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.history.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.lang.ObjectUtil;
 import consulo.versionControlSystem.util.VcsUtil;
-import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -41,202 +38,209 @@ import org.jspecify.annotations.Nullable;
  * @since 2011-03-17
  */
 public class VcsAnnotationCachedProxy implements AnnotationProvider, CacheableAnnotationProvider {
-  private final VcsHistoryCache myCache;
-  private final AbstractVcs myVcs;
-  private final static Logger LOG = Logger.getInstance(VcsAnnotationCachedProxy.class);
-  private final AnnotationProvider myAnnotationProvider;
+    private final VcsHistoryCache myCache;
+    private final AbstractVcs myVcs;
+    private final static Logger LOG = Logger.getInstance(VcsAnnotationCachedProxy.class);
+    private final AnnotationProvider myAnnotationProvider;
 
-  public VcsAnnotationCachedProxy(AbstractVcs vcs, AnnotationProvider provider) {
-    assert provider instanceof VcsCacheableAnnotationProvider;
-    myVcs = vcs;
-    myCache = ProjectLevelVcsManager.getInstance(vcs.getProject()).getVcsHistoryCache();
-    myAnnotationProvider = provider;
-  }
-
-  @Override
-  public FileAnnotation annotate(final VirtualFile file) throws VcsException {
-    DiffProvider diffProvider = myVcs.getDiffProvider();
-    VcsRevisionNumber currentRevision = diffProvider.getCurrentRevision(file);
-
-    return annotate(file, currentRevision, true, new ThrowableComputable<FileAnnotation, VcsException>() {
-      @Override
-      public FileAnnotation compute() throws VcsException {
-        return myAnnotationProvider.annotate(file);
-      }
-    });
-  }
-
-  @Override
-  public FileAnnotation annotate(final VirtualFile file, final VcsFileRevision revision) throws VcsException {
-    return annotate(file, revision.getRevisionNumber(), false, new ThrowableComputable<FileAnnotation, VcsException>() {
-      @Override
-      public FileAnnotation compute() throws VcsException {
-        return myAnnotationProvider.annotate(file, revision);
-      }
-    });
-  }
-
-  @Override
-  public boolean isCaching() {
-    return true;
-  }
-
-  /**
-   * Populates the cache by annotating the file if not already cached.
-   * Ported from JB {@code VcsAnnotationCachedProxy.populateCache}.
-   */
-  @Override
-  public void populateCache(VirtualFile file) throws VcsException {
-    annotate(file);
-  }
-
-  /**
-   * Always returns {@code null} — the annotation is accessed via {@link #annotate(VirtualFile)},
-   * which retrieves from the cache internally.
-   * Ported from JB {@code VcsAnnotationCachedProxy.getFromCache}.
-   */
-  @Override
-  public @Nullable FileAnnotation getFromCache(VirtualFile file) {
-    return null;
-  }
-
-  /**
-   * @param currentRevision - just a hint for optimization
-   */
-  private FileAnnotation annotate(VirtualFile file, VcsRevisionNumber revisionNumber, boolean currentRevision,
-                                  ThrowableComputable<FileAnnotation, VcsException> delegate) throws VcsException {
-    AnnotationProvider annotationProvider = myAnnotationProvider;
-
-    FilePath filePath = VcsUtil.getFilePath(file);
-
-    VcsCacheableAnnotationProvider cacheableAnnotationProvider = (VcsCacheableAnnotationProvider)annotationProvider;
-
-    VcsAnnotation vcsAnnotation = null;
-    if (revisionNumber != null) {
-      Object cachedData = myCache.get(filePath, myVcs.getKeyInstanceMethod(), revisionNumber);
-      vcsAnnotation = ObjectUtil.tryCast(cachedData, VcsAnnotation.class);
+    public VcsAnnotationCachedProxy(AbstractVcs vcs, AnnotationProvider provider) {
+        assert provider instanceof VcsCacheableAnnotationProvider;
+        myVcs = vcs;
+        myCache = ProjectLevelVcsManager.getInstance(vcs.getProject()).getVcsHistoryCache();
+        myAnnotationProvider = provider;
     }
 
-    if (vcsAnnotation != null) {
-      VcsHistoryProvider historyProvider = myVcs.getVcsHistoryProvider();
-      VcsAbstractHistorySession history = getHistory(revisionNumber, filePath, historyProvider, vcsAnnotation.getFirstRevision());
-      if (history == null) return null;
-      // question is whether we need "not moved" path here?
-      ContentRevision fileContent = myVcs.getDiffProvider().createFileContent(revisionNumber, file);
-      FileAnnotation restored = cacheableAnnotationProvider.
-              restore(vcsAnnotation, history, fileContent.getContent(), currentRevision,
-                      revisionNumber);
-      if (restored != null) {
-        return restored;
-      }
+    @Override
+    public FileAnnotation annotate(VirtualFile file) throws VcsException {
+        DiffProvider diffProvider = myVcs.getDiffProvider();
+        VcsRevisionNumber currentRevision = diffProvider.getCurrentRevision(file);
+
+        return annotate(file, currentRevision, true, () -> myAnnotationProvider.annotate(file));
     }
 
-    FileAnnotation fileAnnotation = delegate.compute();
-    vcsAnnotation = cacheableAnnotationProvider.createCacheable(fileAnnotation);
-    if (vcsAnnotation == null) return fileAnnotation;
-
-    if (revisionNumber != null) {
-      myCache.put(filePath, myVcs.getKeyInstanceMethod(), revisionNumber, vcsAnnotation);
+    @Override
+    public FileAnnotation annotate(VirtualFile file, VcsFileRevision revision) throws VcsException {
+        return annotate(file, revision.getRevisionNumber(), false, () -> myAnnotationProvider.annotate(file, revision));
     }
 
-    if (myVcs.getVcsHistoryProvider() instanceof VcsCacheableHistorySessionFactory) {
-      loadHistoryInBackgroundToCache(revisionNumber, filePath, vcsAnnotation);
+    @Override
+    public boolean isCaching() {
+        return true;
     }
-    return fileAnnotation;
-  }
 
-  // todo will be removed - when annotation will be presented together with history
-  private void loadHistoryInBackgroundToCache(final VcsRevisionNumber revisionNumber,
-                                              final FilePath filePath,
-                                              final VcsAnnotation vcsAnnotation) {
-    ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-      @Override
-      public void run() {
+    /**
+     * Populates the cache by annotating the file if not already cached.
+     * Ported from JB {@code VcsAnnotationCachedProxy.populateCache}.
+     */
+    @Override
+    public void populateCache(VirtualFile file) throws VcsException {
+        annotate(file);
+    }
+
+    /**
+     * Always returns {@code null} — the annotation is accessed via {@link #annotate(VirtualFile)},
+     * which retrieves from the cache internally.
+     * Ported from JB {@code VcsAnnotationCachedProxy.getFromCache}.
+     */
+    @Override
+    public @Nullable FileAnnotation getFromCache(VirtualFile file) {
+        return null;
+    }
+
+    /**
+     * @param currentRevision - just a hint for optimization
+     */
+    private FileAnnotation annotate(
+        VirtualFile file,
+        VcsRevisionNumber revisionNumber,
+        boolean currentRevision,
+        ThrowableSupplier<FileAnnotation, VcsException> delegate
+    ) throws VcsException {
+        AnnotationProvider annotationProvider = myAnnotationProvider;
+
+        FilePath filePath = VcsUtil.getFilePath(file);
+
+        VcsCacheableAnnotationProvider cacheableAnnotationProvider = (VcsCacheableAnnotationProvider) annotationProvider;
+
+        VcsAnnotation vcsAnnotation = null;
+        if (revisionNumber != null) {
+            Object cachedData = myCache.get(filePath, myVcs.getKeyInstanceMethod(), revisionNumber);
+            vcsAnnotation = ObjectUtil.tryCast(cachedData, VcsAnnotation.class);
+        }
+
+        if (vcsAnnotation != null) {
+            VcsHistoryProvider historyProvider = myVcs.getVcsHistoryProvider();
+            VcsAbstractHistorySession history = getHistory(revisionNumber, filePath, historyProvider, vcsAnnotation.getFirstRevision());
+            if (history == null) {
+                return null;
+            }
+            // question is whether we need "not moved" path here?
+            ContentRevision fileContent = myVcs.getDiffProvider().createFileContent(revisionNumber, file);
+            FileAnnotation restored =
+                cacheableAnnotationProvider.restore(vcsAnnotation, history, fileContent.getContent(), currentRevision, revisionNumber);
+            if (restored != null) {
+                return restored;
+            }
+        }
+
+        FileAnnotation fileAnnotation = delegate.get();
+        vcsAnnotation = cacheableAnnotationProvider.createCacheable(fileAnnotation);
+        if (vcsAnnotation == null) {
+            return fileAnnotation;
+        }
+
+        if (revisionNumber != null) {
+            myCache.put(filePath, myVcs.getKeyInstanceMethod(), revisionNumber, vcsAnnotation);
+        }
+
+        if (myVcs.getVcsHistoryProvider() instanceof VcsCacheableHistorySessionFactory) {
+            loadHistoryInBackgroundToCache(revisionNumber, filePath, vcsAnnotation);
+        }
+        return fileAnnotation;
+    }
+
+    // todo will be removed - when annotation will be presented together with history
+    private void loadHistoryInBackgroundToCache(VcsRevisionNumber revisionNumber, FilePath filePath, VcsAnnotation vcsAnnotation) {
+        Application.get().executeOnPooledThread((Runnable) () -> {
+            try {
+                getHistory(revisionNumber, filePath, myVcs.getVcsHistoryProvider(), vcsAnnotation.getFirstRevision());
+            }
+            catch (VcsException e) {
+                LOG.info(e);
+            }
+        });
+    }
+
+    private VcsAbstractHistorySession getHistory(
+        VcsRevisionNumber revision, FilePath filePath, VcsHistoryProvider historyProvider,
+        @Nullable VcsRevisionNumber firstRevision
+    ) throws VcsException {
+        boolean historyCacheSupported = historyProvider instanceof VcsCacheableHistorySessionFactory;
+        if (historyCacheSupported) {
+            VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory) historyProvider;
+            VcsAbstractHistorySession cachedSession =
+                myCache.getMaybePartial(filePath, myVcs.getKeyInstanceMethod(), cacheableHistorySessionFactory);
+            if (cachedSession != null && !cachedSession.getRevisionList().isEmpty()) {
+                VcsFileRevision recentRevision = cachedSession.getRevisionList().get(0);
+                if (recentRevision.getRevisionNumber().compareTo(revision) >= 0 && (firstRevision == null || cachedSession.getHistoryAsMap()
+                    .containsKey(firstRevision))) {
+                    return cachedSession;
+                }
+            }
+        }
+        // history may be also cut
+        VcsAbstractHistorySession sessionFor;
+        if (firstRevision != null) {
+            sessionFor = limitedHistory(filePath, firstRevision);
+        }
+        else {
+            sessionFor = (VcsAbstractHistorySession) historyProvider.createSessionFor(filePath);
+        }
+        if (sessionFor != null && historyCacheSupported) {
+            VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory) historyProvider;
+            FilePath correctedPath = cacheableHistorySessionFactory.getUsedFilePath(sessionFor);
+            myCache.put(
+                filePath,
+                correctedPath,
+                myVcs.getKeyInstanceMethod(),
+                sessionFor,
+                cacheableHistorySessionFactory,
+                firstRevision == null
+            );
+        }
+        return sessionFor;
+    }
+
+    @Override
+    public boolean isAnnotationValid(VcsFileRevision rev) {
+        return myAnnotationProvider.isAnnotationValid(rev);
+    }
+
+    private VcsAbstractHistorySession limitedHistory(FilePath filePath, final VcsRevisionNumber firstNumber) throws VcsException {
+        final VcsAbstractHistorySession[] result = new VcsAbstractHistorySession[1];
+        final VcsException[] exc = new VcsException[1];
+
         try {
-          getHistory(revisionNumber, filePath, myVcs.getVcsHistoryProvider(), vcsAnnotation.getFirstRevision());
-        }
-        catch (VcsException e) {
-          LOG.info(e);
-        }
-      }
-    });
-  }
+            myVcs.getVcsHistoryProvider().reportAppendableHistory(filePath, new VcsAppendableHistorySessionPartner() {
+                @Override
+                @RequiredUIAccess
+                public void reportCreatedEmptySession(VcsAbstractHistorySession session) {
+                    result[0] = session;
+                }
 
-  private VcsAbstractHistorySession getHistory(VcsRevisionNumber revision, FilePath filePath, VcsHistoryProvider historyProvider,
-                                               @Nullable VcsRevisionNumber firstRevision) throws VcsException {
-    boolean historyCacheSupported = historyProvider instanceof VcsCacheableHistorySessionFactory;
-    if (historyCacheSupported) {
-      VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;
-      VcsAbstractHistorySession cachedSession =
-              myCache.getMaybePartial(filePath, myVcs.getKeyInstanceMethod(), cacheableHistorySessionFactory);
-      if (cachedSession != null && ! cachedSession.getRevisionList().isEmpty()) {
-        VcsFileRevision recentRevision = cachedSession.getRevisionList().get(0);
-        if (recentRevision.getRevisionNumber().compareTo(revision) >= 0 && (firstRevision == null || cachedSession.getHistoryAsMap().containsKey(firstRevision))) {
-          return cachedSession;
+                @Override
+                public void acceptRevision(VcsFileRevision revision) {
+                    result[0].appendRevision(revision);
+                    if (firstNumber.equals(revision.getRevisionNumber())) {
+                        throw new ProcessCanceledException();
+                    }
+                }
+
+                @Override
+                public void reportException(VcsException exception) {
+                    exc[0] = exception;
+                }
+
+                @Override
+                public void finished() {
+                }
+
+                @Override
+                public void beforeRefresh() {
+                }
+
+                @Override
+                public void forceRefresh() {
+                }
+            });
         }
-      }
+        catch (ProcessCanceledException e) {
+            // ok
+        }
+        if (exc[0] != null) {
+            throw exc[0];
+        }
+        return result[0];
     }
-    // history may be also cut
-    VcsAbstractHistorySession sessionFor;
-    if (firstRevision != null) {
-      sessionFor = limitedHistory(filePath, firstRevision);
-    } else {
-      sessionFor = (VcsAbstractHistorySession) historyProvider.createSessionFor(filePath);
-    }
-    if (sessionFor != null && historyCacheSupported) {
-      VcsCacheableHistorySessionFactory cacheableHistorySessionFactory = (VcsCacheableHistorySessionFactory)historyProvider;
-      FilePath correctedPath = cacheableHistorySessionFactory.getUsedFilePath(sessionFor);
-      myCache.put(filePath, correctedPath, myVcs.getKeyInstanceMethod(), sessionFor, cacheableHistorySessionFactory, firstRevision == null);
-    }
-    return sessionFor;
-  }
-
-  @Override
-  public boolean isAnnotationValid(VcsFileRevision rev) {
-    return myAnnotationProvider.isAnnotationValid(rev);
-  }
-
-  private VcsAbstractHistorySession limitedHistory(FilePath filePath, final VcsRevisionNumber firstNumber) throws VcsException {
-    final VcsAbstractHistorySession[] result = new VcsAbstractHistorySession[1];
-    final VcsException[] exc = new VcsException[1];
-
-    try {
-      myVcs.getVcsHistoryProvider().reportAppendableHistory(filePath, new VcsAppendableHistorySessionPartner() {
-        @Override
-        public void reportCreatedEmptySession(VcsAbstractHistorySession session) {
-          result[0] = session;
-        }
-
-        @Override
-        public void acceptRevision(VcsFileRevision revision) {
-          result[0].appendRevision(revision);
-          if (firstNumber.equals(revision.getRevisionNumber())) throw new ProcessCanceledException();
-        }
-
-        @Override
-        public void reportException(VcsException exception) {
-          exc[0] = exception;
-        }
-
-        @Override
-        public void finished() {
-        }
-
-        @Override
-        public void beforeRefresh() {
-        }
-
-        @Override
-        public void forceRefresh() {
-        }
-      });
-    } catch (ProcessCanceledException e) {
-      // ok
-    }
-    if (exc[0] != null) {
-      throw exc[0];
-    }
-    return result[0];
-  }
 }
 

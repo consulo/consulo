@@ -222,8 +222,8 @@ public class FileTypeConfigurable implements SearchableConfigurable, Configurabl
             myPatternsList.getEmptyText().setText(FileTypeLocalize.filetypeSettingsNoPatterns());
 
             add(ToolbarDecorator.createDecorator(myPatternsList)
-                .setToolbarPosition(ActionToolbarPosition.TOP).
-                setAddAction(button -> myController.addPattern())
+                .setToolbarPosition(ActionToolbarPosition.TOP)
+                .setAddAction(button -> myController.addPattern())
                 .setEditAction(button -> myController.editPattern())
                 .setRemoveAction(button -> myController.removePattern())
                 .disableUpDownActions()

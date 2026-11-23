@@ -713,6 +713,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return result;
     }
 
+    @RequiredUIAccess
     private void hideHint() {
         if (!myTextFieldPanel.focusRequested()) {
             doClose(false);
@@ -1036,11 +1037,11 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
 
         Matcher matcher = buildPatternMatcher(transformPattern(trimmedText));
         String statContext = statisticsContext();
-        Comparator<Object> itemComparator = Comparator.
-            comparing(e -> trimmedText.equalsIgnoreCase(myModel.getElementName(e))).
-            thenComparing(e -> matchingDegree(matcher, e)).
-            thenComparing(e -> getUseCount(statContext, e)).
-            reversed();
+        Comparator<Object> itemComparator = Comparator
+            .comparing(e -> trimmedText.equalsIgnoreCase(myModel.getElementName(e)))
+            .thenComparing(e -> matchingDegree(matcher, e))
+            .thenComparing(e -> getUseCount(statContext, e))
+            .reversed();
 
         int bestPosition = 0;
         while (bestPosition < modelElements.length - 1 && isSpecialElement(modelElements[bestPosition])) {
@@ -1602,9 +1603,8 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             presentation.setTabText(prefixPattern);
             presentation.setTargetsNodeText("Unsorted " + StringUtil.toLowerCase(patternToLowerCase(prefixPattern)));
             PsiElement[] elements = getElements();
-            final List<PsiElement> targets = new ArrayList<>();
             final Set<Usage> usages = new LinkedHashSet<>();
-            fillUsages(Arrays.asList(elements), usages, targets);
+            fillUsages(Arrays.asList(elements), usages);
             if (myListModel.contains(EXTRA_ELEM)) { //start searching for the rest
                 final boolean everywhere = myCheckBox.getValueOrError();
                 hideHint();
@@ -1647,18 +1647,18 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                             myCalcUsagesThread.addElementsByPattern(text, collected, indicator, everywhere);
 
                             indicator.setText("Prepare…");
-                            fillUsages(collected, usages, targets);
+                            fillUsages(collected, usages);
                         });
                     }
 
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public void onSuccess() {
-                        showUsageView(targets, usages, presentation);
+                        showUsageView(List.of(), usages, presentation);
                     }
 
-                    @RequiredUIAccess
                     @Override
+                    @RequiredUIAccess
                     public void onCancel() {
                         myCalcUsagesThread.cancel();
                     }
@@ -1673,24 +1673,15 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             }
             else {
                 hideHint();
-                showUsageView(targets, usages, presentation);
+                showUsageView(List.of(), usages, presentation);
             }
         }
 
         @RequiredReadAction
-        private void fillUsages(
-            Collection<Object> matchElementsArray,
-            Collection<? super Usage> usages,
-            List<? super PsiElement> targets
-        ) {
+        private void fillUsages(Collection<Object> matchElementsArray, Collection<? super Usage> usages) {
             for (Object o : matchElementsArray) {
                 if (o instanceof PsiElement element) {
-                    if (element.getTextRange() != null) {
-                        usages.add(new MyUsageInfo2UsageAdapter(element, false));
-                    }
-                    else {
-                        targets.add(element);
-                    }
+                    usages.add(new MyUsageInfo2UsageAdapter(element, false));
                 }
             }
         }

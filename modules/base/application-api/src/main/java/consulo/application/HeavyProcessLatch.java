@@ -1,6 +1,7 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.application;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
@@ -19,171 +20,182 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Some other threads then call {@link #isRunning()} and others to query for heavy operations running in background.
  */
 public final class HeavyProcessLatch {
-  private static final Logger LOG = Logger.getInstance(HeavyProcessLatch.class);
+    private static final Logger LOG = Logger.getInstance(HeavyProcessLatch.class);
 
-  public static final HeavyProcessLatch INSTANCE = new HeavyProcessLatch();
+    public static final HeavyProcessLatch INSTANCE = new HeavyProcessLatch();
 
-  private final List<Operation> myHeavyProcesses = Lists.newLockFreeCopyOnWriteList();
-  private final EventDispatcher<HeavyProcessListener> myEventDispatcher = EventDispatcher.create(HeavyProcessListener.class);
-  private final Queue<Runnable> myExecuteOutOfHeavyActivity = new ConcurrentLinkedQueue<>();
+    private final List<Operation> myHeavyProcesses = Lists.newLockFreeCopyOnWriteList();
+    private final EventDispatcher<HeavyProcessListener> myEventDispatcher = EventDispatcher.create(HeavyProcessListener.class);
+    private final Queue<Runnable> myExecuteOutOfHeavyActivity = new ConcurrentLinkedQueue<>();
 
-  private HeavyProcessLatch() {
-  }
-
-  /**
-   * Approximate type of heavy operation. Used in {@link TrafficLightRenderer} UI as brief description.
-   */
-  public enum Type {
-    Indexing(ApplicationLocalize.heavyprocessTypeIndexing()),
-    Syncing(ApplicationLocalize.heavyprocessTypeSyncing()),
-    Processing(ApplicationLocalize.heavyprocessTypeProcessing());
-
-    private final LocalizeValue myDisplayName;
-
-    Type(LocalizeValue displayName) {
-      myDisplayName = displayName;
+    private HeavyProcessLatch() {
     }
 
-    @Override
-    public String toString() {
-      return myDisplayName.get();
-    }
-  }
+    /**
+     * Approximate type of heavy operation. Used in {@link TrafficLightRenderer} UI as brief description.
+     */
+    public enum Type {
+        Indexing(ApplicationLocalize.heavyprocessTypeIndexing()),
+        Syncing(ApplicationLocalize.heavyprocessTypeSyncing()),
+        Processing(ApplicationLocalize.heavyprocessTypeProcessing());
 
-  /**
-   * @deprecated use {@link #performOperation} instead
-   */
-  @Deprecated
-  public AccessToken processStarted(String displayName) {
-    Op op = new Op(Type.Processing, displayName);
-    myHeavyProcesses.add(op);
-    myEventDispatcher.getMulticaster().processStarted(op);
-    return new AccessToken() {
-      @Override
-      public void finish() {
-        myEventDispatcher.getMulticaster().processFinished(op);
-        myHeavyProcesses.remove(op);
-        executeHandlers();
-      }
-    };
-  }
+        private final LocalizeValue myDisplayName;
 
-  /**
-   * Executes {@code runnable} as a heavy operation. E.g., during this method execution, {@link #isRunning()} returns true.
-   */
-  public void performOperation(Type type, String displayName, Runnable runnable) {
-    Op op = new Op(type, displayName);
-    myHeavyProcesses.add(op);
-    myEventDispatcher.getMulticaster().processStarted(op);
-    try {
-      runnable.run();
-    }
-    finally {
-      myEventDispatcher.getMulticaster().processFinished(op);
-      myHeavyProcesses.remove(op);
-      executeHandlers();
-    }
-  }
+        Type(LocalizeValue displayName) {
+            myDisplayName = displayName;
+        }
 
-  private void executeHandlers() {
-    if (!isRunning()) {
-      Runnable runnable;
-      while ((runnable = myExecuteOutOfHeavyActivity.poll()) != null) {
+        public LocalizeValue getDisplayName() {
+            return myDisplayName;
+        }
+
+        @Override
+        public String toString() {
+            return myDisplayName.get();
+        }
+    }
+
+    /**
+     * @deprecated use {@link #performOperation} instead
+     */
+    @Deprecated
+    public AccessToken processStarted(String displayName) {
+        Op op = new Op(Type.Processing, LocalizeValue.of(displayName));
+        myHeavyProcesses.add(op);
+        myEventDispatcher.getMulticaster().processStarted(op);
+        return new AccessToken() {
+            @Override
+            public void finish() {
+                myEventDispatcher.getMulticaster().processFinished(op);
+                myHeavyProcesses.remove(op);
+                executeHandlers();
+            }
+        };
+    }
+
+    /**
+     * Executes {@code runnable} as a heavy operation. E.g., during this method execution, {@link #isRunning()} returns true.
+     */
+    public void performOperation(Type type, LocalizeValue displayName, Runnable runnable) {
+        Op op = new Op(type, displayName);
+        myHeavyProcesses.add(op);
+        myEventDispatcher.getMulticaster().processStarted(op);
         try {
-          runnable.run();
+            runnable.run();
         }
-        catch (Exception e) {
-          LOG.error(e);
+        finally {
+            myEventDispatcher.getMulticaster().processFinished(op);
+            myHeavyProcesses.remove(op);
+            executeHandlers();
         }
-      }
-    }
-  }
-
-  /**
-   * @return {@code true} if some heavy operation is running on some thread
-   */
-  public boolean isRunning() {
-    return !myHeavyProcesses.isEmpty();
-  }
-
-  /**
-   * @return {@code true} if any heavy operation of type {@code type} is currently running in some thread
-   */
-  public boolean isRunning(Type type) {
-    return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() == type);
-  }
-
-  /**
-   * @return {@code true} if there is a heavy operation currently running in some thread,
-   * which has its {@link Operation#getType()} != {@code type}
-   */
-  public boolean isRunningAnythingBut(Type type) {
-    return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() != type);
-  }
-
-  /**
-   * heavyProcessIsRunning
-   * @return heavy operation currently running, if any, in undefined order
-   */
-  public @Nullable Operation getAnyRunningOperation() {
-    Iterator<Operation> iterator = myHeavyProcesses.iterator();
-    return iterator.hasNext() ? iterator.next() : null;
-  }
-
-  /**
-   * @return all heavy operations currently running, in undefined order, or an empty collection
-   */
-  public Collection<Operation> getRunningOperations() {
-    return new ArrayList<>(myHeavyProcesses);
-  }
-
-  @SuppressWarnings("InterfaceMayBeAnnotatedFunctional")
-  public interface HeavyProcessListener extends EventListener {
-    default void processStarted(Operation op) {
     }
 
-    void processFinished(Operation op);
-  }
-
-  public interface Operation {
-    Type getType();
-
-    String getDisplayName();
-  }
-
-  public void addListener(Disposable parentDisposable, HeavyProcessListener listener) {
-    myEventDispatcher.addListener(listener, parentDisposable);
-  }
-
-  /**
-   * schedules {@code runnable} to be executed when all heavy operations are finished (i.e., when {@link #isRunning()} returned false)
-   */
-  public void queueExecuteOutOfHeavyProcess(Runnable runnable) {
-    if (isRunning()) {
-      myExecuteOutOfHeavyActivity.add(runnable);
-    }
-    else {
-      runnable.run();
-    }
-  }
-
-  private static final class Op implements Operation {
-    private final Type myType;
-    private final String myDisplayName;
-
-    Op(Type type, String displayName) {
-      myType = type;
-      myDisplayName = displayName;
+    @Deprecated
+    @DeprecationInfo("Use variant with LocalizeValue")
+    public void performOperation(Type type, String displayName, Runnable runnable) {
+        performOperation(type, LocalizeValue.of(displayName), runnable);
     }
 
-    @Override
-    public Type getType() {
-      return myType;
+    private void executeHandlers() {
+        if (!isRunning()) {
+            Runnable runnable;
+            while ((runnable = myExecuteOutOfHeavyActivity.poll()) != null) {
+                try {
+                    runnable.run();
+                }
+                catch (Exception e) {
+                    LOG.error(e);
+                }
+            }
+        }
     }
 
-    @Override
-    public String getDisplayName() {
-      return myDisplayName;
+    /**
+     * @return {@code true} if some heavy operation is running on some thread
+     */
+    public boolean isRunning() {
+        return !myHeavyProcesses.isEmpty();
     }
-  }
+
+    /**
+     * @return {@code true} if any heavy operation of type {@code type} is currently running in some thread
+     */
+    public boolean isRunning(Type type) {
+        return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() == type);
+    }
+
+    /**
+     * @return {@code true} if there is a heavy operation currently running in some thread,
+     * which has its {@link Operation#getType()} != {@code type}
+     */
+    public boolean isRunningAnythingBut(Type type) {
+        return ContainerUtil.exists(myHeavyProcesses, op -> op.getType() != type);
+    }
+
+    /**
+     * heavyProcessIsRunning
+     *
+     * @return heavy operation currently running, if any, in undefined order
+     */
+    public @Nullable Operation getAnyRunningOperation() {
+        Iterator<Operation> iterator = myHeavyProcesses.iterator();
+        return iterator.hasNext() ? iterator.next() : null;
+    }
+
+    /**
+     * @return all heavy operations currently running, in undefined order, or an empty collection
+     */
+    public Collection<Operation> getRunningOperations() {
+        return new ArrayList<>(myHeavyProcesses);
+    }
+
+    @SuppressWarnings("InterfaceMayBeAnnotatedFunctional")
+    public interface HeavyProcessListener extends EventListener {
+        default void processStarted(Operation op) {
+        }
+
+        void processFinished(Operation op);
+    }
+
+    public interface Operation {
+        Type getType();
+
+        LocalizeValue getDisplayName();
+    }
+
+    public void addListener(Disposable parentDisposable, HeavyProcessListener listener) {
+        myEventDispatcher.addListener(listener, parentDisposable);
+    }
+
+    /**
+     * schedules {@code runnable} to be executed when all heavy operations are finished (i.e., when {@link #isRunning()} returned false)
+     */
+    public void queueExecuteOutOfHeavyProcess(Runnable runnable) {
+        if (isRunning()) {
+            myExecuteOutOfHeavyActivity.add(runnable);
+        }
+        else {
+            runnable.run();
+        }
+    }
+
+    private static final class Op implements Operation {
+        private final Type myType;
+        private final LocalizeValue myDisplayName;
+
+        Op(Type type, LocalizeValue displayName) {
+            myType = type;
+            myDisplayName = displayName;
+        }
+
+        @Override
+        public Type getType() {
+            return myType;
+        }
+
+        @Override
+        public LocalizeValue getDisplayName() {
+            return myDisplayName;
+        }
+    }
 }

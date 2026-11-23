@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import consulo.codeEditor.EditorColors;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
@@ -52,15 +51,14 @@ import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
@@ -629,7 +627,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
 
     protected abstract CodeEditorSoftWrapModelBase createSoftWrapModel();
 
-    
+    @RequiredUIAccess
     protected abstract DataContext getComponentContext();
 
     protected abstract void stopDumb();
@@ -661,6 +659,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         myFoldingModel.onBulkDocumentUpdateStarted();
     }
 
+    @RequiredUIAccess
     protected void bulkUpdateFinished() {
         myFoldingModel.onBulkDocumentUpdateFinished();
         mySoftWrapModel.onBulkDocumentUpdateFinished();
@@ -720,43 +719,36 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         }
     }
 
-    
     @Override
     public CodeEditorScrollingModelBase getScrollingModel() {
         return myScrollingModel;
     }
 
-    
     @Override
     public CodeEditorFoldingModelBase getFoldingModel() {
         return myFoldingModel;
     }
 
-    
     @Override
     public CodeEditorSelectionModelBase getSelectionModel() {
         return mySelectionModel;
     }
 
-    
     @Override
     public CodeEditorInlayModelBase getInlayModel() {
         return myInlayModel;
     }
 
-    
     @Override
     public CodeEditorSoftWrapModelBase getSoftWrapModel() {
         return mySoftWrapModel;
     }
 
-    
     @Override
     public MarkupModelEx getMarkupModel() {
         return myMarkupModel;
     }
 
-    
     @Override
     public CodeEditorCaretModelBase<? extends CodeEditorCaretBase> getCaretModel() {
         return myCaretModel;
@@ -770,11 +762,11 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredUIAccess
     public void setPrefixTextAndAttributes(@Nullable String prefixText, @Nullable TextAttributes attributes) {
         mySoftWrapModel.recalculate();
     }
 
-    
     @Override
     public IndentsModel getIndentsModel() {
         return myIndentsModel;
@@ -843,6 +835,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredReadAction
     public int getExpectedCaretOffset() {
         int expectedCaretOffset = myExpectedCaretOffset;
         return expectedCaretOffset == -1 ? getCaretModel().getOffset() : expectedCaretOffset;
@@ -889,7 +882,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    
     public Disposable getDisposable() {
         return myDisposable;
     }
@@ -1009,7 +1001,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    
     public MarkupModelEx getFilteredDocumentMarkupModel() {
         return myDocumentMarkupModel;
     }
@@ -1151,6 +1142,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
+    @RequiredReadAction
     public void putInfo(Map<String, String> info) {
         VisualPosition visual = getCaretModel().getVisualPosition();
         info.put("caret", visual.getLine() + ":" + visual.getColumn());
@@ -1164,7 +1156,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    
     public String dumpState() {
         return "allow caret inside tab: " +
             mySettings.isCaretInsideTabs() +
@@ -1187,13 +1178,11 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
             myPurePaintingMode;
     }
 
-    
     @Override
     public DataContext getDataContext() {
         return getProjectAwareDataContext(getComponentContext());
     }
 
-    
     private DataContext getProjectAwareDataContext(DataContext original) {
         if (original.getData(Project.KEY) == myProject) {
             return original;
@@ -1211,14 +1200,12 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
         };
     }
 
-    
     @Override
     public EditorKind getEditorKind() {
         return myKind;
     }
 
     @Override
-    
     public EditorSettings getSettings() {
         return mySettings;
     }
@@ -1259,7 +1246,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    
     public EditorColorsScheme getColorsScheme() {
         return myScheme;
     }
@@ -1341,12 +1327,10 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     }
 
     @Override
-    
     public DocumentEx getDocument() {
         return myDocument;
     }
 
-    
     @Override
     @RequiredUIAccess
     public EditorHighlighter getHighlighter() {

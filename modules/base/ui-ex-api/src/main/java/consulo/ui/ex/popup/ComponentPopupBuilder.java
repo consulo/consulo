@@ -4,6 +4,7 @@ package consulo.ui.ex.popup;
 import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.image.Image;
@@ -110,7 +111,7 @@ public interface ComponentPopupBuilder {
     /**
      * Allows to define custom strategy for processing {@link JBPopup#dispatchKeyEvent(KeyEvent)}.
      */
-    ComponentPopupBuilder setKeyEventHandler(Predicate<? super KeyEvent> handler);
+    ComponentPopupBuilder setKeyEventHandler(@RequiredUIAccess Predicate<? super KeyEvent> handler);
 
     ComponentPopupBuilder setShowBorder(boolean show);
 
