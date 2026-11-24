@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
@@ -22,6 +21,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
@@ -158,7 +158,7 @@ public class EncodingUtil {
         EncodingProjectManagerImpl.suppressReloadDuring(() -> {
             EncodingManager.getInstance().setEncoding(virtualFile, charset);
             try {
-                project.getApplication().runWriteAction((ThrowableComputable<Object, IOException>) () -> {
+                project.getApplication().runWriteAction((ThrowableSupplier<Object, IOException>) () -> {
                     virtualFile.setCharset(charset);
                     LoadTextUtil.write(project, virtualFile, virtualFile, document.getText(), document.getModificationStamp());
                     return null;
@@ -313,7 +313,7 @@ public class EncodingUtil {
             case BY_FILE -> IdeLocalize.noCharsetSetReasonCharsetHardCodedInFile();
             case BY_BOM -> IdeLocalize.noCharsetSetReasonCharsetAutoDetectedByBom();
             case BY_BYTES -> IdeLocalize.noCharsetSetReasonCharsetAutoDetectedFromContent();
-            case BY_FILETYPE -> IdeLocalize.noCharsetSetReasonDisabledForFileType(file.getFileType().getDescription());
+            case BY_FILETYPE -> IdeLocalize.noCharsetSetReasonDisabledForFileType(file.getFileType().getDisplayName());
         };
     }
 }

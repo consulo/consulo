@@ -2,7 +2,6 @@
 package consulo.application.internal;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressIndicator;
@@ -11,7 +10,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -19,6 +17,7 @@ import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
@@ -386,12 +385,12 @@ public class ProgressIndicatorUtils {
         Lock lock,
         int timeout,
         TimeUnit timeUnit,
-        ThrowableComputable<T, E> computable
+        ThrowableSupplier<T, E> computable
     ) throws E, ProcessCanceledException {
         awaitWithCheckCanceled(lock, timeout, timeUnit);
 
         try {
-            return computable.compute();
+            return computable.get();
         }
         finally {
             lock.unlock();
@@ -435,13 +434,13 @@ public class ProgressIndicatorUtils {
         awaitWithCheckCanceled(() -> lock.tryLock(timeout, timeUnit));
     }
 
-    public static void awaitWithCheckCanceled(ThrowableComputable<Boolean, ? extends Exception> waiter) {
+    public static void awaitWithCheckCanceled(ThrowableSupplier<Boolean, ? extends Exception> waiter) {
         ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
         boolean success = false;
         while (!success) {
             checkCancelledEvenWithPCEDisabled(indicator);
             try {
-                success = waiter.compute();
+                success = waiter.get();
             }
             catch (Exception e) {
                 //noinspection InstanceofCatchParameter

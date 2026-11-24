@@ -19,10 +19,9 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDirectory;
@@ -47,149 +46,147 @@ import java.util.function.Function;
 
 @ServiceAPI(ComponentScope.APPLICATION)
 public class FormatChangedTextUtil {
-  public static final Key<CharSequence> TEST_REVISION_CONTENT = Key.create("test.revision.content");
-  protected static final Logger LOG = Logger.getInstance(FormatChangedTextUtil.class);
+    public static final Key<CharSequence> TEST_REVISION_CONTENT = Key.create("test.revision.content");
+    protected static final Logger LOG = Logger.getInstance(FormatChangedTextUtil.class);
 
-  protected FormatChangedTextUtil() {
-  }
-
-  
-  public static FormatChangedTextUtil getInstance() {
-    return Application.get().getInstance(FormatChangedTextUtil.class);
-  }
-
-  /**
-   * Allows to answer if given file has changes in comparison with VCS.
-   *
-   * @param file target file
-   * @return <code>true</code> if given file has changes; <code>false</code> otherwise
-   */
-  public static boolean hasChanges(PsiFile file) {
-    Project project = file.getProject();
-    VirtualFile virtualFile = file.getVirtualFile();
-    if (virtualFile != null) {
-      Change change = ChangeListManager.getInstance(project).getChange(virtualFile);
-      return change != null;
+    protected FormatChangedTextUtil() {
     }
-    return false;
-  }
 
-  /**
-   * Allows to answer if any file below the given directory (any level of nesting) has changes in comparison with VCS.
-   *
-   * @param directory target directory to check
-   * @return <code>true</code> if any file below the given directory has changes in comparison with VCS;
-   * <code>false</code> otherwise
-   */
-  public static boolean hasChanges(PsiDirectory directory) {
-    return hasChanges(directory.getVirtualFile(), directory.getProject());
-  }
-
-  /**
-   * Allows to answer if given file or any file below the given directory (any level of nesting) has changes in comparison with VCS.
-   *
-   * @param file    target directory to check
-   * @param project target project
-   * @return <code>true</code> if given file or any file below the given directory has changes in comparison with VCS;
-   * <code>false</code> otherwise
-   */
-  public static boolean hasChanges(VirtualFile file, Project project) {
-    Collection<Change> changes = ChangeListManager.getInstance(project).getChangesIn(file);
-    for (Change change : changes) {
-      if (change.getType() == Change.Type.NEW || change.getType() == Change.Type.MODIFICATION) {
-        return true;
-      }
+    public static FormatChangedTextUtil getInstance() {
+        return Application.get().getInstance(FormatChangedTextUtil.class);
     }
-    return false;
-  }
 
-  public static boolean hasChanges(VirtualFile[] files, Project project) {
-    for (VirtualFile file : files) {
-      if (hasChanges(file, project)) return true;
-    }
-    return false;
-  }
-
-  /**
-   * Allows to answer if any file that belongs to the given module has changes in comparison with VCS.
-   *
-   * @param module target module to check
-   * @return <code>true</code> if any file that belongs to the given module has changes in comparison with VCS
-   * <code>false</code> otherwise
-   */
-  public static boolean hasChanges(Module module) {
-    ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
-    for (VirtualFile root : rootManager.getSourceRoots()) {
-      if (hasChanges(root, module.getProject())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Allows to answer if any file that belongs to the given project has changes in comparison with VCS.
-   *
-   * @param project target project to check
-   * @return <code>true</code> if any file that belongs to the given project has changes in comparison with VCS
-   * <code>false</code> otherwise
-   */
-  @RequiredWriteAction
-  public static boolean hasChanges(Project project) {
-    ThrowableComputable<ModifiableModuleModel,RuntimeException> action = () -> ModuleManager.getInstance(project).getModifiableModel();
-    ModifiableModuleModel moduleModel = AccessRule.read(action);
-
-    try {
-      for (Module module : moduleModel.getModules()) {
-        if (hasChanges(module)) {
-          return true;
+    /**
+     * Allows to answer if given file has changes in comparison with VCS.
+     *
+     * @param file target file
+     * @return <code>true</code> if given file has changes; <code>false</code> otherwise
+     */
+    public static boolean hasChanges(PsiFile file) {
+        Project project = file.getProject();
+        VirtualFile virtualFile = file.getVirtualFile();
+        if (virtualFile != null) {
+            Change change = ChangeListManager.getInstance(project).getChange(virtualFile);
+            return change != null;
         }
-      }
-      return false;
-    }
-    finally {
-      moduleModel.dispose();
-    }
-  }
-
-  
-  public static List<PsiFile> getChangedFilesFromDirs(Project project, List<PsiDirectory> dirs) {
-    ChangeListManager changeListManager = ChangeListManager.getInstance(project);
-    Collection<Change> changes = new ArrayList<>();
-
-    for (PsiDirectory dir : dirs) {
-      changes.addAll(changeListManager.getChangesIn(dir.getVirtualFile()));
+        return false;
     }
 
-    return getChangedFiles(project, changes);
-  }
+    /**
+     * Allows to answer if any file below the given directory (any level of nesting) has changes in comparison with VCS.
+     *
+     * @param directory target directory to check
+     * @return <code>true</code> if any file below the given directory has changes in comparison with VCS;
+     * <code>false</code> otherwise
+     */
+    public static boolean hasChanges(PsiDirectory directory) {
+        return hasChanges(directory.getVirtualFile(), directory.getProject());
+    }
 
-  
-  public static List<PsiFile> getChangedFiles(final Project project, Collection<Change> changes) {
-    Function<Change, PsiFile> changeToPsiFileMapper = new Function<>() {
-      private PsiManager myPsiManager = PsiManager.getInstance(project);
+    /**
+     * Allows to answer if given file or any file below the given directory (any level of nesting) has changes in comparison with VCS.
+     *
+     * @param file    target directory to check
+     * @param project target project
+     * @return <code>true</code> if given file or any file below the given directory has changes in comparison with VCS;
+     * <code>false</code> otherwise
+     */
+    public static boolean hasChanges(VirtualFile file, Project project) {
+        Collection<Change> changes = ChangeListManager.getInstance(project).getChangesIn(file);
+        for (Change change : changes) {
+            if (change.getType() == Change.Type.NEW || change.getType() == Change.Type.MODIFICATION) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-      @Override
-      @RequiredReadAction
-      public PsiFile apply(Change change) {
-        VirtualFile vFile = change.getVirtualFile();
-        return vFile != null ? myPsiManager.findFile(vFile) : null;
-      }
-    };
+    public static boolean hasChanges(VirtualFile[] files, Project project) {
+        for (VirtualFile file : files) {
+            if (hasChanges(file, project)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    return ContainerUtil.mapNotNull(changes, changeToPsiFileMapper);
-  }
+    /**
+     * Allows to answer if any file that belongs to the given module has changes in comparison with VCS.
+     *
+     * @param module target module to check
+     * @return <code>true</code> if any file that belongs to the given module has changes in comparison with VCS
+     * <code>false</code> otherwise
+     */
+    public static boolean hasChanges(Module module) {
+        ModuleRootManager rootManager = ModuleRootManager.getInstance(module);
+        for (VirtualFile root : rootManager.getSourceRoots()) {
+            if (hasChanges(root, module.getProject())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-  
-  public List<TextRange> getChangedTextRanges(Project project, PsiFile file) throws FilesTooBigForDiffException {
-    return List.of();
-  }
+    /**
+     * Allows to answer if any file that belongs to the given project has changes in comparison with VCS.
+     *
+     * @param project target project to check
+     * @return <code>true</code> if any file that belongs to the given project has changes in comparison with VCS
+     * <code>false</code> otherwise
+     */
+    @RequiredWriteAction
+    public static boolean hasChanges(Project project) {
+        ModifiableModuleModel moduleModel = ReadAction.compute(() -> ModuleManager.getInstance(project).getModifiableModel());
 
-  public int calculateChangedLinesNumber(Document document, CharSequence contentFromVcs) {
-    return -1;
-  }
+        try {
+            for (Module module : moduleModel.getModules()) {
+                if (hasChanges(module)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        finally {
+            moduleModel.dispose();
+        }
+    }
 
-  public boolean isChangeNotTrackedForFile(Project project, PsiFile file) {
-    return false;
-  }
+    public static List<PsiFile> getChangedFilesFromDirs(Project project, List<PsiDirectory> dirs) {
+        ChangeListManager changeListManager = ChangeListManager.getInstance(project);
+        Collection<Change> changes = new ArrayList<>();
+
+        for (PsiDirectory dir : dirs) {
+            changes.addAll(changeListManager.getChangesIn(dir.getVirtualFile()));
+        }
+
+        return getChangedFiles(project, changes);
+    }
+
+
+    public static List<PsiFile> getChangedFiles(final Project project, Collection<Change> changes) {
+        Function<Change, PsiFile> changeToPsiFileMapper = new Function<>() {
+            private PsiManager myPsiManager = PsiManager.getInstance(project);
+
+            @Override
+            @RequiredReadAction
+            public PsiFile apply(Change change) {
+                VirtualFile vFile = change.getVirtualFile();
+                return vFile != null ? myPsiManager.findFile(vFile) : null;
+            }
+        };
+
+        return ContainerUtil.mapNotNull(changes, changeToPsiFileMapper);
+    }
+
+    public List<TextRange> getChangedTextRanges(Project project, PsiFile file) throws FilesTooBigForDiffException {
+        return List.of();
+    }
+
+    public int calculateChangedLinesNumber(Document document, CharSequence contentFromVcs) {
+        return -1;
+    }
+
+    public boolean isChangeNotTrackedForFile(Project project, PsiFile file) {
+        return false;
+    }
 }

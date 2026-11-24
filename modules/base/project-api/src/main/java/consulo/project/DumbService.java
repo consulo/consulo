@@ -12,7 +12,6 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionList;
@@ -379,10 +378,10 @@ public abstract class DumbService {
      *
      * @see #setAlternativeResolveEnabled(boolean)
      */
-    public <T, E extends Throwable> T computeWithAlternativeResolveEnabled(ThrowableComputable<T, E> runnable) throws E {
+    public <T, E extends Throwable> T computeWithAlternativeResolveEnabled(ThrowableSupplier<T, E> runnable) throws E {
         setAlternativeResolveEnabled(true);
         try {
-            return runnable.compute();
+            return runnable.get();
         }
         finally {
             setAlternativeResolveEnabled(false);

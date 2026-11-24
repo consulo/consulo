@@ -19,9 +19,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.DateFormatUtil;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
-import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -38,9 +36,9 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.Component;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.ActionToolbarFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -58,10 +56,10 @@ import consulo.versionControlSystem.change.ContentRevisionCache;
 import consulo.versionControlSystem.change.VcsAnnotationLocalChangesListener;
 import consulo.versionControlSystem.checkout.CheckoutCallback;
 import consulo.versionControlSystem.history.VcsHistoryCache;
+import consulo.versionControlSystem.impl.internal.NewMappings.MappedRoot;
 import consulo.versionControlSystem.impl.internal.change.VcsAnnotationLocalChangesListenerImpl;
 import consulo.versionControlSystem.impl.internal.checkout.CompositeCheckoutCallback;
 import consulo.versionControlSystem.impl.internal.checkout.OpenProjectCheckoutCallback;
-import consulo.versionControlSystem.impl.internal.NewMappings.MappedRoot;
 import consulo.versionControlSystem.impl.internal.update.UpdateInfoTreeImpl;
 import consulo.versionControlSystem.internal.*;
 import consulo.versionControlSystem.localize.VcsLocalize;
@@ -73,13 +71,12 @@ import consulo.versionControlSystem.util.VcsRootIterator;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -810,11 +807,12 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
 
     @Override
     public boolean isFileInContent(@Nullable VirtualFile vf) {
-        ThrowableComputable<Boolean, RuntimeException> action = () -> vf != null && (
-            myExcludedIndex.isInContent(vf) || isFileInBaseDir(vf) || vf.equals(myProject.getBaseDir()) || hasExplicitMapping(vf)
-                || isInDirectoryBasedRoot(vf) || !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)
-        ) && !isIgnored(vf);
-        return ReadAction.compute(action);
+        return ReadAction.compute(
+            () -> vf != null && (
+                myExcludedIndex.isInContent(vf) || isFileInBaseDir(vf) || vf.equals(myProject.getBaseDir()) || hasExplicitMapping(vf)
+                    || isInDirectoryBasedRoot(vf) || !Registry.is("ide.hide.excluded.files") && myExcludedIndex.isExcludedFile(vf)
+            ) && !isIgnored(vf)
+        );
     }
 
     @Override

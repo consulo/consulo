@@ -18,7 +18,6 @@ package consulo.usage;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ReadAction;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataSink;
@@ -90,8 +89,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
         myUsageInfo = usageInfo;
         myMergedUsageInfos = usageInfo;
 
-        @RequiredReadAction
-        ThrowableComputable<Point, RuntimeException> action = () -> {
+        Point data = ReadAction.compute(() -> {
             PsiElement element = getElement();
             PsiFile psiFile = usageInfo.getFile();
             Document document = psiFile == null ? null : PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
@@ -115,8 +113,7 @@ public class UsageInfo2UsageAdapter implements UsageInModule, UsageInfoAdapter, 
                 }
             }
             return new Point(offset, lineNumber);
-        };
-        Point data = ReadAction.compute(action);
+        });
         myOffset = data.x;
         myLineNumber = data.y;
         myModificationStamp = getCurrentModificationStamp();

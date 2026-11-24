@@ -1,14 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi;
 
-import consulo.application.util.function.ThrowableComputable;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -61,7 +61,6 @@ import java.util.function.Supplier;
  * Note that tree access won't result in an exception when the tree was already loaded.
  */
 public class AstLoadingFilter {
-
   private static final Logger LOG = Logger.getInstance(AstLoadingFilter.class);
   //TODO private static final FrequentErrorLogger ourErrorLogger = FrequentErrorLogger.newInstance(LOG);
   /**
@@ -70,7 +69,7 @@ public class AstLoadingFilter {
    */
   private static final ThreadLocal<Supplier<String>> myDisallowedInfo = new ThreadLocal<>();
   @SuppressWarnings("SSBasedInspection")
-  private static final ThreadLocal<Set<VirtualFile>> myForcedAllowedFiles = ThreadLocal.withInitial(() -> new HashSet<>());
+  private static final ThreadLocal<Set<VirtualFile>> myForcedAllowedFiles = ThreadLocal.withInitial(HashSet::new);
 
   private static final boolean AST_LOADING_FILTER = Boolean.getBoolean("consulo.ast.loading.filter");
 
@@ -108,18 +107,18 @@ public class AstLoadingFilter {
     disallowTreeLoading(toComputable(runnable));
   }
 
-  public static <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable) throws E {
+  public static <T, E extends Throwable> T disallowTreeLoading(ThrowableSupplier<? extends T, E> computable) throws E {
     return disallowTreeLoading(computable, () -> null);
   }
 
-  public static <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable, Supplier<String> debugInfo) throws E {
+  public static <T, E extends Throwable> T disallowTreeLoading(ThrowableSupplier<? extends T, E> computable, Supplier<String> debugInfo) throws E {
     if (myDisallowedInfo.get() != null) {
-      return computable.compute();
+      return computable.get();
     }
     else {
       try {
         myDisallowedInfo.set(debugInfo);
-        return computable.compute();
+        return computable.get();
       }
       finally {
         myDisallowedInfo.set(null);
@@ -135,27 +134,27 @@ public class AstLoadingFilter {
     forceAllowTreeLoading(virtualFile, toComputable(runnable));
   }
 
-  public static <T, E extends Throwable> T forceAllowTreeLoading(@Nullable PsiFile psiFile, ThrowableComputable<? extends T, E> computable) throws E {
+  public static <T, E extends Throwable> T forceAllowTreeLoading(@Nullable PsiFile psiFile, ThrowableSupplier<? extends T, E> computable) throws E {
     VirtualFile virtualFile = psiFile == null ? null : psiFile.getVirtualFile();
-    return virtualFile == null ? computable.compute() : forceAllowTreeLoading(virtualFile, computable);
+    return virtualFile == null ? computable.get() : forceAllowTreeLoading(virtualFile, computable);
   }
 
-  public static <T, E extends Throwable> T forceAllowTreeLoading(VirtualFile virtualFile, ThrowableComputable<? extends T, E> computable) throws E {
+  public static <T, E extends Throwable> T forceAllowTreeLoading(VirtualFile virtualFile, ThrowableSupplier<? extends T, E> computable) throws E {
     Set<VirtualFile> enabledFiles = myForcedAllowedFiles.get();
     if (enabledFiles.add(virtualFile)) {
       try {
-        return computable.compute();
+        return computable.get();
       }
       finally {
         enabledFiles.remove(virtualFile);
       }
     }
     else {
-      return computable.compute();
+      return computable.get();
     }
   }
 
-  private static <E extends Throwable> ThrowableComputable<?, E> toComputable(ThrowableRunnable<? extends E> runnable) {
+  private static <E extends Throwable> ThrowableSupplier<?, E> toComputable(ThrowableRunnable<? extends E> runnable) {
     return () -> {
       runnable.run();
       return null;

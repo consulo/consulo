@@ -20,16 +20,15 @@ import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.ReadAction;
 import consulo.application.SystemHealthMonitor;
 import consulo.application.internal.JobScheduler;
 import consulo.application.internal.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.util.SystemInfo;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.impl.idea.diagnostic.VMOptions;
 import consulo.ide.localize.IdeLocalize;
@@ -228,9 +227,7 @@ public class SystemHealthMonitorImpl extends PreloadingActivity {
                             ourFreeSpaceCalculation.set(null);
 
                             if (fileUsableSpace < LOW_DISK_SPACE_THRESHOLD) {
-                                ThrowableComputable<NotificationsConfiguration, RuntimeException> action =
-                                    () -> NotificationsConfiguration.getNotificationsConfiguration();
-                                if (AccessRule.read(action) == null) {
+                                if (ReadAction.compute(NotificationsConfiguration::getNotificationsConfiguration) == null) {
                                     ourFreeSpaceCalculation.set(future);
                                     restart(1);
                                     return;

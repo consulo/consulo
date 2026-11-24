@@ -15,7 +15,6 @@
  */
 package consulo.execution.runner;
 
-import consulo.application.util.function.ThrowableComputable;
 import consulo.execution.ExecutionManager;
 import consulo.execution.RunProfileStarter;
 import consulo.execution.configuration.RunProfileState;
@@ -23,13 +22,14 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.function.ThrowableSupplier;
 import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 /**
  * @author VISTALL
- * @since 05-May-17
+ * @since 2017-05-05
  */
 public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extends BaseProgramRunner<Settings> {
     @RequiredUIAccess
@@ -38,18 +38,12 @@ public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extend
         startRunProfile(environment, state, this::executeImpl);
     }
 
-    
-    protected abstract CompletableFuture<RunContentDescriptor> executeImpl(
-        RunProfileState state,
-        ExecutionEnvironment environment
-    ) throws ExecutionException;
+    protected abstract CompletableFuture<RunContentDescriptor> executeImpl(RunProfileState state, ExecutionEnvironment environment)
+        throws ExecutionException;
 
     @RequiredUIAccess
-    protected static void startRunProfile(ExecutionEnvironment environment,
-                                          RunProfileState state,
-                                          @Nullable RunProfileStarter starter) {
-
-        ThrowableComputable<CompletableFuture<RunContentDescriptor>, ExecutionException> func = () -> {
+    protected static void startRunProfile(ExecutionEnvironment environment, RunProfileState state, @Nullable RunProfileStarter starter) {
+        ThrowableSupplier<CompletableFuture<RunContentDescriptor>, ExecutionException> func = () -> {
             CompletableFuture<RunContentDescriptor> future = starter == null
                 ? CompletableFuture.completedFuture(null)
                 : starter.executeAsync(state, environment);
@@ -64,4 +58,3 @@ public abstract class AsyncProgramRunner<Settings extends RunnerSettings> extend
         ExecutionManager.getInstance(environment.getProject()).startRunProfile((s, e) -> func.get(), state, environment);
     }
 }
-

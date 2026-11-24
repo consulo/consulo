@@ -19,7 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
 import consulo.index.io.EnumeratorStringDescriptor;
@@ -29,10 +28,11 @@ import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
@@ -106,8 +106,7 @@ public class TestStateStorage implements Disposable {
     if (myMap != null && myMap.isDirty()) myMap.force();
   }
 
-  
-  private static ThrowableComputable<PersistentHashMap<String, Record>, IOException> getComputable(File file) {
+  private static ThrowableSupplier<PersistentHashMap<String, Record>, IOException> getComputable(File file) {
     return () -> new PersistentHashMap<>(file.toPath(), EnumeratorStringDescriptor.INSTANCE, new DataExternalizer<Record>() {
       @Override
       public void save(DataOutput out, Record value) throws IOException {

@@ -15,25 +15,20 @@
  */
 package consulo.versionControlSystem.impl.internal.change.patch;
 
-import consulo.application.util.function.ThrowableComputable;
-import consulo.component.extension.Extensions;
-import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
-import consulo.versionControlSystem.change.patch.BinaryFilePatch;
-import consulo.versionControlSystem.change.patch.FilePatch;
-import consulo.versionControlSystem.change.patch.PatchEP;
-import consulo.versionControlSystem.change.patch.ApplyPatchStatus;
-import consulo.versionControlSystem.change.patch.PatchSyntaxException;
-import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
-import consulo.util.collection.ContainerUtil;
+import consulo.component.extension.ExtensionPoint;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.LocalChangeList;
+import consulo.versionControlSystem.change.patch.*;
+import consulo.versionControlSystem.impl.internal.patch.apply.PatchApplier;
+import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -53,14 +48,14 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
         return null;
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public void apply(
         List<FilePatch> remaining,
         MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroupsToApply,
         @Nullable LocalChangeList localList,
         @Nullable String fileName,
-        @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
     ) {
         CommitContext commitContext = new CommitContext();
         applyAdditionalInfoBefore(myProject, additionalInfo, commitContext);
@@ -71,19 +66,21 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
     @RequiredUIAccess
     protected CompletableFuture<ApplyPatchStatus> executeAndApplyAdditionalInfo(
         @Nullable LocalChangeList localList,
-        @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext,
         Collection<PatchApplier> appliers
     ) {
         UIAccess uiAccess = UIAccess.current();
-        return PatchApplier.executePatchGroup(appliers, localList).whenCompleteAsync((applyPatchStatus, error) -> {
-            if (error == null && applyPatchStatus != ApplyPatchStatus.ABORT) {
-                applyAdditionalInfo(myProject, additionalInfo, commitContext);
-            }
-        }, uiAccess);
+        return PatchApplier.executePatchGroup(appliers, localList).whenCompleteAsync(
+            (applyPatchStatus, error) -> {
+                if (error == null && applyPatchStatus != ApplyPatchStatus.ABORT) {
+                    applyAdditionalInfo(myProject, additionalInfo, commitContext);
+                }
+            },
+            uiAccess
+        );
     }
 
-    
     protected Collection<PatchApplier> getPatchAppliers(
         MultiMap<VirtualFile, AbstractFilePatchInProgress> patchGroups,
         @Nullable LocalChangeList localList,
@@ -94,7 +91,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
             appliers.add(new PatchApplier<BinaryFilePatch>(
                 myProject,
                 base,
-                ContainerUtil.map(patchGroups.get(base), patchInProgress -> patchInProgress.getPatch()),
+                ContainerUtil.map(patchGroups.get(base), AbstractFilePatchInProgress::getPatch),
                 localList,
                 null,
                 commitContext
@@ -105,7 +102,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
     public static void applyAdditionalInfoBefore(
         Project project,
-        @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext
     ) {
         applyAdditionalInfoImpl(
@@ -122,7 +119,7 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
     private static void applyAdditionalInfo(
         Project project,
-        @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext
     ) {
         applyAdditionalInfoImpl(
@@ -135,26 +132,26 @@ public class ApplyPatchDefaultExecutor implements ApplyPatchExecutor<AbstractFil
 
     private static void applyAdditionalInfoImpl(
         Project project,
-        @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo,
         CommitContext commitContext,
         Consumer<InfoGroup> worker
     ) {
-        PatchEP[] extensions = Extensions.getExtensions(PatchEP.EP_NAME, project);
-        if (extensions.length == 0) {
+        ExtensionPoint<PatchEP> extensionPoint = project.getExtensionPoint(PatchEP.class);
+        if (!extensionPoint.hasAnyExtensions()) {
             return;
         }
         if (additionalInfo != null) {
             try {
-                for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.compute().entrySet()) {
+                for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.get().entrySet()) {
                     String path = entry.getKey();
                     Map<String, CharSequence> innerMap = entry.getValue();
 
-                    for (PatchEP extension : extensions) {
+                    extensionPoint.forEach(extension -> {
                         CharSequence charSequence = innerMap.get(extension.getName());
                         if (charSequence != null) {
                             worker.accept(new InfoGroup(extension, path, charSequence, commitContext));
                         }
-                    }
+                    });
                 }
             }
             catch (PatchSyntaxException e) {

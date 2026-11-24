@@ -17,9 +17,9 @@ package consulo.fileEditor.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.AccessToken;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.ui.UISettings;
@@ -27,7 +27,6 @@ import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.UserHomeFileUtil;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.ProcessCanceledException;
@@ -36,10 +35,6 @@ import consulo.component.persist.PersistentStateComponentWithAsyncGet;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ui.UIAction;
-import consulo.util.concurrent.coroutine.Coroutine;
-import consulo.util.concurrent.coroutine.CoroutineScope;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;
 import consulo.component.util.ModificationTracker;
@@ -74,6 +69,7 @@ import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.ComponentContainer;
@@ -84,6 +80,9 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
+import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.NullUtils;
 import consulo.util.lang.Pair;
@@ -102,17 +101,17 @@ import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jdom.Element;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -847,7 +846,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                     provider != null,
                     "Provider for file " + file + " is null. All providers: " + Arrays.asList(providers)
                 );
-                ThrowableComputable<AsyncFileEditorProvider.Builder, RuntimeException> action = () -> {
+                builders[i] = ReadAction.compute(() -> {
                     if (myProject.isDisposed() || !file.isValid()) {
                         return null;
                     }
@@ -855,8 +854,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
                     return provider instanceof AsyncFileEditorProvider asyncFileEditorProvider
                         ? asyncFileEditorProvider.createEditorAsync(myProject, file)
                         : null;
-                };
-                builders[i] = AccessRule.read(action);
+                });
             }
             catch (ProcessCanceledException e) {
                 throw e;

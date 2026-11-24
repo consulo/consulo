@@ -16,15 +16,13 @@
 package consulo.localHistory.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.ReadAction;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
-import consulo.localHistory.ActivityId;
 import consulo.localHistory.*;
 import consulo.localHistory.impl.internal.ui.model.DirectoryHistoryDialogModel;
 import consulo.localHistory.impl.internal.ui.model.EntireFileHistoryDialogModel;
@@ -193,23 +191,20 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
 
             @Override
             public ByteContent getByteContent(String path) {
-                ThrowableComputable<ByteContent, RuntimeException> action =
-                    () -> impl.getByteContent(myGateway.createTransientRootEntryForPathOnly(path), path);
-                return AccessRule.read(action);
+                return ReadAction.compute(() -> impl.getByteContent(myGateway.createTransientRootEntryForPathOnly(path), path));
             }
         };
     }
 
     @Override
-    public @Nullable byte[] getByteContent(VirtualFile f, FileRevisionTimestampComparator c) {
+    public byte @Nullable [] getByteContent(VirtualFile f, FileRevisionTimestampComparator c) {
         if (!isInitialized()) {
             return null;
         }
         if (!myGateway.areContentChangesVersioned(f)) {
             return null;
         }
-        ThrowableComputable<byte[], RuntimeException> action = () -> new ByteContentRetriever(myGateway, myVcs, f, c).getResult();
-        return AccessRule.read(action);
+        return ReadAction.compute(() -> new ByteContentRetriever(myGateway, myVcs, f, c).getResult());
     }
 
     @Override

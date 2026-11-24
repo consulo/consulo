@@ -15,22 +15,23 @@
  */
 package consulo.diff.dir;
 
-import consulo.application.AllIcons;
-import consulo.application.ApplicationManager;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.navigation.Navigatable;
 import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.image.Image;
 import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
@@ -105,13 +106,8 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
-  public @Nullable byte[] getContent() throws IOException {
-    return ApplicationManager.getApplication().runReadAction(new ThrowableComputable<byte[], IOException>() {
-      @Override
-      public byte[] compute() throws IOException {
-        return myFile.contentsToByteArray();
-      }
-    });
+  public byte @Nullable [] getContent() throws IOException {
+    return Application.get().runReadAction((ThrowableSupplier<byte[], IOException>) myFile::contentsToByteArray);
   }
 
   @Override
@@ -121,7 +117,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
 
   @Override
   public Image getIcon() {
-    return isContainer() ? AllIcons.Nodes.Folder : VirtualFilePresentation.getIcon(myFile);
+    return isContainer() ? PlatformIconGroup.nodesFolder() : VirtualFilePresentation.getIcon(myFile);
   }
 
   @Override
@@ -160,6 +156,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
   }
 
   @Override
+  @RequiredWriteAction
   public boolean delete() {
     try {
       myFile.delete(this);

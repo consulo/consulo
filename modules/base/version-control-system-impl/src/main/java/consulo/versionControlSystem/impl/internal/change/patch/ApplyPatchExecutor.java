@@ -15,8 +15,8 @@
  */
 package consulo.versionControlSystem.impl.internal.change.patch;
 
-import consulo.application.util.function.ThrowableComputable;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.PatchSyntaxException;
@@ -31,11 +31,12 @@ import java.util.Map;
  * @since 2011-02-25
  */
 public interface ApplyPatchExecutor<T extends AbstractFilePatchInProgress> {
-  
-  String getName();
+    String getName();
 
-  void apply(List<FilePatch> remaining, MultiMap<VirtualFile, T> patchGroupsToApply,
-             @Nullable LocalChangeList localList,
-             @Nullable String fileName,
-             @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo);
+    void apply(
+        List<FilePatch> remaining, MultiMap<VirtualFile, T> patchGroupsToApply,
+        @Nullable LocalChangeList localList,
+        @Nullable String fileName,
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
+    );
 }

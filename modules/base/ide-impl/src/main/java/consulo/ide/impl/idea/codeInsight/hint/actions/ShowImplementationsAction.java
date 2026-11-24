@@ -21,7 +21,6 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -32,7 +31,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponentImpl;
 import consulo.ide.impl.idea.codeInsight.navigation.ImplementationSearcher;
-import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
@@ -52,8 +50,9 @@ import consulo.platform.base.localize.ActionLocalize;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.LegacyAnAction;
 import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.action.LegacyAnAction;
+import consulo.ui.ex.action.PopupAction;
 import consulo.ui.ex.awt.popup.AWTPopup;
 import consulo.ui.ex.popup.GenericListComponentUpdater;
 import consulo.ui.ex.popup.JBPopup;
@@ -64,10 +63,10 @@ import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.ref.SoftReference;
-import jakarta.annotation.Nonnull;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -407,7 +406,7 @@ public class ShowImplementationsAction extends LegacyAnAction implements PopupAc
             return handlerImplementations;
         }
 
-        ThrowableComputable<PsiElement[], RuntimeException> action = () -> {
+        return ReadAction.compute(() -> {
             PsiElement psiElement = element;
             PsiFile psiFile = psiElement.getContainingFile();
             if (psiFile == null) {
@@ -422,11 +421,9 @@ public class ShowImplementationsAction extends LegacyAnAction implements PopupAc
                 return new PsiElement[]{psiElement};
             }
             return PsiElement.EMPTY_ARRAY;
-        };
-        return ReadAction.compute(action);
+        });
     }
 
-    
     private static PsiElement[] filterElements(PsiElement[] targetElements) {
         Set<PsiElement> unique = new LinkedHashSet<>(Arrays.asList(targetElements));
         for (PsiElement elt : targetElements) {

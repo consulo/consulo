@@ -16,7 +16,6 @@
 package consulo.versionControlSystem.impl.internal.change.patch;
 
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -25,17 +24,18 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.io.FileUtil;
 import consulo.util.io.PathUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.AbstractVcsHelper;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.CommitContext;
 import consulo.versionControlSystem.change.LocalChangeList;
 import consulo.versionControlSystem.change.patch.FilePatch;
 import consulo.versionControlSystem.change.patch.PatchEP;
+import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.change.patch.TextFilePatch;
 import consulo.versionControlSystem.change.shelf.ShelvedChangesViewManager;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelveChangesManagerImpl;
 import consulo.versionControlSystem.impl.internal.change.shelf.ShelvedChangeListImpl;
-import consulo.versionControlSystem.change.patch.PatchSyntaxException;
 import consulo.versionControlSystem.impl.internal.util.VcsCatchingRunnable;
 import consulo.versionControlSystem.ui.VcsBalloonProblemNotifier;
 import consulo.virtualFileSystem.VirtualFile;
@@ -48,7 +48,7 @@ import java.util.*;
 public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchInProgress> {
     private static final Logger LOG = Logger.getInstance(ImportToShelfExecutor.class);
 
-    private static final String IMPORT_TO_SHELF = "Import to Shelf";
+    private static final LocalizeValue IMPORT_TO_SHELF = LocalizeValue.localizeTODO("Import to Shelf");
     private final Project myProject;
 
     public ImportToShelfExecutor(Project project) {
@@ -57,7 +57,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
 
     @Override
     public String getName() {
-        return IMPORT_TO_SHELF;
+        return IMPORT_TO_SHELF.get();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
         final MultiMap<VirtualFile, TextFilePatchInProgress> patchGroupsToApply,
         @Nullable LocalChangeList localList,
         final @Nullable String fileName,
-        @Nullable ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
+        @Nullable ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> additionalInfo
     ) {
         if (fileName == null) {
             LOG.error("Patch file name shouldn't be null");
@@ -101,7 +101,7 @@ public class ImportToShelfExecutor implements ApplyPatchExecutor<TextFilePatchIn
                     if (additionalInfo != null) {
                         try {
                             Map<String, PatchEP> extensions = new HashMap<>();
-                            for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.compute().entrySet()) {
+                            for (Map.Entry<String, Map<String, CharSequence>> entry : additionalInfo.get().entrySet()) {
                                 String filePath = entry.getKey();
                                 Map<String, CharSequence> extToValue = entry.getValue();
                                 for (Map.Entry<String, CharSequence> innerEntry : extToValue.entrySet()) {

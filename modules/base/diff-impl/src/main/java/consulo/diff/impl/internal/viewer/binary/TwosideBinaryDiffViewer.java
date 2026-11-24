@@ -15,10 +15,9 @@
  */
 package consulo.diff.impl.internal.viewer.binary;
 
-import consulo.application.AccessRule;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffContext;
 import consulo.diff.content.DiffContent;
@@ -41,6 +40,7 @@ import consulo.ui.Component;
 import consulo.ui.MessageBoxes;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jspecify.annotations.Nullable;
 
@@ -123,7 +123,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
             VirtualFile file1 = ((FileContent)contents.get(0)).getFile();
             VirtualFile file2 = ((FileContent)contents.get(1)).getFile();
 
-            ThrowableComputable<@Nullable Supplier<Component>, RuntimeException> action = () -> {
+            Supplier<Component> notification = ReadAction.compute((ThrowableSupplier<@Nullable Supplier<Component>, RuntimeException>) () -> {
                 if (!file1.isValid() || !file2.isValid()) {
                     return DiffNotifications::createError;
                 }
@@ -140,8 +140,7 @@ public class TwosideBinaryDiffViewer extends TwosideDiffViewer<BinaryEditorHolde
                     LOG.warn(e);
                     return null;
                 }
-            };
-            Supplier<Component> notification = AccessRule.read(action);
+            });
 
             return applyNotification(notification);
         }

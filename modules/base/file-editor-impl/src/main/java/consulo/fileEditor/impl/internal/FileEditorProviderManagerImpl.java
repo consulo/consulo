@@ -18,7 +18,6 @@ package consulo.fileEditor.impl.internal;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -46,10 +45,9 @@ import java.util.List;
 @Singleton
 @ServiceImpl
 @State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager", roamingType = RoamingType.DISABLED))
-public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerState> {
-
+public final class FileEditorProviderManagerImpl extends FileEditorProviderManager
+    implements PersistentStateComponent<FileEditorProviderManagerState> {
     private final Application myApplication;
-
     private FileEditorProviderManagerState myState = new FileEditorProviderManagerState();
 
     @Inject
@@ -61,22 +59,16 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     public FileEditorProvider[] getProviders(Project project, VirtualFile file) {
         // Collect all possible editors
         List<FileEditorProvider> sharedProviders = new ArrayList<>();
-        boolean doNotShowTextEditor = false;
-        for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
-            ThrowableComputable<Boolean, RuntimeException> action = () -> {
-                if (DumbService.isDumb(project) && !DumbService.isDumbAware(provider)) {
-                    return false;
-                }
-                return provider.accept(project, file);
-            };
-            if (ReadAction.compute(action)) {
+        myApplication.getExtensionPoint(FileEditorProvider.class).forEach(provider -> {
+            if (ReadAction.compute(
+                () -> (!DumbService.isDumb(project) || DumbService.isDumbAware(provider)) && provider.accept(project, file)
+            )) {
                 sharedProviders.add(provider);
-                doNotShowTextEditor |= provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR;
             }
-        }
+        });
 
         // Throw out default editors provider if necessary
-        if (doNotShowTextEditor) {
+        if (ContainerUtil.exists(sharedProviders, provider -> provider.getPolicy() == FileEditorPolicy.HIDE_DEFAULT_EDITOR)) {
             ContainerUtil.retainAll(sharedProviders, provider -> !(provider instanceof TextEditorProvider));
         }
 
@@ -88,14 +80,9 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
     @Override
     public @Nullable FileEditorProvider getProvider(String editorTypeId) {
-        for (FileEditorProvider provider : myApplication.getExtensionList(FileEditorProvider.class)) {
-            if (provider.getEditorTypeId().equals(editorTypeId)) {
-                return provider;
-            }
-        }
-        return null;
+        return myApplication.getExtensionPoint(FileEditorProvider.class)
+            .findFirstSafe(provider -> provider.getEditorTypeId().equals(editorTypeId));
     }
-
 
     @Override
     public FileEditorProviderManagerState getState() {
@@ -108,10 +95,10 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
     }
 
     public void providerSelected(FileEditorComposite composite) {
-        if (!(composite instanceof FileEditorWithProviderComposite)) {
+        if (!(composite instanceof FileEditorWithProviderComposite fileEditorWithProviderComposite)) {
             return;
         }
-        FileEditorProvider[] providers = ((FileEditorWithProviderComposite) composite).getProviders();
+        FileEditorProvider[] providers = fileEditorWithProviderComposite.getProviders();
         if (providers.length < 2) {
             return;
         }
@@ -122,7 +109,11 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
         return StringUtil.join(ContainerUtil.map(providers, FileEditorProvider::getEditorTypeId), ",");
     }
 
-    public @Nullable FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
+    public @Nullable FileEditorProvider getSelectedFileEditorProvider(
+        EditorHistoryManager editorHistoryManager,
+        VirtualFile file,
+        FileEditorProvider[] providers
+    ) {
         FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
         if (provider != null || providers.length < 2) {
             return provider;

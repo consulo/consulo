@@ -16,11 +16,11 @@
 package consulo.versionControlSystem.change.patch;
 
 import consulo.application.util.LineTokenizer;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.StringEscapeUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -174,8 +174,8 @@ public class PatchReader {
     }
 
     
-    public ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> getAdditionalInfo(@Nullable Set<String> paths) {
-        ThrowableComputable<Map<String, Map<String, CharSequence>>, PatchSyntaxException> result;
+    public ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> getAdditionalInfo(@Nullable Set<String> paths) {
+        ThrowableSupplier<Map<String, Map<String, CharSequence>>, PatchSyntaxException> result;
         PatchSyntaxException e = myAdditionalInfoParser.getSyntaxException();
 
         if (e != null) {

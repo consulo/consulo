@@ -19,11 +19,11 @@ import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.versionControlSystem.*;
 import consulo.versionControlSystem.diff.DiffProvider;
 import consulo.versionControlSystem.diff.ItemLatestState;
@@ -80,7 +80,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         boolean silent,
         @Nullable Consumer<VcsHistorySession> backgroundSpecialization
     ) {
-        ThrowableComputable<VcsHistorySession, VcsException> throwableComputable =
+        ThrowableSupplier<VcsHistorySession, VcsException> throwableComputable =
             myHistoryComputerFactory.create(filePath, backgroundSpecialization, vcsKey);
         VcsBackgroundableActions resultingActionKey = actionKey == null ? VcsBackgroundableActions.CREATE_HISTORY_SESSION : actionKey;
         Object key = VcsBackgroundableActions.keyFrom(filePath);
@@ -287,10 +287,10 @@ public class VcsHistoryProviderBackgroundableProxy {
     }
 
     private interface HistoryComputerFactory {
-        ThrowableComputable<VcsHistorySession, VcsException> create(FilePath filePath, Consumer<VcsHistorySession> consumer, VcsKey vcsKey);
+        ThrowableSupplier<VcsHistorySession, VcsException> create(FilePath filePath, Consumer<VcsHistorySession> consumer, VcsKey vcsKey);
     }
 
-    private class SimpleHistoryComputer implements ThrowableComputable<VcsHistorySession, VcsException> {
+    private class SimpleHistoryComputer implements ThrowableSupplier<VcsHistorySession, VcsException> {
         private final FilePath myFilePath;
         private final Consumer<VcsHistorySession> myConsumer;
 
@@ -300,7 +300,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         }
 
         @Override
-        public VcsHistorySession compute() throws VcsException {
+        public VcsHistorySession get() throws VcsException {
             VcsHistorySession session = createSessionWithLimitCheck(myFilePath);
             if (myConsumer != null) {
                 myConsumer.accept(session);
@@ -329,7 +329,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         return partner.getSession();
     }
 
-    private class CachingHistoryComputer implements ThrowableComputable<VcsHistorySession, VcsException> {
+    private class CachingHistoryComputer implements ThrowableSupplier<VcsHistorySession, VcsException> {
         private final FilePath myFilePath;
         private final Consumer<VcsHistorySession> myConsumer;
         private final VcsKey myVcsKey;
@@ -341,7 +341,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         }
 
         @Override
-        public VcsHistorySession compute() throws VcsException {
+        public VcsHistorySession get() throws VcsException {
             VcsAbstractHistorySession session;
             // we check for the last revision, since requests to this exact method at the moment only request history once, and no refresh is possible later
             session = getSessionFromCacheWithLastRevisionCheck(myFilePath, myVcsKey);

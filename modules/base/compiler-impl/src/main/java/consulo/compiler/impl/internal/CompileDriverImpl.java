@@ -20,7 +20,6 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.Semaphore;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.build.ui.BuildContentManager;
 import consulo.build.ui.progress.BuildProgress;
 import consulo.build.ui.progress.BuildProgressDescriptor;
@@ -70,7 +69,6 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.OrderedSet;
-import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Couple;
@@ -78,8 +76,6 @@ import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Predicates;
 import consulo.util.lang.ref.SimpleReference;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -802,8 +798,7 @@ public class CompileDriverImpl implements CompileDriver {
     }
 
     private void clearAffectedOutputPathsIfPossible(CompileContextEx context) {
-        @RequiredReadAction
-        ThrowableComputable<List<Path>, RuntimeException> action = () -> {
+        List<Path> scopeOutputs = ReadAction.compute(() -> {
             MultiMap<Path, Module> outputToModulesMap = new MultiMap<>();
             for (Module module : ModuleManager.getInstance(myProject).getModules()) {
                 ModuleCompilerPathsManager moduleCompilerPathsManager = ModuleCompilerPathsManager.getInstance(module);
@@ -830,8 +825,7 @@ public class CompileDriverImpl implements CompileDriver {
                 }
             }
             return result;
-        };
-        List<Path> scopeOutputs = ReadAction.compute(action);
+        });
         if (!scopeOutputs.isEmpty()) {
             CompilerUtil.runInContext(
                 context,

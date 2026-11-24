@@ -16,22 +16,23 @@
 package consulo.ide.impl.project.ui.view.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.language.impl.internal.psi.AstLoadingFilter;
 import consulo.project.ui.view.internal.ProjectViewInternalHelper;
+import consulo.util.lang.function.ThrowableSupplier;
 import jakarta.inject.Singleton;
 
 import java.util.function.Supplier;
 
 /**
  * @author VISTALL
- * @since 10-Aug-22
+ * @since 2022-08-10
  */
 @Singleton
 @ServiceImpl
 public class ProjectViewInternalHelperImpl implements ProjectViewInternalHelper {
-  @Override
-  public <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable, Supplier<String> debugInfo) throws E {
-    return AstLoadingFilter.disallowTreeLoading(computable, debugInfo);
-  }
+    @Override
+    public <T, E extends Throwable> T disallowTreeLoading(ThrowableSupplier<? extends T, E> computable, Supplier<String> debugInfo)
+        throws E {
+        return AstLoadingFilter.disallowTreeLoading(computable, debugInfo);
+    }
 }

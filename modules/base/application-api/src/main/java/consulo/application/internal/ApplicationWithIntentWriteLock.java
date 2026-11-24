@@ -16,43 +16,43 @@
 package consulo.application.internal;
 
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.util.lang.function.ThrowableSupplier;
 
 public interface ApplicationWithIntentWriteLock extends Application {
-  /**
-   * Acquires IW lock if it's not acquired by the current thread.
-   *
-   * @param invokedClassFqn fully qualified name of the class requiring the write-intent lock.
-   */
-  default void acquireWriteIntentLock(String invokedClassFqn) {
-    throw new UnsupportedOperationException();
-  }
+    /**
+     * Acquires IW lock if it's not acquired by the current thread.
+     *
+     * @param invokedClassFqn fully qualified name of the class requiring the write-intent lock.
+     */
+    default void acquireWriteIntentLock(String invokedClassFqn) {
+        throw new UnsupportedOperationException();
+    }
 
-  /**
-   * Releases IW lock.
-   */
-  default void releaseWriteIntentLock() {
-    throw new UnsupportedOperationException();
-  }
+    /**
+     * Releases IW lock.
+     */
+    default void releaseWriteIntentLock() {
+        throw new UnsupportedOperationException();
+    }
 
-  /**
-   * Runs the specified action, releasing the write-intent lock if it is acquired at the moment of the call.
-   * <p>
-   * This method is used to implement higher-level API. Please do not use it directly.
-   */
-  default <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
-    return action.compute();
-  }
+    /**
+     * Runs the specified action, releasing the write-intent lock if it is acquired at the moment of the call.
+     * <p>
+     * This method is used to implement higher-level API. Please do not use it directly.
+     */
+    default <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableSupplier<T, E> action) throws E {
+        return action.get();
+    }
 
-  /**
-   * Runs the specified action under the write-intent lock. Can be called from any thread. The action is executed immediately
-   * if no write-intent action is currently running, or blocked until the currently running write-intent action completes.
-   * <p>
-   * This method is used to implement higher-level API. Please do not use it directly.
-   *
-   * @param action the action to run
-   */
-  default void runIntendedWriteActionOnCurrentThread(Runnable action) {
-    action.run();
-  }
+    /**
+     * Runs the specified action under the write-intent lock. Can be called from any thread. The action is executed immediately
+     * if no write-intent action is currently running, or blocked until the currently running write-intent action completes.
+     * <p>
+     * This method is used to implement higher-level API. Please do not use it directly.
+     *
+     * @param action the action to run
+     */
+    default void runIntendedWriteActionOnCurrentThread(Runnable action) {
+        action.run();
+    }
 }

@@ -17,7 +17,7 @@ package consulo.execution.debug.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessRule;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.ReadAction;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
@@ -39,11 +39,7 @@ import consulo.execution.debug.impl.internal.evaluate.XDebuggerEditorLinePainter
 import consulo.execution.debug.impl.internal.setting.XDebuggerSettingManagerImpl;
 import consulo.execution.debug.impl.internal.ui.XDebugSessionTab;
 import consulo.execution.debug.localize.XDebuggerLocalize;
-import consulo.execution.debug.step.HasForceStepInto;
-import consulo.execution.debug.step.HasRunToPosition;
-import consulo.execution.debug.step.HasStepIntoMyCode;
-import consulo.execution.debug.step.XSmartStepIntoHandler;
-import consulo.execution.debug.step.XSmartStepIntoVariant;
+import consulo.execution.debug.step.*;
 import consulo.execution.debug.ui.XDebugSessionData;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -65,7 +61,6 @@ import consulo.project.ui.util.AppUIUtil;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.collection.SmartList;
@@ -417,9 +412,7 @@ public class XDebugSessionImpl implements XDebugSession {
         boolean temporary
     ) {
         if (register) {
-            @RequiredReadAction
-            ThrowableComputable<Boolean, RuntimeException> action = () -> isBreakpointActive(b);
-            boolean active = AccessRule.read(action);
+            boolean active = ReadAction.compute(() -> isBreakpointActive(b));
             if (active) {
                 synchronized (myRegisteredBreakpoints) {
                     myRegisteredBreakpoints.put(b, new CustomizedBreakpointPresentation());
