@@ -216,7 +216,8 @@ public final class DaemonListeners implements Disposable {
 
         PsiChangeHandler changeHandler = new PsiChangeHandler(myProject, connection);
         Disposer.register(this, changeHandler);
-        PsiManager.getInstance(myProject).addPsiTreeChangeListener(changeHandler, changeHandler);
+        // the handler only records the changes and queues a pooled alarm: it runs in place, by the thread changing the PSI
+        PsiManager.getInstance(myProject).addPsiTreeChangeListenerBackgroundable(changeHandler, changeHandler);
 
         connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
             @Override

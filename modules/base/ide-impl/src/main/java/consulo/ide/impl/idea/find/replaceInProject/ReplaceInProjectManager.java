@@ -7,7 +7,8 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.ProgressBuilderFactory;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
@@ -32,6 +33,8 @@ import consulo.platform.base.localize.CommonLocalize;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationService;
+import consulo.ui.UIAccess;
+import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyCode;
 import consulo.ui.event.details.KeyStroke;
@@ -44,6 +47,8 @@ import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
 import consulo.usage.rule.UsageInFile;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.step.Loop;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.xml.XmlStringUtil;
@@ -56,6 +61,8 @@ import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Singleton
@@ -349,6 +356,12 @@ public class ReplaceInProjectManager {
             }
 
             @Override
+            public ActionUpdateThread getActionUpdateThread() {
+                // the selection is read from the usage view tree, which is UI-only
+                return ActionUpdateThread.EDT;
+            }
+
+            @Override
             public void update(AnActionEvent e) {
                 Presentation presentation = e.getPresentation();
                 presentation.setText(FindLocalize.findReplaceSelectedAction(replaceContext.getUsageView().getSelectedUsages().size()));
@@ -357,55 +370,104 @@ public class ReplaceInProjectManager {
         });
     }
 
-    @RequiredUIAccess
-    private boolean replaceUsages(ReplaceContext replaceContext, Collection<Usage> usages) {
-        if (!ensureUsagesWritable(replaceContext, usages)) {
-            return true;
+    /**
+     * Replaces the usages under a modal progress, a chunk of them in each write action on the UI thread - in between, the UI paints the
+     * progress and handles Cancel. Each chunk is a command of its own; the commands share a group, so they undo as one.
+     */
+    private class ChunkedReplacement {
+        private static final long CHUNK_NANOS = TimeUnit.MILLISECONDS.toNanos(50);
+
+        private final ReplaceContext myReplaceContext;
+        private final List<Usage> myUsages;
+        private final Iterator<Usage> myIterator;
+        private final Object myCommandGroup = new Object();
+        private int myProcessed;
+        private int myReplacedCount;
+        private boolean myMalformed;
+        private boolean myCancelled;
+        private @Nullable VirtualFile myLastFile;
+
+        ChunkedReplacement(ReplaceContext replaceContext, List<Usage> usages) {
+            myReplaceContext = replaceContext;
+            myUsages = usages;
+            myIterator = usages.iterator();
         }
 
-        int[] replacedCount = {0};
-        boolean[] success = {true};
+        @RequiredUIAccess
+        CompletableFuture<?> start(UIAccess uiAccess) {
+            return Application.get().getInstance(ProgressBuilderFactory.class)
+                .newProgressBuilder(myProject, FindLocalize.findReplaceAllConfirmationTitle())
+                .cancelable()
+                .modal()
+                .execute(uiAccess, () -> Coroutine.first(Loop.<Boolean>loopWhile(
+                    more -> more == null || more,
+                    UIAction.<Boolean, Boolean>apply((more, continuation) -> replaceChunkInCommand(ProgressIndicator.from(continuation)))
+                )));
+        }
 
-        success[0] &= ((ApplicationEx)Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
-            FindLocalize.findReplaceAllConfirmationTitle(),
-            myProject,
-            null,
-            indicator -> {
-                indicator.setIndeterminate(false);
-                int processed = 0;
-                VirtualFile lastFile = null;
+        /**
+         * @return true when the replaced usages were all well-formed and the replacement was not cancelled
+         */
+        boolean isSuccess() {
+            return !myMalformed && !myCancelled;
+        }
 
-                for (Usage usage : usages) {
-                    ++processed;
-                    indicator.checkCanceled();
-                    indicator.setFraction((float)processed / usages.size());
+        List<Usage> getProcessedUsages() {
+            return myUsages.subList(0, myProcessed);
+        }
 
-                    if (usage instanceof UsageInFile usageInFile) {
-                        VirtualFile virtualFile = usageInFile.getFile();
-                        if (virtualFile != null && !virtualFile.equals(lastFile)) {
-                            indicator.setText2(LocalizeValue.of(virtualFile.getPresentableUrl()));
-                            lastFile = virtualFile;
+        @RequiredUIAccess
+        private boolean replaceChunkInCommand(ProgressIndicator indicator) {
+            boolean[] more = {false};
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(FindLocalize.findReplaceCommand())
+                .groupId(myCommandGroup)
+                .inWriteAction()
+                .run(() -> more[0] = replaceChunk(indicator));
+            return more[0];
+        }
+
+        @RequiredUIAccess
+        private boolean replaceChunk(ProgressIndicator indicator) {
+            indicator.setIndeterminate(false);
+            long deadline = System.nanoTime() + CHUNK_NANOS;
+            while (myIterator.hasNext()) {
+                if (indicator.isCanceled()) {
+                    myCancelled = true;
+                    return false;
+                }
+
+                Usage usage = myIterator.next();
+                myProcessed++;
+                indicator.setFraction((double) myProcessed / myUsages.size());
+
+                if (usage instanceof UsageInFile usageInFile) {
+                    VirtualFile virtualFile = usageInFile.getFile();
+                    if (virtualFile != null && !virtualFile.equals(myLastFile)) {
+                        indicator.setText2(LocalizeValue.of(virtualFile.getPresentableUrl()));
+                        myLastFile = virtualFile;
+                    }
+                }
+
+                ProgressManager.getInstance().executeNonCancelableSection(() -> {
+                    try {
+                        if (replaceUsage(usage, myReplaceContext.getFindModel(), myReplaceContext.getExcludedSetCached(), false)) {
+                            myReplacedCount++;
                         }
                     }
+                    catch (FindManager.MalformedReplacementStringException ex) {
+                        markAsMalformedReplacement(myReplaceContext, usage);
+                        myMalformed = true;
+                    }
+                });
 
-                    ProgressManager.getInstance().executeNonCancelableSection(() -> {
-                        try {
-                            if (replaceUsage(usage, replaceContext.getFindModel(), replaceContext.getExcludedSetCached(), false)) {
-                                replacedCount[0]++;
-                            }
-                        }
-                        catch (FindManager.MalformedReplacementStringException ex) {
-                            markAsMalformedReplacement(replaceContext, usage);
-                            success[0] = false;
-                        }
-                    });
+                if (System.nanoTime() > deadline) {
+                    break;
                 }
             }
-        );
-
-        replaceContext.getUsageView().removeUsagesBulk(usages);
-        reportNumberReplacedOccurrences(myProject, replacedCount[0]);
-        return success[0];
+            return myIterator.hasNext();
+        }
     }
 
     private static void markAsMalformedReplacement(ReplaceContext replaceContext, Usage usage) {
@@ -502,22 +564,22 @@ public class ReplaceInProjectManager {
             return;
         }
 
-        CommandProcessor.getInstance().newCommand()
-            .project(myProject)
-            .name(FindLocalize.findReplaceCommand())
-            .run(() -> {
-                boolean success = replaceUsages(replaceContext, usages);
-                UsageView usageView = replaceContext.getUsageView();
+        UIAccess uiAccess = UIAccess.current();
+        ChunkedReplacement replacement = new ChunkedReplacement(replaceContext, usages);
+        replacement.start(uiAccess).whenComplete((result, error) -> uiAccess.give(() -> {
+            UsageView usageView = replaceContext.getUsageView();
+            // the usages left after a cancel stay in the view, to be replaced later
+            usageView.removeUsagesBulk(replacement.getProcessedUsages());
+            reportNumberReplacedOccurrences(myProject, replacement.myReplacedCount);
+            replaceContext.invalidateExcludedSetCache();
 
-                if (closeUsageViewIfEmpty(usageView, success)) {
-                    return;
-                }
-                IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
-                    () -> IdeFocusManager.getGlobalInstance().requestFocus(usageView.getPreferredFocusableComponent(), true)
-                );
-            });
-
-        replaceContext.invalidateExcludedSetCache();
+            if (closeUsageViewIfEmpty(usageView, error == null && replacement.isSuccess())) {
+                return;
+            }
+            IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(
+                () -> IdeFocusManager.getGlobalInstance().requestFocus(usageView.getPreferredFocusableComponent(), true)
+            );
+        }));
     }
 
     @RequiredUIAccess

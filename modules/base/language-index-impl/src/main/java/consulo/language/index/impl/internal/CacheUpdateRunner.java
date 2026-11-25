@@ -192,7 +192,7 @@ public class CacheUpdateRunner {
                     throw new ProcessCanceledException();
                 }
 
-                if (!isWriting() && ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, new AttemptIndicator(myIndicator))) {
+                if (ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(action, new AttemptIndicator(myIndicator))) {
                     myProgressUpdater.processed(file);
                     return;
                 }
@@ -200,10 +200,6 @@ public class CacheUpdateRunner {
                 LockSupport.parkNanos(backoffNanos);
                 backoffNanos = Math.min(backoffNanos * 2, MAX_CONTENTION_BACKOFF_NANOS);
             }
-        }
-
-        private boolean isWriting() {
-            return myApplication.isWriteActionPending() || myApplication.isWriteActionInProgress();
         }
 
         private static void handleIndexingException(VirtualFile file, Throwable e) {

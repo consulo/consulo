@@ -2,6 +2,7 @@
 package consulo.language.editor.action;
 
 import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
 import consulo.dataContext.DataContext;
@@ -14,11 +15,13 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnActionWithAsyncUpdate;
+import consulo.ui.ex.action.InputAction;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.ui.ex.action.Presentation;
@@ -29,7 +32,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author Dmitry Avdeev
  */
-public abstract class CodeInsightAction extends AnAction implements AnActionWithAsyncUpdate {
+public abstract class CodeInsightAction extends AnAction implements AnActionWithAsyncUpdate, InputAction {
     protected CodeInsightAction() {
     }
 
@@ -46,6 +49,30 @@ public abstract class CodeInsightAction extends AnAction implements AnActionWith
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getRequiredData(Project.KEY);
         Editor hostEditor = e.getData(EditorKeys.HOST_EDITOR);
+        DataContext dataContext = e.getDataContext();
+        ApplicationEx application = (ApplicationEx) Application.get();
+        if (!isInputAction() || application.isInsideInput()) {
+            perform(project, hostEditor, dataContext);
+            return;
+        }
+
+        application.runInput(UIAccess.current(), () -> {
+            if (!project.isDisposed() && (hostEditor == null || !hostEditor.isDisposed())) {
+                perform(project, hostEditor, dataContext);
+            }
+        });
+    }
+
+    /**
+     * The action is input when its handler starts in a write action - it does nothing visible before it writes.
+     */
+    @Override
+    public boolean isInputAction() {
+        return getHandler().startInWriteAction();
+    }
+
+    @RequiredUIAccess
+    private void perform(Project project, @Nullable Editor hostEditor, DataContext dataContext) {
         if (hostEditor != null) {
             PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(hostEditor.getDocument());
             if (file != null) {
@@ -53,7 +80,7 @@ public abstract class CodeInsightAction extends AnAction implements AnActionWith
             }
         }
 
-        Editor editor = getEditor(e.getDataContext(), project, false);
+        Editor editor = getEditor(dataContext, project, false);
 
         actionPerformedImpl(project, editor);
     }

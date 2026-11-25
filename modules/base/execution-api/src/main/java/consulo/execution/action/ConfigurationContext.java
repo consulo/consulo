@@ -37,6 +37,7 @@ import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
@@ -48,7 +49,8 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Context for creating run configurations from a location in the source code.
+ * Context for creating run configurations from a location in the source code. One context can be shared by several threads
+ * (see {@link #getFromContext(AnActionEvent)}): what it computes lazily is computed once.
  *
  * @see RunConfigurationProducer
  */
@@ -65,7 +67,19 @@ public class ConfigurationContext {
 
     public static Key<ConfigurationContext> SHARED_CONTEXT = Key.create("SHARED_CONTEXT");
 
+    private static final Key<ConfigurationContext> UPDATE_SESSION_CONTEXT = Key.create("ConfigurationContext.updateSession");
+
     private List<ConfigurationFromContext> myConfigurationsFromContext;
+
+    /**
+     * The context of an action event. Within a menu or toolbar update it is created once and shared by all the actions of the
+     * update, which run in parallel - the executor actions of a context menu (Run, Debug, Coverage...) ask the same producers
+     * about the same location.
+     */
+    @RequiredReadAction
+    public static ConfigurationContext getFromContext(AnActionEvent event) {
+        return event.getUpdateSession().sharedData(UPDATE_SESSION_CONTEXT, () -> getFromContext(event.getDataContext()));
+    }
 
     @RequiredReadAction
     public static ConfigurationContext getFromContext(DataContext dataContext) {
@@ -177,7 +191,7 @@ public class ConfigurationContext {
      */
     @SuppressWarnings("deprecation")
     @RequiredReadAction
-    public @Nullable RunnerAndConfigurationSettings findExisting() {
+    public synchronized @Nullable RunnerAndConfigurationSettings findExisting() {
         if (myExistingConfiguration != null) {
             return myExistingConfiguration.get();
         }
@@ -300,7 +314,7 @@ public class ConfigurationContext {
         return myRuntimeConfiguration == null || ConfigurationTypeUtil.equals(myRuntimeConfiguration.getType(), type);
     }
 
-    public @Nullable List<ConfigurationFromContext> getConfigurationsFromContext() {
+    public synchronized @Nullable List<ConfigurationFromContext> getConfigurationsFromContext() {
         if (myConfigurationsFromContext == null) {
             myConfigurationsFromContext = PreferredProducerFind.getConfigurationsFromContext(myLocation, this, true);
         }
@@ -322,14 +336,14 @@ public class ConfigurationContext {
 
     @Deprecated
     @SuppressWarnings({"deprecation", "unused"})
-    public @Nullable RunnerAndConfigurationSettings updateConfiguration(RuntimeConfigurationProducer producer) {
+    public synchronized @Nullable RunnerAndConfigurationSettings updateConfiguration(RuntimeConfigurationProducer producer) {
         myConfiguration = producer.getConfiguration();
         return myConfiguration;
     }
 
     @Deprecated
     @SuppressWarnings("deprecation")
-    public @Nullable List<RuntimeConfigurationProducer> findPreferredProducers() {
+    public synchronized @Nullable List<RuntimeConfigurationProducer> findPreferredProducers() {
         if (myPreferredProducers == null) {
             myPreferredProducers = PreferredProducerFind.findPreferredProducers(myLocation, this, true);
         }

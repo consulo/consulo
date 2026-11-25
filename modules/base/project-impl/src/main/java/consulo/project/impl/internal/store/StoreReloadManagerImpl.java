@@ -17,7 +17,6 @@ package consulo.project.impl.internal.store;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
-import consulo.application.Application;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.component.store.impl.internal.storage.StateStorageBase;
 import consulo.component.store.impl.internal.storage.StorageUtil;
@@ -27,7 +26,6 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.StoreReloadManager;
-import consulo.ui.UIAccess;
 
 import consulo.util.collection.Sets;
 import consulo.util.lang.ThreeState;
@@ -85,13 +83,11 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         virtualFileManager.addVirtualFileManagerListener(new VirtualFileManagerListener() {
             @Override
             public void beforeRefreshStart(boolean asynchronous) {
-                LOG.warn("RELOAD-DEBUG beforeRefreshStart async=" + asynchronous + debugState());
                 blockReloadingProjectOnExternalChanges();
             }
 
             @Override
             public void afterRefreshFinish(boolean asynchronous) {
-                LOG.warn("RELOAD-DEBUG afterRefreshFinish async=" + asynchronous + debugState());
                 unblockReloadingProjectOnExternalChanges();
             }
         }, this);
@@ -105,13 +101,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
         }
     }
 
-    private static String debugState() {
-        Application application = Application.get();
-        return " [thread=" + Thread.currentThread().getName()
-            + ", writeAccess=" + application.isWriteAccessAllowed()
-            + ", uiThread=" + UIAccess.isUIThread() + "]";
-    }
-
     /**
      * Reloads the components backed by the storages that changed on disk. Nothing is asked of the user and the
      * project is never reloaded as a whole - each component takes the new state through its own
@@ -119,8 +108,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
      * independently by the file tracker in {@code SchemeManagerImpl}.
      */
     private void reloadChangedStorages() {
-        LOG.warn("RELOAD-DEBUG reloadChangedStorages enter pending=" + myChangedProjectFiles.size()
-            + ", blockCount=" + myReloadBlockCount.get() + ", inProgress=" + myReloadInProgress.get() + debugState());
 
         if (isProjectGone() || myChangedProjectFiles.isEmpty()) {
             return;
@@ -156,7 +143,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
             return;
         }
 
-        LOG.warn("RELOAD-DEBUG reinit start components=" + changedComponentNames + debugState());
 
         try {
             myProject.getInstance(IProjectStore.class)
@@ -179,7 +165,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
      * read-only once it has been reloaded.
      */
     private void finishReload(Collection<? extends StateStorage> causes) {
-        LOG.warn("RELOAD-DEBUG finishReload" + debugState());
 
         for (StateStorage cause : causes) {
             if (cause instanceof StateStorageBase stateStorageBase) {
@@ -196,8 +181,6 @@ public class StoreReloadManagerImpl implements StoreReloadManager, Disposable {
     }
 
     private void registerProjectToReload(VirtualFile file, StateStorage storage) {
-        LOG.warn("RELOAD-DEBUG registerProjectToReload file=" + file.getName()
-            + ", blockCount=" + myReloadBlockCount.get() + debugState());
 
         myChangedProjectFiles.add(storage);
 

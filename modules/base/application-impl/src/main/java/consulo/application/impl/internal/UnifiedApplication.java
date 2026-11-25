@@ -42,7 +42,7 @@ public abstract class UnifiedApplication extends BaseApplication {
     public UnifiedApplication(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
 
-        myLock = new StampedRWLock();
+        myLock = RWLock.create();
 
         ApplicationManager.setApplication(this);
     }

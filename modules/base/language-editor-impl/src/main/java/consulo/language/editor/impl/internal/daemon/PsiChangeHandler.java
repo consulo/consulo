@@ -36,7 +36,7 @@ import consulo.language.editor.impl.internal.markup.EditorMarkupModel;
 import consulo.language.editor.impl.internal.markup.ErrorStripeUpdateManager;
 import consulo.language.editor.internal.DaemonCodeAnalyzerInternal;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
-import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
+import consulo.language.impl.internal.psi.PsiDocumentTransactionListenerBackgroundable;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
@@ -44,7 +44,6 @@ import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
@@ -110,13 +109,13 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable,
             this
         );
 
-        connection.subscribe(PsiDocumentTransactionListener.class, new PsiDocumentTransactionListener() {
+        // records the change in place, by the thread committing the document - the error stripe is refreshed on the UI thread
+        connection.subscribe(PsiDocumentTransactionListenerBackgroundable.class, new PsiDocumentTransactionListenerBackgroundable() {
             @Override
             public void transactionStarted(Document doc, PsiFile file) {
             }
 
             @Override
-            @RequiredUIAccess
             public void transactionCompleted(Document document, PsiFile file) {
                 updateChangesForDocumentOnCommit(document);
                 // ensure we don't call updateChangesForDocumentOnCommit() twice which can lead to whole file re-highlight
@@ -129,7 +128,6 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable,
     public void dispose() {
     }
 
-    @RequiredUIAccess
     private void updateChangesForDocumentOnCommit(Document document) {
         if (myProject.isDisposed()) {
             return;
@@ -149,16 +147,17 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable,
             }
         }
 
-        Editor selectedEditor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
-        PsiFile selectedPsiFile = selectedEditor == null ? null : psiDocumentManager.getCachedPsiFile(selectedEditor.getDocument());
-        if (selectedPsiFile != null && !application.isUnitTestMode()) {
+        if (!application.isUnitTestMode()) {
             application.invokeLater(
                 () -> {
-                    if (!selectedEditor.isDisposed() && selectedEditor.getMarkupModel() instanceof EditorMarkupModel markupModel) {
+                    Editor selectedEditor = FileEditorManager.getInstance(myProject).getSelectedTextEditor();
+                    PsiFile selectedPsiFile = selectedEditor == null ? null : psiDocumentManager.getCachedPsiFile(selectedEditor.getDocument());
+                    if (selectedPsiFile != null && !selectedEditor.isDisposed()
+                        && selectedEditor.getMarkupModel() instanceof EditorMarkupModel markupModel) {
                         ErrorStripeUpdateManager.getInstance(myProject).setOrRefreshErrorStripeRenderer(markupModel, selectedPsiFile);
                     }
                 },
-                application.getModalityStateForComponent(selectedEditor.getComponent()),
+                application.getNoneModalityState(),
                 myProject.getDisposed()
             );
         }

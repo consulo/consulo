@@ -14,7 +14,6 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.ui.ModalityState;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.function.ThrowableSupplier;
@@ -224,14 +223,9 @@ public class ProgressIndicatorUtils {
         Executor executor,
         final ReadTask readTask
     ) {
-        // invoke later even if on EDT
-        // to avoid tasks eagerly restarting immediately, allocating many pooled threads
-        // which get cancelled too soon when a next write action arrives in the same EDT batch
-        // (can happen when processing multiple VFS events or writing multiple files on save)
-
         CompletableFuture<?> future = new CompletableFuture<>();
         Application application = Application.get();
-        application.invokeLater(
+        ((ApplicationEx) application).runWhenWriteActionIsCompleted(
             () -> {
                 if (application.isDisposed() || progressIndicator.isCanceled() || future.isCancelled()) {
                     future.complete(null);
@@ -305,8 +299,7 @@ public class ProgressIndicatorUtils {
                     future.completeExceptionally(e);
                     throw e;
                 }
-            },
-            ModalityState.any() // 'any' to tolerate immediate modality changes (e.g. https://youtrack.jetbrains.com/issue/IDEA-135180)
+            }
         );
         return future;
     }
@@ -326,10 +319,19 @@ public class ProgressIndicatorUtils {
     }
 
     /**
-     * Ensure the current EDT activity finishes in case it requires many write actions, with each being delayed a bit
-     * by background thread read action (until its first checkCanceled call). Shouldn't be called from under read action.
+     * Waits until no write action is pending or running, so that a read action started next is not cancelled by it right away.
+     * Returns at once when there is no write action. The write lock signals the end of the wait (see
+     * {@link ApplicationEx#runWhenWriteActionIsCompleted(Runnable)}), the UI thread queue is not involved.
+     * Shouldn't be called from under read action.
      */
     public static void yieldToPendingWriteActions() {
+        yieldToPendingWriteActions(ProgressIndicatorProvider.getGlobalProgressIndicator());
+    }
+
+    /**
+     * Same as {@link #yieldToPendingWriteActions()}, the wait is cancelled with the given indicator.
+     */
+    public static void yieldToPendingWriteActions(@Nullable ProgressIndicator indicator) {
         Application application = Application.get();
         if (application.isReadAccessAllowed()) {
             throw new IllegalStateException("Mustn't be called from within read action");
@@ -337,9 +339,12 @@ public class ProgressIndicatorUtils {
         if (application.isDispatchThread()) {
             throw new IllegalStateException("Mustn't be called from EDT");
         }
+        if (!(application instanceof ApplicationEx applicationEx) || !isWriting(applicationEx)) {
+            return;
+        }
         Semaphore semaphore = new Semaphore(1);
-        application.invokeLater(semaphore::up, ModalityState.any());
-        awaitWithCheckCanceled(semaphore, ProgressIndicatorProvider.getGlobalProgressIndicator());
+        applicationEx.runWhenWriteActionIsCompleted(semaphore::up);
+        awaitWithCheckCanceled(semaphore, indicator);
     }
 
     /**

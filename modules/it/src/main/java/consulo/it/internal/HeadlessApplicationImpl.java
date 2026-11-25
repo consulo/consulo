@@ -17,19 +17,15 @@ package consulo.it.internal;
 
 import consulo.annotation.component.ComponentProfiles;
 import consulo.application.internal.StartupProgress;
-import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.progress.ProgressManager;
 import consulo.component.internal.ComponentBinding;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import consulo.util.concurrent.ThreadIssueException;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ref.SimpleReference;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -41,42 +37,8 @@ import java.util.function.BooleanSupplier;
 public class HeadlessApplicationImpl extends UnifiedApplication {
     private static final Logger LOG = Logger.getInstance(HeadlessApplicationImpl.class);
 
-    private static final List<ThreadIssueException> ourThreadIssues = new CopyOnWriteArrayList<>();
-
-    private static volatile boolean ourAllowWriteLockUnderUIThread;
-
     public HeadlessApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
-        myLock = new ReadMostlyRWLock(null);
-    }
-
-    /**
-     * Opt-out, rejected by default: not every flow under test is free of write actions on the UI thread yet, so
-     * those tests turn this on for as long as they run.
-     */
-    public static void setAllowWriteLockUnderUIThread(boolean value) {
-        ourAllowWriteLockUnderUIThread = value;
-    }
-
-    /**
-     * The write-lock-under-UI-thread ban is not applied on this branch: the lock installed above polls pending
-     * write-action transfers while waiting for write intent, so a UI task taking the write lock cannot deadlock
-     * against a background write action transferring onto the UI queue. The opt-out annotation and the recorded
-     * issue list stay, so tests written against the ban still compile and pass.
-     */
-
-    public static List<ThreadIssueException> takeThreadIssues() {
-        List<ThreadIssueException> issues = List.copyOf(ourThreadIssues);
-        ourThreadIssues.clear();
-        return issues;
-    }
-
-    /**
-     * The issues recorded so far, left in place so that {@link #takeThreadIssues()} at the end of the test still
-     * fails it: for a diagnostic printed while the test is running.
-     */
-    public static List<ThreadIssueException> peekThreadIssues() {
-        return List.copyOf(ourThreadIssues);
     }
 
     @Override

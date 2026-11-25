@@ -28,18 +28,4 @@ public class TransferredWriteActionServiceImpl implements TransferredWriteAction
             edtRunnable -> application.invokeLater(edtRunnable, ModalityState.any())
         );
     }
-
-    @Override
-    public void runOnBackgroundThreadWithTransferredWriteActionAndWait(Runnable action) {
-        BaseApplication application = (BaseApplication) Application.get();
-        if (!application.isWriteAccessAllowed()) {
-            throw new IllegalStateException("Transferring of write action to a background thread is permitted only if write lock is acquired");
-        }
-        if (!UIAccess.isUIThread()) {
-            action.run();
-            return;
-        }
-
-        application.myLock.transferWriteAction(false, action, application::executeOnPooledThread);
-    }
 }

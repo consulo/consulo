@@ -6,6 +6,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
+import consulo.application.concurrent.coroutine.ReadWriteLock;
 import consulo.application.concurrent.ApplicationConcurrency;
 import consulo.application.internal.StandardProgressIndicatorBase;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -36,6 +37,9 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.SmartList;
+import consulo.util.concurrent.coroutine.Continuation;
+import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -44,7 +48,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.BooleanSupplier;
 
@@ -54,7 +61,10 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
     private static final Logger LOG = Logger.getInstance(DocumentCommitThread.class);
     private static final String SYNC_COMMIT_REASON = "Sync commit";
 
+    private static final boolean BACKGROUND_COMMIT = Boolean.parseBoolean(System.getProperty("consulo.document.commit.background", "true"));
+
     private final ExecutorService executor;
+    private final Map<Document, Continuation<?>> myBackgroundCommits = new ConcurrentHashMap<>();
     private volatile boolean isDisposed;
 
     @Inject
@@ -76,9 +86,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
         }
 
         PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase) PsiDocumentManager.getInstance(project);
-        if (documentManager.isEventSystemEnabled(document)) {
-            documentManager.assertCommitThread();
-        }
+        documentManager.assertFinishCommitThread(document);
 
         PsiFile psiFile = documentManager.getCachedPsiFile(document);
         if (psiFile == null || psiFile instanceof PsiCompiledElement) {
@@ -87,12 +95,60 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
 
         CommitTask task =
             new CommitTask(project, document, reason, modality, documentManager.getLastCommittedText(document));
+        if (BACKGROUND_COMMIT && modality == ModalityState.nonModal()) {
+            commitInBackgroundWriteAction(project, documentManager, document, task);
+            return;
+        }
         ReadAction
             .nonBlocking(() -> commitUnderProgress(task, false))
             .expireWhen(() -> project.isDisposed() || isDisposed || !documentManager.isInUncommittedSet(document) || !task.isStillValid())
             .coalesceBy(task)
             .finishOnUiThread(application -> modality, Runnable::run)
             .submit(executor);
+    }
+
+    /**
+     * The document is reparsed in a read action which gives way to a pending write action, and the commit finishes in a
+     * background write action. The reparse runs again when a write action ran before the commit could finish. Only the latest
+     * request to commit a document is kept.
+     */
+    private void commitInBackgroundWriteAction(Project project, PsiDocumentManagerBase documentManager, Document document, CommitTask task) {
+        BooleanSupplier expired =
+            () -> project.isDisposed() || isDisposed || !documentManager.isInUncommittedSet(document) || !task.isStillValid();
+
+        Continuation<?> continuation = Coroutine.first(ReadWriteLock.<Object, @Nullable Runnable, Object>nonBlocking(
+                (input, c) -> {
+                    if (expired.getAsBoolean()) {
+                        c.finishEarly(null);
+                        return null;
+                    }
+                    Runnable finish = commitUnderProgress(task, false);
+                    if (expired.getAsBoolean()) {
+                        c.finishEarly(null);
+                        return null;
+                    }
+                    return finish;
+                },
+                (finish, c) -> {
+                    if (finish != null) {
+                        finish.run();
+                    }
+                    return null;
+                }
+            ).aheadOfInput())
+            .runAsync(CoroutineScope.of(project.coroutineContext()), null);
+
+        Continuation<?> previous = myBackgroundCommits.put(document, continuation);
+        if (previous != null) {
+            previous.cancel();
+        }
+        continuation.toFuture().whenComplete((result, error) -> {
+            myBackgroundCommits.remove(document, continuation);
+            if (error != null && !(error instanceof CancellationException) && !(error.getCause() instanceof CancellationException)
+                && !(error instanceof ProcessCanceledException)) {
+                LOG.error(error);
+            }
+        });
     }
 
     @SuppressWarnings("unused")
@@ -166,9 +222,7 @@ public final class DocumentCommitThread implements Disposable, DocumentCommitPro
                 return;
             }
             PsiDocumentManagerBase documentManager = (PsiDocumentManagerBase) PsiDocumentManager.getInstance(project);
-            if (documentManager.isEventSystemEnabled(document)) {
-                documentManager.assertCommitThread();
-            }
+            documentManager.assertFinishCommitThread(document);
             boolean success = documentManager.finishCommit(
                 document,
                 finishProcessors,

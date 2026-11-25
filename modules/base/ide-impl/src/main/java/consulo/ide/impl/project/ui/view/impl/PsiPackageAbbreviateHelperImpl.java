@@ -17,7 +17,7 @@ package consulo.ide.impl.project.ui.view.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
-import consulo.language.psi.AnyPsiChangeListener;
+import consulo.language.psi.AnyPsiChangeListenerBackgroundable;
 import consulo.language.psi.PsiPackage;
 import consulo.project.Project;
 import consulo.project.ui.view.internal.PsiPackageAbbreviateHelper;
@@ -40,7 +40,8 @@ public class PsiPackageAbbreviateHelperImpl implements PsiPackageAbbreviateHelpe
 
   @Inject
   public PsiPackageAbbreviateHelperImpl(Project project) {
-    project.getMessageBus().connect(this).subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener() {
+    // a concurrent map: cleared in place, by the thread changing the PSI
+    project.getMessageBus().connect(this).subscribe(AnyPsiChangeListenerBackgroundable.class, new AnyPsiChangeListenerBackgroundable() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         myShouldAbbreviateNameMap.clear();

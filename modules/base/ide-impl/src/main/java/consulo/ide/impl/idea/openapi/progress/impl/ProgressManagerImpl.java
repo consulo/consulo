@@ -65,26 +65,6 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
     }
 
     @Override
-    public void executeProcessUnderProgress(Runnable process, ProgressIndicator progress) throws ProcessCanceledException {
-        CheckCanceledHook hook = progress instanceof PingProgress && myApplication.isDispatchThread() ? p -> {
-            ((PingProgress) progress).interact();
-            return true;
-        } : null;
-        if (hook != null) {
-            addCheckCanceledHook(hook);
-        }
-
-        try {
-            super.executeProcessUnderProgress(process, progress);
-        }
-        finally {
-            if (hook != null) {
-                removeCheckCanceledHook(hook);
-            }
-        }
-    }
-
-    @Override
     public boolean runProcessWithProgressSynchronously(Task task) {
         long start = System.currentTimeMillis();
         boolean result = super.runProcessWithProgressSynchronously(task);
@@ -177,7 +157,6 @@ public class ProgressManagerImpl extends CoreProgressManager implements Disposab
 
         @Override
         public void interactWithUI() {
-            PingProgress.interactWithEdtProgress();
         }
     }
 }

@@ -26,7 +26,6 @@ import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.FrequentErrorLogger;
 import consulo.application.internal.NoAccessDuringPsiEventsService;
-import consulo.application.progress.PingProgress;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
@@ -691,7 +690,6 @@ public class DumbServiceImpl extends DumbServiceInternal implements Disposable, 
             myGuiDumbTaskRunner.cancelAllTasks();
             // a process which did not start yet (a modal dialog holds back its progress) runs the queue later
             while (myGuiDumbTaskRunner.hasStartedTask() && !myProject.isDisposed()) {
-                PingProgress.interactWithEdtProgress();
                 LockSupport.parkNanos(50_000_000);
             }
 

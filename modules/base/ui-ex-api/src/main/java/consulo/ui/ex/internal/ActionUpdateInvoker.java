@@ -105,6 +105,20 @@ public final class ActionUpdateInvoker {
     }
 
     /**
+     * {@code true} when the whole update of the action runs on the UI thread, see {@link #createUpdateCoroutine}.
+     */
+    @SuppressWarnings("deprecation")
+    public static boolean isUpdatedOnUIThread(AnAction action) {
+        if (action instanceof AnActionWithAsyncUpdate) {
+            return false;
+        }
+        if (action instanceof AnActionWithUIUpdate) {
+            return true;
+        }
+        return action instanceof AnActionWithSyncUpdate sync && sync.getActionUpdateThread() == ActionUpdateThread.EDT;
+    }
+
+    /**
      * Runs the action's update asynchronously (no coroutine and a completed future when the action
      * implements no update interface). This is the async entry point for modules which cannot reach
      * the richer ide-impl runner; no dumb-mode bookkeeping is performed here.

@@ -11,6 +11,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.UIAccess;
 import consulo.util.lang.ref.SimpleReference;
 
 import java.util.concurrent.CompletableFuture;
@@ -26,12 +27,16 @@ public final class NewProgressRunner<R> {
     
     private final CompletableFuture<? extends ProgressIndicator> myProgressIndicatorFuture;
 
+    private final UIAccess myUIAccess;
+
     public NewProgressRunner(Function<? super ProgressIndicator, ? extends R> computation,
                              boolean modal,
-                             CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture) {
+                             CompletableFuture<? extends ProgressIndicator> progressIndicatorFuture,
+                             UIAccess uiAccess) {
         myComputation = ClientId.decorateFunction(computation);
         isModal = modal;
         myProgressIndicatorFuture = progressIndicatorFuture;
+        myUIAccess = uiAccess;
     }
 
     
@@ -95,14 +100,20 @@ public final class NewProgressRunner<R> {
             //   is stopped and the submitted task fails with respective exception.
             // The task submitted to e.g. POOLED thread might not be able to finish at all because it requires invoke&waits,
             //   but EDT is broken due an exception. Hence, initial task should be completed exceptionally
-            CompletableFuture<Void> blockingRunFuture = progressFuture.thenAccept(progressIndicator -> {
-                if (progressIndicator instanceof BlockingProgressIndicator) {
-                    ((BlockingProgressIndicator) progressIndicator).startBlocking(modalityEntered::up, taskFuture);
-                }
-                else {
+            CompletableFuture<Void> blockingRunFuture = progressFuture.thenCompose(progressIndicator -> {
+                if (!(progressIndicator instanceof BlockingProgressIndicator blockingProgressIndicator)) {
                     Logger.getInstance(NewProgressRunner.class).warn("Can't go modal without BlockingProgressIndicator");
                     modalityEntered.up();
+                    return CompletableFuture.completedFuture(null);
                 }
+                if (UIAccess.isUIThread()) {
+                    blockingProgressIndicator.startBlocking(modalityEntered::up, taskFuture);
+                    return CompletableFuture.completedFuture(null);
+                }
+                return myUIAccess.<Void>giveAsync(() -> {
+                    blockingProgressIndicator.startBlocking(modalityEntered::up, taskFuture);
+                    return null;
+                });
             }).exceptionally(throwable -> {
                 taskFuture.completeExceptionally(throwable);
                 modalityEntered.up();

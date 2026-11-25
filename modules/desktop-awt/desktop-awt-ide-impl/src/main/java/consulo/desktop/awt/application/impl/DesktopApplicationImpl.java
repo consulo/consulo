@@ -24,7 +24,7 @@ import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.ReadMostlyRWLock;
+import consulo.application.impl.internal.RWLock;
 import consulo.application.impl.internal.concurent.AppScheduledExecutorService;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
@@ -32,7 +32,6 @@ import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.internal.AppLifecycleListener;
 import consulo.application.internal.StartupProgress;
 import consulo.application.localize.ApplicationLocalize;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.ThreadDumper;
@@ -42,7 +41,6 @@ import consulo.component.ComponentManager;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
 import consulo.desktop.application.util.Restarter;
-import consulo.desktop.awt.progress.PotemkinProgress;
 import consulo.desktop.awt.ui.IdeEventQueue;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
 import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
@@ -51,7 +49,6 @@ import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.ide.ApplicationActivationStateManager;
 import consulo.ide.impl.idea.ide.CommandLineProcessor;
 import consulo.ide.impl.idea.ide.GeneralSettings;
-import consulo.ide.localize.IdeLocalize;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
@@ -79,7 +76,6 @@ import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.TestOnly;
 import org.jspecify.annotations.Nullable;
@@ -90,7 +86,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 public class DesktopApplicationImpl extends BaseApplication {
     private static final Logger LOG = Logger.getInstance(DesktopApplicationImpl.class);
@@ -157,9 +152,7 @@ public class DesktopApplicationImpl extends BaseApplication {
             });
         });
 
-        // no permanent write thread: the write-intent lock is acquired transiently around each EDT
-        // event (see IdeEventQueue) and around each off-EDT write action, so any thread can write
-        myLock = new ReadMostlyRWLock(null);
+        myLock = RWLock.create();
 
         NoSwingUnderWriteAction.watchForEvents(this);
     }
@@ -242,20 +235,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         }
 
         LaterInvocator.of(AWTUIAccessImpl.ourInstance).invokeAndWait(runnable, modalityState);
-    }
-
-    @Override
-    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableSupplier<T, E> action) throws E {
-        if (!myLock.isWriteThread()) {
-            return action.get();
-        }
-        myLock.writeIntentUnlock();
-        try {
-            return action.get();
-        }
-        finally {
-            myLock.writeIntentLock();
-        }
     }
 
     @Override
@@ -446,41 +425,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         return true;
     }
 
-    @Override
-    public boolean runWriteActionWithNonCancellableProgressInDispatchThread(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, LocalizeValue.empty(), action);
-    }
-
-    @Override
-    public boolean runWriteActionWithCancellableProgressInDispatchThread(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        return runEdtProgressWriteAction(title, project, parentComponent, IdeLocalize.actionStop(), action);
-    }
-
-    private boolean runEdtProgressWriteAction(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        LocalizeValue cancelText,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
-        return runWriteActionWithClass(action.getClass(), () -> {
-            PotemkinProgress indicator = new PotemkinProgress(title.get(), (Project)project, parentComponent, cancelText);
-            indicator.runInSwingThread(() -> action.accept(indicator));
-            return !indicator.isCanceled();
-        });
-    }
-
     @RequiredReadAction
     @Override
     public void assertReadAccessAllowed() {
@@ -575,7 +519,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     @Override
     public boolean isCurrentWriteOnUIThread() {
-        return EDT.isEdt(((ReadMostlyRWLock) myLock).writeThread);
+        return EDT.isEdt(myLock.getWriteThread());
     }
 
     @TestOnly

@@ -1166,6 +1166,10 @@ import.project.chooser.header:
     text: <html>Select {0}</html>
 incompatible.encoding.dialog.title:
     text: 'Incompatible Encoding: {0}'
+input.delayed.notification.content:
+    text: Typing is delayed until a background write action finishes. The typed keys are applied right after it.
+input.delayed.notification.group:
+    text: Delayed typing
 install.package.failure:
     text: Error occurred when installing package ''{0}''. <a href="xxx">Details...</a>
 item.file.templates:

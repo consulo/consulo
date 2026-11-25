@@ -4,6 +4,7 @@ package consulo.desktop.awt.editor.impl.internal;
 import consulo.desktop.awt.ui.impl.components.LeftHandScrollbarLayout;
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.application.util.Dumpable;
@@ -80,6 +81,7 @@ import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.project.ui.internal.ProjectIdeFocusManager;
 import consulo.project.ui.internal.ToolWindowManagerEx;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.event.details.InputDetails;
@@ -146,6 +148,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class DesktopEditorImpl extends CodeEditorBase
@@ -1157,7 +1160,11 @@ public final class DesktopEditorImpl extends CodeEditorBase
 
         ActionManagerEx.getInstanceEx().fireBeforeEditorTyping(c, context);
         CodeEditorInternalHelper.getInstance().hideCursorInEditor(this);
-        processKeyTypedNormally(c, context);
+        ((ApplicationEx) Application.get()).runInput(UIAccess.current(), () -> {
+            if (!isDisposed()) {
+                processKeyTypedNormally(c, context);
+            }
+        });
 
         return true;
     }
@@ -3229,11 +3236,60 @@ public final class DesktopEditorImpl extends CodeEditorBase
         }
     }
 
+    /**
+     * A press, a drag or a release while input given before it still waits - for a background write action to let go of
+     * write-intent - runs after that input: moving the caret first would put the waiting input where the user clicked. The point of
+     * the event is kept on the character it was made on, so text that input inserts before it moves it along.
+     *
+     * @return true when the event is left for later
+     */
+    @RequiredUIAccess
+    private boolean runAfterPendingInput(MouseEvent e, Consumer<MouseEvent> handler) {
+        ApplicationEx application = (ApplicationEx) Application.get();
+        if (!application.isInputPending() || application.isInsideInput()) {
+            return false;
+        }
+
+        // the gutter shares the vertical coordinates of the text, but not the horizontal ones
+        boolean inGutter = e.getComponent() == myGutterComponent;
+        int offset = logicalPositionToOffset(xyToLogicalPosition(new Point(inGutter ? 0 : e.getX(), e.getY())));
+        Point anchor = offsetToXY(offset);
+        RangeMarker marker = myDocument.createRangeMarker(offset, offset);
+        application.runInput(UIAccess.current(), () -> {
+            try {
+                if (isReleased) {
+                    return;
+                }
+                Point moved = marker.isValid() ? offsetToXY(marker.getStartOffset()) : anchor;
+                int x = inGutter ? e.getX() : e.getX() + moved.x - anchor.x;
+                int y = e.getY() + moved.y - anchor.y;
+                handler.accept(new MouseEvent(
+                    e.getComponent(),
+                    e.getID(),
+                    e.getWhen(),
+                    e.getModifiersEx(),
+                    x,
+                    y,
+                    e.getClickCount(),
+                    e.isPopupTrigger(),
+                    e.getButton()
+                ));
+            }
+            finally {
+                marker.dispose();
+            }
+        });
+        return true;
+    }
+
     private class MyMouseAdapter extends MouseAdapter {
         @Override
         @RequiredUIAccess
         public void mousePressed(MouseEvent e) {
             requestFocus();
+            if (runAfterPendingInput(e, this::mousePressed)) {
+                return;
+            }
             if (SwingUtilities.isLeftMouseButton(e) && !e.isPopupTrigger() && myLineFrameResize.pressed(e.getY())) {
                 myLineFrameTooltip.hideTooltip();
                 e.consume();
@@ -3245,6 +3301,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         @RequiredUIAccess
         public void mouseReleased(MouseEvent e) {
+            if (runAfterPendingInput(e, this::mouseReleased)) {
+                return;
+            }
             myMousePressArea = null;
             myLastMousePressedLocation = null;
             if (myLineFrameResize.released()) {
@@ -3818,6 +3877,9 @@ public final class DesktopEditorImpl extends CodeEditorBase
         @Override
         @RequiredUIAccess
         public void mouseDragged(MouseEvent e) {
+            if (runAfterPendingInput(e, this::mouseDragged)) {
+                return;
+            }
             if (myDraggedRange != null || myGutterComponent.myDnDInProgress) {
                 return; // on Mac we receive events even if drag-n-drop is in progress
             }

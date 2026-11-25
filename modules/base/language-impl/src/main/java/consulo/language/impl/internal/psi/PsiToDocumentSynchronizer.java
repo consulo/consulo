@@ -56,6 +56,26 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
   PsiToDocumentSynchronizer(PsiDocumentManagerBase psiDocumentManager, MessageBus bus) {
     myPsiDocumentManager = psiDocumentManager;
     myBus = bus;
+    myBus.connect(psiDocumentManager).subscribe(PsiDocumentTransactionListenerBackgroundable.class, new PsiDocumentTransactionListenerBackgroundable() {
+      // a legacy subscriber gets the transaction on the UI thread - without one, there is nothing to wait for there
+      @Override
+      public void transactionStarted(Document document, PsiFile file) {
+        if (bus.hasSubscribers(PsiDocumentTransactionListener.class)) {
+          PsiManagerImpl.runWriteActionOnEdtRegardlessOfCurrentThread(
+            () -> bus.syncPublisher(PsiDocumentTransactionListener.class).transactionStarted(document, file)
+          );
+        }
+      }
+
+      @Override
+      public void transactionCompleted(Document document, PsiFile file) {
+        if (bus.hasSubscribers(PsiDocumentTransactionListener.class)) {
+          PsiManagerImpl.runWriteActionOnEdtRegardlessOfCurrentThread(
+            () -> bus.syncPublisher(PsiDocumentTransactionListener.class).transactionCompleted(document, file)
+          );
+        }
+      }
+    });
   }
 
   public @Nullable DocumentChangeTransaction getTransaction(Document document) {
@@ -178,7 +198,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     doSync(event, false, (document, event1) -> replaceString(document, event1.getOffset(), event1.getOffset() + event1.getOldLength(), event1.getParent().getText(), event1.getParent()));
   }
 
-  private boolean myIgnorePsiEvents;
+  private volatile boolean myIgnorePsiEvents;
 
   public void setIgnorePsiEvents(boolean ignorePsiEvents) {
     myIgnorePsiEvents = ignorePsiEvents;
@@ -225,7 +245,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     if (pair == null) {
       PsiFile psiFile = scope.getContainingFile();
       pair = new Pair<>(new DocumentChangeTransaction(doc, psiFile), 0);
-      myBus.syncPublisher(PsiDocumentTransactionListener.class).transactionStarted(doc, psiFile);
+      myBus.syncPublisher(PsiDocumentTransactionListenerBackgroundable.class).transactionStarted(doc, psiFile);
     }
     else {
       pair = new Pair<>(pair.getFirst(), pair.getSecond().intValue() + 1);
@@ -246,7 +266,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       fakeEvent.setFile(changeScope);
       checkPsiModificationAllowed(fakeEvent);
       doSync(fakeEvent, true, (document1, event) -> doCommitTransaction(document1, documentChangeTransaction));
-      myBus.syncPublisher(PsiDocumentTransactionListener.class).transactionCompleted(document, changeScope);
+      myBus.syncPublisher(PsiDocumentTransactionListenerBackgroundable.class).transactionCompleted(document, changeScope);
     }
     catch (Throwable e) {
       myPsiDocumentManager.forceReload(changeScope.getViewProvider().getVirtualFile(), changeScope.getViewProvider());

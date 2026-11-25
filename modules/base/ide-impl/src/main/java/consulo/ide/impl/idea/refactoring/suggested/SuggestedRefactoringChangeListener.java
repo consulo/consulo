@@ -24,6 +24,7 @@ import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.event.CommandEvent;
@@ -63,7 +64,7 @@ public class SuggestedRefactoringChangeListener {
         myPsiDocumentManager = PsiDocumentManager.getInstance(project);
 
         EditorFactory.getInstance().getEventMulticaster().addDocumentListener(new MyDocumentListener(), parentDisposable);
-        PsiManager.getInstance(project).addPsiTreeChangeListener(new MyPsiTreeChangeListener(), parentDisposable);
+        PsiManager.getInstance(project).addPsiTreeChangeListenerBackgroundable(new MyPsiTreeChangeListener(), parentDisposable);
 
         Application.get().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, new CommandListener() {
             @Override
@@ -457,7 +458,8 @@ public class SuggestedRefactoringChangeListener {
 
         @RequiredReadAction
         private void processBeforeEvent(PsiTreeChangeEvent event) {
-            if (myProject.isDisposed() || !myIsFirstChangeInsideCommand) {
+            // follows the edits of a command, on the UI thread - the PSI change of a background commit is not one of them
+            if (!UIAccess.isUIThread() || myProject.isDisposed() || !myIsFirstChangeInsideCommand) {
                 return;
             }
 

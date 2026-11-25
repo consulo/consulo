@@ -19,6 +19,7 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.AWTKeyStrokeHacking;
 import consulo.component.ProcessCanceledException;
@@ -91,6 +92,8 @@ import java.util.concurrent.TimeUnit;
  * @author Vladimir Kondratyev
  */
 public final class IdeKeyEventDispatcher implements Disposable {
+    private static final int MAX_INPUT_UPDATE_RETRIES = 20;
+
     private static final Logger LOG = Logger.getInstance(IdeKeyEventDispatcher.class);
 
     private KeyStroke myFirstKeyStroke;
@@ -671,8 +674,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 return true;
             }
 
-            processor.performAction(e, action, actionEvent);
-            actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+            performAction(e, action, actionEvent, processor, actionManager);
             return true;
         }
 
@@ -726,8 +728,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 if (component != null && !component.isShowing()) {
                     return true;
                 }
-                processor.performAction(e, action, actionEvent);
-                actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+                performAction(e, action, actionEvent, processor, actionManager);
                 return true;
             }
         }
@@ -757,6 +758,21 @@ public final class IdeKeyEventDispatcher implements Disposable {
         ActionProcessor processor,
         PresentationFactory presentationFactory
     ) {
+        performFirstEnabledAsync(actions, index, e, place, context, releaseTarget, processor, presentationFactory, 0);
+    }
+
+    @RequiredUIAccess
+    private void performFirstEnabledAsync(
+        List<AnAction> actions,
+        int index,
+        InputEvent e,
+        String place,
+        DataContext context,
+        Component releaseTarget,
+        ActionProcessor processor,
+        PresentationFactory presentationFactory,
+        int inputRetries
+    ) {
         if (index >= actions.size()) {
             try {
                 releaseUnhandledEvent(e, releaseTarget);
@@ -784,6 +800,9 @@ public final class IdeKeyEventDispatcher implements Disposable {
 
         AnAction finalAction = action;
         AnActionEvent finalActionEvent = actionEvent;
+        ApplicationEx application = (ApplicationEx) Application.get();
+        long writeEpoch = application.getWriteEpoch();
+        boolean writing = isWriting(application);
         ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, actionEvent, false).whenCompleteAsync((enabled, throwable) -> {
             IdeEventQueue queue = IdeEventQueue.getInstance();
             boolean holdReleased = false;
@@ -801,16 +820,30 @@ public final class IdeKeyEventDispatcher implements Disposable {
                         queue.endAsyncInputDispatch();
                         return;
                     }
-                    // release the input hold BEFORE performing: a modal dialog opened by the action must
-                    // receive keyboard events, and the held events are reposted behind this action anyway
                     holdReleased = true;
-                    queue.endAsyncInputDispatch();
-                    processor.performAction(e, finalAction, finalActionEvent);
-                    actionManager.fireAfterActionPerformed(finalAction, finalActionEvent.getDataContext(), finalActionEvent);
+                    if (isInputAction(finalAction)) {
+                        performAction(e, finalAction, finalActionEvent, processor, actionManager);
+                        queue.endAsyncInputDispatch();
+                    }
+                    else {
+                        // release the input hold BEFORE performing: a modal dialog opened by the action must
+                        // receive keyboard events, and the held events are reposted behind this action anyway
+                        queue.endAsyncInputDispatch();
+                        processor.performAction(e, finalAction, finalActionEvent);
+                        actionManager.fireAfterActionPerformed(finalAction, finalActionEvent.getDataContext(), finalActionEvent);
+                    }
+                }
+                else if (isInputAction(finalAction)
+                    && inputRetries < MAX_INPUT_UPDATE_RETRIES
+                    && (writing || isWriting(application) || application.getWriteEpoch() != writeEpoch)) {
+                    holdReleased = true;
+                    application.runWhenWriteActionIsCompleted(() -> uiAccess.give(() -> performFirstEnabledAsync(
+                        actions, index, e, place, context, releaseTarget, processor, presentationFactory, inputRetries + 1
+                    )));
                 }
                 else {
                     holdReleased = true; // the next step takes the ownership of the input hold
-                    performFirstEnabledAsync(actions, index + 1, e, place, context, releaseTarget, processor, presentationFactory);
+                    performFirstEnabledAsync(actions, index + 1, e, place, context, releaseTarget, processor, presentationFactory, 0);
                 }
             }
             catch (Throwable t) {
@@ -820,6 +853,34 @@ public final class IdeKeyEventDispatcher implements Disposable {
                 LOG.error(t);
             }
         }, uiAccess);
+    }
+
+    private static boolean isWriting(ApplicationEx application) {
+        return application.isWriteActionInProgress() || application.isWriteActionPending();
+    }
+
+    private static boolean isInputAction(AnAction action) {
+        return action instanceof InputAction inputAction && inputAction.isInputAction();
+    }
+
+    @RequiredUIAccess
+    private static void performAction(
+        InputEvent e,
+        AnAction action,
+        AnActionEvent actionEvent,
+        ActionProcessor processor,
+        ActionManagerEx actionManager
+    ) {
+        Runnable perform = () -> {
+            processor.performAction(e, action, actionEvent);
+            actionManager.fireAfterActionPerformed(action, actionEvent.getDataContext(), actionEvent);
+        };
+        if (isInputAction(action)) {
+            ((ApplicationEx) Application.get()).runInput(UIAccess.current(), perform);
+        }
+        else {
+            perform.run();
+        }
     }
 
     private static void logUpdateFailure(AnAction action, Throwable throwable) {

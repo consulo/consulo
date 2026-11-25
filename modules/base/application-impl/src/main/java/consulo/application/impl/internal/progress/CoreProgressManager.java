@@ -503,7 +503,7 @@ public class CoreProgressManager extends ProgressManager implements ProgressMana
                 }
             };
             return startTask(task, progress, info);
-        }, modal, indicatorFuture)
+        }, modal, indicatorFuture, uiAccess)
             .submit(application);
 
         future.whenComplete((v, throwable) -> {

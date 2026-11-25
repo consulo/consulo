@@ -16,7 +16,6 @@
 package consulo.desktop.qt.application.impl;
 
 import consulo.application.concurrent.coroutine.WriteLock;
-import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.application.impl.internal.UnifiedApplication;
 import consulo.application.internal.AppLifecycleListener;
 import consulo.application.internal.StartupProgress;
@@ -53,11 +52,6 @@ public class DesktopQtApplicationImpl extends UnifiedApplication {
 
     public DesktopQtApplicationImpl(ComponentBinding componentBinding, SimpleReference<? extends StartupProgress> splashRef) {
         super(componentBinding, splashRef);
-
-        // the qt frontend owns a real ui thread, so a write action can be handed to it the way the awt one
-        // does. the StampedRWLock a unified application takes cannot transfer, and the write thread would
-        // then block on giveAndWait while the ui thread waits for the very lock it holds
-        myLock = new ReadMostlyRWLock(null);
     }
 
     @Override

@@ -69,7 +69,7 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
         List<VirtualFile> history = Lists.reverse(EditorHistoryManagerImpl.getInstance(myProject).getFileList());
 
         List<FoundItemDescriptor<Object>> res = new ArrayList<>();
-        ProgressIndicatorUtils.yieldToPendingWriteActions();
+        ProgressIndicatorUtils.yieldToPendingWriteActions(progressIndicator);
         ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
             () -> {
                 PsiManager psiManager = PsiManager.getInstance(myProject);

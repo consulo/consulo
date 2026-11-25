@@ -13,6 +13,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.ClientId;
 import consulo.application.util.Semaphore;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -138,11 +139,19 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
                                            myProgressIndicator);
   }
 
-  private void invokeLater(Runnable runnable) {
-    // first wait for the write action queue to be processed (signaled by the lock, without occupying
-    // the UI thread queue), and only then post the cheap reschedule runnable to the write thread
-    ((ApplicationEx)myApplication).runWhenWriteActionIsCompleted(
-      () -> myApplication.invokeLater(runnable, myApplication.getAnyModalityState(), myApplication.getDisposed()));
+  private void runWhenWriteActionIsCompleted(Runnable runnable, Runnable onExpired) {
+    ((ApplicationEx)myApplication).runWhenWriteActionIsCompleted(() -> {
+      if (myApplication.isDisposed()) {
+        onExpired.run();
+        return;
+      }
+      try {
+        AppExecutorUtil.getAppExecutorService().execute(runnable);
+      }
+      catch (RejectedExecutionException e) {
+        onExpired.run();
+      }
+    });
   }
 
   @Override
@@ -498,7 +507,9 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
     T executeSynchronously() {
       try {
         while (true) {
-          attemptComputation();
+          if (!attemptComputation() && !isDone()) {
+            blockUntilWriteActionIsDone();
+          }
 
           if (isDone()) {
             if (isCancelled()) {
@@ -516,15 +527,10 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
           ConstrainedExecution.ContextConstraint[] constraints = builder.myConstraints;
           if (shouldFinishOnEdt() || constraints.length != 0) {
             Semaphore semaphore = new Semaphore(1);
-            builder.invokeLater(() -> {
-              if (checkObsolete()) {
-                semaphore.up();
-              }
-              else {
-                BaseConstrainedExecution.scheduleWithinConstraints(semaphore::up, null, constraints);
-              }
-            });
-            ProgressIndicatorUtils.awaitWithCheckCanceled(semaphore, myProgressIndicator);
+            BaseConstrainedExecution.scheduleWithinConstraints(semaphore::up, null, constraints);
+            while (!semaphore.waitFor(10) && !isDone()) {
+              ProgressIndicatorUtils.checkCancelledEvenWithPCEDisabled(myProgressIndicator);
+            }
             if (isCancelled()) {
               throw new ProcessCanceledException();
             }
@@ -533,6 +539,28 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
       }
       finally {
         cleanupIfNeeded();
+      }
+    }
+
+    private void blockUntilWriteActionIsDone() {
+      CompletableFuture<Object> future = new CompletableFuture<>();
+      ((ApplicationEx)builder.myApplication).runWhenWriteActionIsCompleted(() -> future.complete(null));
+      while (!future.isDone()) {
+        ProgressIndicatorUtils.checkCancelledEvenWithPCEDisabled(myProgressIndicator);
+        try {
+          future.get(10, TimeUnit.MILLISECONDS);
+        }
+        catch (InterruptedException e) {
+          throw new ProcessCanceledException(e);
+        }
+        catch (ExecutionException e) {
+          throw new RuntimeException(e);
+        }
+        catch (TimeoutException e) {
+          if (checkObsolete()) {
+            future.cancel(false);
+          }
+        }
       }
     }
 
@@ -582,17 +610,25 @@ public final class NonBlockingReadActionImpl<T> implements NonBlockingReadAction
 
     private void rescheduleLater() {
       if (Promises.isPending(this)) {
-        builder.invokeLater(() -> reschedule());
+        builder.runWhenWriteActionIsCompleted(this::reschedule, this::cancel);
       }
     }
 
     private void reschedule() {
-      if (!checkObsolete()) {
+      ProgressManager.getInstance().runProcess(() -> {
+        SimpleReference<Boolean> obsolete = SimpleReference.create(Boolean.FALSE);
+        if (!builder.myApplication.tryRunReadAction(() -> obsolete.set(checkObsolete()))) {
+          rescheduleLater();
+          return;
+        }
+        if (obsolete.get()) {
+          return;
+        }
         if (LOG.isTraceEnabled()) {
           LOG.trace("Rescheduling " + this);
         }
         BaseConstrainedExecution.scheduleWithinConstraints(() -> transferToBgThread(), null, builder.myConstraints);
-      }
+      }, new EmptyProgressIndicator(creationModality));
     }
 
     private void insideReadAction(ProgressIndicator indicator,

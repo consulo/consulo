@@ -6,7 +6,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Caret;
@@ -103,16 +103,11 @@ public class JoinLinesHandler extends EditorActionHandler implements ExtensionEd
         int lineCount = endLine - startLine;
         int line = startLine;
 
-        ((ApplicationEx) Application.get()).runWriteActionWithCancellableProgressInDispatchThread(
-            LocalizeValue.localizeTODO("Join Lines"),
-            project,
-            null,
-            indicator -> {
-                indicator.setIndeterminate(false);
-                JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, indicator);
-                processor.process(editor, caret, lineCount);
-            }
-        );
+        // the joining phases depend on each other, so it is one write action: it can't be cut into chunks a progress could show
+        Application.get().runWriteAction(() -> {
+            JoinLineProcessor processor = new JoinLineProcessor(doc, psiFile, line, new EmptyProgressIndicator());
+            processor.process(editor, caret, lineCount);
+        });
     }
 
     @Override

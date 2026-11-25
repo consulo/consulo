@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.RecursionGuard;
 import consulo.application.util.RecursionManager;
+import consulo.language.psi.AnyPsiChangeListenerBackgroundable;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.ResolveCache;
 import consulo.project.Project;
@@ -45,7 +46,8 @@ public class ResolveCacheImpl implements ResolveCache {
 
   @Inject
   public ResolveCacheImpl(Project project) {
-    project.getMessageBus().connect().subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener() {
+    // the caches are concurrent: they are cleared in place, by the thread changing the PSI
+    project.getMessageBus().connect().subscribe(AnyPsiChangeListenerBackgroundable.class, new AnyPsiChangeListenerBackgroundable() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         clearCache(isPhysical);

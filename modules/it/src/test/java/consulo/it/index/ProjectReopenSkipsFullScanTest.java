@@ -18,7 +18,6 @@ package consulo.it.index;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.ScanningType;
@@ -70,7 +69,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 @ExtendWith(HeadlessProjectExtension.class)
-@AllowWriteLockUnderUIThread
 public class ProjectReopenSkipsFullScanTest {
     private static final int FILES = 25;
 

@@ -118,4 +118,11 @@ public interface MessageBus {
    * and not all listeners have received the events yet.
    */
   boolean hasUndeliveredEvents(Class<?> topic);
+
+  /**
+   * @return {@code false} if nothing listens to {@code topic} on this bus, {@code true} when there are listeners or it is unknown
+   */
+  default boolean hasSubscribers(Class<?> topic) {
+    return true;
+  }
 }

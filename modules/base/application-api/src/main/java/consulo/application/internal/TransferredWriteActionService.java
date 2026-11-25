@@ -21,16 +21,4 @@ public interface TransferredWriteActionService {
      */
     @RequiredWriteAction
     void runOnEdtWithTransferredWriteActionAndWait(@RequiredWriteAction Runnable action);
-
-    /**
-     * Executes {@code action} synchronously on a background thread under write action.
-     * This function is semantically equivalent to {@link consulo.application.Application#executeOnPooledThread} with
-     * waiting.
-     * <p>
-     * This function allows transferring write access to a background thread, hence it is possible to use functions that
-     * require background threads inside it. This is useful for invocation of backgroundable listeners (such as
-     * {@code BulkFileListenerBackgroundable}) from EDT write actions.
-     */
-    @RequiredWriteAction
-    void runOnBackgroundThreadWithTransferredWriteActionAndWait(@RequiredWriteAction Runnable action);
 }

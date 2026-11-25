@@ -18,13 +18,14 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.ContentIterator;
 import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.index.io.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileTypeManager;
-import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
+import consulo.language.impl.internal.psi.PsiDocumentTransactionListenerBackgroundable;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
@@ -153,6 +154,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
     private final Set<ID<?, ?>> myUpToDateIndicesForUnsavedOrTransactedDocuments = ContainerUtil.newConcurrentSet();
     private volatile SmartFMap<Document, PsiFile> myTransactionMap = SmartFMap.emptyMap();
+    private final Set<Project> myProjectsWithPsiPreprocessor = ContainerUtil.newConcurrentSet();
 
     final boolean myIsUnitTestMode;
     private @Nullable ScheduledFuture<?> myFlushingFuture;
@@ -414,7 +416,8 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
         myIsUnitTestMode = application.isUnitTestMode();
 
         MessageBusConnection connection = application.getMessageBus().connect();
-        connection.subscribe(PsiDocumentTransactionListener.class, new PsiDocumentTransactionListener() {
+        // a volatile map written under the write lock and a concurrent set: updated in place, by the thread committing the document
+        connection.subscribe(PsiDocumentTransactionListenerBackgroundable.class, new PsiDocumentTransactionListenerBackgroundable() {
             @Override
             public void transactionStarted(Document doc, PsiFile file) {
                 myTransactionMap = myTransactionMap.plus(doc, file);
@@ -2569,8 +2572,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     public void registerIndexableSet(IndexableFileSet set, @Nullable Project project) {
         myIndexableSets.add(set);
         myIndexableSetToProjectMap.put(set, project);
-        if (project != null) {
-            ((PsiManagerImpl) PsiManager.getInstance(project)).addTreeChangePreprocessor(event -> {
+        if (project != null && myProjectsWithPsiPreprocessor.add(project)) {
+            // records the change in the lock-free events merger: runs in place, by the thread changing the PSI
+            Disposer.register(project, () -> myProjectsWithPsiPreprocessor.remove(project));
+            ((PsiManagerImpl) PsiManager.getInstance(project)).addTreeChangePreprocessorBackgroundable(event -> {
                 PsiTreeChangeEventImpl treeChangeEvent = (PsiTreeChangeEventImpl) event;
                 if (treeChangeEvent.isGenericChange() && treeChangeEvent.getCode() == PsiTreeChangeEventImpl.PsiEventType.CHILDREN_CHANGED) {
                     PsiFile file = event.getFile();
@@ -2582,7 +2587,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                         }
                     }
                 }
-            });
+            }, project);
         }
     }
 

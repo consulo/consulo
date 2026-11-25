@@ -7,6 +7,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorListener;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.AlwaysPerformingActionGroup;
@@ -20,6 +21,7 @@ import consulo.ui.ex.internal.ActionUpdateInvoker;
 import consulo.ui.ex.internal.XmlActionGroupStub;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SimpleReference;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -27,10 +29,21 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ActionUpdater {
     private static final Logger LOG = Logger.getInstance(ActionUpdater.class);
+
+    /**
+     * A menu or toolbar shows once all its items are updated, so an item updated in the background gets this long: then it is
+     * shown with the presentation it had, disabled, and its update is abandoned - it goes on in its own copy of the
+     * presentation, which is never applied. A slow update (or a slow group's children) is reported once per class.
+     */
+    private static final long SLOW_UPDATE_MILLIS = 300;
+    private static final Set<Class<?>> ourReportedSlowUpdates = ConcurrentHashMap.newKeySet();
 
     private final PresentationFactory myFactory;
     private final DataContext myDataContext;
@@ -48,7 +61,14 @@ public class ActionUpdater {
 
     private volatile @Nullable ProgressIndicator myExpansionIndicator;
 
-    private final Map<Key<?>, Object> mySharedData = new ConcurrentHashMap<>();
+    private final Map<Key<?>, SharedValue> mySharedData = new ConcurrentHashMap<>();
+
+    private record PendingUpdate(long started, CompletableFuture<Presentation> result, @Nullable CoroutineScope scope) {
+    }
+
+    private final Map<AnAction, PendingUpdate> myPendingUpdates = new ConcurrentHashMap<>();
+    private final AtomicBoolean myDeadlineCheckScheduled = new AtomicBoolean();
+    private final Map<AnAction, Presentation> myTimedOutPresentations = new ConcurrentHashMap<>();
 
     private final ActionUpdateSession mySession = new ActionUpdateSession() {
         @Override
@@ -64,9 +84,29 @@ public class ActionUpdater {
         @Override
         @SuppressWarnings("unchecked")
         public <T> T sharedData(Key<T> key, Supplier<? extends T> provider) {
-            return (T) mySharedData.computeIfAbsent(key, __ -> provider.get());
+            // the provider runs outside the map: it may take a while, and ask for other shared data
+            return (T) mySharedData.computeIfAbsent(key, __ -> new SharedValue()).get(provider);
         }
     };
+
+    private static final class SharedValue {
+        private static final Object NOT_COMPUTED = new Object();
+
+        private volatile @Nullable Object myValue = NOT_COMPUTED;
+
+        @Nullable Object get(Supplier<?> provider) {
+            Object value = myValue;
+            if (value == NOT_COMPUTED) {
+                synchronized (this) {
+                    value = myValue;
+                    if (value == NOT_COMPUTED) {
+                        myValue = value = provider.get();
+                    }
+                }
+            }
+            return value;
+        }
+    }
 
     public ActionUpdateSession asUpdateSession() {
         return mySession;
@@ -223,7 +263,81 @@ public class ActionUpdater {
         Presentation presentation = myFactory.getPresentation(action).clone();
         presentation.setEnabledAndVisible(true);
         AnActionEvent event = createActionEvent(action, presentation);
-        return updateActionAsync(action, event).thenApply(success -> success ? presentation : null);
+        long started = System.nanoTime();
+        SimpleReference<CoroutineScope> scope = SimpleReference.create();
+        CompletableFuture<Presentation> updated = updateActionAsync(action, event, scope::set)
+            .thenApply(success -> success ? presentation : null);
+        // only a menu or toolbar being filled has a deadline - an update before performing waits for its action. The menu needs
+        // the UI thread too, so a deadline would not let it show sooner than an update on the UI thread
+        if (myExpansionIndicator != null && !updated.isDone() && !ActionUpdateInvoker.isUpdatedOnUIThread(action)) {
+            watchDeadline(action, new PendingUpdate(started, updated, scope.get()));
+        }
+        return updated;
+    }
+
+    private void watchDeadline(AnAction action, PendingUpdate pending) {
+        myPendingUpdates.put(action, pending);
+        pending.result().whenComplete((presentation, throwable) -> myPendingUpdates.remove(action, pending));
+        scheduleDeadlineCheck(SLOW_UPDATE_MILLIS);
+    }
+
+    /**
+     * One check per session, not a timer per item: it runs again only while some update is still pending.
+     */
+    private void scheduleDeadlineCheck(long delayMillis) {
+        if (myDeadlineCheckScheduled.compareAndSet(false, true)) {
+            AppExecutorUtil.getAppScheduledExecutorService().schedule(this::checkDeadlines, delayMillis, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private void checkDeadlines() {
+        ProgressIndicator indicator = myExpansionIndicator;
+        if (indicator != null && indicator.isCanceled()) {
+            myPendingUpdates.clear();
+            myDeadlineCheckScheduled.set(false);
+            return;
+        }
+
+        long now = System.nanoTime();
+        long deadline = TimeUnit.MILLISECONDS.toNanos(SLOW_UPDATE_MILLIS);
+        long nextCheck = deadline;
+        for (Map.Entry<AnAction, PendingUpdate> entry : myPendingUpdates.entrySet()) {
+            long left = entry.getValue().started() + deadline - now;
+            if (left <= 0) {
+                timeOut(entry.getKey(), entry.getValue());
+            }
+            else {
+                nextCheck = Math.min(nextCheck, left);
+            }
+        }
+
+        myDeadlineCheckScheduled.set(false);
+        if (!myPendingUpdates.isEmpty()) {
+            scheduleDeadlineCheck(TimeUnit.NANOSECONDS.toMillis(nextCheck) + 1);
+        }
+    }
+
+    private void timeOut(AnAction action, PendingUpdate pending) {
+        Presentation stale = myFactory.getPresentation(action).clone();
+        stale.setEnabled(false);
+        myTimedOutPresentations.put(action, stale);
+        if (!pending.result().complete(stale)) {
+            myTimedOutPresentations.remove(action, stale);
+            return;
+        }
+
+        CoroutineScope scope = pending.scope();
+        if (scope != null) {
+            scope.cancel();
+        }
+        if (ourReportedSlowUpdates.add(action.getClass())) {
+            LOG.warn("Update of " + describe(action) + " in " + myPlace + " did not finish in " + SLOW_UPDATE_MILLIS +
+                " ms - shown disabled. An update must not wait for anything (locks, model builds)");
+        }
+    }
+
+    private boolean isTimedOut(AnAction action, @Nullable Presentation presentation) {
+        return presentation != null && myTimedOutPresentations.get(action) == presentation;
     }
 
     private CompletableFuture<List<AnAction>> getGroupChildrenAsync(ActionGroup group) {
@@ -233,8 +347,15 @@ public class ActionUpdater {
     private CompletableFuture<List<AnAction>> computeGroupChildren(ActionGroup group) {
         checkCanceled();
         AnActionEvent event = createActionEvent(group, orDefault(group, cachedPresentation(group)));
-        return launchCoroutineAsync(group.getChildrenAsync(event))
-            .thenApply(children -> children == null ? List.of() : children);
+        long started = System.currentTimeMillis();
+        return launchCoroutineAsync(group.getChildrenAsync(event), null).thenApply(children -> {
+            long elapsed = System.currentTimeMillis() - started;
+            if (elapsed >= SLOW_UPDATE_MILLIS && ourReportedSlowUpdates.add(group.getClass())) {
+                LOG.warn("Slow children of " + describe(group) + " in " + myPlace + ": " + elapsed +
+                    " ms - the menu or toolbar waits for them. Children must not wait for anything (locks, model builds)");
+            }
+            return children == null ? List.of() : children;
+        });
     }
 
     private CompletableFuture<List<AnAction>> expandGroupChild(AnAction child, boolean hideDisabled) {
@@ -251,6 +372,10 @@ public class ActionUpdater {
             }
 
             boolean isPopup = actionGroup.isPopup(myPlace) || presentation.isPopupGroup();
+            if (isPopup && isTimedOut(child, presentation)) {
+                // shown as it was, disabled - a submenu whose update did not finish in time is not asked for its children either
+                return CompletableFuture.completedFuture(Collections.singletonList(child));
+            }
             return collectChildrenFlags(actionGroup, hideDisabled, isPopup).thenCompose(flags -> {
                 boolean hasEnabled = flags.hasEnabled();
                 boolean hasVisible = flags.hasVisible();
@@ -422,7 +547,7 @@ public class ActionUpdater {
         }
     }
 
-    private CompletableFuture<Boolean> updateActionAsync(AnAction action, AnActionEvent e) {
+    private CompletableFuture<Boolean> updateActionAsync(AnAction action, AnActionEvent e, @Nullable Consumer<CoroutineScope> onLaunch) {
         if (Application.get().isDisposed()) {
             return CompletableFuture.completedFuture(false);
         }
@@ -441,14 +566,19 @@ public class ActionUpdater {
         Coroutine<?, ?> coroutine = ActionUpdateInvoker.createUpdateCoroutine(action, e);
         CompletableFuture<?> updateFuture = coroutine == null
             ? CompletableFuture.completedFuture(null)
-            : launchCoroutineAsync(coroutine);
+            : launchCoroutineAsync(coroutine, onLaunch);
 
         return updateFuture.handle((ignored, throwable) -> {
+            reportSlowUpdate(action, System.currentTimeMillis() - startTime);
             try {
                 if (throwable != null) {
                     Throwable cause = unwrapCoroutineException(throwable);
                     if (cause instanceof ProcessCanceledException pce) {
                         throw pce;
+                    }
+                    if (cause instanceof CancellationException) {
+                        // abandoned after its deadline, or the whole expansion was cancelled
+                        return false;
                     }
                     if (cause instanceof IndexNotReadyException) {
                         if (!notAllowed) {
@@ -480,7 +610,20 @@ public class ActionUpdater {
         });
     }
 
-    private <T> CompletableFuture<T> launchCoroutineAsync(Coroutine<?, T> coroutine) {
+    private void reportSlowUpdate(AnAction action, long elapsed) {
+        if (elapsed < SLOW_UPDATE_MILLIS || !ourReportedSlowUpdates.add(action.getClass())) {
+            return;
+        }
+        LOG.warn("Slow update of " + describe(action) + " in " + myPlace + ": " + elapsed +
+            " ms - the menu or toolbar waits for it. An update must not wait for anything (locks, model builds)");
+    }
+
+    private String describe(AnAction action) {
+        String id = myActionManager.getId(action);
+        return action.getClass().getName() + (id == null ? "" : " (id=" + id + ")");
+    }
+
+    private <T> CompletableFuture<T> launchCoroutineAsync(Coroutine<?, T> coroutine, @Nullable Consumer<CoroutineScope> onLaunch) {
         ProgressIndicator expansionIndicator = myExpansionIndicator;
         if (expansionIndicator != null && expansionIndicator.isCanceled()) {
             return CompletableFuture.failedFuture(new ProcessCanceledException());
@@ -503,6 +646,9 @@ public class ActionUpdater {
             });
         }
 
+        if (onLaunch != null) {
+            onLaunch.accept(scope);
+        }
         return coroutine.runAsync(scope, null).toFuture();
     }
 

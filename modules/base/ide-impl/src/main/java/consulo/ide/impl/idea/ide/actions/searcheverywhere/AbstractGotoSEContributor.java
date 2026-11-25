@@ -225,7 +225,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
             return;
         }
 
-        ProgressIndicatorUtils.yieldToPendingWriteActions();
+        ProgressIndicatorUtils.yieldToPendingWriteActions(progressIndicator);
         ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(
             () -> {
                 if (!isDumbAware() && DumbService.isDumb(myProject)) {

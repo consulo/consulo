@@ -15,12 +15,12 @@
  */
 package consulo.application.impl.internal;
 
-import consulo.ui.UIAccess;
 import consulo.util.lang.ExceptionUtil;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 final class WriteActionTransfer {
@@ -29,9 +29,11 @@ final class WriteActionTransfer {
 
     private final AtomicReference<Transfer> myPendingTransfer = new AtomicReference<>();
     private final Consumer<Thread> myWriteThreadSetter;
+    private final BooleanSupplier myUIThread;
 
-    WriteActionTransfer(Consumer<Thread> writeThreadSetter) {
+    WriteActionTransfer(Consumer<Thread> writeThreadSetter, BooleanSupplier uiThread) {
         myWriteThreadSetter = writeThreadSetter;
+        myUIThread = uiThread;
     }
 
     void transfer(boolean runOnEdt, Runnable action, Consumer<Runnable> scheduleTarget) {
@@ -73,7 +75,7 @@ final class WriteActionTransfer {
         if (transfer == null) {
             return;
         }
-        boolean edt = UIAccess.isUIThread();
+        boolean edt = myUIThread.getAsBoolean();
         if (transfer.runOnEdt() == edt && myPendingTransfer.compareAndSet(transfer, null)) {
             transfer.trampoline().run();
         }

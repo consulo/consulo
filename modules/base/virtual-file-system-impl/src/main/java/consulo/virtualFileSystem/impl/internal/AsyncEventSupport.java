@@ -4,7 +4,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
-import consulo.application.progress.PingProgress;
 import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionPointName;
@@ -106,7 +105,6 @@ public final class AsyncEventSupport {
         }
         VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> {
             for (AsyncFileListener.ChangeApplier applier : appliers) {
-                PingProgress.interactWithEdtProgress();
                 try {
                     applier.beforeVfsChange();
                 }
@@ -123,7 +121,6 @@ public final class AsyncEventSupport {
         }
         VfsThreadingUtil.runActionOnEdtRegardlessOfCurrentThread(() -> {
             for (AsyncFileListener.ChangeApplier applier : appliers) {
-                PingProgress.interactWithEdtProgress();
                 try {
                     applier.afterVfsChange();
                 }
