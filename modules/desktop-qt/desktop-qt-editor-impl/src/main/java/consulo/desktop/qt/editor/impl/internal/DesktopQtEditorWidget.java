@@ -27,10 +27,12 @@ import consulo.desktop.qt.ui.impl.DesktopQtKeymapWidget;
 import consulo.desktop.qt.ui.impl.QtComponentDelegate;
 import consulo.document.DocCommandGroupId;
 import consulo.document.Document;
+import consulo.document.RangeMarker;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.details.KeyCode;
 import consulo.undoRedo.CommandProcessor;
@@ -57,6 +59,7 @@ import io.qt.widgets.QToolTip;
 import io.qt.widgets.QWidget;
 
 import java.awt.Point;
+import java.util.function.IntConsumer;
 
 /**
  * The editor surface itself: a scroll area whose viewport is painted by the editor rather than by child widgets.
@@ -299,9 +302,11 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
         if (event.button() == Qt.MouseButton.RightButton) {
             // the menu is built out of the data context, so the caret has to have reached the click before the
             // handlers are asked. a click inside the selection is meant for it and leaves the caret alone
-            placeCaretForContextMenu(offsetAt(event));
-
-            myEditor.fireMousePressed(editingAreaEvent(event));
+            EditorMouseEvent pressed = editingAreaEvent(event);
+            runAtOffsetAfterPendingInput(offsetAt(event), offset -> {
+                placeCaretForContextMenu(offset);
+                myEditor.fireMousePressed(pressed);
+            });
 
             event.accept();
             return;
@@ -329,27 +334,32 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
         // ctrl click follows the reference rather than moving the caret to it, but never the one behind a hint
         if (hit == null && isNavigationModifier(event.modifiers())) {
-            myLinkNavigation.navigateTo(offset);
+            runAtOffsetAfterPendingInput(offset, myLinkNavigation::navigateTo);
 
             event.accept();
             return;
         }
 
-        if (event.modifiers().testFlag(Qt.KeyboardModifier.ShiftModifier)) {
-            // shift keeps whatever the selection was anchored to, so a click extends the run rather than starting one
-            if (mySelectionAnchor < 0) {
-                mySelectionAnchor = myEditor.getCaretModel().getOffset();
-            }
-        }
-        else {
-            mySelectionAnchor = offset;
-            myEditor.getSelectionModel().removeSelection();
-        }
-
-        moveCaretTo(offset);
+        boolean extendSelection = event.modifiers().testFlag(Qt.KeyboardModifier.ShiftModifier);
+        EditorMouseEvent pressed = editingAreaEvent(event);
+        // the moves which follow are a drag even while the press still waits behind input typed before it
         mySelecting = true;
+        runAtOffsetAfterPendingInput(offset, pressOffset -> {
+            if (extendSelection) {
+                // shift keeps whatever the selection was anchored to, so a click extends the run rather than starting one
+                if (mySelectionAnchor < 0) {
+                    mySelectionAnchor = myEditor.getCaretModel().getOffset();
+                }
+            }
+            else {
+                mySelectionAnchor = pressOffset;
+                myEditor.getSelectionModel().removeSelection();
+            }
 
-        myEditor.fireMousePressed(editingAreaEvent(event));
+            moveCaretTo(pressOffset);
+
+            myEditor.fireMousePressed(pressed);
+        });
 
         // qt keeps sending moves to whoever took the press, and dropping the press would hand the drag to the
         // scroll area instead
@@ -372,7 +382,7 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
             return;
         }
 
-        moveCaretTo(offsetAt(event));
+        runAtOffsetAfterPendingInput(offsetAt(event), this::moveCaretTo);
 
         event.accept();
     }
@@ -488,13 +498,17 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
             return;
         }
 
-        myEditor.fireMouseReleased(editingAreaEvent(event));
+        EditorMouseEvent released = editingAreaEvent(event);
+        boolean leftButton = event.button() == Qt.MouseButton.LeftButton;
+        DesktopQtEditorKeyHandler.runAfterPendingStrokes(UIAccess.current(), () -> {
+            myEditor.fireMouseReleased(released);
 
-        if (event.button() == Qt.MouseButton.LeftButton) {
-            int clickCount = myDoubleClicked ? 2 : 1;
-            myDoubleClicked = false;
-            myEditor.fireSelectionMouseReleased(clickCount);
-        }
+            if (leftButton) {
+                int clickCount = myDoubleClicked ? 2 : 1;
+                myDoubleClicked = false;
+                myEditor.fireSelectionMouseReleased(clickCount);
+            }
+        });
 
         super.mouseReleaseEvent(event);
     }
@@ -506,19 +520,21 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
             return;
         }
 
-        EditorSettings settings = myEditor.getSettings();
-
-        moveCaretInCommand(() -> myEditor.getCaretModel().moveToOffset(offsetAt(event)));
-        myEditor.getCaretModel().getCurrentCaret()
-            .selectWordAtCaret(settings.isMouseClickSelectionHonorsCamelWords() && settings.isCamelWords());
-
         // the word the click landed on is the whole selection, so a drag going on from here starts over rather
         // than stretching what the first click of the double click anchored
-        mySelectionAnchor = -1;
         mySelecting = false;
-        myDoubleClicked = true;
+        runAtOffsetAfterPendingInput(offsetAt(event), offset -> {
+            EditorSettings settings = myEditor.getSettings();
 
-        restartCaretBlink();
+            moveCaretInCommand(() -> myEditor.getCaretModel().moveToOffset(offset));
+            myEditor.getCaretModel().getCurrentCaret()
+                .selectWordAtCaret(settings.isMouseClickSelectionHonorsCamelWords() && settings.isCamelWords());
+
+            mySelectionAnchor = -1;
+            myDoubleClicked = true;
+
+            restartCaretBlink();
+        });
 
         event.accept();
     }
@@ -573,6 +589,30 @@ public class DesktopQtEditorWidget extends QAbstractScrollArea implements Deskto
 
     private Point documentPoint(QPoint point) {
         return new Point(point.x() + horizontalScrollBar().value(), point.y() + verticalScrollBar().value());
+    }
+
+    /**
+     * Applies a pointer event at {@code offset} after the keys typed before it, which may still wait - moving the caret first
+     * would put them where the pointer went. The offset is the one of the text on the screen, so it is kept on that character
+     * while the waiting keys change the text before it.
+     */
+    private void runAtOffsetAfterPendingInput(int offset, IntConsumer action) {
+        if (!DesktopQtEditorKeyHandler.isInputPending()) {
+            action.accept(offset);
+            return;
+        }
+
+        RangeMarker marker = myEditor.getDocument().createRangeMarker(offset, offset);
+        DesktopQtEditorKeyHandler.runAfterPendingStrokes(UIAccess.current(), () -> {
+            try {
+                if (!myEditor.isDisposed()) {
+                    action.accept(marker.isValid() ? marker.getStartOffset() : Math.min(offset, myEditor.getDocument().getTextLength()));
+                }
+            }
+            finally {
+                marker.dispose();
+            }
+        });
     }
 
     private int offsetAt(QMouseEvent event) {

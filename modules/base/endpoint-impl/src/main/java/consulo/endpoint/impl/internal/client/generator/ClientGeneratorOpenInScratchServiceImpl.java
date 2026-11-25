@@ -5,7 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.concurrent.coroutine.ReadLock;
-import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.application.concurrent.coroutine.ReadWriteLock;
 import consulo.application.progress.ProgressBuilderFactory;
 import consulo.codeEditor.Editor;
 import consulo.endpoint.EndpointChangeTrackerUtil;
@@ -140,10 +140,8 @@ public final class ClientGeneratorOpenInScratchServiceImpl implements ClientGene
         OpenApiSpecification oas
     ) {
         return Coroutine
-            .first(ReadLock.<Object, Optional<ClientExample>>apply(
-                ignored -> Optional.ofNullable(generateClientWithBoilerplate(clientGenerator, oas))
-            ))
-            .then(WriteLock.<Optional<ClientExample>, Optional<VirtualFile>>apply(
+            .first(ReadWriteLock.<Object, Optional<ClientExample>, Optional<VirtualFile>>apply(
+                ignored -> Optional.ofNullable(generateClientWithBoilerplate(clientGenerator, oas)),
                 clientExample -> clientExample.map(this::writeScratchFile)
             ))
             .then(ReadLock.<Optional<VirtualFile>, Optional<ScratchPointer>>apply(

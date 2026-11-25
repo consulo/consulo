@@ -88,7 +88,8 @@ class AsyncProjectViewSupport {
         updateByFile(bookmark.getFile(), false);
       }
     });
-    PsiManager.getInstance(project).addPsiTreeChangeListener(new ProjectViewPsiTreeChangeListener(project) {
+    // the node updater and the tree model queue the updates to their own threads: runs in place, by the thread changing the PSI
+    PsiManager.getInstance(project).addPsiTreeChangeListenerBackgroundable(new ProjectViewPsiTreeChangeListener(project) {
       @Override
       protected boolean isFlattenPackages() {
         return structure instanceof AbstractProjectTreeStructure && ((AbstractProjectTreeStructure)structure).isFlattenPackages();

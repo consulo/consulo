@@ -71,7 +71,8 @@ public abstract class ProjectFileNodeUpdater {
         }
       }
     });
-    PsiManager.getInstance(project).addPsiTreeChangeListener(new PsiTreeChangeAdapter() {
+    // collects the files to update under a lock, the invoker updates them: runs in place, by the thread changing the PSI
+    PsiManager.getInstance(project).addPsiTreeChangeListenerBackgroundable(new PsiTreeChangeAdapter() {
       @Override
       public void childAdded(PsiTreeChangeEvent event) {
         if (event.getNewChild() instanceof PsiWhiteSpace) return; // optimization

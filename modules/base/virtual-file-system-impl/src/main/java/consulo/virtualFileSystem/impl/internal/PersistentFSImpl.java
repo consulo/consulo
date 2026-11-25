@@ -4,7 +4,6 @@ package consulo.virtualFileSystem.impl.internal;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
-import consulo.application.progress.PingProgress;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
@@ -1051,8 +1050,6 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
         Set<String> middleDirs = Sets.newHashSet(cappedInitialSize, FileUtil.PATH_HASHING_STRATEGY);
         List<VFileEvent> validated = new ArrayList<>(cappedInitialSize);
         while (startIndex != events.size()) {
-            PingProgress.interactWithEdtProgress();
-
             applyEvents.clear();
             files.clear();
             middleDirs.clear();
@@ -1060,15 +1057,12 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
             startIndex = groupAndValidate(events, startIndex, applyEvents, validated, files, middleDirs);
 
             if (!validated.isEmpty()) {
-                PingProgress.interactWithEdtProgress();
                 // do defensive copy to cope with ill-written listeners that save passed list for later processing
                 List<VFileEvent> toSend = List.of(validated.toArray(new VFileEvent[0]));
                 fireBeforeEvents(toSend);
 
-                PingProgress.interactWithEdtProgress();
                 applyEvents.forEach(Runnable::run);
 
-                PingProgress.interactWithEdtProgress();
                 fireAfterEvents(toSend);
             }
         }

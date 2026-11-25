@@ -9,6 +9,7 @@ import consulo.application.internal.ProgressSuspenderListener;
 import consulo.application.localize.ApplicationLocalize;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
@@ -46,6 +47,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 /**
@@ -495,6 +498,10 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
             }
         }
 
+        private static final int PROGRESS_UPDATE_MILLIS = 200;
+
+        private final AtomicBoolean myProgressUpdateQueued = new AtomicBoolean();
+
         @Override
         public void stop() {
             super.stop();
@@ -521,8 +528,20 @@ public class UnifiedInfoAndProgressPanel implements Disposable {
         @Override
         protected void queueProgressUpdate() {
             UIAccess uiAccess = uiAccess();
-            if (uiAccess != null) {
-                uiAccess.giveIfNeed(this::updateAndRepaint);
+            if (uiAccess == null) {
+                return;
+            }
+            // the work reports progress on its own thread, possibly for every processed file - the changes of 200 ms are merged
+            // into one UI update, which paints the state of the moment it runs
+            if (myProgressUpdateQueued.compareAndSet(false, true)) {
+                AppExecutorUtil.getAppScheduledExecutorService().schedule(
+                    () -> uiAccess.give(() -> {
+                        myProgressUpdateQueued.set(false);
+                        updateAndRepaint();
+                    }),
+                    PROGRESS_UPDATE_MILLIS,
+                    TimeUnit.MILLISECONDS
+                );
             }
         }
 

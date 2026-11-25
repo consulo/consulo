@@ -1,7 +1,6 @@
 // Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package consulo.language.index.impl.internal.events;
 
-import consulo.application.progress.PingProgress;
 import consulo.util.collection.ConcurrentBitSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
@@ -48,7 +47,6 @@ public final class ProjectDirtyFiles {
     public void addAllTo(IntSet set) {
         for (int fileId = 0; fileId < myFilesSet.size(); fileId++) {
             if (myFilesSet.get(fileId)) {
-                PingProgress.interactWithEdtProgress();
                 set.add(fileId);
             }
         }

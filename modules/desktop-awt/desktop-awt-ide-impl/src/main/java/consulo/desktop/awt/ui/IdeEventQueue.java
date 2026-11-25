@@ -30,7 +30,6 @@ import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
-import consulo.awt.hacking.InvocationUtil;
 import consulo.awt.hacking.PostEventQueueHacking;
 import consulo.awt.hacking.SequencedEventNestedFieldHolder;
 import consulo.desktop.awt.ui.keymap.IdeKeyEventDispatcher;
@@ -91,10 +90,6 @@ public class IdeEventQueue extends EventQueue {
 
     private static final Logger FOCUS_AWARE_RUNNABLES_LOG = Logger.getInstance(IdeEventQueue.class.getName() + ".runnables");
 
-    private static final Set<Class<? extends Runnable>> ourRunnablesWoWrite = Set.of(InvocationUtil.REPAINT_PROCESSING_CLASS);
-    private static final Set<Class<? extends Runnable>> ourRunnablesWithWrite = Set.of();
-    private static final boolean ourDefaultEventWithWrite = false;
-
     private static ProgressManager ourProgressManager;
 
     private final List<Runnable> myActivityListeners = Lists.newLockFreeCopyOnWriteList();
@@ -113,6 +108,7 @@ public class IdeEventQueue extends EventQueue {
     private int myAsyncInputDispatchCount;
     private final java.util.ArrayDeque<KeyEvent> myHeldKeyEvents = new java.util.ArrayDeque<>();
     private int myReplayInProgressCount;
+    private boolean myReplayingHeldKeyEvents;
     final AtomicInteger myKeyboardEventsPosted = new AtomicInteger();
     final AtomicInteger myKeyboardEventsDispatched = new AtomicInteger();
     private boolean myIsInInputEvent;
@@ -385,8 +381,6 @@ public class IdeEventQueue extends EventQueue {
         myCurrentEvent = e;
 
         AWTEvent finalE1 = e;
-        Runnable runnable = InvocationUtil.extractRunnable(e);
-        Class<? extends Runnable> runnableClass = runnable != null ? runnable.getClass() : Runnable.class;
 
         @RequiredUIAccess
         Runnable processEventRunnable = () -> {
@@ -436,23 +430,7 @@ public class IdeEventQueue extends EventQueue {
             }
         };
 
-        if (runnableClass != Runnable.class) {
-            if (ourRunnablesWoWrite.contains(runnableClass)) {
-                processEventRunnable.run();
-                return;
-            }
-            if (ourRunnablesWithWrite.contains(runnableClass)) {
-                ((ApplicationWithIntentWriteLock) Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-                return;
-            }
-        }
-
-        if (ourDefaultEventWithWrite) {
-            ((ApplicationWithIntentWriteLock) Application.get()).runIntendedWriteActionOnCurrentThread(processEventRunnable);
-        }
-        else {
-            processEventRunnable.run();
-        }
+        processEventRunnable.run();
     }
 
     // Fixes IDEA-218430: nested sequence events cause deadlock
@@ -675,8 +653,8 @@ public class IdeEventQueue extends EventQueue {
 
     @RequiredUIAccess
     public void _dispatchEvent(AWTEvent e) {
-        if (myAsyncInputDispatchCount > 0 && e instanceof KeyEvent) {
-            myHeldKeyEvents.add((KeyEvent) e);
+        if (e instanceof KeyEvent keyEvent && (myAsyncInputDispatchCount > 0 || myReplayInProgressCount > 0 && !myReplayingHeldKeyEvents)) {
+            myHeldKeyEvents.add(keyEvent);
             return;
         }
 
@@ -892,21 +870,25 @@ public class IdeEventQueue extends EventQueue {
             return;
         }
 
-        // repost instead of dispatching inline: keeps the chronological order relative to the action
-        // which has just been performed, and lets a modal event pump started by that action deliver them
-        while (myAsyncInputDispatchCount == 0 && !myHeldKeyEvents.isEmpty()) {
-            postEvent(myHeldKeyEvents.poll());
-        }
-
-        // the reposted events are still ahead of us in the queue, and until they are dispatched the key
-        // dispatcher must keep STATE_PROCESSED so that inProcessedState() can swallow them. The sentinel
-        // is posted after them, so it marks the point where the replay is really over.
+        // replayed later, not inline: keeps the chronological order relative to the action which has just been
+        // performed, and lets a modal event pump started by that action deliver them. Key events which arrive before
+        // the replay runs join the held ones - posted behind them they would overtake keys typed earlier. Until the
+        // replay is over the key dispatcher must keep STATE_PROCESSED so that inProcessedState() can swallow them.
         myReplayInProgressCount++;
         //noinspection SSBasedInspection
         SwingUtilities.invokeLater(() -> {
-            if (--myReplayInProgressCount <= 0) {
-                myReplayInProgressCount = 0;
-                maybeReady();
+            myReplayingHeldKeyEvents = true;
+            try {
+                while (myAsyncInputDispatchCount == 0 && !myHeldKeyEvents.isEmpty()) {
+                    dispatchEvent(myHeldKeyEvents.poll());
+                }
+            }
+            finally {
+                myReplayingHeldKeyEvents = false;
+                if (--myReplayInProgressCount <= 0) {
+                    myReplayInProgressCount = 0;
+                    maybeReady();
+                }
             }
         });
     }

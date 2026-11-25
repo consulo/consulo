@@ -20,20 +20,20 @@ import consulo.application.AccessToken;
 import consulo.application.Application;
 
 import java.util.concurrent.Executor;
-import consulo.application.event.ApplicationListener;
-import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.application.util.ApplicationUtil;
 import consulo.component.ComponentManager;
-import java.util.concurrent.atomic.AtomicBoolean;
 import consulo.localize.LocalizeValue;
 import consulo.util.concurrent.coroutine.Coroutine;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -58,7 +58,7 @@ public interface ApplicationEx extends Application {
     boolean holdsReadLock();
 
     /**
-     * @return true if the EDT is performing write action right now.
+     * @return true if a write action is running right now, on any thread.
      * @see #runWriteAction(Runnable)
      */
     boolean isWriteActionInProgress();
@@ -75,50 +75,84 @@ public interface ApplicationEx extends Application {
     /**
      * The executor write actions run on - a single platform thread.
      * <p>
-     * The write lock identifies its owner by {@code Thread.currentThread()}, and a virtual thread can lose that
-     * identity across mount and unmount, so a write action must hold a stable platform thread for its whole
-     * duration. The application coroutine context runs on virtual threads, which is why a coroutine step taking
-     * the write lock has to move here first.
+     * The write lock identifies its owner by {@code Thread.currentThread()}, and each step of a coroutine may run on
+     * a different virtual thread of the application coroutine context, so the ownership could not span the steps of
+     * one coroutine. A coroutine step taking the write lock moves here first.
      */
     Executor getWriteExecutor();
 
     /**
-     * @return true if the EDT started to acquire write action but has not acquired it yet.
+     * Runs {@code read} in a read action, then {@code write} with its result in a write action - and no other write action
+     * runs in between.
+     * <p>
+     * When the lock can, the read switches straight to write-intent. Otherwise write-intent is taken after the read, and if a
+     * write action ran in between, {@code read} runs once more under write-intent. So {@code read} may run twice and must
+     * not have side effects beyond its result.
+     */
+    <R, O> O runReadAndWriteAction(Class<?> actionClass, Supplier<R> read, Function<R, O> write);
+
+    /**
+     * Grows with every write action. While a thread holds the write-intent lock it changes only by write actions of that
+     * thread, so an unchanged value there means no write action ran since it was read.
+     */
+    long getWriteEpoch();
+
+    /**
+     * A write action started inside {@code action} does not wait for a pause in the input of a UI thread - for a short write
+     * the input itself waits for, such as a document commit.
+     */
+    <T extends @Nullable Object> T runAheadOfInput(Supplier<T> action);
+
+    /**
+     * @return true if a thread started to acquire write action but has not acquired it yet.
      * @see #runWriteAction(Runnable)
      */
     boolean isWriteActionPending();
 
     /**
      * Runs the action immediately when no write action is pending or in progress, otherwise defers
-     * it until the write action queue is processed. The lock signals the continuation - the UI
+     * it until that write action is finished or suspended. The lock signals the continuation - the UI
      * thread queue is never used for the waiting.
      * <p>
      * The action may run on the calling thread (immediate case) or on the thread which finishes the
      * write action, so it must be cheap and thread-agnostic (e.g. resubmitting a task to an executor).
      */
-    default void runWhenWriteActionIsCompleted(Runnable action) {
-        if (!isWriteActionPending() && !isWriteActionInProgress()) {
-            action.run();
-            return;
-        }
+    void runWhenWriteActionIsCompleted(Runnable action);
 
-        AtomicBoolean executed = new AtomicBoolean();
-        ApplicationListener listener = new ApplicationListener() {
-            @Override
-            public void afterWriteActionFinished(Object writeAction) {
-                if (!isWriteActionPending() && !isWriteActionInProgress() && executed.compareAndSet(false, true)) {
-                    removeApplicationListener(this);
-                    action.run();
-                }
-            }
-        };
-        addApplicationListener(listener);
-        // the write action might have finished between the check above and the listener registration
-        if (!isWriteActionPending() && !isWriteActionInProgress() && executed.compareAndSet(false, true)) {
-            removeApplicationListener(listener);
-            action.run();
-        }
-    }
+    /**
+     * Runs input - a typed character, an editor action - on the UI thread of {@code uiAccess}. It runs right away holding
+     * write-intent, so a write action it does never waits for a background one, unless another thread holds write-intent
+     * now: then it runs as soon as that thread releases it, and the UI thread doesn't wait for that meanwhile. Background
+     * writers are held back while input keeps coming, until it pauses. Must be called on that UI thread.
+     *
+     * @return a future completed when the input has run
+     */
+    CompletableFuture<?> runInput(UIAccess uiAccess, Runnable input);
+
+    /**
+     * Same as {@link #runInput(UIAccess, Runnable)} for input which completes asynchronously: write-intent is held only while
+     * {@code input} is called.
+     */
+    <T> CompletableFuture<T> runInputAsync(UIAccess uiAccess, Supplier<CompletableFuture<T>> input);
+
+    /**
+     * True while the calling thread runs input given to {@link #runInput} - code which is part of that input runs right away
+     * rather than through {@link #runInput}, which would queue it behind the input itself. Input given while one runs - from
+     * an event loop nested in it - waits for it.
+     */
+    boolean isInsideInput();
+
+    /**
+     * True while input given to {@link #runInput} has not run yet - it waits for a background write action to let go of
+     * write-intent. A pointer event which moves the caret goes through {@link #runInput} meanwhile, behind that input: moving the
+     * caret first would put the waiting input where the pointer went.
+     */
+    boolean isInputPending();
+
+    /**
+     * @return the number of actions waiting in {@link #runWhenWriteActionIsCompleted(Runnable)}
+     */
+    int writeActionFollowupsSize();
 
     default AccessToken startSaveBlock() {
         doNotSave();
@@ -223,24 +257,6 @@ public interface ApplicationEx extends Application {
     boolean isInImpatientReader();
 
     default void executeByImpatientReader(@RequiredReadAction Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
-        throw new UnsupportedOperationException();
-    }
-
-    default boolean runWriteActionWithCancellableProgressInDispatchThread(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        Consumer<? super ProgressIndicator> action
-    ) {
-        throw new UnsupportedOperationException();
-    }
-
-    default boolean runWriteActionWithNonCancellableProgressInDispatchThread(
-        LocalizeValue title,
-        @Nullable ComponentManager project,
-        @Nullable JComponent parentComponent,
-        Consumer<? super ProgressIndicator> action
-    ) {
         throw new UnsupportedOperationException();
     }
 }

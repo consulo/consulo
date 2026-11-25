@@ -5,6 +5,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.application.internal.TransferredWriteActionService;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -17,6 +18,7 @@ import consulo.language.psi.event.PsiTreeChangeListener;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.Lists;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
@@ -41,6 +43,7 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     private final FileManagerImpl myFileManager;
 
     private final List<PsiTreeChangePreprocessor> myTreeChangePreprocessors = Lists.newLockFreeCopyOnWriteList();
+    private final List<PsiTreeChangePreprocessor> myTreeChangePreprocessorsBackgroundable = Lists.newLockFreeCopyOnWriteList();
     private final List<PsiTreeChangeListener> myTreeChangeListeners = Lists.newLockFreeCopyOnWriteList();
     private final List<PsiTreeChangeListener> myTreeChangeListenersBackgroundable = Lists.newLockFreeCopyOnWriteList();
     private boolean myTreeChangeEventIsFiring;
@@ -61,6 +64,11 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
         myProject = project;
         myFileIndex = fileIndexFacadeProvider;
         myModificationTracker = modificationTracker;
+        // the modification counters are atomic: a change is counted in place, by the thread changing the PSI, before any other
+        // preprocessor sees it
+        if (modificationTracker instanceof PsiModificationTrackerImpl tracker) {
+            myTreeChangePreprocessorsBackgroundable.add(tracker::treeChanged);
+        }
 
         myFileManager = new FileManagerImpl(application, this, fileIndexFacadeProvider);
     }
@@ -198,15 +206,14 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     }
 
     @Override
-    public void addPsiTreeChangeListenerBackgroundable(PsiTreeChangeListener listener, Disposable parentDisposable) {
-        myTreeChangeListenersBackgroundable.add(listener);
-        Disposer.register(parentDisposable, () -> myTreeChangeListenersBackgroundable.remove(listener));
+    public void removePsiTreeChangeListener(PsiTreeChangeListener listener) {
+        myTreeChangeListeners.remove(listener);
     }
 
     @Override
-    public void removePsiTreeChangeListener(PsiTreeChangeListener listener) {
-        myTreeChangeListeners.remove(listener);
-        myTreeChangeListenersBackgroundable.remove(listener);
+    public void addPsiTreeChangeListenerBackgroundable(PsiTreeChangeListener listener, Disposable parentDisposable) {
+        myTreeChangeListenersBackgroundable.add(listener);
+        Disposer.register(parentDisposable, () -> myTreeChangeListenersBackgroundable.remove(listener));
     }
 
     private static String logPsi(@Nullable PsiElement element) {
@@ -378,6 +385,11 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
         myTreeChangePreprocessors.remove(preprocessor);
     }
 
+    public void addTreeChangePreprocessorBackgroundable(PsiTreeChangePreprocessor preprocessor, Disposable parentDisposable) {
+        myTreeChangePreprocessorsBackgroundable.add(preprocessor);
+        Disposer.register(parentDisposable, () -> myTreeChangePreprocessorsBackgroundable.remove(preprocessor));
+    }
+
     @RequiredWriteAction
     private void fireEvent(PsiTreeChangeEventImpl event) {
         PsiTreeChangeEventImpl.PsiEventType code = event.getCode();
@@ -393,10 +405,7 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
             myTreeChangeEventIsFiring = true;
         }
         try {
-            for (PsiTreeChangePreprocessor preprocessor : myTreeChangePreprocessors) {
-                preprocessor.treeChanged(event);
-            }
-            for (PsiTreeChangePreprocessor preprocessor : PsiTreeChangePreprocessor.EP_NAME.getExtensionList(myProject)) {
+            for (PsiTreeChangePreprocessor preprocessor : myTreeChangePreprocessorsBackgroundable) {
                 try {
                     preprocessor.treeChanged(event);
                 }
@@ -404,17 +413,50 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
                     LOG.error(e);
                 }
             }
+            if (!myTreeChangePreprocessors.isEmpty() || !PsiTreeChangePreprocessor.EP_NAME.getExtensionList(myProject).isEmpty()) {
+                runWriteActionOnEdtRegardlessOfCurrentThread(() -> {
+                    for (PsiTreeChangePreprocessor preprocessor : myTreeChangePreprocessors) {
+                        preprocessor.treeChanged(event);
+                    }
+                    for (PsiTreeChangePreprocessor preprocessor : PsiTreeChangePreprocessor.EP_NAME.getExtensionList(myProject)) {
+                        try {
+                            preprocessor.treeChanged(event);
+                        }
+                        catch (Throwable e) {
+                            LOG.error(e);
+                        }
+                    }
+                });
+            }
             for (PsiTreeChangeListener listener : myTreeChangeListenersBackgroundable) {
                 notifyPsiTreeChangeListener(event, listener);
             }
-            for (PsiTreeChangeListener listener : myTreeChangeListeners) {
-                notifyPsiTreeChangeListener(event, listener);
+            if (!myTreeChangeListeners.isEmpty()) {
+                runWriteActionOnEdtRegardlessOfCurrentThread(() -> {
+                    for (PsiTreeChangeListener listener : myTreeChangeListeners) {
+                        notifyPsiTreeChangeListener(event, listener);
+                    }
+                });
             }
         }
         finally {
             if (isRealTreeChange) {
                 myTreeChangeEventIsFiring = false;
             }
+        }
+    }
+
+    /**
+     * Runs {@code action} on the UI thread with the write lock handed over to it, or right here when this thread is the UI
+     * thread. Without the write lock (a non-physical change) nothing can move to the UI thread, so the action runs in place.
+     */
+    public static void runWriteActionOnEdtRegardlessOfCurrentThread(Runnable action) {
+        Application application = Application.get();
+        if (UIAccess.isUIThread() || !application.isWriteAccessAllowed()) {
+            action.run();
+        }
+        else {
+            application.getInstance(TransferredWriteActionService.class).runOnEdtWithTransferredWriteActionAndWait(action);
         }
     }
 
@@ -520,13 +562,28 @@ public class PsiManagerImpl extends PsiManagerEx implements Disposable {
     @Override
     public void beforeChange(boolean isPhysical) {
         myProject.getMessageBus().syncPublisher(AnyPsiChangeListenerBackgroundable.class).beforePsiChanged(isPhysical);
-        myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).beforePsiChanged(isPhysical);
+        runLegacyAnyPsiChange(isPhysical, () -> myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).beforePsiChanged(isPhysical));
     }
 
     @Override
     public void afterChange(boolean isPhysical) {
-        myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).afterPsiChanged(isPhysical);
+        runLegacyAnyPsiChange(isPhysical, () -> myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).afterPsiChanged(isPhysical));
         myProject.getMessageBus().syncPublisher(AnyPsiChangeListenerBackgroundable.class).afterPsiChanged(isPhysical);
+    }
+
+    /**
+     * A legacy subscriber gets a physical change on the UI thread - without one, there is nothing to wait for there. Without the
+     * write lock, nothing can move to the UI thread, so the subscriber runs in place, as before the background write action.
+     */
+    private void runLegacyAnyPsiChange(boolean isPhysical, Runnable action) {
+        if (isPhysical && Application.get().isWriteAccessAllowed()) {
+            if (myProject.getMessageBus().hasSubscribers(AnyPsiChangeListener.class)) {
+                runWriteActionOnEdtRegardlessOfCurrentThread(action);
+            }
+        }
+        else {
+            action.run();
+        }
     }
 
     @Override

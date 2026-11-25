@@ -1,13 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.virtualFileSystem.impl.internal.refresh;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.HeavyProcessLatch;
 import consulo.application.ReadAction;
-import consulo.application.concurrent.coroutine.WriteLock;
-import consulo.application.event.ApplicationListener;
-import consulo.application.internal.ProgressIndicatorUtils;
+import consulo.application.concurrent.coroutine.ReadWriteLock;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.FrequentEventDetector;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -19,9 +18,7 @@ import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineScope;
-import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.lang.Pair;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.RefreshQueue;
 import consulo.virtualFileSystem.RefreshSession;
 import consulo.virtualFileSystem.VirtualFile;
@@ -45,8 +42,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author max
@@ -74,19 +69,12 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   private final Application myApplication;
 
-  private final AtomicLong myWriteActionCounter = new AtomicLong();
   private final Object myEventProcessingLock = new Object();
   private CompletableFuture<?> myLastEventProcessing = CompletableFuture.completedFuture(null);
 
   @Inject
   public RefreshQueueImpl(Application application) {
     myApplication = application;
-    application.addApplicationListener(new ApplicationListener() {
-      @Override
-      public void writeActionStarted(Object action) {
-        myWriteActionCounter.incrementAndGet();
-      }
-    }, this);
   }
 
   public void execute(RefreshSessionImpl session) {
@@ -150,33 +138,25 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
    * are applied only if no other write action happened since the listeners ran, otherwise the listeners run again.
    */
   private CompletableFuture<?> processEventsInBackgroundWriteAction(RefreshSessionImpl session) {
-    AtomicLong stamp = new AtomicLong();
-    CompletableFuture<Boolean> attempt = Coroutine.<Void, @Nullable Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>>first(
-          CodeExecution.<Void, @Nullable Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>>apply((input, continuation) -> {
-            Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> prepared = collectChangeAppliers(session, stamp);
+    return Coroutine.first(
+        ReadWriteLock.<Void, @Nullable Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>, Boolean>nonBlocking(
+          (input, continuation) -> {
+            Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> prepared = collectChangeAppliers(session);
             if (prepared == null) {
               session.terminate();
               continuation.finishEarly(null);
             }
             return prepared;
-          }))
-        .then(WriteLock.<@Nullable Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>, Boolean>applyIf(
-          pair -> myWriteActionCounter.get() == stamp.get(),
-          pair -> {
+          },
+          (pair, continuation) -> {
             if (pair != null) {
               session.fireEventsInBackgroundWriteAction(pair.getFirst(), pair.getSecond());
             }
             return Boolean.TRUE;
-          },
-          pair -> Boolean.FALSE
+          }
         ))
       .runAsync(CoroutineScope.of(myApplication.coroutineContext()), null)
-      .toFuture();
-
-    return attempt
-      .thenCompose(done -> Boolean.FALSE.equals(done) && !myApplication.isDisposed()
-        ? processEventsInBackgroundWriteAction(session)
-        : CompletableFuture.completedFuture(null))
+      .toFuture()
       .whenComplete((result, throwable) -> {
         if (throwable != null) {
           session.terminate();
@@ -188,33 +168,20 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
   /**
    * @return the events to fire and their change appliers, or {@code null} if there is nothing to fire
    */
-  private @Nullable Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> collectChangeAppliers(
-    RefreshSessionImpl session,
-    AtomicLong stamp
+  @RequiredReadAction
+  private static @Nullable Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> collectChangeAppliers(
+    RefreshSessionImpl session
   ) {
-    while (true) {
-      SimpleReference<Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>> result = new SimpleReference<>();
-      AtomicBoolean nothingToFire = new AtomicBoolean();
-      boolean finished = ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> {
-        stamp.set(myWriteActionCounter.get());
-        List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
-          VirtualFile file = e instanceof VFileCreateEvent ce ? ce.getParent() : e.getFile();
-          return file == null || file.isValid();
-        });
-        if (events.isEmpty() && !session.hasFinishRunnable()) {
-          nothingToFire.set(true);
-          return;
-        }
-        List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
-        result.set(Pair.<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>create(events, appliers));
-      });
-      if (finished) {
-        return nothingToFire.get() ? null : result.get();
-      }
-      ProgressIndicatorUtils.yieldToPendingWriteActions();
+    List<? extends VFileEvent> events = ContainerUtil.filter(session.getEvents(), e -> {
+      VirtualFile file = e instanceof VFileCreateEvent ce ? ce.getParent() : e.getFile();
+      return file == null || file.isValid();
+    });
+    if (events.isEmpty() && !session.hasFinishRunnable()) {
+      return null;
     }
+    List<AsyncFileListener.ChangeApplier> appliers = AsyncEventSupport.runAsyncListeners(events);
+    return Pair.<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>>create(events, appliers);
   }
-
 
   private void fireEventsOnUiThread(RefreshSessionImpl session, ModalityState modality) {
     try {

@@ -7,7 +7,6 @@ import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.content.scope.SearchScope;
@@ -415,14 +414,31 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         return CommonRefactoringUtil.checkReadOnlyStatus(project, psiElements);
     }
 
+    /**
+     * Runs the refactoring command. Everything the user decides is decided by now, so while a background write action runs the
+     * command waits for it in the input queue of the ui instead of blocking the ui thread.
+     */
     @RequiredUIAccess
     protected void execute(UsageInfo[] usages) {
-        CommandProcessor.getInstance().newCommand()
-            .project(myProject)
-            .name(getCommandName())
-            .undoConfirmationPolicy(getUndoConfirmationPolicy())
-            .inGlobalUndoActionIf(isGlobalUndoAction())
-            .run(() -> doRefactoring(new LinkedHashSet<>(Arrays.asList(usages))));
+        boolean globalUndoAction = isGlobalUndoAction();
+        Runnable command = () -> {
+            if (myProject.isDisposed()) {
+                return;
+            }
+            CommandProcessor.getInstance().newCommand()
+                .project(myProject)
+                .name(getCommandName())
+                .undoConfirmationPolicy(getUndoConfirmationPolicy())
+                .inGlobalUndoActionIf(globalUndoAction)
+                .run(() -> doRefactoring(new LinkedHashSet<>(Arrays.asList(usages))));
+        };
+        ApplicationEx application = (ApplicationEx) Application.get();
+        if (application.isInsideInput()) {
+            command.run();
+        }
+        else {
+            application.runInput(UIAccess.current(), command);
+        }
     }
 
     protected boolean isGlobalUndoAction() {
@@ -685,17 +701,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                     }
                 }
             };
-            if (!app.isUnifiedApplication() && Registry.is("run.refactorings.under.progress")) {
-                app.runWriteActionWithNonCancellableProgressInDispatchThread(
-                    commandName,
-                    myProject,
-                    null,
-                    indicator -> performRefactoringRunnable.run()
-                );
-            }
-            else {
-                app.runWriteAction(performRefactoringRunnable);
-            }
+            app.runWriteAction(performRefactoringRunnable);
 
             DumbService.getInstance(myProject).completeJustSubmittedTasks();
 
@@ -704,17 +710,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
                 e.getKey().performOperation(myProject, e.getValue());
             }
             myTransaction.commit();
-            if (!app.isUnifiedApplication() && Registry.is("run.refactorings.under.progress")) {
-                app.runWriteActionWithNonCancellableProgressInDispatchThread(
-                    commandName,
-                    myProject,
-                    null,
-                    indicator -> performPsiSpoilingRefactoring()
-                );
-            }
-            else {
-                app.runWriteAction(this::performPsiSpoilingRefactoring);
-            }
+            app.runWriteAction(this::performPsiSpoilingRefactoring);
         }
         finally {
             action.finish();

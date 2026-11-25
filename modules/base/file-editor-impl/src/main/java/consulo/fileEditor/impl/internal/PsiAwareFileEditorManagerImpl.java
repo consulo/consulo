@@ -39,11 +39,13 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Provider;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author yole
@@ -95,7 +97,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
   protected void projectOpened(MessageBusConnection connection) {
     super.projectOpened(connection);
 
-    myPsiManager.addPsiTreeChangeListener(myPsiTreeChangeListener);
+    myPsiManager.addPsiTreeChangeListenerBackgroundable(myPsiTreeChangeListener, myProject);
     connection.subscribe(ProblemListener.class, myProblemListener);
   }
 
@@ -134,16 +136,21 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
    * Updates attribute of open files when roots change
    */
   private final class MyPsiTreeChangeListener extends PsiTreeChangeAdapter {
+    // runs on the thread changing the PSI: the icons are updated later, on the UI thread, once per file in the meantime
+    private final Set<VirtualFile> myPendingIconUpdates = ConcurrentHashMap.newKeySet();
+
     @Override
     @RequiredWriteAction
     public void propertyChanged(PsiTreeChangeEvent e) {
       if (PsiTreeChangeEvent.PROP_ROOTS.equals(e.getPropertyName())) {
-        VirtualFile[] openFiles = getOpenFiles();
-        for (int i = openFiles.length - 1; i >= 0; i--) {
-          VirtualFile file = openFiles[i];
-          LOG.assertTrue(file != null);
-          updateFileIconAsync(file);
-        }
+        Application.get().getLastUIAccess().give(() -> {
+          VirtualFile[] openFiles = getOpenFiles();
+          for (int i = openFiles.length - 1; i >= 0; i--) {
+            VirtualFile file = openFiles[i];
+            LOG.assertTrue(file != null);
+            updateFileIconAsync(file);
+          }
+        });
       }
     }
 
@@ -173,24 +180,23 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     }
 
     private void doChange(PsiTreeChangeEvent event) {
-      if(UIAccess.isUIThread()) {
-        doChangeInUI(event);
-      }
-      else {
-        Application.get().getLastUIAccess().giveAndWait(() -> doChangeInUI(event));
-      }
-    }
-
-    private void doChangeInUI(PsiTreeChangeEvent event) {
       PsiFile psiFile = event.getFile();
       if (psiFile == null) return;
       VirtualFile file = psiFile.getVirtualFile();
-      if (file == null) return;
+      if (file == null || !myPendingIconUpdates.add(file)) return;
+      Application.get().getLastUIAccess().give(() -> {
+        myPendingIconUpdates.remove(file);
+        updateIconIfCurrent(file);
+      });
+    }
+
+    @RequiredUIAccess
+    private void updateIconIfCurrent(VirtualFile file) {
       FileEditor[] editors = getAllEditors(file);
       if (editors.length == 0) return;
 
       VirtualFile currentFile = getCurrentFile();
-      if (currentFile != null && Comparing.equal(psiFile.getVirtualFile(), currentFile)) {
+      if (currentFile != null && Comparing.equal(file, currentFile)) {
         updateFileIconAsync(currentFile);
       }
     }

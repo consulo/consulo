@@ -94,10 +94,13 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         myPsiManager = PsiManager.getInstance(project);
         myDocumentCommitProcessor = documentCommitProcessor;
         mySynchronizer = new PsiToDocumentSynchronizer(this, project.getMessageBus());
-        myPsiManager.addPsiTreeChangeListener(mySynchronizer);
+        myPsiManager.addPsiTreeChangeListenerBackgroundable(mySynchronizer, this);
 
-        project.getMessageBus().connect(this)
-            .subscribe(PsiDocumentTransactionListener.class, (document, file) -> myUncommittedDocuments.remove(document));
+        // a concurrent set: updated in place, by the thread committing the document
+        project.getMessageBus().connect(this).subscribe(
+            PsiDocumentTransactionListenerBackgroundable.class,
+            (PsiDocumentTransactionListenerBackgroundable) (document, file) -> myUncommittedDocuments.remove(document)
+        );
     }
 
     @Override
@@ -388,6 +391,16 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         UIAccess.assertIsUIThread();
     }
 
+    /**
+     * A commit finishes on the commit thread, or in a write action - which can run on a background thread. A document without an
+     * event system - a non-physical copy - is committed on any thread, inside a read action too.
+     */
+    void assertFinishCommitThread(Document document) {
+        if (!Application.get().isWriteAccessAllowed() && isEventSystemEnabled(document)) {
+            assertCommitThread();
+        }
+    }
+
     @RequiredReadAction
     public boolean isEventSystemEnabled(Document document) {
         FileViewProvider viewProvider = getCachedViewProvider(document);
@@ -403,7 +416,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         Object reason
     ) {
         assert !myProject.isDisposed() : "Already disposed";
-        assertCommitThread();
+        assertFinishCommitThread(document);
         final boolean[] ok = {true};
         Runnable runnable = new DocumentRunnable(document, myProject) {
             @Override
@@ -436,7 +449,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
         boolean synchronously,
         boolean forceNoPsiCommit
     ) {
-        assertCommitThread();
+        assertFinishCommitThread(document);
         if (myProject.isDisposed()) {
             return false;
         }
@@ -554,10 +567,18 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
             return true; // the project must be closing or file deleted
         }
 
-        Application.get().runWriteAction(() -> {
+        Runnable commit = () -> {
             executeInsideCommit(() -> myDocumentCommitProcessor.commitSynchronously(document, myProject, psiFile));
             assert !isInUncommittedSet(document) : "Document :" + document;
-        });
+        };
+        // a document with an event system is committed in a write action; a non-physical copy has none, and it is committed in place,
+        // even inside a read action - its PSI changes need no write lock, and a reader can't take the write lock
+        if (isEventSystemEnabled(document) && !Application.get().isWriteAccessAllowed()) {
+            Application.get().runWriteAction(commit);
+        }
+        else {
+            commit.run();
+        }
         return true;
     }
 

@@ -313,9 +313,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
 
         if (myPopup.getPeer().isRealDialog()) {
             myPopup.getPeer().setAutoRequestFocus(false);
-            if (isWriteActionProgress()) {
-                myPopup.setModal(false); // display the dialog and continue with EDT execution, don't block it forever
-            }
         }
         myPopup.pack();
 
@@ -337,10 +334,6 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
     @Override
     public void runRepaintRunnable() {
         myRepaintRunnable.run();
-    }
-
-    private boolean isWriteActionProgress() {
-        return myProgressWindow instanceof PotemkinProgress;
     }
 
     private class MyDialogWrapper extends DialogWrapper {
@@ -396,7 +389,7 @@ public class DesktopAWTProgressDialogImpl implements ProgressDialog {
         }
 
         private boolean useLightPopup() {
-            return System.getProperty("vintage.progress") == null && !isWriteActionProgress();
+            return System.getProperty("vintage.progress") == null;
         }
 
         @Override

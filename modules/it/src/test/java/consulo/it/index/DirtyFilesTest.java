@@ -16,7 +16,6 @@
 package consulo.it.index;
 
 import consulo.application.Application;
-import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
@@ -44,7 +43,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.it.internal.HeadlessApplicationImpl;
 import consulo.it.internal.HeadlessLoggerFactory;
 import consulo.virtualFileSystem.VirtualFileManager;
 
@@ -73,7 +71,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 @ExtendWith(HeadlessProjectExtension.class)
-@AllowWriteLockUnderUIThread
 public class DirtyFilesTest {
     private static final int FILES = 25;
 
@@ -243,7 +240,6 @@ public class DirtyFilesTest {
                     .map(System::identityHashCode)
                     .toList()
                 + " loggedErrors=" + HeadlessLoggerFactory.peekLoggedErrors().stream().map(Throwable::getMessage).toList()
-                    + " threadIssues=" + HeadlessApplicationImpl.peekThreadIssues().stream().map(Throwable::getMessage).toList()
             );
         }
         finally {

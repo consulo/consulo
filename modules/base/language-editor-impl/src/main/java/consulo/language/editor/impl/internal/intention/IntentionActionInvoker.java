@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.impl.internal.intention;
 
+import consulo.ui.UIAccess;
+import consulo.application.internal.ApplicationEx;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.WriteAction;
@@ -146,6 +148,26 @@ public final class IntentionActionInvoker {
 
     @RequiredUIAccess
     public static boolean chooseActionAndInvoke(
+        PsiFile hostFile,
+        @Nullable Editor hostEditor,
+        IntentionAction action,
+        String text,
+        Project project
+    ) {
+        ApplicationEx application = (ApplicationEx) Application.get();
+        if (action.startInWriteAction() && !application.isInsideInput()) {
+            application.runInput(UIAccess.current(), () -> {
+                if (!project.isDisposed() && hostFile.isValid() && (hostEditor == null || !hostEditor.isDisposed())) {
+                    invokeNow(hostFile, hostEditor, action, text, project);
+                }
+            });
+            return true;
+        }
+        return invokeNow(hostFile, hostEditor, action, text, project);
+    }
+
+    @RequiredUIAccess
+    private static boolean invokeNow(
         PsiFile hostFile,
         @Nullable Editor hostEditor,
         IntentionAction action,

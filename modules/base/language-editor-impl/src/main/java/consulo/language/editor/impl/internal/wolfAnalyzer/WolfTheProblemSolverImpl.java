@@ -143,7 +143,8 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
         clearSyntaxErrorFlag(event);
       }
     };
-    psiManager.addPsiTreeChangeListener(changeListener);
+    // only resets a flag under myProblems: runs in place, by the thread changing the PSI
+    psiManager.addPsiTreeChangeListenerBackgroundable(changeListener, project);
     project.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(List<? extends VFileEvent> events) {

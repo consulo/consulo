@@ -345,6 +345,15 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public boolean hasSubscribers(Class<?> topic) {
+    if (myDisposed) return false;
+    // creating the publisher subscribes the lazy listeners of the topic
+    syncPublisher((Class<Object>)topic);
+    return !getTopicSubscribers(topic).isEmpty();
+  }
+
+  @Override
   public boolean hasUndeliveredEvents(Class<?> topic) {
     if (myDisposed) return false;
     if (!isDispatchingAnything()) return false;

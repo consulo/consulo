@@ -134,7 +134,7 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
             }
             presentation.setEnabledAndVisible(true);
         }, presentation -> {
-            LocalizeValue activeText = getActionText(e.getDataContext(), myExecutor);
+            LocalizeValue activeText = getActionText(e, myExecutor);
             presentation.setVisible(activeText.isNotEmpty());
             presentation.setText(activeText);
         }).toCoroutine();
@@ -166,16 +166,20 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
         return myOrigin instanceof ActionGroup && !(myOrigin instanceof BaseRunConfigurationAction);
     }
 
-    private static List<ConfigurationFromContext> getConfigurations(DataContext dataContext) {
-        List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
-        if (result == null) {
-            DataManager.getInstance().saveInDataContext(dataContext, CONFIGURATION_CACHE, result = calcConfigurations(dataContext));
-        }
-        return result;
+    private static List<ConfigurationFromContext> getConfigurations(AnActionEvent e) {
+        // the executor actions of a gutter popup are updated in parallel: computed once per update session
+        return e.getUpdateSession().sharedData(CONFIGURATION_CACHE, () -> {
+            DataContext dataContext = e.getDataContext();
+            List<ConfigurationFromContext> result = DataManager.getInstance().loadFromDataContext(dataContext, CONFIGURATION_CACHE);
+            if (result == null) {
+                DataManager.getInstance().saveInDataContext(dataContext, CONFIGURATION_CACHE, result = calcConfigurations(e));
+            }
+            return result;
+        });
     }
 
-    private static List<ConfigurationFromContext> calcConfigurations(DataContext dataContext) {
-        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+    private static List<ConfigurationFromContext> calcConfigurations(AnActionEvent e) {
+        ConfigurationContext context = ConfigurationContext.getFromContext(e);
         if (context.getLocation() == null) {
             return Collections.emptyList();
         }
@@ -192,8 +196,8 @@ public class ExecutorAction extends ActionGroup implements ActionWithDelegate<An
         return result;
     }
 
-    private LocalizeValue getActionText(DataContext dataContext, Executor executor) {
-        List<ConfigurationFromContext> list = getConfigurations(dataContext);
+    private LocalizeValue getActionText(AnActionEvent e, Executor executor) {
+        List<ConfigurationFromContext> list = getConfigurations(e);
         if (list.isEmpty()) {
             return LocalizeValue.empty();
         }

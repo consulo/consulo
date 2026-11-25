@@ -15,6 +15,8 @@
  */
 package consulo.desktop.qt.editor.impl.internal;
 
+import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.dataContext.DataContext;
 import consulo.desktop.qt.ui.impl.DesktopQtInputDetails;
@@ -90,7 +92,10 @@ public class DesktopQtEditorKeyHandler {
             .thenComposeAsync(
                 ignored -> myEditor.isDisposed()
                     ? CompletableFuture.completedFuture(Boolean.TRUE)
-                    : UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, myEditor.getDataContext(), uiEvent),
+                    : application().runInputAsync(
+                        uiAccess,
+                        () -> UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, myEditor.getDataContext(), uiEvent)
+                    ),
                 uiAccess
             )
             .whenCompleteAsync((performed, throwable) -> {
@@ -130,20 +135,49 @@ public class DesktopQtEditorKeyHandler {
         }
 
         char ch = text.charAt(0);
+        UIAccess uiAccess = UIAccess.current();
         if (ourStrokeQueue.isDone()) {
-            typeCharacter(ch);
+            ourStrokeQueue = application().runInput(uiAccess, () -> typeCharacter(ch));
             return true;
         }
 
-        UIAccess uiAccess = UIAccess.current();
         ourStrokeQueue = ourStrokeQueue
             .exceptionally(throwable -> null)
-            .thenRunAsync(() -> {
-                if (!myEditor.isDisposed()) {
-                    typeCharacter(ch);
-                }
-            }, uiAccess);
+            .thenComposeAsync(
+                ignored -> myEditor.isDisposed()
+                    ? CompletableFuture.completedFuture(null)
+                    : application().runInput(uiAccess, () -> typeCharacter(ch)).thenApply(result -> null),
+                uiAccess
+            );
         return true;
+    }
+
+    /**
+     * True while keys typed before now have not run - they wait in the stroke queue, or for a background write action to let go
+     * of write-intent.
+     */
+    static boolean isInputPending() {
+        ApplicationEx application = application();
+        return !application.isInsideInput() && (!ourStrokeQueue.isDone() || application.isInputPending());
+    }
+
+    /**
+     * Runs a pointer action on the caret after the keys typed before it - moving the caret first would put them where the
+     * pointer went.
+     */
+    static void runAfterPendingStrokes(UIAccess uiAccess, Runnable action) {
+        if (!isInputPending()) {
+            action.run();
+            return;
+        }
+
+        ourStrokeQueue = ourStrokeQueue
+            .exceptionally(throwable -> null)
+            .thenComposeAsync(ignored -> application().runInput(uiAccess, action), uiAccess);
+    }
+
+    private static ApplicationEx application() {
+        return (ApplicationEx) Application.get();
     }
 
     private void typeCharacter(char ch) {

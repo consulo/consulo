@@ -21,7 +21,6 @@ import consulo.application.AccessToken;
 import consulo.application.ReadAction;
 import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.internal.ApplicationEx;
-import consulo.application.progress.PingProgress;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
@@ -464,7 +463,6 @@ public final class UnindexedFilesScannerExecutorImpl implements Disposable, Unin
         // we don't check isRunning here, because this method is usually invoked on EDT. There is no chance for a bgt thread to clear
         // isRunning flag.
         while (myRunningTask != null && !myProject.isDisposed()) {
-            PingProgress.interactWithEdtProgress();
             LockSupport.parkNanos(50_000_000);
         }
     }

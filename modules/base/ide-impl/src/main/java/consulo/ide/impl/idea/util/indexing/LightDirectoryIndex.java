@@ -40,11 +40,15 @@ public final class LightDirectoryIndex<T> {
   private final ConcurrentIntObjectMap<T> myInfoCache = IntMaps.newConcurrentIntObjectHashMap();
   private final T myDefValue;
   private final Consumer<LightDirectoryIndex<T>> myInitializer;
+  private volatile boolean myUpToDate;
 
+  /**
+   * The index is filled by {@code initializer} on the first query, not here - the index is created by a service constructor,
+   * which can run on the ui thread, and looking files up can mean reading the file system.
+   */
   public LightDirectoryIndex(Disposable parentDisposable, T defValue, Consumer<LightDirectoryIndex<T>> initializer) {
     myDefValue = defValue;
     myInitializer = initializer;
-    resetIndex();
     MessageBusConnection connection = Application.get().getMessageBus().connect(parentDisposable);
     connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
@@ -72,8 +76,19 @@ public final class LightDirectoryIndex<T> {
   }
 
   public void resetIndex() {
-    myInfoCache.clear();
-    myInitializer.accept(this);
+    myUpToDate = false;
+  }
+
+  private void ensureUpToDate() {
+    if (!myUpToDate) {
+      synchronized (this) {
+        if (!myUpToDate) {
+          myInfoCache.clear();
+          myInitializer.accept(this);
+          myUpToDate = true;
+        }
+      }
+    }
   }
 
   public void putInfo(@Nullable VirtualFile file, T value) {
@@ -84,6 +99,7 @@ public final class LightDirectoryIndex<T> {
   
   public T getInfoForFile(@Nullable VirtualFile file) {
     if (!(file instanceof VirtualFileWithId)) return myDefValue;
+    ensureUpToDate();
 
     VirtualFile dir;
     if (!file.isDirectory()) {

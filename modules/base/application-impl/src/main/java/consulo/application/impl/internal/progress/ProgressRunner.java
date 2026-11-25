@@ -3,8 +3,10 @@ package consulo.application.impl.internal.progress;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.internal.BlockingProgressIndicator;
 import consulo.application.internal.ProgressIndicatorEx;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -27,6 +29,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -242,7 +246,7 @@ public final class ProgressRunner<R> {
     }
 
     // The case of sync exec from the EDT without the ability to poll events (no BlockingProgressIndicator#startBlocking or presence of Write Action)
-    // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. PotemkinProgress or ProgressWindow).
+    // must be handled by very synchronous direct call (alt: use proper progress indicator, i.e. ProgressWindow).
     // Note: running sync task on pooled thread from EDT can lead to deadlock if pooled thread will try to invokeAndWait.
     private boolean checkIfForceDirectExecNeeded() {
         Application application = ApplicationManager.getApplication();
@@ -299,12 +303,7 @@ public final class ProgressRunner<R> {
         }
 
         if (isSync) {
-            try {
-                resultFuture.get();
-            }
-            catch (Throwable ignore) {
-                // ignore possible exceptions, as they will be handled by the subsequent get/whenComplete calls.
-            }
+            waitUnlockingIntendedWrite(resultFuture);
         }
         return resultFuture;
     }
@@ -356,10 +355,38 @@ public final class ProgressRunner<R> {
         if (UIAccess.isUIThread()) {
             throw new UnsupportedOperationException("Sync waiting from EDT is dangerous.");
         }
-        try {
-            resultFuture.get();
+        waitUnlockingIntendedWrite(resultFuture);
+    }
+
+    private static void waitUnlockingIntendedWrite(CompletableFuture<?> resultFuture) {
+        if (resultFuture.isDone()) {
+            return;
         }
-        catch (Throwable ignore) {
+        if (ApplicationManager.getApplication() instanceof ApplicationWithIntentWriteLock application) {
+            application.runUnlockingIntendedWrite(() -> {
+                awaitQuietly(resultFuture);
+                return null;
+            });
+        }
+        else {
+            awaitQuietly(resultFuture);
+        }
+    }
+
+    private static void awaitQuietly(CompletableFuture<?> future) {
+        BaseApplication application = UIAccess.isUIThread() && ApplicationManager.getApplication() instanceof BaseApplication base ? base : null;
+        while (!future.isDone()) {
+            if (application != null) {
+                application.pollTransferredWriteAction();
+            }
+            try {
+                future.get(1, TimeUnit.MILLISECONDS);
+            }
+            catch (TimeoutException ignore) {
+            }
+            catch (Throwable ignore) {
+                return;
+            }
         }
     }
 

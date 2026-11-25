@@ -18,7 +18,6 @@ package consulo.it.project.dumb;
 import consulo.application.Application;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.index.ScanningTestSupport;
 import consulo.project.DumbModeTask;
@@ -43,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Guards two properties of {@code DumbServiceImpl}:
  * <ul>
  * <li>{@link DumbModeListenerBackgroundable} is published inside a write action, so a listener that
- * takes a write action itself nests instead of parking in {@code ReadMostlyRWLock.writeLock};</li>
+ * takes a write action itself nests instead of parking in {@code StampedRWLock.writeLock};</li>
  * <li>the {@code myState} machine and the dumb counter stay in agreement across repeated cycles.
  * When they diverge, {@code updateFinished} decrements the counter below zero and fails with
  * {@code AssertionError: Unbalanced dumb counter decrement}.</li>
@@ -65,7 +64,6 @@ public class DumbServiceTest {
     private record Event(String name, boolean underWriteAction) {
     }
 
-    @AllowWriteLockUnderUIThread
     @Test
     public void queueTaskFromUiThreadEntersAndExitsDumbMode(Application application, Project project) throws Exception {
         DumbService dumbService = DumbService.getInstance(project);
@@ -114,7 +112,6 @@ public class DumbServiceTest {
         assertThat(events).as("no unpaired dumb mode events left").isEmpty();
     }
 
-    @AllowWriteLockUnderUIThread
     @Test
     public void queueTaskInsideWriteActionOnUiThreadPublishesBeforeItReturns(Application application, Project project)
         throws Exception {

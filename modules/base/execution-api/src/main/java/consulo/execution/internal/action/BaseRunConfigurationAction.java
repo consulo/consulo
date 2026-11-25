@@ -70,13 +70,13 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
             if (e.getData(Project.KEY) == null) {
                 presentation.setEnabledAndVisible(false);
             }
-        }, presentation -> List.of(getChildren(e.getDataContext())))
+        }, presentation -> List.of(computeChildren(e)))
             .toCoroutine();
     }
 
     @RequiredReadAction
-    private AnAction[] getChildren(DataContext dataContext) {
-        final ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+    private AnAction[] computeChildren(AnActionEvent e) {
+        final ConfigurationContext context = ConfigurationContext.getFromContext(e);
         RunnerAndConfigurationSettings existing = context.findExisting();
         if (existing == null) {
             List<ConfigurationFromContext> producers = getConfigurationsFromContext(context);
@@ -190,8 +190,8 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
     protected abstract void perform(ConfigurationContext context);
 
     @RequiredReadAction
-    private boolean canBePerformed(DataContext dataContext) {
-        ConfigurationContext context = ConfigurationContext.getFromContext(dataContext);
+    private boolean canBePerformed(AnActionEvent event) {
+        ConfigurationContext context = ConfigurationContext.getFromContext(event);
         RunnerAndConfigurationSettings existing = context.findExisting();
         if (existing == null) {
             List<ConfigurationFromContext> fromContext = getConfigurationsFromContext(context);
@@ -205,11 +205,11 @@ public abstract class BaseRunConfigurationAction extends AsyncActionGroup implem
         return ActionSafeReadLock.run(event, presentation -> {
             presentation.setEnabledAndVisible(event.getData(Project.KEY) != null);
         }, presentation -> {
-            ConfigurationContext context = ConfigurationContext.getFromContext(event.getDataContext());
+            ConfigurationContext context = ConfigurationContext.getFromContext(event);
             RunnerAndConfigurationSettings existing = context.findExisting();
             RunnerAndConfigurationSettings configuration = existing;
 
-            presentation.setPerformGroup(canBePerformed(event.getDataContext()));
+            presentation.setPerformGroup(canBePerformed(event));
 
             if (configuration == null) {
                 configuration = context.getConfiguration();

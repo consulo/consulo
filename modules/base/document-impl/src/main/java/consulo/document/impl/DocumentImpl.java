@@ -755,11 +755,13 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
         }
     }
 
+    @RequiredUIAccess
     @RequiredWriteAction
     private void assertWriteAccess() {
         if (myAssertThreading) {
             Application application = ApplicationManager.getApplication();
             if (application != null) {
+                UIAccess.assertIsUIThread();
                 application.assertWriteAccessAllowed();
             }
         }

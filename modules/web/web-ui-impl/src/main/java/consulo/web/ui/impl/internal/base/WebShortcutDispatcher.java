@@ -18,6 +18,9 @@ package consulo.web.ui.impl.internal.base;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.dom.Element;
+import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
+import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
@@ -29,6 +32,7 @@ import consulo.ui.event.details.ModifiedInputDetails;
 import consulo.ui.ex.impl.internal.action.UnifiedCustomShortcutDispatcher;
 import consulo.ui.Point2D;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.InputAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
@@ -180,7 +184,23 @@ public final class WebShortcutDispatcher {
         }
 
         ComponentEvent<Component> uiEvent = new ComponentEvent<>(root, toInputDetails(keyStrokes.get(0)));
-        return UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, WebFocusTracker.createDataContext(root), uiEvent);
+        DataContext dataContext = WebFocusTracker.createDataContext(root);
+        if (hasInputAction(actions)) {
+            return ((ApplicationEx) Application.get()).runInputAsync(
+                UIAccess.current(),
+                () -> UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, dataContext, uiEvent)
+            );
+        }
+        return UnifiedCustomShortcutDispatcher.performFirstEnabled(actions, dataContext, uiEvent);
+    }
+
+    private static boolean hasInputAction(List<AnAction> actions) {
+        for (AnAction action : actions) {
+            if (action instanceof InputAction inputAction && inputAction.isInputAction()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static KeyboardInputDetails toInputDetails(KeyStroke keyStroke) {

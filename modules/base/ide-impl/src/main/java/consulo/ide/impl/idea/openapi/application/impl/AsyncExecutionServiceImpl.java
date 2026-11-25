@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.application.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
-import consulo.application.event.ApplicationListener;
+import consulo.application.internal.ApplicationEx;
 import consulo.ui.ModalityState;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -16,20 +16,11 @@ import java.util.concurrent.Callable;
 @Singleton
 @ServiceImpl
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
-  private static long ourWriteActionCounter = 0;
-
   private final Application myApplication;
 
   @Inject
   public AsyncExecutionServiceImpl(Application app) {
     myApplication = app;
-    app.addApplicationListener(new ApplicationListener() {
-      @Override
-      public void writeActionStarted(Object action) {
-        //noinspection AssignmentToStaticFieldFromInstanceMethod
-        ourWriteActionCounter++;
-      }
-    }, app);
   }
 
   @Override
@@ -44,6 +35,6 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
 
   static long getWriteActionCounter() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
-    return ourWriteActionCounter;
+    return ((ApplicationEx) ApplicationManager.getApplication()).getWriteEpoch();
   }
 }

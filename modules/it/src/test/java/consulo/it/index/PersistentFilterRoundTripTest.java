@@ -16,7 +16,6 @@
 package consulo.it.index;
 
 import consulo.application.Application;
-import consulo.it.AllowWriteLockUnderUIThread;
 import consulo.it.HeadlessProjectExtension;
 import consulo.it.HeadlessProjects;
 import consulo.language.index.impl.internal.FileBasedIndexImpl;
@@ -66,7 +65,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author VISTALL
  */
 @ExtendWith(HeadlessProjectExtension.class)
-@AllowWriteLockUnderUIThread
 public class PersistentFilterRoundTripTest {
     private static final int FILES = 25;
 

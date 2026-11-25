@@ -25,6 +25,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ComponentEvent;
 import consulo.ui.event.details.KeyboardInputDetails;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.InputAction;
 import consulo.ui.ex.internal.AnActionWithUIUpdate;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
@@ -38,7 +39,7 @@ import java.util.List;
  * The constructor parameters named {@code text}, {@code description} and {@code icon} are read at compile time to know
  * the presentation of the actions extending this class - don't rename them, see {@link consulo.ui.ex.action.AnAction}.
  */
-public abstract class EditorAction extends AnAction implements DumbAware, AnActionWithUIUpdate {
+public abstract class EditorAction extends AnAction implements DumbAware, AnActionWithUIUpdate, InputAction {
     private EditorActionHandler myHandler;
     private boolean myHandlersLoaded;
 

@@ -34,6 +34,7 @@ import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.internal.InputDelayListener;
 import consulo.application.internal.StartupProgress;
 import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
@@ -60,7 +61,6 @@ import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.proxy.EventDispatcher;
-import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.UIAction;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -70,6 +70,7 @@ import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.SemVer;
 import consulo.util.lang.ShutDownTracker;
@@ -90,6 +91,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -174,6 +178,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     private static final int ourDumpThreadsOnLongWriteActionWaiting = Integer.getInteger("dump.threads.on.long.write.action.waiting", 0);
 
+    private static final long INPUT_LEASE_NANOS = TimeUnit.MILLISECONDS.toNanos(700);
+
+    private static final long INPUT_DELAY_NOTICE_MILLIS = 500;
+
     
     protected final SimpleReference<? extends StartupProgress> mySplashRef;
 
@@ -196,7 +204,11 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     protected boolean myDoNotSave;
     private boolean myLoaded;
-    private volatile boolean myWriteActionPending;
+    private final AtomicInteger myWriteActionFollowups = new AtomicInteger();
+    private final AtomicLong myWriteEpoch = new AtomicLong();
+    private final ThreadLocal<Boolean> myInsideInput = ThreadLocal.withInitial(() -> Boolean.FALSE);
+    private final AtomicInteger myDelayedInputs = new AtomicInteger();
+    private final AtomicBoolean myInputDelayNoticed = new AtomicBoolean();
 
     protected int myWriteStackBase;
 
@@ -538,8 +550,6 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
         super.dispose();
 
-        invokeLater(this::releaseWriteIntentLock, ModalityState.nonModal());
-
         AppScheduledExecutorService service = (AppScheduledExecutorService)concurrency.getScheduledExecutorService();
         service.shutdownAppScheduledExecutorService();
 
@@ -693,8 +703,14 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
         int prevBase = myWriteStackBase;
         myWriteStackBase = myWriteActionsStack.size();
-        try (AccessToken ignored = myLock.writeSuspend()) {
-            runModalProgress(project, title, runnable);
+        try {
+            AccessToken suspension = myLock.writeSuspend();
+            try {
+                runModalProgress(project, title, runnable);
+            }
+            finally {
+                suspension.finish();
+            }
         }
         finally {
             myWriteStackBase = prevBase;
@@ -722,7 +738,156 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public boolean isWriteActionPending() {
-        return myWriteActionPending;
+        return myLock.isWriteRequested() && !myLock.isWriteLocked();
+    }
+
+    /**
+     * Each write the lock grants has its own gate, raised when the write is requested and completed when it is released (or
+     * suspended), so the action waits for exactly the write requested or held when it was given. A write which ends before the
+     * action is attached to its gate runs the action right away.
+     */
+    @Override
+    public void runWhenWriteActionIsCompleted(Runnable action) {
+        CompletionStage<?> writeFinished = myLock.whenWriteFinished();
+        if (writeFinished == null) {
+            action.run();
+            return;
+        }
+
+        myWriteActionFollowups.incrementAndGet();
+        writeFinished.whenComplete((result, error) -> {
+            myWriteActionFollowups.decrementAndGet();
+            try {
+                action.run();
+            }
+            catch (Throwable e) {
+                if (!(e instanceof ControlFlowException)) {
+                    LOG.error(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public int writeActionFollowupsSize() {
+        return myWriteActionFollowups.get();
+    }
+
+    @Override
+    public CompletableFuture<?> runInput(UIAccess uiAccess, Runnable input) {
+        CompletableFuture<Object> done = new CompletableFuture<>();
+        CompletableFuture<?> previous = myLock.queueInput(done);
+        if (previous.isDone()) {
+            attemptInput(uiAccess, input, done);
+        }
+        else {
+            previous.handle((result, error) -> null)
+                .thenRunAsync(() -> attemptInput(uiAccess, input, done), uiAccess)
+                .exceptionally(error -> {
+                    done.completeExceptionally(error);
+                    return null;
+                });
+        }
+        trackDelayedInput(uiAccess, done);
+        return done;
+    }
+
+    @Override
+    public boolean isInsideInput() {
+        return myInsideInput.get();
+    }
+
+    @Override
+    public boolean isInputPending() {
+        return myLock.isInputQueued();
+    }
+
+    private void trackDelayedInput(UIAccess uiAccess, CompletableFuture<?> done) {
+        if (done.isDone()) {
+            return;
+        }
+
+        if (myDelayedInputs.getAndIncrement() == 0) {
+            AppExecutorUtil.getAppScheduledExecutorService().schedule(
+                () -> uiAccess.give(() -> {
+                    if (myDelayedInputs.get() > 0 && myInputDelayNoticed.compareAndSet(false, true)) {
+                        getMessageBus().syncPublisher(InputDelayListener.class).inputDelayed(uiAccess);
+                    }
+                }),
+                INPUT_DELAY_NOTICE_MILLIS,
+                TimeUnit.MILLISECONDS
+            );
+        }
+
+        done.whenComplete((result, error) -> {
+            if (myDelayedInputs.decrementAndGet() == 0) {
+                uiAccess.give(() -> {
+                    if (myDelayedInputs.get() == 0 && myInputDelayNoticed.compareAndSet(true, false)) {
+                        getMessageBus().syncPublisher(InputDelayListener.class).inputResumed(uiAccess);
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public <T> CompletableFuture<T> runInputAsync(UIAccess uiAccess, Supplier<CompletableFuture<T>> input) {
+        CompletableFuture<CompletableFuture<T>> started = new CompletableFuture<>();
+        runInput(uiAccess, () -> started.complete(input.get())).whenComplete((result, error) -> {
+            if (error != null) {
+                started.completeExceptionally(error);
+            }
+        });
+        return started.thenCompose(future -> future);
+    }
+
+    private void attemptInput(UIAccess uiAccess, Runnable input, CompletableFuture<Object> done) {
+        boolean ran;
+        boolean insideInput = myInsideInput.get();
+        myInsideInput.set(Boolean.TRUE);
+        try {
+            ran = tryRunInput(input);
+        }
+        catch (Throwable e) {
+            if (!(e instanceof ControlFlowException)) {
+                LOG.error(e);
+            }
+            done.completeExceptionally(e);
+            return;
+        }
+        finally {
+            myInsideInput.set(insideInput);
+        }
+
+        if (ran) {
+            done.complete(null);
+            return;
+        }
+
+        myLock.whenWriteIntentFree()
+            .thenRunAsync(() -> attemptInput(uiAccess, input, done), uiAccess)
+            .exceptionally(error -> {
+                done.completeExceptionally(error);
+                return null;
+            });
+    }
+
+    private boolean tryRunInput(Runnable input) {
+        if (!myLock.tryStartInput(INPUT_LEASE_NANOS)) {
+            if (!myLock.isReadLockedByThisThread()) {
+                return false;
+            }
+            input.run();
+            return true;
+        }
+
+        try {
+            input.run();
+        }
+        finally {
+            releaseWriteIntentLock();
+        }
+        return true;
     }
 
     @RequiredWriteAction
@@ -860,13 +1025,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         if (!myLock.isWriteThread()) {
             throw new IllegalStateException("Access is allowed from write thread only");
         }
-        boolean writeActionPending = myWriteActionPending;
-        myWriteActionPending = true;
+        boolean nested = myLock.isWriteLocked();
+        if (!nested) {
+            myLock.requestWrite();
+        }
+        boolean locked = false;
         try {
             ActivityTracker.getInstance().inc();
             fireBeforeWriteActionStart(clazz);
 
-            if (!myLock.isWriteLocked()) {
+            if (!nested) {
                 int delay = ourDumpThreadsOnLongWriteActionWaiting;
                 Future<?> reportSlowWrite = delay <= 0
                     ? null
@@ -888,12 +1056,16 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
                     reportSlowWrite.cancel(false);
                 }
             }
+            locked = true;
         }
         finally {
-            myWriteActionPending = writeActionPending;
+            if (!nested && !locked) {
+                myLock.cancelWriteRequest();
+            }
         }
 
         myWriteActionsStack.push(clazz);
+        myWriteEpoch.incrementAndGet();
         fireWriteActionStarted(clazz);
     }
 
@@ -949,6 +1121,64 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
         return false;
     }
 
+    /**
+     * Runs a write action transferred to the calling thread, if one waits for it - a thread the transfer targets has to call it
+     * while it waits for something itself.
+     */
+    public void pollTransferredWriteAction() {
+        myLock.pollTransferredWriteAction();
+    }
+
+    @Override
+    public long getWriteEpoch() {
+        return myWriteEpoch.get();
+    }
+
+    @Override
+    public <T extends @Nullable Object> T runAheadOfInput(Supplier<T> action) {
+        return myLock.computeAheadOfInput(action);
+    }
+
+    @Override
+    public <R, O> O runReadAndWriteAction(Class<?> actionClass, Supplier<R> read, Function<R, O> write) {
+        if (myLock.isReadLockedByThisThread()) {
+            throw new IllegalStateException("A write action can't start inside a read action: " + Thread.currentThread());
+        }
+        if (myLock.isWriteThread()) {
+            R result = read.get();
+            return runWriteActionWithClass(actionClass, () -> write.apply(result));
+        }
+
+        R result;
+        long epoch;
+        boolean upgraded = false;
+        RWLock.ReadToken status = myLock.startRead();
+        try {
+            epoch = myWriteEpoch.get();
+            result = read.get();
+            upgraded = status != null && myLock.tryUpgradeToWriteIntent();
+        }
+        finally {
+            if (status != null) {
+                myLock.endRead(status);
+            }
+        }
+
+        if (!upgraded) {
+            myLock.writeIntentLock();
+        }
+        try {
+            if (!upgraded && myWriteEpoch.get() != epoch) {
+                result = read.get();
+            }
+            R value = result;
+            return runWriteActionWithClass(actionClass, () -> write.apply(value));
+        }
+        finally {
+            myLock.writeIntentUnlock();
+        }
+    }
+
     protected <T, E extends Throwable> T runWriteActionWithClass(
         Class<?> clazz,
         ThrowableSupplier<T, E> computable
@@ -991,7 +1221,25 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
     @Override
     public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableSupplier<T, E> action) throws E {
-        return action.get();
+        if (!myLock.isWriteThread() || myLock.isWriteLocked()) {
+            return action.get();
+        }
+
+        int holds = 0;
+        while (myLock.isWriteThread()) {
+            myLock.writeIntentUnlock();
+            holds++;
+        }
+        myLock.suspendInputPriority();
+        try {
+            return action.get();
+        }
+        finally {
+            myLock.resumeInputPriority();
+            for (int i = 0; i < holds; i++) {
+                myLock.writeIntentLock();
+            }
+        }
     }
 
     @Override

@@ -17,13 +17,4 @@ public final class VfsThreadingUtil {
             Application.get().getInstance(TransferredWriteActionService.class).runOnEdtWithTransferredWriteActionAndWait(action);
         }
     }
-
-    public static void runActionOnBackgroundRegardlessOfCurrentThread(Runnable action) {
-        if (!UIAccess.isUIThread()) {
-            action.run();
-        }
-        else {
-            Application.get().getInstance(TransferredWriteActionService.class).runOnBackgroundThreadWithTransferredWriteActionAndWait(action);
-        }
-    }
 }

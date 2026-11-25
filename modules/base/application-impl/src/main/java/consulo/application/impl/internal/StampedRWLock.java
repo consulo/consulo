@@ -17,198 +17,185 @@ package consulo.application.impl.internal;
 
 import consulo.application.AccessToken;
 import consulo.application.util.ApplicationUtil;
-import consulo.ui.UIAccess;
+import consulo.component.ProcessCanceledException;
+import consulo.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.StampedLock;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Application read-write lock based on {@link StampedLock}.
  * <p>
- * Write lock can be acquired from any thread. Only one writer at a time.
- * Multiple readers can run concurrently. Writer has preference (readers block when writer is waiting).
+ * Read is compatible with read and with write-intent, write excludes everything. Write-intent is exclusive among writers and
+ * is upgraded to write by its holder. The write-intent holder (and a thread a write action is transferred to) gets implicit read
+ * access. Stamps have no owner, so a write action can be transferred to another thread.
  * <p>
- * The write lock holder gets implicit read access (no need to acquire read lock separately).
+ * Readers are spread over a stripe of locks, one per processor, picked by the thread, so that parallel readers don't contend
+ * for one lock word; the writer locks every stripe.
+ * <p>
+ * A requested write has priority: from {@link #requestWrite()} until {@link #writeUnlock()} no new read lock is granted, readers
+ * wait for the write to finish. A thread waiting for a read lock or for write-intent runs a write action transferred to it.
+ * <p>
+ * A reader switches to write-intent without letting a write action in between only when write-intent is free at that moment
+ * ({@link #tryUpgradeToWriteIntent()}) - waiting for it inside a read would deadlock with the write-intent holder waiting for
+ * the readers.
+ * <p>
+ * Input on a UI thread has priority over background writers: while input keeps coming ({@link #tryStartInput(long)} renews a
+ * lease) or queued input has not run yet ({@link #queueInput}), threads other than UI threads don't take write-intent.
  *
  * @author VISTALL
  * @since 2025-03-10
  */
 public final class StampedRWLock implements RWLock {
-    public record StampedReadToken(long stamp) implements ReadToken {
-        static final StampedReadToken FAILED = new StampedReadToken(0);
+    private static final Logger LOG = Logger.getInstance(StampedRWLock.class);
 
-        @Override
-        public boolean readRequested() {
-            return stamp != 0;
-        }
-    }
+    private static final ReadToken FAILED = () -> false;
 
-    private final StampedLock myLock = new StampedLock();
+    private static final long WAIT_MILLIS = 1;
 
-    private volatile Thread myWriteThread;
-    private volatile long myWriteStamp;
+    private static final int MAX_STRIPES = 64;
 
-    private final ThreadLocal<Long> myReadStamp = new ThreadLocal<>();
+    private static final long MAX_INPUT_WAIT_NANOS = TimeUnit.SECONDS.toNanos(30);
+
+    private final StampedLockStripe[] myStripes;
+    private final long[] myWriteStamps;
+    private final Semaphore myWriteIntent = new Semaphore(1, true);
+    private final StampedRWLockEnvironment myEnvironment;
+    private final WriteActionTransfer myTransfer;
+
+    private volatile @Nullable Thread myWriteThread;
+    private volatile @Nullable CompletableFuture<Void> myWriteGate;
+    private volatile boolean myWriteLocked;
+    private int myWriteIntentHolds;
+
+    private final AtomicReference<@Nullable CompletableFuture<Void>> myWriteIntentFree = new AtomicReference<>();
+    private final AtomicReference<CompletableFuture<?>> myInputQueue = new AtomicReference<>(CompletableFuture.completedFuture(null));
+    private volatile long myInputQueuedUntil;
+    private volatile long myInputLeaseUntil = System.nanoTime();
+    private final AtomicInteger myInputPrioritySuspended = new AtomicInteger();
+
+    private final ThreadLocal<StampedReaderState> myReader = ThreadLocal.withInitial(StampedReaderState::new);
     private final ThreadLocal<Boolean> myImpatientReads = ThreadLocal.withInitial(() -> Boolean.FALSE);
-    private final WriteActionTransfer myTransfer = new WriteActionTransfer(thread -> myWriteThread = thread);
+    private final ThreadLocal<Boolean> myAheadOfInput = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
-    // ── Write ──
+    public StampedRWLock() {
+        this(StampedRWLockEnvironment.DEFAULT);
+    }
+
+    StampedRWLock(StampedRWLockEnvironment environment) {
+        myEnvironment = environment;
+        myTransfer = new WriteActionTransfer(thread -> myWriteThread = thread, environment::isUIThread);
+
+        int processors = Runtime.getRuntime().availableProcessors();
+        int stripes = Math.min(MAX_STRIPES, Integer.highestOneBit(Math.max(1, processors - 1)) << 1);
+        myStripes = new StampedLockStripe[stripes];
+        for (int i = 0; i < stripes; i++) {
+            myStripes[i] = new StampedLockStripe();
+        }
+        myWriteStamps = new long[stripes];
+    }
 
     @Override
-    public void writeLock() {
-        // reentrant: writeIntentLock already took the exclusive lock, or this is a nested
-        // write action — StampedLock is non-reentrant, so acquiring again would deadlock
-        if (Thread.currentThread() == myWriteThread) {
-            return;
+    public @Nullable ReadToken startRead() {
+        if (isWriteThread()) {
+            return null;
         }
+        StampedReaderState reader = myReader.get();
+        if (reader.myStamp != 0) {
+            return null;
+        }
+
+        throwIfImpatient();
+
         boolean interrupted = false;
-        long stamp = myLock.tryWriteLock();
-        while (stamp == 0) {
-            myTransfer.poll();
-            try {
-                stamp = myLock.tryWriteLock(1, TimeUnit.MILLISECONDS);
-            }
-            catch (InterruptedException e) {
-                interrupted = true;
+        try {
+            while (true) {
+                CompletableFuture<Void> gate = myWriteGate;
+                if (gate == null) {
+                    if (tryAcquireRead(reader)) {
+                        return reader;
+                    }
+                    Thread.onSpinWait();
+                    continue;
+                }
+
+                myTransfer.poll();
+                if (myEnvironment.isReadWaitCancelled()) {
+                    throw new ProcessCanceledException();
+                }
+                throwIfImpatient();
+
+                try {
+                    gate.get(WAIT_MILLIS, TimeUnit.MILLISECONDS);
+                }
+                catch (InterruptedException e) {
+                    interrupted = true;
+                }
+                catch (TimeoutException | ExecutionException ignored) {
+                }
             }
         }
-        if (interrupted) {
-            Thread.currentThread().interrupt();
-        }
-        myWriteStamp = stamp;
-        myWriteThread = Thread.currentThread();
-    }
-
-    @Override
-    public void writeUnlock() {
-        // tolerate a second unlock: in the writeIntentLock -> startWrite/endWrite -> writeIntentUnlock
-        // nesting the exclusive lock is acquired once but released twice (endWrite then writeIntentUnlock).
-        // The owner check is what makes the second unlock a no-op even when another thread has meanwhile
-        // acquired the lock and published its own stamp
-        if (Thread.currentThread() != myWriteThread) {
-            return;
-        }
-        long stamp = myWriteStamp;
-        myWriteThread = null;
-        myWriteStamp = 0;
-        myLock.unlockWrite(stamp);
-    }
-
-    /**
-     * Executes {@code action} on the executor's thread with this lock's write authority
-     * temporarily re-assigned to it — the {@link ReadMostlyRWLock#transferWriteAction}
-     * analog. The calling thread must hold the write lock and blocks until the action
-     * finishes; nested write acquisitions inside the action are reentrant no-ops.
-     */
-    public void transferWriteAction(Runnable action, java.util.function.Consumer<Runnable> executor) {
-        Thread owner = Thread.currentThread();
-        if (owner != myWriteThread) {
-            throw new IllegalStateException("Write action transfer requires holding the write lock");
-        }
-        java.util.concurrent.CompletableFuture<Void> done = new java.util.concurrent.CompletableFuture<>();
-        executor.accept(() -> {
-            myWriteThread = Thread.currentThread();
-            try {
-                action.run();
-                done.complete(null);
+        finally {
+            if (interrupted) {
+                Thread.currentThread().interrupt();
             }
-            catch (Throwable t) {
-                done.completeExceptionally(t);
-            }
-            finally {
-                myWriteThread = owner;
-            }
-        });
-        done.join();
-    }
-
-    @Override
-    public void writeIntentLock() {
-        writeLock();
-    }
-
-    @Override
-    public void writeIntentUnlock() {
-        writeUnlock();
-    }
-
-    @Override
-    public void transferWriteAction(boolean runOnEdt, Runnable action, Consumer<Runnable> scheduleTarget) {
-        Thread source = Thread.currentThread();
-        if (source != myWriteThread) {
-            throw new IllegalStateException(
-                "Write action can be transferred only from the write thread: " + source + "; current write thread: " + myWriteThread
-            );
         }
-
-        myTransfer.transfer(runOnEdt, action, scheduleTarget);
     }
 
     @Override
-    public AccessToken writeSuspend() {
-        return null;
-    }
-
-
-    // ── Read ──
-
-    @Override
-    public ReadToken startRead() {
-        // write holder gets implicit read access
-        if (Thread.currentThread() == myWriteThread) {
+    public @Nullable ReadToken startTryRead() {
+        if (isWriteThread()) {
             return null;
         }
-
-        // already in read action (nested)
-        if (myReadStamp.get() != null) {
+        StampedReaderState reader = myReader.get();
+        if (reader.myStamp != 0) {
             return null;
         }
 
         throwIfImpatient();
 
-        // UI thread must never block waiting for a write lock to be released — that would freeze the UI.
-        // Use tryRunReadAction() or move the read action to a background thread.
-        if (UIAccess.isUIThread() && myLock.isWriteLocked()) {
-            throw new IllegalStateException("Can't run ReadAction from UI thread while write lock is active — would freeze UI");
+        if (myWriteGate != null || !tryAcquireRead(reader)) {
+            return FAILED;
         }
-
-        long stamp = myLock.readLock();
-        myReadStamp.set(stamp);
-        return new StampedReadToken(stamp);
+        return reader;
     }
 
-    @Override
-    public ReadToken startTryRead() {
-        // write holder gets implicit read access
-        if (Thread.currentThread() == myWriteThread) {
-            return null;
-        }
-
-        // already in read action (nested)
-        if (myReadStamp.get() != null) {
-            return null;
-        }
-
-        throwIfImpatient();
-
-        long stamp = myLock.tryReadLock();
+    private boolean tryAcquireRead(StampedReaderState reader) {
+        int stripe = (int) Thread.currentThread().threadId() & (myStripes.length - 1);
+        StampedLock lock = myStripes[stripe];
+        long stamp = lock.tryReadLock();
         if (stamp == 0) {
-            return StampedReadToken.FAILED;
+            return false;
         }
 
-        myReadStamp.set(stamp);
-        return new StampedReadToken(stamp);
+        if (myWriteGate != null) {
+            lock.unlockRead(stamp);
+            return false;
+        }
+
+        reader.myStripe = stripe;
+        reader.myStamp = stamp;
+        return true;
     }
 
     @Override
     public void endRead(ReadToken read) {
-        long stamp = ((StampedReadToken) read).stamp();
-        myReadStamp.remove();
-        myLock.unlockRead(stamp);
+        StampedReaderState reader = (StampedReaderState) read;
+        long stamp = reader.myStamp;
+        reader.myStamp = 0;
+        myStripes[reader.myStripe].unlockRead(stamp);
     }
-
-    // ── Impatient Reader ──
 
     @Override
     public void executeByImpatientReader(Runnable runnable) throws ApplicationUtil.CannotRunReadActionException {
@@ -228,12 +215,301 @@ public final class StampedRWLock implements RWLock {
     }
 
     private void throwIfImpatient() throws ApplicationUtil.CannotRunReadActionException {
-        if (myImpatientReads.get() && myLock.isWriteLocked()) {
+        if (myImpatientReads.get() && myWriteGate != null && myEnvironment.isImpatienceAllowed()) {
             throw ApplicationUtil.CannotRunReadActionException.create();
         }
     }
 
-    // ── Queries ──
+    @Override
+    public void writeIntentLock() {
+        Thread current = Thread.currentThread();
+        if (current == myWriteThread) {
+            myWriteIntentHolds++;
+            return;
+        }
+
+        checkNoReadLock("Write-intent");
+
+        boolean yieldsToInput = yieldsToInput();
+        boolean interrupted = false;
+        while (true) {
+            if (yieldsToInput && isInputPriority()) {
+                myTransfer.poll();
+                LockSupport.parkNanos(this, TimeUnit.MILLISECONDS.toNanos(WAIT_MILLIS));
+                continue;
+            }
+            try {
+                if (myWriteIntent.tryAcquire(WAIT_MILLIS, TimeUnit.MILLISECONDS)) {
+                    if (!yieldsToInput || !isInputPriority()) {
+                        break;
+                    }
+                    myWriteIntent.release();
+                }
+            }
+            catch (InterruptedException e) {
+                interrupted = true;
+            }
+            myTransfer.poll();
+        }
+
+        myWriteThread = current;
+        myWriteIntentHolds = 1;
+
+        if (interrupted) {
+            current.interrupt();
+        }
+    }
+
+    @Override
+    public void writeIntentUnlock() {
+        checkWriteThread();
+
+        if (--myWriteIntentHolds > 0) {
+            return;
+        }
+
+        boolean leakedWrite = myWriteLocked;
+        if (leakedWrite) {
+            writeUnlock();
+        }
+
+        myWriteThread = null;
+        myWriteIntent.release();
+
+        CompletableFuture<Void> free = myWriteIntentFree.getAndSet(null);
+        if (free != null) {
+            free.complete(null);
+        }
+
+        if (leakedWrite) {
+            LOG.error(new IllegalStateException("Write-intent released while the write lock is held: " + Thread.currentThread()));
+        }
+    }
+
+    @Override
+    public boolean tryUpgradeToWriteIntent() {
+        Thread current = Thread.currentThread();
+        if (current == myWriteThread || myReader.get().myStamp == 0) {
+            return false;
+        }
+
+        boolean yieldsToInput = yieldsToInput();
+        if (yieldsToInput && isInputPriority() || !myWriteIntent.tryAcquire()) {
+            return false;
+        }
+        if (yieldsToInput && isInputPriority()) {
+            myWriteIntent.release();
+            return false;
+        }
+
+        myWriteThread = current;
+        myWriteIntentHolds = 1;
+        return true;
+    }
+
+    @Override
+    public <T extends @Nullable Object> T computeAheadOfInput(Supplier<T> action) {
+        Boolean old = myAheadOfInput.get();
+        myAheadOfInput.set(Boolean.TRUE);
+        try {
+            return action.get();
+        }
+        finally {
+            myAheadOfInput.set(old);
+        }
+    }
+
+    private boolean yieldsToInput() {
+        return !myEnvironment.isUIThread() && !myAheadOfInput.get();
+    }
+
+    @Override
+    public boolean tryStartInput(long leaseNanos) {
+        Thread current = Thread.currentThread();
+        if (current == myWriteThread) {
+            myWriteIntentHolds++;
+            renewInputLease(leaseNanos);
+            return true;
+        }
+
+        if (myReader.get().myStamp != 0 || !myWriteIntent.tryAcquire()) {
+            return false;
+        }
+
+        myWriteThread = current;
+        myWriteIntentHolds = 1;
+        renewInputLease(leaseNanos);
+        return true;
+    }
+
+    @Override
+    public void renewInputLease(long leaseNanos) {
+        long until = System.nanoTime() + leaseNanos;
+        if (until - myInputLeaseUntil > 0) {
+            myInputLeaseUntil = until;
+        }
+    }
+
+    @Override
+    public CompletableFuture<?> whenWriteIntentFree() {
+        while (true) {
+            CompletableFuture<Void> free = myWriteIntentFree.get();
+            if (free == null) {
+                free = new CompletableFuture<>();
+                if (!myWriteIntentFree.compareAndSet(null, free)) {
+                    continue;
+                }
+            }
+            if (myWriteThread == null && myWriteIntentFree.compareAndSet(free, null)) {
+                free.complete(null);
+            }
+            return free;
+        }
+    }
+
+    @Override
+    public CompletableFuture<?> queueInput(CompletableFuture<?> input) {
+        myInputQueuedUntil = System.nanoTime() + MAX_INPUT_WAIT_NANOS;
+        return myInputQueue.getAndSet(input);
+    }
+
+    @Override
+    public boolean isInputQueued() {
+        return !myInputQueue.get().isDone();
+    }
+
+    @Override
+    public void suspendInputPriority() {
+        myInputPrioritySuspended.incrementAndGet();
+    }
+
+    @Override
+    public void resumeInputPriority() {
+        myInputPrioritySuspended.decrementAndGet();
+    }
+
+    boolean isInputPriority() {
+        if (myInputPrioritySuspended.get() > 0) {
+            return false;
+        }
+        long now = System.nanoTime();
+        return myInputLeaseUntil - now > 0 || !myInputQueue.get().isDone() && myInputQueuedUntil - now > 0;
+    }
+
+    @Override
+    public void requestWrite() {
+        checkWriteThread();
+        checkNoReadLock("Write");
+
+        if (myWriteLocked) {
+            throw new IllegalStateException("Write lock is already held: " + Thread.currentThread());
+        }
+
+        if (myWriteGate == null) {
+            myWriteGate = new CompletableFuture<>();
+        }
+    }
+
+    @Override
+    public void cancelWriteRequest() {
+        checkWriteThread();
+
+        if (!myWriteLocked) {
+            releaseWriteGate();
+        }
+    }
+
+    @Override
+    public void writeLock() {
+        requestWrite();
+        lockStripes();
+    }
+
+    @Override
+    public void writeUnlock() {
+        checkWriteThread();
+
+        if (!myWriteLocked) {
+            throw new IllegalStateException("Write lock is not held: " + Thread.currentThread());
+        }
+
+        unlockStripes();
+        releaseWriteGate();
+    }
+
+    private void lockStripes() {
+        for (int i = 0; i < myStripes.length; i++) {
+            myWriteStamps[i] = myStripes[i].writeLock();
+        }
+        myWriteLocked = true;
+    }
+
+    private void unlockStripes() {
+        myWriteLocked = false;
+        for (int i = myStripes.length - 1; i >= 0; i--) {
+            long stamp = myWriteStamps[i];
+            myWriteStamps[i] = 0;
+            myStripes[i].unlockWrite(stamp);
+        }
+    }
+
+    @Override
+    public AccessToken writeSuspend() {
+        writeUnlock();
+
+        return new AccessToken() {
+            @Override
+            public void finish() {
+                checkWriteThread();
+
+                myWriteGate = new CompletableFuture<>();
+                try {
+                    myEnvironment.beforeWriteRelock();
+                }
+                finally {
+                    lockStripes();
+                }
+            }
+        };
+    }
+
+    private void releaseWriteGate() {
+        CompletableFuture<Void> gate = myWriteGate;
+        myWriteGate = null;
+        if (gate != null) {
+            gate.complete(null);
+        }
+    }
+
+    @Override
+    public void transferWriteAction(boolean runOnEdt, Runnable action, Consumer<Runnable> scheduleTarget) {
+        Thread source = Thread.currentThread();
+        if (source != myWriteThread) {
+            throw new IllegalStateException(
+                "Write action can be transferred only from the write thread: " + source + "; current write thread: " + myWriteThread
+            );
+        }
+
+        myTransfer.transfer(runOnEdt, action, scheduleTarget);
+    }
+
+    @Override
+    public void pollTransferredWriteAction() {
+        myTransfer.poll();
+    }
+
+    private void checkWriteThread() {
+        Thread current = Thread.currentThread();
+        if (current != myWriteThread) {
+            throw new IllegalStateException("Current thread: " + current + "; write thread: " + myWriteThread);
+        }
+    }
+
+    private void checkNoReadLock(String lock) {
+        if (myReader.get().myStamp != 0) {
+            throw new IllegalStateException(lock + " lock can't be acquired inside a read action: " + Thread.currentThread());
+        }
+    }
 
     @Override
     public boolean isWriteThread() {
@@ -241,20 +517,37 @@ public final class StampedRWLock implements RWLock {
     }
 
     @Override
+    public @Nullable Thread getWriteThread() {
+        return myWriteThread;
+    }
+
+    @Override
     public boolean isReadLockedByThisThread() {
-        return myReadStamp.get() != null;
+        return myReader.get().myStamp != 0;
     }
 
     @Override
     public boolean isWriteLocked() {
-        return myLock.isWriteLocked();
+        return myWriteLocked;
+    }
+
+    @Override
+    public boolean isWriteRequested() {
+        return myWriteGate != null;
+    }
+
+    @Override
+    public @Nullable CompletionStage<?> whenWriteFinished() {
+        CompletableFuture<Void> gate = myWriteGate;
+        return gate == null ? null : gate.minimalCompletionStage();
     }
 
     @Override
     public String toString() {
         return "StampedRWLock{" +
             "writeThread=" + myWriteThread +
-            ", writeLocked=" + myLock.isWriteLocked() +
+            ", writeLocked=" + myWriteLocked +
+            ", writeRequested=" + (myWriteGate != null) +
             '}';
     }
 }

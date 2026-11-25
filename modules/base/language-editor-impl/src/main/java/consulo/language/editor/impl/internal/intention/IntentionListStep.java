@@ -1,6 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.impl.internal.intention;
 
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.Application;
+import consulo.ui.UIAccess;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.component.util.Iconable;
@@ -101,27 +105,37 @@ public class IntentionListStep implements ListPopupStep<IntentionActionWithTextC
     private void applyAction(IntentionActionWithTextCaching cachedAction) {
         myFinalRunnable = () -> {
             HintManager.getInstance().hideAllHints();
-            if (myProject.isDisposed()) {
-                return;
+            if (cachedAction.getAction().startInWriteAction()) {
+                ((ApplicationEx) Application.get()).runInput(UIAccess.current(), () -> invoke(cachedAction));
             }
-            if (myEditor != null && (myEditor.isDisposed() || (!myEditor.getComponent().isShowing() && !ApplicationManager.getApplication().isUnitTestMode()))) {
-                return;
+            else {
+                invoke(cachedAction);
             }
-
-            if (DumbService.isDumb(myProject) && !DumbService.isDumbAware(cachedAction)) {
-                DumbService.getInstance(myProject).showDumbModeNotification(cachedAction.getText() + " is not available during indexing");
-                return;
-            }
-
-            PsiDocumentManager.getInstance(myProject).commitAllDocuments();
-
-            PsiFile file = myEditor != null ? PsiUtilBase.getPsiFileInEditor(myEditor, myProject) : myFile;
-            if (file == null) {
-                return;
-            }
-
-            IntentionActionInvoker.chooseActionAndInvoke(file, myEditor, cachedAction.getAction(), cachedAction.getText().get(), myProject);
         };
+    }
+
+    @RequiredUIAccess
+    private void invoke(IntentionActionWithTextCaching cachedAction) {
+        if (myProject.isDisposed()) {
+            return;
+        }
+        if (myEditor != null && (myEditor.isDisposed() || (!myEditor.getComponent().isShowing() && !ApplicationManager.getApplication().isUnitTestMode()))) {
+            return;
+        }
+
+        if (DumbService.isDumb(myProject) && !DumbService.isDumbAware(cachedAction)) {
+            DumbService.getInstance(myProject).showDumbModeNotification(cachedAction.getText() + " is not available during indexing");
+            return;
+        }
+
+        PsiDocumentManager.getInstance(myProject).commitAllDocuments();
+
+        PsiFile file = myEditor != null ? PsiUtilBase.getPsiFileInEditor(myEditor, myProject) : myFile;
+        if (file == null) {
+            return;
+        }
+
+        IntentionActionInvoker.chooseActionAndInvoke(file, myEditor, cachedAction.getAction(), cachedAction.getText().get(), myProject);
     }
 
     

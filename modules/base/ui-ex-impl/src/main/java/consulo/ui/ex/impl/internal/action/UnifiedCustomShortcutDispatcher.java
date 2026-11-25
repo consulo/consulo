@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.impl.internal.action;
 
+import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import consulo.ui.Component;
@@ -40,6 +42,8 @@ import java.util.function.Predicate;
  */
 public final class UnifiedCustomShortcutDispatcher {
     private static final Logger LOG = Logger.getInstance(UnifiedCustomShortcutDispatcher.class);
+
+    private static final int MAX_INPUT_UPDATE_RETRIES = 20;
 
     private UnifiedCustomShortcutDispatcher() {
     }
@@ -123,15 +127,20 @@ public final class UnifiedCustomShortcutDispatcher {
     ) {
         List<AnAction> ordered = new ArrayList<>(ActionPromoterUtil.rearrangeByPromoters(actions, context));
         ordered.sort(Comparator.comparing(AnAction::getExecuteWeight).reversed());
-        return performFirstEnabled(ordered, 0, context, uiEvent, UIAccess.current());
+        return performFirstEnabled(ordered, 0, context, uiEvent, UIAccess.current(), 0);
     }
 
+    /**
+     * The update of an action reads under a lock which a write action takes away; an input action whose update failed while a
+     * write action ran is updated again once it finished - the keys typed after it keep waiting behind it meanwhile.
+     */
     private static CompletableFuture<Boolean> performFirstEnabled(
         List<AnAction> actions,
         int index,
         DataContext context,
         @Nullable ComponentEvent<?> uiEvent,
-        UIAccess uiAccess
+        UIAccess uiAccess,
+        int inputRetries
     ) {
         if (index >= actions.size()) {
             return CompletableFuture.completedFuture(Boolean.FALSE);
@@ -139,6 +148,9 @@ public final class UnifiedCustomShortcutDispatcher {
 
         AnAction action = actions.get(index);
         AnActionEvent event = AnActionEvent.createFromAnAction(action, null, ActionPlaces.KEYBOARD_SHORTCUT, context, uiEvent);
+        ApplicationEx application = (ApplicationEx) Application.get();
+        long writeEpoch = application.getWriteEpoch();
+        boolean writing = isWriting(application);
         return ActionRunnerAsync.lastUpdateAndCheckDumbAsync(action, event, false)
             .handleAsync((enabled, throwable) -> {
                 if (throwable != null && !UnifiedActionMenuExpander.isProcessCanceled(throwable)) {
@@ -146,12 +158,41 @@ public final class UnifiedCustomShortcutDispatcher {
                 }
 
                 if (throwable != null || !Boolean.TRUE.equals(enabled)) {
-                    return performFirstEnabled(actions, index + 1, context, uiEvent, uiAccess);
+                    if (isInputAction(action)
+                        && inputRetries < MAX_INPUT_UPDATE_RETRIES
+                        && (writing || isWriting(application) || application.getWriteEpoch() != writeEpoch)) {
+                        CompletableFuture<Boolean> retry = new CompletableFuture<>();
+                        application.runWhenWriteActionIsCompleted(() -> uiAccess.give(
+                            () -> performFirstEnabled(actions, index, context, uiEvent, uiAccess, inputRetries + 1).whenComplete((result, error) -> {
+                                if (error != null) {
+                                    retry.completeExceptionally(error);
+                                }
+                                else {
+                                    retry.complete(result);
+                                }
+                            })
+                        ));
+                        return retry;
+                    }
+                    return performFirstEnabled(actions, index + 1, context, uiEvent, uiAccess, 0);
                 }
 
+                if (isInputAction(action)) {
+                    return ((ApplicationEx) Application.get())
+                        .runInput(uiAccess, () -> UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event))
+                        .thenApply(ignored -> Boolean.TRUE);
+                }
                 UnifiedActionMenuExpander.performActionWithCallbacks(action, context, event);
                 return CompletableFuture.completedFuture(Boolean.TRUE);
             }, uiAccess)
             .thenCompose(next -> next);
+    }
+
+    private static boolean isWriting(ApplicationEx application) {
+        return application.isWriteActionInProgress() || application.isWriteActionPending();
+    }
+
+    private static boolean isInputAction(AnAction action) {
+        return action instanceof InputAction inputAction && inputAction.isInputAction();
     }
 }

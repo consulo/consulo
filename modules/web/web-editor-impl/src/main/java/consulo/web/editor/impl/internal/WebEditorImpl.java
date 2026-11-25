@@ -19,6 +19,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.internal.ApplicationEx;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.*;
@@ -106,6 +107,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 /**
@@ -185,6 +188,10 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     private volatile boolean myTextFromClient;
 
     private volatile @Nullable ClientEdit myClientEdit;
+
+    private final List<int[]> myUnseenChanges = new ArrayList<>();
+    private long myUnseenChangesBase;
+    private int myWaitingClientEvents;
 
     /**
      * Where the caret is on screen, as the browser last reported it. Anything anchored to the caret - the completion
@@ -517,6 +524,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
                     int start = event.getOffset();
                     int end = start + event.getOldLength();
                     String newFragment = event.getNewFragment().toString();
+                    recordUnseenChange(start, event.getOldLength(), newFragment.length());
 
                     // the caret goes with the text and after it. writing into the model moves what orion draws only as far
                     // as the change forces it to, and where the caret belongs afterwards is the platform's to say - a tab
@@ -606,7 +614,13 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * own left the platform holding a range the user had long since dragged away from - and every action reading the
      * selection, delete first among them, worked on that one instead of what was on screen.
      */
+    @RequiredUIAccess
     private void moveCaretFromClient(int offset, int selectionStart, int selectionEnd) {
+        runInClientOrder(unseen -> applyCaretFromClient(unseen.applyAsInt(offset), unseen.applyAsInt(selectionStart), unseen.applyAsInt(selectionEnd)));
+    }
+
+    @RequiredUIAccess
+    private void applyCaretFromClient(int offset, int selectionStart, int selectionEnd) {
         int length = myDocument.getTextLength();
         if (offset < 0 || offset > length || selectionStart < 0 || selectionEnd > length || selectionStart > selectionEnd) {
             return;
@@ -638,7 +652,80 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * Applies an edit the user made in the browser to the platform document, so the psi, the daemon and the undo
      * stack see it. Offsets refer to the document as it was before the edit.
      */
+    @RequiredUIAccess
     private void replaceTextFromClient(int start, int removedCharCount, String text) {
+        runInClientOrder(unseen -> {
+            int unseenStart = unseen.applyAsInt(start);
+            int unseenEnd = unseen.applyAsInt(start + removedCharCount);
+            applyTextFromClient(unseenStart, Math.max(0, unseenEnd - unseenStart), text);
+        });
+    }
+
+    /**
+     * Applies an event which carries offsets into the text the browser shows - in order with the keys and the edits ahead of
+     * it. Input which still waits is not on the browser's screen yet, so by the time the event runs its offsets are moved
+     * over every change the browser has not seen since the event arrived.
+     */
+    @RequiredUIAccess
+    private void runInClientOrder(Consumer<IntUnaryOperator> apply) {
+        long from = beginClientEvent();
+        WebShortcutDispatcher.runAfterPendingStrokes(UI.getCurrent(), () -> ((ApplicationEx) Application.get()).runInput(
+            UIAccess.current(),
+            () -> {
+                try {
+                    if (!isReleased) {
+                        apply.accept(offset -> translateUnseen(offset, from));
+                    }
+                }
+                finally {
+                    endClientEvent();
+                }
+            }
+        ));
+    }
+
+    private long beginClientEvent() {
+        synchronized (myUnseenChanges) {
+            myWaitingClientEvents++;
+            return myUnseenChangesBase + myUnseenChanges.size();
+        }
+    }
+
+    private void recordUnseenChange(int offset, int oldLength, int newLength) {
+        synchronized (myUnseenChanges) {
+            if (myWaitingClientEvents > 0) {
+                myUnseenChanges.add(new int[]{offset, oldLength, newLength});
+            }
+        }
+    }
+
+    private int translateUnseen(int offset, long from) {
+        synchronized (myUnseenChanges) {
+            int result = offset;
+            for (int i = (int) (from - myUnseenChangesBase); i < myUnseenChanges.size(); i++) {
+                int[] change = myUnseenChanges.get(i);
+                if (result >= change[0] + change[1]) {
+                    result += change[2] - change[1];
+                }
+                else if (result > change[0]) {
+                    result = change[0] + change[2];
+                }
+            }
+            return result;
+        }
+    }
+
+    private void endClientEvent() {
+        synchronized (myUnseenChanges) {
+            if (--myWaitingClientEvents == 0) {
+                myUnseenChangesBase += myUnseenChanges.size();
+                myUnseenChanges.clear();
+            }
+        }
+    }
+
+    @RequiredUIAccess
+    private void applyTextFromClient(int start, int removedCharCount, String text) {
         Vaadin vaadin = myEditorComponent.toVaadinComponent();
 
         int end = start + removedCharCount;
@@ -686,11 +773,14 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // them back at it would type the run out backwards. the caret on this side advances with each insert and is
         // pushed back to the browser by the caret listener, which is what keeps the two together
         char typed = text.charAt(0);
-        WebShortcutDispatcher.runAfterPendingStrokes(UI.getCurrent(), () -> {
-            if (!isReleased) {
-                EditorActionManager.getInstance().getTypedAction().actionPerformed(this, typed, getDataContext());
+        WebShortcutDispatcher.runAfterPendingStrokes(UI.getCurrent(), () -> ((ApplicationEx) Application.get()).runInput(
+            UIAccess.current(),
+            () -> {
+                if (!isReleased) {
+                    EditorActionManager.getInstance().getTypedAction().actionPerformed(this, typed, getDataContext());
+                }
             }
-        });
+        ));
     }
 
     /**
