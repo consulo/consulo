@@ -23,6 +23,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -116,6 +118,27 @@ public record IdeFingerprint(long value) {
         return Path.of(new URI(url));
     }
 
+    public record IndexVersion(String name, int version) {
+    }
+
+    /**
+     * Hash of the index versions, independent of the order they are given in: the extension point lists the indexes in
+     * the order the plugins' bindings were collected, which is parallel and differs between IDE starts - so the
+     * fingerprint changed on every start and every indexing flag was invalidated.
+     */
+    public static long indexVersionsHash(Collection<IndexVersion> versions) {
+        List<IndexVersion> sorted = new ArrayList<>(versions);
+        sorted.sort(Comparator.comparing(IndexVersion::name).thenComparingInt(IndexVersion::version));
+
+        HashStream64 hasher = Hashing.xxh3_64().hashStream();
+        hasher.putInt(sorted.size());
+        for (IndexVersion version : sorted) {
+            hasher.putString(version.name());
+            hasher.putInt(version.version());
+        }
+        return hasher.getAsLong();
+    }
+
     private static IdeFingerprint computeIdeFingerprint(int debugHelperToken) {
         long startTime = System.currentTimeMillis();
 
@@ -142,7 +165,10 @@ public record IdeFingerprint(long value) {
         //RC: we include IDE/plugins versions AND explicit indexes versions into the fingerprint -- because index.version
         //    could change without code change, by sys-properties or other env conditions change.
         //    E.g., sharding: # shards could be changed with system properties and could change automatically if #CPU changed.
-        Application.get().getExtensionPoint(FileBasedIndexExtension.class).forEach(extension -> hasher.putInt(extension.getVersion()));
+        List<IndexVersion> indexVersions = new ArrayList<>();
+        Application.get().getExtensionPoint(FileBasedIndexExtension.class).forEach(extension ->
+            indexVersions.add(new IndexVersion(extension.getName().getName(), extension.getVersion())));
+        hasher.putLong(indexVersionsHash(indexVersions));
 
         hasher.putInt(debugHelperToken);
 
