@@ -147,8 +147,10 @@ jobs:
     needs: [loader, cmake]
     if: github.repository == 'consulo/consulo' && github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    # one group per platform: a group keeps only one pending job, so a shared group cancelled the publish of
+    # whichever platform finished first
     concurrency:
-      group: binaries-publish
+      group: binaries-publish-windows
       cancel-in-progress: false
     steps:
       - name: Download all artifacts
@@ -188,5 +190,15 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update Windows native binaries from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
-            git push -u origin master
+            # the other platforms push to the same repository at the same time; each writes only its own directories
+            for attempt in 1 2 3 4 5; do
+              if git push -u origin master; then
+                break
+              fi
+              if [ "$attempt" = 5 ]; then
+                exit 1
+              fi
+              sleep $((attempt * 5))
+              git pull --rebase origin master
+            done
           fi
