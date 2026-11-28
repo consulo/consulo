@@ -15,6 +15,8 @@
  */
 package consulo.externalService.impl.internal;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Locale;
 
 /**
@@ -22,33 +24,55 @@ import java.util.Locale;
  * @since 24-Sep-16
  */
 public enum WebServiceApi {
-  MAIN("https://consulo.io"),
-  HELP("https://consulo.help/"),
-  ERROR_REPORTER_API("https://api.consulo.io/errorReporter/"),
-  ERROR_REPORT("https://hub.consulo.io/public/errorReport/"),
-  STATISTICS_API("https://api.consulo.io/statistics/"),
-  DEVELOPER_API("https://api.consulo.io/developer/"),
-  STORAGE_API("https://api.consulo.io/storage/"),
-  OAUTH_API("https://api.consulo.io/oauth/"),
-  LINK_CONSULO("https://hub.consulo.io/link"),
-  REPOSITORY_API("https://api.consulo.io/repository/"),
-  DISCUSSION("https://github.com/orgs/consulo/discussions");
+    MAIN("https://consulo.io"),
+    HELP("https://consulo.help/"),
+    ERROR_REPORTER_API("https://api.consulo.io/errorReporter/", "http://api.ide.rocks/errorReporter/"),
+    ERROR_REPORT("https://hub.consulo.io/public/errorReport/"),
+    STATISTICS_API("https://api.consulo.io/statistics/", "http://api.ide.rocks/statistics/"),
+    DEVELOPER_API("https://api.consulo.io/developer/", "http://api.ide.rocks/developer/"),
+    STORAGE_API("https://api.consulo.io/storage/", "http://api.ide.rocks/storage/"),
+    OAUTH_API("https://api.consulo.io/oauth/", "http://api.ide.rocks/oauth/"),
+    LINK_CONSULO("https://hub.consulo.io/link"),
+    REPOSITORY_API("https://api.consulo.io/repository/", "http://api.ide.rocks/repository/"),
+    DISCUSSION("https://github.com/orgs/consulo/discussions");
 
-  private String myDefaultUrl;
-  private String myOverrideProperty;
+    private final String myDefaultUrl;
+    private final @Nullable String myFallbackUrl;
+    private final String myOverrideProperty;
 
-  WebServiceApi(String defaultUrl) {
-    myDefaultUrl = defaultUrl;
-    myOverrideProperty = "consulo." + name().toLowerCase(Locale.US).replace("_", ".");
-  }
+    WebServiceApi(String defaultUrl) {
+        this(defaultUrl, null);
+    }
 
-  
-  public String buildUrl(String urlPart) {
-    return buildUrl() + urlPart;
-  }
+    /**
+     * @param fallbackUrl the same api on another host, for where the default one can not be reached - http only
+     */
+    WebServiceApi(String defaultUrl, @Nullable String fallbackUrl) {
+        myDefaultUrl = defaultUrl;
+        myFallbackUrl = fallbackUrl;
+        myOverrideProperty = "consulo." + name().toLowerCase(Locale.US).replace("_", ".");
+    }
 
-  
-  public String buildUrl() {
-    return System.getProperty(myOverrideProperty, myDefaultUrl);
-  }
+    public String buildUrl(String urlPart) {
+        return buildUrl() + urlPart;
+    }
+
+    public String buildUrl() {
+        return System.getProperty(myOverrideProperty, myDefaultUrl);
+    }
+
+    /**
+     * The url on the other host of this api - null where it has no other host, or the url does not come from the
+     * default one, so an api pointed somewhere else by its property keeps the host it was given.
+     *
+     * @param url a url built by {@link #buildUrl(String)}
+     * @see WebServiceApiFallback
+     */
+    public @Nullable String buildFallbackUrl(String url) {
+        if (myFallbackUrl == null || !url.startsWith(myDefaultUrl)) {
+            return null;
+        }
+
+        return myFallbackUrl + url.substring(myDefaultUrl.length());
+    }
 }

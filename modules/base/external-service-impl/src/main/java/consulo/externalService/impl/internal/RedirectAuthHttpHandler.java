@@ -77,8 +77,11 @@ public class RedirectAuthHttpHandler extends HttpRequestHandler {
                 ExternalServiceLoginService loginService = Application.get().getInstance(ExternalServiceLoginService.class);
 
                 try {
-                    String json =
-                        HttpRequests.request(WebServiceApi.OAUTH_API.buildUrl("request?token=" + sharedToken)).readString(indicator);
+                    String json = WebServiceApiFallback.request(
+                        WebServiceApi.OAUTH_API,
+                        WebServiceApi.OAUTH_API.buildUrl("request?token=" + sharedToken),
+                        requestUrl -> HttpRequests.request(requestUrl).readString(indicator)
+                    );
 
                     OAuthRequestResult requestResult = new Gson().fromJson(json, OAuthRequestResult.class);
 

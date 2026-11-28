@@ -21,6 +21,7 @@ import consulo.application.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.externalService.impl.internal.WebServiceApi;
+import consulo.externalService.impl.internal.WebServiceApiFallback;
 import consulo.externalService.impl.internal.plugin.ExperimentalPluginsDescriptor;
 import consulo.externalService.impl.internal.plugin.PluginJsonNode;
 import consulo.externalService.impl.internal.plugin.PluginNode;
@@ -143,13 +144,17 @@ public class RepositoryHelper {
         }
 
         try {
-            byte[] bytes = HttpRequests.request(url).uiOwner(uiOwner).connect(request -> {
-                if (indicator != null) {
-                    indicator.setText2(ExternalServiceLocalize.progressDownloadingListOfPlugins());
-                }
+            byte[] bytes = WebServiceApiFallback.request(
+                WebServiceApi.REPOSITORY_API,
+                url,
+                requestUrl -> HttpRequests.request(requestUrl).uiOwner(uiOwner).connect(request -> {
+                    if (indicator != null) {
+                        indicator.setText2(ExternalServiceLocalize.progressDownloadingListOfPlugins());
+                    }
 
-                return request.readBytes(indicator);
-            });
+                    return request.readBytes(indicator);
+                })
+            );
 
             return readPluginsStream(new UnsyncByteArrayInputStream(bytes));
         }

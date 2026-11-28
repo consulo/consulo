@@ -65,11 +65,15 @@ public class WebServiceApiSender {
     }
 
     public static @Nullable byte[] doGetBytes(WebServiceApi serviceApi, String url, Map<String, String> parameters) throws IOException {
+        return WebServiceApiFallback.request(serviceApi, serviceApi.buildUrl(url), requestUrl -> sendGet(serviceApi, requestUrl, parameters));
+    }
+
+    private static @Nullable byte[] sendGet(WebServiceApi serviceApi, String requestUrl, Map<String, String> parameters) throws IOException {
         HttpClient4Factory client4Factory = Application.get().getInstance(HttpClient4Factory.class);
         try (CloseableHttpClient httpClient = client4Factory.createBuilder().build()) {
             HttpGet request;
             try {
-                URIBuilder urlBuilder = new URIBuilder(serviceApi.buildUrl(url));
+                URIBuilder urlBuilder = new URIBuilder(requestUrl);
                 for (Map.Entry<String, String> entry : parameters.entrySet()) {
                     urlBuilder.addParameter(entry.getKey(), entry.getValue());
                 }
@@ -98,9 +102,13 @@ public class WebServiceApiSender {
     }
 
     public static @Nullable <T> T doPost(WebServiceApi serviceApi, String url, Object bean, Type resultType) throws IOException {
+        return WebServiceApiFallback.request(serviceApi, serviceApi.buildUrl(url), requestUrl -> sendPost(serviceApi, requestUrl, bean, resultType));
+    }
+
+    private static @Nullable <T> T sendPost(WebServiceApi serviceApi, String requestUrl, Object bean, Type resultType) throws IOException {
         HttpClient4Factory client4Factory = Application.get().getInstance(HttpClient4Factory.class);
         try (CloseableHttpClient httpClient = client4Factory.createBuilder().build()) {
-            HttpPost request = new HttpPost(serviceApi.buildUrl(url));
+            HttpPost request = new HttpPost(requestUrl);
             request.setHeader("Content-Type", "application/json");
             request.setEntity(new StringEntity(new Gson().toJson(bean), ContentType.APPLICATION_JSON));
 

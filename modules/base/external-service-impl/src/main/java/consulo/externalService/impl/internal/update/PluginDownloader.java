@@ -23,6 +23,8 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
+import consulo.externalService.impl.internal.WebServiceApi;
+import consulo.externalService.impl.internal.WebServiceApiFallback;
 import consulo.externalService.impl.internal.repository.RepositoryHelper;
 import consulo.externalService.localize.ExternalServiceLocalize;
 import consulo.externalService.update.UpdateSettings;
@@ -350,24 +352,28 @@ public class PluginDownloader {
 
         String downloadUrl = buildUrl(tryIndex);
         try {
-            return HttpRequests.request(downloadUrl).uiOwner(uiOwner).gzip(false).connect(request -> {
-                MessageDigest digest;
-                try {
-                    digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
-                }
-                catch (NoSuchAlgorithmException e) {
-                    throw new IOException(e);
-                }
+            return WebServiceApiFallback.request(
+                WebServiceApi.REPOSITORY_API,
+                downloadUrl,
+                requestUrl -> HttpRequests.request(requestUrl).uiOwner(uiOwner).gzip(false).connect(request -> {
+                    MessageDigest digest;
+                    try {
+                        digest = MessageDigest.getInstance(CHECKSUM_ALGORITHM);
+                    }
+                    catch (NoSuchAlgorithmException e) {
+                        throw new IOException(e);
+                    }
 
-                request.saveToFile(file, digest, indicator);
+                    request.saveToFile(file, digest, indicator);
 
-                String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
+                    String checksum = Hex.encodeHexString(digest.digest()).toUpperCase(Locale.ROOT);
 
-                String fileName = getFileName();
-                File newFile = new File(file.getParentFile(), fileName);
-                FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
-                return Pair.create(newFile, checksum);
-            });
+                    String fileName = getFileName();
+                    File newFile = new File(file.getParentFile(), fileName);
+                    FileUtil.rename(file, newFile, FilePermissionCopier.BY_NIO2);
+                    return Pair.create(newFile, checksum);
+                })
+            );
         }
         catch (IOException e) {
             throw new IOException(ExternalServiceLocalize.messageFailedToReadDataFromUrl(downloadUrl).get(), e);
