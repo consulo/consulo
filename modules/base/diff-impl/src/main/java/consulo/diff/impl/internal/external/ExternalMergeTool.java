@@ -30,6 +30,8 @@ import consulo.logging.Logger;
 
 import java.io.IOException;
 import java.util.List;
+
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jspecify.annotations.Nullable;
 
 public class ExternalMergeTool {
@@ -43,8 +45,8 @@ public class ExternalMergeTool {
     return ExternalDiffSettings.getInstance().isMergeEnabled();
   }
 
-  public static void show(@Nullable Project project,
-                          MergeRequest request) {
+  @RequiredUIAccess
+  public static void show(@Nullable Project project, MergeRequest request) {
     try {
       if (canShow(request)) {
         showRequest(project, request);
@@ -63,19 +65,19 @@ public class ExternalMergeTool {
     }
   }
 
-  public static void showRequest(@Nullable Project project, MergeRequest request)
-          throws ExecutionException, IOException {
+  @RequiredUIAccess
+  public static void showRequest(@Nullable Project project, MergeRequest request) throws ExecutionException, IOException {
     ExternalDiffSettings settings = ExternalDiffSettings.getInstance();
 
     ExternalDiffToolUtil.executeMerge(project, settings, (ThreesideMergeRequest)request);
   }
 
   public static boolean canShow(MergeRequest request) {
-    if (request instanceof ThreesideMergeRequest) {
-      DiffContent outputContent = ((ThreesideMergeRequest)request).getOutputContent();
+    if (request instanceof ThreesideMergeRequest threesideMergeRequest) {
+      DiffContent outputContent = threesideMergeRequest.getOutputContent();
       if (!canProcessOutputContent(outputContent)) return false;
 
-      List<? extends DiffContent> contents = ((ThreesideMergeRequest)request).getContents();
+      List<? extends DiffContent> contents = threesideMergeRequest.getContents();
       if (contents.size() != 3) return false;
       for (DiffContent content : contents) {
         if (!ExternalDiffToolUtil.canCreateFile(content)) return false;
@@ -87,7 +89,7 @@ public class ExternalMergeTool {
 
   private static boolean canProcessOutputContent(DiffContent content) {
     if (content instanceof DocumentContent) return true;
-    if (content instanceof FileContent && ((FileContent)content).getFile().isInLocalFileSystem()) return true;
+    if (content instanceof FileContent fileContent && fileContent.getFile().isInLocalFileSystem()) return true;
     return false;
   }
 }

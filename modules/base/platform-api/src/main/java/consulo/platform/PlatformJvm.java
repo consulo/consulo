@@ -16,6 +16,7 @@
 package consulo.platform;
 
 import org.jspecify.annotations.Nullable;
+
 import java.util.Map;
 
 /**
@@ -23,26 +24,26 @@ import java.util.Map;
  * @since 2023-04-25
  */
 public interface PlatformJvm {
-  JavaVersion version();
+    JavaVersion version();
 
-  String rawVersion();
+    String rawVersion();
 
-  String vendor();
+    String vendor();
 
-  String name();
+    String name();
 
-  @Nullable String getRuntimeProperty(String key);
+    @Nullable String getRuntimeProperty(String key);
 
-  default @Nullable String getRuntimeProperty(String key, String defaultValue) {
-    String runtimeProperty = getRuntimeProperty(key);
-    return runtimeProperty == null ? defaultValue : runtimeProperty;
-  }
+    default @Nullable String getRuntimeProperty(String key, String defaultValue) {
+        String runtimeProperty = getRuntimeProperty(key);
+        return runtimeProperty == null ? defaultValue : runtimeProperty;
+    }
 
-  Map<String, String> getRuntimeProperties();
+    Map<String, String> getRuntimeProperties();
 
-  default boolean isAny64Bit() {
-    return arch().width() == 64;
-  }
+    default boolean isAny64Bit() {
+        return arch().width() == 64;
+    }
 
-  CpuArchitecture arch();
+    CpuArchitecture arch();
 }

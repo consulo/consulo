@@ -29,7 +29,6 @@ import consulo.component.extension.ExtensionException;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.externalService.statistic.FeatureUsageTracker;
-import consulo.ide.impl.idea.find.actions.ShowUsagesAction;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
 import consulo.language.editor.action.CodeInsightActionHandler;
@@ -46,6 +45,7 @@ import consulo.language.editor.navigation.GotoDeclarationHandler;
 import consulo.language.editor.navigation.NavigationContexts;
 
 import consulo.ui.RelativePoint2D;
+import consulo.usage.ShowUsagesManager;
 import java.util.List;
 import java.util.Map;
 import consulo.language.psi.stub.ModuleAwareIndexOptions;
@@ -67,7 +67,6 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.coroutine.ActionSafeReadLock;
@@ -128,9 +127,8 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
                 if (elements.length == 0 && suggestCandidates(TargetElementUtil.findReference(editor, offset)).isEmpty()) {
                     PsiElement element = findElementToShowUsagesOf(editor, editor.getCaretModel().getOffset());
                     if (element != null) {
-                        ShowUsagesAction showUsages = (ShowUsagesAction)ActionManager.getInstance().getAction(ShowUsagesAction.ID);
                         RelativePoint2D popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
-                        showUsages.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
+                        ShowUsagesManager.getInstance(project).startFindUsages(element, popupPosition, editor);
                         return;
                     }
                 }

@@ -25,7 +25,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.stub.ILightStubFileElementType;
-import consulo.language.psi.stub.IStubElementType;
 import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.stub.StubBuilder;
 import consulo.language.util.CharTable;
@@ -141,8 +140,7 @@ public class FileElement extends LazyParseableElement implements FileASTNode, Su
                     return;
                 }
 
-                IElementType type = node.getElementType();
-                if (type instanceof IStubElementType stubElementType && stubElementType.shouldCreateStub(node)) {
+                if (builder.isStubbedNode(node)) {
                     result.add(node);
                 }
 

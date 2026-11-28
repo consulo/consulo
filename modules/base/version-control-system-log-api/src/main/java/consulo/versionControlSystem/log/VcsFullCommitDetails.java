@@ -15,12 +15,9 @@
  */
 package consulo.versionControlSystem.log;
 
-import consulo.application.util.function.ThrowableComputable;
 import consulo.versionControlSystem.change.Change;
-import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * All metadata + changes.
@@ -30,10 +27,10 @@ import java.util.List;
  * hash codes. The VCS Log framework heavily relies on this fact.
  */
 public interface VcsFullCommitDetails extends VcsCommitMetadata {
-  /**
-   * For a merge commit this method should return combined changes from all parents.
-   */
-  Collection<Change> getChanges();
+    /**
+     * For a merge commit this method should return combined changes from all parents.
+     */
+    Collection<Change> getChanges();
 
-  Collection<Change> getChanges(int parent);
+    Collection<Change> getChanges(int parent);
 }

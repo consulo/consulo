@@ -22,15 +22,13 @@ import consulo.application.util.Queryable;
 import consulo.component.util.ActiveRunnable;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.UiDataProvider;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import java.util.function.Supplier;
-import consulo.ui.ex.awt.TabsUtil;
+import consulo.desktop.awt.ui.impl.tabs.laf.JBEditorTabsUI;
 import consulo.desktop.awt.ui.impl.tabs.singleRow.SingleRowLayout;
 import consulo.desktop.awt.ui.impl.tabs.singleRow.SingleRowPassInfo;
 import consulo.desktop.awt.ui.impl.tabs.table.TableLayout;
 import consulo.desktop.awt.ui.impl.util.LazyUiDisposable;
-import consulo.desktop.awt.ui.impl.tabs.laf.JBEditorTabsUI;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -54,10 +52,10 @@ import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TimedDeadzone;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.StackingPopupDispatcher;
-import consulo.util.collection.Lists;
 import consulo.ui.ex.internal.ActionTicker;
 import consulo.ui.ex.internal.TimerListener;
+import consulo.ui.ex.popup.StackingPopupDispatcher;
+import consulo.util.collection.Lists;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -74,8 +72,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -88,7 +86,8 @@ import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
  * For implementation use {@link JBEditorTabs} or {@link TabbedPaneWrapper}
  */
 public abstract class JBTabsImpl extends JComponent
-    implements JBTabs, PropertyChangeListener, TimerListener, UiDataProvider, PopupMenuListener, Disposable, JBTabsPresentation, Queryable, QuickActionProvider {
+    implements JBTabs, PropertyChangeListener, TimerListener, UiDataProvider, PopupMenuListener, Disposable, JBTabsPresentation,
+    Queryable, QuickActionProvider {
 
     private static final String uiClassID = "JBEditorTabsUI";
 
@@ -226,7 +225,13 @@ public abstract class JBTabsImpl extends JComponent
     }
 
     @SuppressWarnings("unused")
-    protected JBTabsImpl(@Nullable Project project, @Nullable ActionManager actionManager, @Nullable IdeFocusManager focusManager, @Nullable Disposable parent, boolean onlyForChildren) {
+    protected JBTabsImpl(
+        @Nullable Project project,
+        @Nullable ActionManager actionManager,
+        @Nullable IdeFocusManager focusManager,
+        @Nullable Disposable parent,
+        boolean onlyForChildren
+    ) {
         myProject = project;
         myActionManager = actionManager;
         myFocusManager = focusManager != null ? focusManager : getGlobalInstance();
@@ -295,7 +300,7 @@ public abstract class JBTabsImpl extends JComponent
                 myNavigationActions.add(myPrevAction);
             }
 
-            new LazyUiDisposable<JBTabsImpl>(parent, this, this) {
+            new LazyUiDisposable<>(parent, this, this) {
                 @Override
                 protected void initialize(Disposable parent, JBTabsImpl child, @Nullable Project project) {
                     if (project != null) {
@@ -330,6 +335,7 @@ public abstract class JBTabsImpl extends JComponent
         updateUI();
     }
 
+    @RequiredUIAccess
     protected SingleRowLayout createSingleRowLayout() {
         return new SingleRowLayout(this);
     }
@@ -1877,8 +1883,8 @@ public abstract class JBTabsImpl extends JComponent
             return null;
         }
         while (component != this || component != null) {
-            if (component instanceof TabLabel) {
-                return ((TabLabel) component).getInfo();
+            if (component instanceof TabLabel tabLabel) {
+                return tabLabel.getInfo();
             }
             if (!labelsOnly) {
                 TabInfo info = findInfo(component);
@@ -1943,8 +1949,8 @@ public abstract class JBTabsImpl extends JComponent
     protected void addImpl(Component comp, Object constraints, int index) {
         unqueueFromRemove(comp);
 
-        if (comp instanceof TabLabel) {
-            ((TabLabel) comp).apply(myUiDecorator.getDecoration());
+        if (comp instanceof TabLabel tabLabel) {
+            tabLabel.apply(myUiDecorator.getDecoration());
         }
 
         super.addImpl(comp, constraints, index);
@@ -2082,7 +2088,8 @@ public abstract class JBTabsImpl extends JComponent
         if (oldObject == null && newObject == null) {
             return false;
         }
-        return oldObject != null && !oldObject.equals(newObject) || newObject != null && !newObject.equals(oldObject);
+        return oldObject != null && !oldObject.equals(newObject)
+            || newObject != null && !newObject.equals(oldObject);
     }
 
     protected @Nullable Color getActiveTabFillIn() {

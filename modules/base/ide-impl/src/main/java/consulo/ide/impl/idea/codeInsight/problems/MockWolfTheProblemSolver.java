@@ -63,6 +63,16 @@ public class MockWolfTheProblemSolver extends WolfTheProblemSolver {
   }
 
   @Override
+  public void reportProblemsFromExternalSource(VirtualFile file, Object source) {
+    if (myDelegate != null) myDelegate.reportProblemsFromExternalSource(file, source);
+  }
+
+  @Override
+  public void clearProblemsFromExternalSource(VirtualFile file, Object source) {
+    if (myDelegate != null) myDelegate.clearProblemsFromExternalSource(file, source);
+  }
+
+  @Override
   public void addProblemListener(ProblemListener listener, Disposable parentDisposable) {
     if (myDelegate != null) myDelegate.addProblemListener(listener, parentDisposable);
   }

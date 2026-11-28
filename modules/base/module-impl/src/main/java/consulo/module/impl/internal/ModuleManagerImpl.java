@@ -77,11 +77,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     public static class ModuleLoadItem {
         private final String myDirUrl;
         private final String myName;
+        private final UUID myId;
         private final String[] myGroups;
         private final Element myElement;
 
-        public ModuleLoadItem(String name, @Nullable String dirUrl, Element element) {
+        public ModuleLoadItem(String name, UUID id, @Nullable String dirUrl, Element element) {
             myDirUrl = dirUrl;
+            myId = id;
             myElement = element;
 
             if (name.contains(MODULE_GROUP_SEPARATOR)) {
@@ -107,6 +109,10 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         
         public String getName() {
             return myName;
+        }
+
+        public UUID getId() {
+            return myId;
         }
 
         
@@ -159,8 +165,11 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
     private static final String ATTRIBUTE_DIRURL = "dirurl";
     private static final String ATTRIBUTE_NAME = "name";
+    private static final String ATTRIBUTE_ID = "id";
 
     private long myModificationCount;
+
+    private boolean myModuleIdsGenerated;
 
     public static ModuleManagerImpl getInstanceImpl(Project project) {
         return (ModuleManagerImpl) getInstance(project);
@@ -205,6 +214,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         Element modules = state.getChild(ELEMENT_MODULES);
         if (modules != null) {
             myModuleLoadItems = new ArrayList<>();
+            Set<UUID> ids = new HashSet<>();
             for (Element moduleElement : modules.getChildren(ELEMENT_MODULE)) {
                 String name = moduleElement.getAttributeValue(ATTRIBUTE_NAME);
                 if (name == null) {
@@ -212,11 +222,38 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 }
                 String dirUrl = moduleElement.getAttributeValue(ATTRIBUTE_DIRURL);
 
-                myModuleLoadItems.add(new ModuleLoadItem(name, dirUrl, moduleElement));
+                UUID id = parseId(moduleElement.getAttributeValue(ATTRIBUTE_ID), name);
+                if (id != null && !ids.add(id)) {
+                    LOG.warn("Module '" + name + "' has the id " + id + " of another module, generating a new one");
+                    id = null;
+                }
+
+                if (id == null) {
+                    id = UUID.randomUUID();
+                    ids.add(id);
+                    moduleElement.setAttribute(ATTRIBUTE_ID, id.toString());
+                    myModuleIdsGenerated = true;
+                }
+
+                myModuleLoadItems.add(new ModuleLoadItem(name, id, dirUrl, moduleElement));
             }
         }
         else {
             myModuleLoadItems = Collections.emptyList();
+        }
+    }
+
+    private static @Nullable UUID parseId(@Nullable String value, String moduleName) {
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return UUID.fromString(value);
+        }
+        catch (IllegalArgumentException e) {
+            LOG.warn("Module '" + moduleName + "' has an invalid id '" + value + "', generating a new one");
+            return null;
         }
     }
 
@@ -338,6 +375,12 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 count++;
             }
         }
+
+        if (myModuleIdsGenerated) {
+            myModuleIdsGenerated = false;
+            myModificationCount++;
+        }
+
         fireErrors(errors);
     }
 
@@ -408,6 +451,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
                 name = StringUtil.join(moduleGroupPath, MODULE_GROUP_SEPARATOR) + MODULE_GROUP_SEPARATOR + name;
             }
             moduleElement.setAttribute(ATTRIBUTE_NAME, name);
+            moduleElement.setAttribute(ATTRIBUTE_ID, module.getId().toString());
             String moduleDirUrl = module.getModuleDirUrl();
             if (moduleDirUrl != null) {
                 moduleElement.setAttribute(ATTRIBUTE_DIRURL, moduleDirUrl);
@@ -448,10 +492,10 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     
     @Override
     @RequiredWriteAction
-    public Module newModule(String name, String dirPath) {
+    public Module newModule(String name, String dirPath, @Nullable UUID id) {
         myModificationCount++;
         ModifiableModuleModel modifiableModel = getModifiableModel();
-        Module module = modifiableModel.newModule(name, dirPath);
+        Module module = modifiableModel.newModule(name, dirPath, id);
         modifiableModel.commit();
         return module;
     }
@@ -492,6 +536,13 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     public Module findModuleByName(String name) {
         myProject.getApplication().assertReadAccessAllowed();
         return myModuleModel.findModuleByName(name);
+    }
+
+    @Override
+    @RequiredReadAction
+    public @Nullable Module findModuleById(UUID id) {
+        myProject.getApplication().assertReadAccessAllowed();
+        return myModuleModel.findModuleById(id);
     }
 
     private Comparator<Module> myCachedModuleComparator = null;
@@ -572,7 +623,7 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
     }
 
     
-    protected abstract ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator);
+    protected abstract ModuleEx createModule(String name, UUID id, @Nullable String dirUrl, @Nullable ProgressIndicator progressIndicator);
 
     
     protected ModuleEx createAndLoadModule(
@@ -580,7 +631,15 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         ModuleModelImpl moduleModel,
         @Nullable ProgressIndicator progressIndicator
     ) {
-        ModuleEx module = createModule(moduleLoadItem.getName(), moduleLoadItem.getDirUrl(), progressIndicator);
+        UUID id = moduleLoadItem.getId();
+        Module moduleWithId = moduleModel.findModuleById(id);
+        if (moduleWithId != null) {
+            LOG.warn("Module '" + moduleLoadItem.getName() + "' has the id " + id + " of " + moduleWithId + ", generating a new one");
+            id = UUID.randomUUID();
+            myModuleIdsGenerated = true;
+        }
+
+        ModuleEx module = createModule(moduleLoadItem.getName(), id, moduleLoadItem.getDirUrl(), progressIndicator);
         moduleModel.initModule(module);
 
         collapseOrExpandMacros(module, moduleLoadItem.getElement(), false);
@@ -673,17 +732,17 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
 
         
         @Override
-        public Module newModule(String name, @Nullable String dirPath) {
+        public Module newModule(String name, @Nullable String dirPath, @Nullable UUID id) {
             assertWritable();
 
-            return newModuleByUrl(name, dirPath == null ? null : toDirUrl(dirPath));
+            return newModuleByUrl(name, dirPath == null ? null : toDirUrl(dirPath), id);
         }
 
         @Override
-        public Module newModule(String name, VirtualFile moduleDir) {
+        public Module newModule(String name, VirtualFile moduleDir, @Nullable UUID id) {
             assertWritable();
 
-            return newModuleByUrl(name, moduleDir.getUrl());
+            return newModuleByUrl(name, moduleDir.getUrl(), id);
         }
 
         /**
@@ -700,17 +759,30 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
             return VirtualFileManager.constructUrl(StandardFileSystems.FILE_PROTOCOL, dirPath);
         }
 
-        private Module newModuleByUrl(String name, @Nullable String dirUrl) {
+        private Module newModuleByUrl(String name, @Nullable String dirUrl, @Nullable UUID id) {
             ModuleEx moduleEx = null;
             if (dirUrl != null) {
                 moduleEx = getModuleByDirUrl(dirUrl);
             }
 
             if (moduleEx == null) {
-                moduleEx = createModule(name, dirUrl, null);
+                moduleEx = createModule(name, newModuleId(name, id), dirUrl, null);
                 initModule(moduleEx);
             }
             return moduleEx;
+        }
+
+        private UUID newModuleId(String name, @Nullable UUID id) {
+            if (id == null) {
+                return UUID.randomUUID();
+            }
+
+            Module moduleWithId = findModuleById(id);
+            if (moduleWithId != null) {
+                LOG.error("Module '" + name + "' requested the id " + id + " of " + moduleWithId + ", generating a new one");
+                return UUID.randomUUID();
+            }
+            return id;
         }
 
         private @Nullable ModuleEx getModuleByDirUrl(String dirUrl) {
@@ -805,6 +877,16 @@ public abstract class ModuleManagerImpl extends ModuleManagerInternal implements
         public Module findModuleByName(String name) {
             for (Module module : myModules) {
                 if (!module.isDisposed() && module.getName().equals(name)) {
+                    return module;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public @Nullable Module findModuleById(UUID id) {
+            for (Module module : myModules) {
+                if (!module.isDisposed() && module.getId().equals(id)) {
                     return module;
                 }
             }

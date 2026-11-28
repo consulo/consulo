@@ -347,6 +347,9 @@ public class DesktopToolWindowContentUi extends JPanel implements ToolWindowCont
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if (Content.PROP_COMPONENT.equals(evt.getPropertyName())) {
+            ensureSelectedContentVisible();
+        }
         update();
     }
 

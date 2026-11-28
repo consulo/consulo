@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.internal;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
 import consulo.language.editor.DaemonCodeAnalyzer;
@@ -47,6 +48,9 @@ public abstract class DaemonCodeAnalyzerInternal extends DaemonCodeAnalyzer {
     public abstract List<HighlightInfo> getFileLevelHighlights(Project project, PsiFile file);
 
     public abstract void cleanFileLevelHighlights(Project project, int group, PsiFile psiFile);
+
+    @RequiredReadAction
+    public abstract boolean hasFileLevelHighlights(int group, PsiFile psiFile);
 
     public abstract void addFileLevelHighlight(Project project, int group, HighlightInfo info, PsiFile psiFile);
 

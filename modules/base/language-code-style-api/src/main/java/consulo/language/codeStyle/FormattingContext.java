@@ -6,6 +6,8 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -45,6 +47,10 @@ public class FormattingContext {
     
     PsiFile getContainingFile() {
         return Objects.requireNonNull(myPsiElement.getContainingFile());
+    }
+
+    public @Nullable VirtualFile getVirtualFile() {
+        return getContainingFile().getVirtualFile();
     }
 
     public

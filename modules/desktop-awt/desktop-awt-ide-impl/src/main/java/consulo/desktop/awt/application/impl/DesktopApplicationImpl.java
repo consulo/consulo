@@ -20,6 +20,7 @@ import consulo.annotation.component.ComponentProfiles;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
+import consulo.application.concurrent.coroutine.WriteLock;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.LaterInvocator;
@@ -35,7 +36,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.ThreadDumper;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.component.ComponentManager;
@@ -71,18 +71,18 @@ import consulo.ui.ex.awt.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.EDT;
-import consulo.application.concurrent.coroutine.WriteLock;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.concurrent.coroutine.Coroutine;
 import consulo.util.concurrent.coroutine.CoroutineContext;
 import consulo.util.concurrent.coroutine.CoroutineScope;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
-import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
-import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -206,43 +206,33 @@ public class DesktopApplicationImpl extends BaseApplication {
         return myHeadlessMode;
     }
 
-    
     public ModalityInvokator getInvokator() {
         return myInvokator;
     }
 
     @Override
-    public void invokeLater(Runnable runnable) {
+    public void invokeLater(@RequiredUIAccess Runnable runnable) {
         invokeLater(runnable, getDisposed());
     }
 
     @Override
-    public void invokeLater(Runnable runnable, BooleanSupplier expired) {
+    public void invokeLater(@RequiredUIAccess Runnable runnable, BooleanSupplier expired) {
         invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
     }
 
     @Override
-    public void invokeLater(Runnable runnable, ModalityState state) {
+    public void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state) {
         invokeLater(runnable, state, getDisposed());
     }
 
     @Override
-    public void invokeLater(
-        Runnable runnable,
-        ModalityState state,
-        BooleanSupplier expired
-    ) {
+    public void invokeLater(@RequiredUIAccess Runnable runnable, ModalityState state, BooleanSupplier expired) {
         LaterInvocator.of(AWTUIAccessImpl.ourInstance).invokeLaterWithCallback(runnable, state, expired, null);
     }
 
-    @RequiredUIAccess
     @Override
-    public void invokeAndWait(Runnable runnable, ModalityState modalityState) {
-        if (isDispatchThread()) {
-            runnable.run();
-            return;
-        }
-        if (SwingUtilities.isEventDispatchThread()) {
+    public void invokeAndWait(@RequiredUIAccess Runnable runnable, ModalityState modalityState) {
+        if (isDispatchThread() || SwingUtilities.isEventDispatchThread()) {
             runnable.run();
             return;
         }
@@ -255,13 +245,13 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
+    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableSupplier<T, E> action) throws E {
         if (!myLock.isWriteThread()) {
-            return action.compute();
+            return action.get();
         }
         myLock.writeIntentUnlock();
         try {
-            return action.compute();
+            return action.get();
         }
         finally {
             myLock.writeIntentLock();
@@ -269,13 +259,12 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    
+    @RequiredUIAccess
     public ModalityState getCurrentModalityState() {
         return LaterInvocator.getCurrentModalityState();
     }
 
     @Override
-    
     public ModalityState getModalityStateForComponent(Component c) {
         if (!isDispatchThread()) {
             LOG.debug("please, use application dispatch thread to get a modality state");
@@ -288,13 +277,13 @@ public class DesktopApplicationImpl extends BaseApplication {
     }
 
     @Override
-    
+    @SuppressWarnings("RequiredXAction")
     public ModalityState getDefaultModalityState() {
         return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
     }
 
-    @RequiredUIAccess
     @Override
+    @RequiredUIAccess
     public long getIdleTime() {
         assertIsDispatchThread();
         return IdeEventQueue.getInstance().getIdleTime();
@@ -337,6 +326,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         exiting = true;
 
         if (isDispatchThread()) {
+            //noinspection RequiredXAction
             doExit(force, exitConfirmed, allowListenersToCancel, restart);
         }
         else {
@@ -552,7 +542,6 @@ public class DesktopApplicationImpl extends BaseApplication {
         LOG.assertTrue(!isDispatchThread(), "This operation is time consuming and must not be called on EDT");
     }
 
-    
     @Override
     public UIAccess getLastUIAccess() {
         return AWTUIAccessImpl.ourInstance;

@@ -636,7 +636,16 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         LocalHistoryAction action = LocalHistory.getInstance().startAction(commandName);
 
         UsageInfo[] writableUsageInfos = usageInfoSet.toArray(UsageInfo.EMPTY_ARRAY);
+        String refactoringId = getRefactoringId();
         try {
+            if (refactoringId != null) {
+                RefactoringEventData data = getBeforeData();
+                if (data != null) {
+                    data.addUsages(usageInfoSet);
+                }
+                myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).refactoringStarted(refactoringId, data);
+            }
+
             PsiDocumentManager.getInstance(myProject).commitAllDocuments();
             ApplicationEx app = (ApplicationEx) myProject.getApplication();
             RefactoringListenerManagerEx listenerManager = (RefactoringListenerManagerEx) RefactoringListenerManager.getInstance(myProject);
@@ -660,15 +669,6 @@ public abstract class BaseRefactoringProcessor implements Runnable {
             }
 
             Runnable performRefactoringRunnable = () -> {
-                String refactoringId = getRefactoringId();
-                if (refactoringId != null) {
-                    RefactoringEventData data = getBeforeData();
-                    if (data != null) {
-                        data.addUsages(usageInfoSet);
-                    }
-                    myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).refactoringStarted(refactoringId, data);
-                }
-
                 try {
                     if (refactoringId != null) {
                         UndoableAction action1 = new UndoRefactoringAction(myProject, refactoringId);

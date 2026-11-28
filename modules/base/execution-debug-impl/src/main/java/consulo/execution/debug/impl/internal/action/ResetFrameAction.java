@@ -18,12 +18,15 @@ package consulo.execution.debug.impl.internal.action;
 import consulo.annotation.component.ActionImpl;
 import consulo.dataContext.DataContext;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.frame.HasDropFrame;
 import consulo.execution.debug.frame.XDropFrameHandler;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
 import consulo.execution.debug.impl.internal.action.handler.XDebuggerActionHandler;
 import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 
 /**
  * @author VISTALL
@@ -35,18 +38,25 @@ public class ResetFrameAction extends XDebuggerActionBase {
         @Override
         protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
             XStackFrame currentStackFrame = session.getCurrentStackFrame();
-            XDropFrameHandler handler = session.getDebugProcess().getDropFrameHandler();
-            return currentStackFrame != null && handler != null && handler.canDrop(currentStackFrame);
+            return currentStackFrame != null
+                && session.getDebugProcess() instanceof HasDropFrame hasDropFrame
+                && hasDropFrame.getDropFrameHandler().canDrop(currentStackFrame);
         }
 
         @Override
         protected void perform(XDebugSession session, DataContext dataContext) {
             XStackFrame currentStackFrame = session.getCurrentStackFrame();
-            XDropFrameHandler handler = session.getDebugProcess().getDropFrameHandler();
-
-            if (handler != null && currentStackFrame != null && handler.canDrop(currentStackFrame)) {
-                handler.drop(currentStackFrame);
+            if (currentStackFrame != null && session.getDebugProcess() instanceof HasDropFrame hasDropFrame) {
+                XDropFrameHandler handler = hasDropFrame.getDropFrameHandler();
+                if (handler.canDrop(currentStackFrame)) {
+                    handler.drop(currentStackFrame);
+                }
             }
+        }
+
+        @Override
+        public boolean isHidden(Project project, AnActionEvent event) {
+            return isHiddenWithout(HasDropFrame.class, project, event, false);
         }
     };
 

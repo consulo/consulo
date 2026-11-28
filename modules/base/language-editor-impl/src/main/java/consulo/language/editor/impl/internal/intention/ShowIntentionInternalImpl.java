@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.codeInsight.intention.impl;
+package consulo.language.editor.impl.internal.intention;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.impl.internal.daemon.ShowIntentionsPass;
-import consulo.language.editor.impl.internal.intention.ShowIntentionActionsHandler;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.internal.intention.ShowIntentionInternal;
 import consulo.language.psi.PsiFile;

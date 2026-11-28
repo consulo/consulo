@@ -15,6 +15,7 @@
  */
 package consulo.execution.configuration;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.RunManager;
 import consulo.localize.LocalizeValue;
@@ -105,7 +106,6 @@ public abstract class ConfigurationFactory {
         return myType.getIcon();
     }
 
-    
     public ConfigurationType getType() {
         return myType;
     }
@@ -126,12 +126,14 @@ public abstract class ConfigurationFactory {
         return true;
     }
 
+    @RequiredReadAction
     public void onNewConfigurationCreated(RunConfiguration configuration) {
         if (configuration instanceof ConfigurationCreationListener listener) {
             listener.onNewConfigurationCreated();
         }
     }
 
+    @RequiredReadAction
     public void onConfigurationCopied(RunConfiguration configuration) {
         if (configuration instanceof ConfigurationCreationListener listener) {
             listener.onConfigurationCopied();

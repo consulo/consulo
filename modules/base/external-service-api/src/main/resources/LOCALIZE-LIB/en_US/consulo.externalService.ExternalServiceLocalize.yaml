@@ -381,7 +381,7 @@ title.plugin.notification.title:
 title.plugin.uninstall:
     text: Plugin Uninstall
 title.plugins:
-    text: Platform and Plugins
+    text: Plugins
 title.plugins.changed:
     text: Plugins Changed
 title.submitting.error.report:

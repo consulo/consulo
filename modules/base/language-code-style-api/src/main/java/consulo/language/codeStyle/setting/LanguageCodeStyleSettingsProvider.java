@@ -284,6 +284,16 @@ public abstract class LanguageCodeStyleSettingsProvider implements CodeStyleSett
      * @return A list of providers implementing {@link #createSettingsPage(CodeStyleSettings, CodeStyleSettings)}
      */
     public static List<LanguageCodeStyleSettingsProvider> getSettingsPagesProviders() {
-        return EP_NAME.getExtensionList();
+        return ContainerUtil.filter(EP_NAME.getExtensionList(), LanguageCodeStyleSettingsProvider::implementsSettingsPage);
+    }
+
+    private static boolean implementsSettingsPage(LanguageCodeStyleSettingsProvider provider) {
+        try {
+            return provider.getClass().getMethod("createSettingsPage", CodeStyleSettings.class, CodeStyleSettings.class)
+                .getDeclaringClass() != LanguageCodeStyleSettingsProvider.class;
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
     }
 }

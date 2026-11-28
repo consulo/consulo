@@ -24,6 +24,7 @@ module consulo.language.code.style.impl {
     exports consulo.language.codeStyle.impl.internal to consulo.ide.impl;
     exports consulo.language.codeStyle.impl.internal.formatting to consulo.ide.impl;
     exports consulo.language.codeStyle.impl.internal.arrangement to consulo.ide.impl;
+    exports consulo.language.codeStyle.impl.internal.service to consulo.ide.impl;
 
     opens consulo.language.codeStyle.impl.internal to consulo.util.xml.serializer;
 }

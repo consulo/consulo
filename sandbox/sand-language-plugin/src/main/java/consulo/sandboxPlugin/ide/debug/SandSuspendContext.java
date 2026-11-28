@@ -20,6 +20,7 @@ import consulo.execution.debug.frame.XSuspendContext;
 import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -28,8 +29,10 @@ import java.util.List;
 public class SandSuspendContext extends XSuspendContext {
     private final SandExecutionStack myMainStack;
     private final SandExecutionStack myWorkerStack;
+    private final int myStep;
 
-    public SandSuspendContext(int step) {
+    public SandSuspendContext(int step, Consumer<String> printer) {
+        myStep = step;
         SandValue point = new SandValue("point", "Point", "{x=" + step + ", y=" + (step * 2) + "}", List.of(
             new SandValue("x", "int", String.valueOf(step)),
             new SandValue("y", "int", String.valueOf(step * 2))
@@ -48,17 +51,25 @@ public class SandSuspendContext extends XSuspendContext {
             )),
             new SandStackFrame("process", 24, List.of(names, new SandValue("enabled", "boolean", "true"))),
             new SandStackFrame("main", 3, List.of(new SandValue("args", "String[0]", "size = 0")))
-        ));
+        ), true, printer);
 
-        myWorkerStack = new SandExecutionStack("worker", ExecutionDebugIconGroup.threadThreadsuspended(), List.of(
+        myWorkerStack = new SandExecutionStack("worker", ExecutionDebugIconGroup.threadThreadrunning(), List.of(
             new SandStackFrame("waitForTask", 42, List.of(new SandValue("timeout", "long", "1000"))),
             new SandStackFrame("run", 7, List.of())
-        ));
+        ), false, printer);
     }
 
     @Override
     public XExecutionStack getActiveExecutionStack() {
         return myMainStack;
+    }
+
+    public int getStep() {
+        return myStep;
+    }
+
+    public List<XExecutionStack> getStacks() {
+        return List.of(myMainStack, myWorkerStack);
     }
 
     @Override

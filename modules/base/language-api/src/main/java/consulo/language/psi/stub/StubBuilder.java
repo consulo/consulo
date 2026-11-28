@@ -28,4 +28,13 @@ public interface StubBuilder {
   @Nullable StubElement buildStubTree(PsiFile file);
 
   boolean skipChildProcessingWhenBuildingStubs(ASTNode parent, ASTNode node);
+
+  /**
+   * Whether {@code node} has a stub in the stub tree this builder builds: by default, when its element type is a stub element
+   * type that creates a stub for it. A builder that creates stubs by other means (e.g. element types mapped to their stub
+   * types) tells here, so that a loaded AST binds to the stubs of the file.
+   */
+  default boolean isStubbedNode(ASTNode node) {
+    return node.getElementType() instanceof IStubElementType<?, ?> stubElementType && stubElementType.shouldCreateStub(node);
+  }
 }

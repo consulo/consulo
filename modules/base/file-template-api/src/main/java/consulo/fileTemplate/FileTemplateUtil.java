@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package consulo.fileTemplate;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiDirectory;
@@ -30,6 +28,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jspecify.annotations.Nullable;
 
@@ -144,7 +143,7 @@ public class FileTemplateUtil {
         String fileName_ = fileName;
         String mergedText = ClassLoaderUtil.runWithClassLoader(
             classLoader != null ? classLoader : FileTemplateUtil.class.getClassLoader(),
-            (ThrowableComputable<String, IOException>)() -> template.getText(properties)
+            (ThrowableSupplier<String, IOException>)() -> template.getText(properties)
         );
         String templateText = StringUtil.convertLineSeparators(mergedText);
         return CommandProcessor.getInstance().<PsiElement>newCommand()

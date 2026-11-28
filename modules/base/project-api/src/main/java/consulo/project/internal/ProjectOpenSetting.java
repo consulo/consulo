@@ -18,7 +18,9 @@ package consulo.project.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
+import consulo.platform.Platform;
 import org.intellij.lang.annotations.MagicConstant;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author VISTALL
@@ -58,4 +60,20 @@ public interface ProjectOpenSetting {
     boolean isReuseWelcomeFrame();
 
     void setReuseWelcomeFrame(boolean reuseWelcomeFrame);
+
+    /**
+     * @return true if closing the frame of the last project shows the welcome project, false if it exits;
+     * {@code null} means the platform default - welcome on macOS, exit elsewhere
+     */
+    @Nullable Boolean getShowWelcomeOnLastProjectClose();
+
+    void setShowWelcomeOnLastProjectClose(@Nullable Boolean showWelcomeOnLastProjectClose);
+
+    /**
+     * {@link #getShowWelcomeOnLastProjectClose()} with the platform default applied
+     */
+    default boolean isShowWelcomeOnLastProjectClose() {
+        Boolean value = getShowWelcomeOnLastProjectClose();
+        return value != null ? value : Platform.current().os().isMac();
+    }
 }

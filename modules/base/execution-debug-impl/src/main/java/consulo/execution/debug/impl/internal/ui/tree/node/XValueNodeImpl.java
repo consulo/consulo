@@ -34,6 +34,7 @@ import consulo.execution.debug.ui.ValueMarkup;
 import consulo.execution.debug.ui.XDebuggerUIConstants;
 import consulo.execution.debug.ui.XValuePresentationUtil;
 import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.ColoredTextContainer;
@@ -46,6 +47,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author nik
@@ -54,11 +56,14 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   implements XValueNode, XCompositeNode, XValueNodePresentationConfigurator.ConfigurableXValueNode, RestorableStateNode {
   public static final Comparator<XValueNodeImpl> COMPARATOR = (o1, o2) -> o1.getName().compareTo(o2.getName());
 
+  private static final Logger LOG = Logger.getInstance(XValueNodeImpl.class);
+
   private static final int MAX_NAME_LENGTH = 100;
 
   private final LocalizeValue myName;
   private @Nullable String myRawValue;
   private XFullValueEvaluator myFullValueEvaluator;
+  private final AtomicReference<@Nullable XDebuggerTreeNodeHyperlink> myAdditionalHyperLink = new AtomicReference<>();
   private boolean myChanged;
   private XValuePresentation myValuePresentation;
 
@@ -184,6 +189,31 @@ public class XValueNodeImpl extends XValueContainerNode<XValue>
   @Override
   public void clearFullValueEvaluator() {
     myFullValueEvaluator = null;
+  }
+
+  @Override
+  public void addAdditionalHyperlink(XDebuggerTreeNodeHyperlink link) {
+    invokeNodeUpdate(() -> {
+      if (!myAdditionalHyperLink.compareAndSet(null, link)) {
+        LOG.warn("Additional hyperlink already set; having more than one is not supported");
+      }
+      fireNodeChanged();
+    });
+  }
+
+  @Override
+  public void clearAdditionalHyperlinks() {
+    invokeNodeUpdate(() -> myAdditionalHyperLink.set(null));
+  }
+
+  @Override
+  public void appendToComponent(ColoredTextContainer component) {
+    super.appendToComponent(component);
+
+    XDebuggerTreeNodeHyperlink hyperlink = myAdditionalHyperLink.get();
+    if (hyperlink != null) {
+      component.append(hyperlink.getLinkText(), hyperlink.getTextAttributes(), hyperlink);
+    }
   }
 
   private void updateText() {

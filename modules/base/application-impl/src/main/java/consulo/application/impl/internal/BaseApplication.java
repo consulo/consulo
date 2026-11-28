@@ -30,20 +30,22 @@ import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.application.impl.internal.progress.ProgressResult;
 import consulo.application.impl.internal.progress.ProgressRunner;
 import consulo.application.impl.internal.progress.ProgressWindow;
-import consulo.application.internal.StartupProgress;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationInfo;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.internal.StartupProgress;
 import consulo.application.progress.*;
 import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.internal.ComponentBinding;
 import consulo.component.internal.inject.InjectingContainerBuilder;
-import consulo.component.store.internal.*;
+import consulo.component.store.internal.IComponentStore;
+import consulo.component.store.internal.StateStorageException;
+import consulo.component.store.internal.StorableComponent;
+import consulo.component.store.internal.StoreUtil;
 import consulo.component.util.BuildNumber;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;
@@ -60,15 +62,18 @@ import consulo.project.internal.ProjectManagerEx;
 import consulo.proxy.EventDispatcher;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAction;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.Stack;
 import consulo.util.concurrent.coroutine.*;
 import consulo.util.concurrent.coroutine.step.CallSubroutine;
 import consulo.util.concurrent.coroutine.step.CodeExecution;
 import consulo.util.io.FileUtil;
-import consulo.util.lang.*;
+import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.SemVer;
+import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.lang.ref.SimpleReference;
@@ -83,13 +88,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -991,8 +990,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     }
 
     @Override
-    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableComputable<T, E> action) throws E {
-        return action.compute();
+    public <T, E extends Throwable> T runUnlockingIntendedWrite(ThrowableSupplier<T, E> action) throws E {
+        return action.get();
     }
 
     @Override

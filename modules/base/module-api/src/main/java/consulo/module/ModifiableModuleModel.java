@@ -21,6 +21,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import org.jspecify.annotations.Nullable;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Represents the model for the list of modules in a project, or a temporary copy
@@ -45,13 +46,32 @@ public interface ModifiableModuleModel {
    * @param dirPath the path at which the module is created.
    * @return the module instance.
    */
-  Module newModule(String name, @Nullable String dirPath);
+  default Module newModule(String name, @Nullable String dirPath) {
+    return newModule(name, dirPath, (UUID) null);
+  }
+
+  /**
+   * Like {@link #newModule(String, String)}, with the id of the new module.
+   *
+   * @param name    name of module
+   * @param dirPath the path at which the module is created.
+   * @param id      the module id, or null to generate one. An id already used by another module is replaced by a generated one.
+   * @return the module instance.
+   */
+  Module newModule(String name, @Nullable String dirPath, @Nullable UUID id);
 
   /**
    * Like {@link #newModule(String, String)}, the module dir url taken from the directory itself - for a directory of any
    * file system, e.g. a project on a remote platform.
    */
-  Module newModule(String name, VirtualFile moduleDir);
+  default Module newModule(String name, VirtualFile moduleDir) {
+    return newModule(name, moduleDir, null);
+  }
+
+  /**
+   * Like {@link #newModule(String, VirtualFile)}, with the id of the new module.
+   */
+  Module newModule(String name, VirtualFile moduleDir, @Nullable UUID id);
 
   /**
    * Creates a module of the specified type at the specified path and adds it to the project
@@ -84,6 +104,14 @@ public interface ModifiableModuleModel {
    * @return the module instance, or null if no module with such name exists.
    */
   @Nullable Module findModuleByName(String name);
+
+  /**
+   * Returns the project module with the specified id, including modules added to this model and not committed yet.
+   *
+   * @param id the id of the module to find.
+   * @return the module instance, or null if no module with such id exists.
+   */
+  @Nullable Module findModuleById(UUID id);
 
   /**
    * Disposes of all modules in the project.

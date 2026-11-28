@@ -54,6 +54,9 @@
   <action id="ForceStepInto">
     <keyboard-shortcut first-keystroke="alt shift F7"/>
   </action>
+  <action id="StepIntoMyCode">
+    <keyboard-shortcut first-keystroke="alt shift F7"/>
+  </action>
   <action id="ForceStepOver">
     <keyboard-shortcut first-keystroke="alt shift F8"/>
   </action>

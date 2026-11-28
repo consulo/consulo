@@ -15,6 +15,8 @@
  */
 package consulo.execution.debug.impl.internal.ui.tree.action;
 
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.frame.HasCopyValue;
 import consulo.execution.debug.frame.HeadlessValueEvaluationCallback;
 import consulo.execution.debug.frame.XFullValueEvaluator;
 import consulo.execution.debug.impl.internal.ui.DebuggerUIImplUtil;
@@ -31,8 +33,10 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.StringUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class XFetchValueActionBase extends LegacyAnAction {
     protected XFetchValueActionBase(LocalizeValue text, LocalizeValue description) {
@@ -81,6 +85,13 @@ public abstract class XFetchValueActionBase extends LegacyAnAction {
         if (paths.size() > 1) { // multiselection - copy the whole node text, see IDEA-136722
             valueCollector.add(valueNode.getText().toString(), valueNode.getPath().getPathCount());
         }
+        else if (computeCopyValue(valueNode) instanceof CompletableFuture<String> copyValue) {
+            int index = valueCollector.acquire();
+            copyValue.whenComplete((value, error) -> valueCollector.evaluationComplete(
+                index,
+                error == null ? value : StringUtil.notNullize(DebuggerUIImplUtil.getNodeRawValue(valueNode))
+            ));
+        }
         else {
             XFullValueEvaluator fullValueEvaluator = valueNode.getFullValueEvaluator();
             if (fullValueEvaluator == null || !fullValueEvaluator.isShowValuePopup()) {
@@ -93,6 +104,14 @@ public abstract class XFetchValueActionBase extends LegacyAnAction {
     }
 
     
+    private static @Nullable CompletableFuture<String> computeCopyValue(XValueNodeImpl valueNode) {
+        XDebugSession session = valueNode.getTree().getSession();
+        if (session != null && session.getDebugProcess() instanceof HasCopyValue hasCopyValue) {
+            return hasCopyValue.computeCopyValue(valueNode.getValueContainer());
+        }
+        return null;
+    }
+
     protected ValueCollector createCollector(AnActionEvent e) {
         return new ValueCollector(XDebuggerTree.getTree(e.getDataContext()));
     }

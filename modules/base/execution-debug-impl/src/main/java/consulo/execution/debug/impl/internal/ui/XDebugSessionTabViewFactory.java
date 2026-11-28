@@ -25,6 +25,7 @@ import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Builds the views of a debug session tab - the frames and the variables - for the frontend the tab is shown on.
@@ -56,6 +57,19 @@ public interface XDebugSessionTabViewFactory {
      */
     @RequiredUIAccess
     ViewContent createVariablesView(XDebugSessionImpl session, RunnerLayoutUi ui);
+
+    /**
+     * The live threads of a process with {@link consulo.execution.debug.frame.HasRunningExecutionStacks}, null when the UI has no
+     * such view.
+     */
+    @RequiredUIAccess
+    @Nullable ViewContent createThreadsView(XDebugSessionImpl session, RunnerLayoutUi ui);
+
+    /**
+     * The instance counts of a process with {@link consulo.execution.debug.memory.HasMemoryView}, null when the UI has no such view.
+     */
+    @RequiredUIAccess
+    @Nullable Content createMemoryView(XDebugSessionImpl session, RunnerLayoutUi ui);
 
     /**
      * The contents a debug process adds to the tab by itself, see {@link XDebugTabLayouter#registerAdditionalContent(RunnerLayoutUi)}.

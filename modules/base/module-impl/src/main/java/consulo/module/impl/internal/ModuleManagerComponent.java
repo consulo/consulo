@@ -38,6 +38,7 @@ import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -77,8 +78,8 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     }
 
     @Override
-    protected ModuleEx createModule(String name, @Nullable String dirUrl, ProgressIndicator progressIndicator) {
-        return new ModuleImpl(name, dirUrl, myProject, myComponentBinding);
+    protected ModuleEx createModule(String name, UUID id, @Nullable String dirUrl, @Nullable ProgressIndicator progressIndicator) {
+        return new ModuleImpl(name, id, dirUrl, myProject, myComponentBinding);
     }
 
     public void loadModulesNew(ProgressIndicator indicator) {

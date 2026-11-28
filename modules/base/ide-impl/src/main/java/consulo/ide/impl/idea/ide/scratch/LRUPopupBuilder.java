@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.LanguageFileType;
@@ -9,6 +8,7 @@ import consulo.language.localize.LanguageLocalize;
 import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
@@ -31,8 +31,8 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -44,7 +44,7 @@ public abstract class LRUPopupBuilder<T> {
     private static final int LRU_ITEMS = 4;
 
     private final String myTitle;
-    private final PropertiesComponent myPropertiesComponent;
+    private final ProjectPropertiesComponent myPropertiesComponent;
     private final Map<T, Pair<String, Image>> myPresentations = new IdentityHashMap<>();
 
     private T mySelection;
@@ -86,30 +86,23 @@ public abstract class LRUPopupBuilder<T> {
      * @deprecated use {@link #forFileLanguages(Project, String, Language, Consumer)}
      */
     @Deprecated
-    
-    public static ListPopup forFileLanguages(
-        Project project,
-        @Nullable Language selection,
-        Consumer<? super Language> onChosen
-    ) {
+    public static ListPopup forFileLanguages(Project project, @Nullable Language selection, Consumer<? super Language> onChosen) {
         return forFileLanguages(project, "Languages", selection, onChosen);
     }
 
-    
     public static ListPopup forFileLanguages(
         Project project,
         String title,
         @Nullable Language selection,
         Consumer<? super Language> onChosen
     ) {
-        return languagePopupBuilder(project, title).
-            forValues(LanguageUtil.getFileLanguages()).
-            withSelection(selection).
-            onChosen(onChosen).
-            buildPopup();
+        return languagePopupBuilder(project, title)
+            .forValues(LanguageUtil.getFileLanguages())
+            .withSelection(selection)
+            .onChosen(onChosen)
+            .buildPopup();
     }
 
-    
     public static LRUPopupBuilder<Language> languagePopupBuilder(Project project, String title) {
         return new LRUPopupBuilder<Language>(project, title) {
             @Override
@@ -132,7 +125,7 @@ public abstract class LRUPopupBuilder<T> {
 
     protected LRUPopupBuilder(Project project, String title) {
         myTitle = title;
-        myPropertiesComponent = PropertiesComponent.getInstance(project);
+        myPropertiesComponent = ProjectPropertiesComponent.getInstance(project);
     }
 
     public abstract String getDisplayName(T t);
@@ -141,26 +134,22 @@ public abstract class LRUPopupBuilder<T> {
 
     public abstract Image getIcon(T t);
 
-    
     public LRUPopupBuilder<T> forValues(@Nullable Iterable<? extends T> items) {
         myItemsIterable = items;
         return this;
     }
 
-    
     public LRUPopupBuilder<T> withSelection(@Nullable T t) {
         mySelection = t;
         return this;
     }
 
-    
     public LRUPopupBuilder<T> withExtra(T extra, String displayName, @Nullable Image icon) {
         myExtraItems = myExtraItems.append(extra);
         myPresentations.put(extra, Pair.create(displayName, icon));
         return this;
     }
 
-    
     public LRUPopupBuilder<T> onChosen(@Nullable Consumer<? super T> consumer) {
         myOnChosen = consumer;
         return this;
@@ -171,7 +160,6 @@ public abstract class LRUPopupBuilder<T> {
         return this;
     }
 
-    
     public ListPopup buildPopup() {
         List<String> ids = ContainerUtil.newArrayList(restoreLRUItems());
         if (mySelection != null) {
@@ -196,7 +184,6 @@ public abstract class LRUPopupBuilder<T> {
 
         List<T> combinedItems = ContainerUtil.concat(lru, items, extra);
         BaseListPopupStep<T> step = new BaseListPopupStep<T>(myTitle, combinedItems) {
-            
             @Override
             public String getTextFor(T t) {
                 return t == null ? "" : getPresentation(t).first;
@@ -234,7 +221,6 @@ public abstract class LRUPopupBuilder<T> {
         return tweakSizeToPreferred(JBPopupFactory.getInstance().createListPopup(step));
     }
 
-    
     private Pair<String, Image> getPresentation(T t) {
         Pair<String, Image> p = myPresentations.get(t);
         if (p == null) {
@@ -243,7 +229,6 @@ public abstract class LRUPopupBuilder<T> {
         return p;
     }
 
-    
     private static ListPopup tweakSizeToPreferred(ListPopup popup) {
         int nameLen = 0;
         ListPopupStep step = popup.getListStep();
@@ -262,7 +247,6 @@ public abstract class LRUPopupBuilder<T> {
         return popup;
     }
 
-    
     private String[] restoreLRUItems() {
         return ObjectUtil.notNull(myPropertiesComponent.getValues(getLRUKey()), ArrayUtil.EMPTY_STRING_ARRAY);
     }
@@ -284,17 +268,12 @@ public abstract class LRUPopupBuilder<T> {
         myPropertiesComponent.setValues(getLRUKey(), ArrayUtil.toStringArray(lastUsed));
     }
 
-    
     private String getLRUKey() {
         return getClass().getName() + "/" + myTitle;
     }
 
-    private static void changeLanguageWithUndo(
-        Project project,
-        Language t,
-        VirtualFile[] sortedFiles,
-        PerFileMappings<Language> mappings
-    ) throws UnexpectedUndoException {
+    private static void changeLanguageWithUndo(Project project, Language t, VirtualFile[] sortedFiles, PerFileMappings<Language> mappings)
+        throws UnexpectedUndoException {
         ReadonlyStatusHandler.OperationStatus status =
             ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(Arrays.asList(sortedFiles));
         if (status.hasReadonlyFiles()) {

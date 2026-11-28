@@ -15,9 +15,9 @@
  */
 package consulo.language.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.document.Document;
 import consulo.language.ast.*;
 import consulo.language.file.FileViewProvider;
@@ -39,9 +39,10 @@ import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.Ref;
-
 import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -556,10 +557,10 @@ public class DebugUtil {
     }
   }
 
-  public static <T, E extends Throwable> T performPsiModification(String trace, ThrowableComputable<T, E> runnable) throws E {
+  public static <T, E extends Throwable> T performPsiModification(String trace, ThrowableSupplier<T, E> runnable) throws E {
     startPsiModification(trace);
     try {
-      return runnable.compute();
+      return runnable.get();
     }
     finally {
       finishPsiModification();
@@ -624,7 +625,7 @@ public class DebugUtil {
     }
   }
 
-  
+  @RequiredReadAction
   public static String diagnosePsiDocumentInconsistency(PsiElement element, Document document) {
     PsiUtilCore.ensureValid(element);
 

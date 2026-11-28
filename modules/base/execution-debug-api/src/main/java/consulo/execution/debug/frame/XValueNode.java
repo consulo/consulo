@@ -77,6 +77,18 @@ public interface XValueNode extends Obsolescent {
     @Nullable XValueTree getTree();
 
     @UsedInPlugin
+    /**
+     * Adds a hyperlink shown after the value, aside from the full value evaluator - a single one is supported.
+     */
+    default void addAdditionalHyperlink(XDebuggerTreeNodeHyperlink link) {
+    }
+
+    /**
+     * Removes the hyperlink added by {@link #addAdditionalHyperlink}.
+     */
+    default void clearAdditionalHyperlinks() {
+    }
+
     default void clearFullValueEvaluator() {
     }
 

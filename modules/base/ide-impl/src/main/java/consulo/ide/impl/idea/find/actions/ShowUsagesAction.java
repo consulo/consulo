@@ -17,10 +17,9 @@ package consulo.ide.impl.idea.find.actions;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ActionImpl;
-import consulo.application.AccessRule;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.component.messagebus.MessageBusConnection;
@@ -46,7 +45,6 @@ import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
 import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.ide.util.gotoByName.ModelDiff;
-import consulo.ui.ex.action.PopupAction;
 import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ide.impl.idea.usages.impl.GroupNode;
 import consulo.ide.impl.idea.usages.impl.UsageNode;
@@ -99,8 +97,8 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.xml.XmlStringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -110,8 +108,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -174,6 +172,7 @@ public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
 
     private final boolean myShowSettingsDialogBefore;
     private final UsageViewSettings myUsageViewSettings;
+    @RequiredUIAccess
     private Runnable mySearchEverywhereRunnable;
 
     // used from plugin.xml
@@ -402,9 +401,7 @@ public class ShowUsagesAction extends LegacyAnAction implements PopupAction {
                 if (UsageViewManager.isSelfUsage(usage, myUsageTarget)) {
                     return true;
                 }
-                @RequiredReadAction
-                ThrowableComputable<UsageNode, RuntimeException> action = () -> usageView.doAppendUsage(usage);
-                UsageNode node = AccessRule.read(action);
+                UsageNode node = ReadAction.compute(() -> usageView.doAppendUsage(usage));
                 usages.add(usage);
                 if (node != null) {
                     visibleNodes.add(node);

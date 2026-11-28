@@ -15,12 +15,15 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.util.NotNullLazyValue;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.image.Image;
 
+import consulo.util.lang.lazy.LazyValue;
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -34,156 +37,154 @@ import java.util.function.Supplier;
  * from kotlin
  */
 public class AnalyzerStatus {
-  public static final NotNullLazyValue<AnalyzerStatus> DEFAULT = NotNullLazyValue.createValue(() -> new AnalyzerStatus(consulo.ui.image.Image.empty(0), null, null, () -> new UIController() {
-    @Override
-    public boolean enableToolbar() {
-      return false;
+    public static final LazyValue<AnalyzerStatus> DEFAULT = LazyValue.notNull(
+        () -> new AnalyzerStatus(
+            Image.empty(0),
+            LocalizeValue.empty(),
+            LocalizeValue.empty(),
+            () -> new UIController() {
+                @Override
+                public boolean enableToolbar() {
+                    return false;
+                }
+
+                @Override
+                public List<AnAction> getActions() {
+                    return Collections.emptyList();
+                }
+
+                @Override
+                public List<InspectionsLevel> getAvailableLevels() {
+                    return Collections.emptyList();
+                }
+
+                @Override
+                public List<LanguageHighlightLevel> getHighlightLevels() {
+                    return Collections.emptyList();
+                }
+
+                @Override
+                public void setHighLightLevel(LanguageHighlightLevel newLevels) {
+                }
+
+                @Override
+                public void fillHectorPanels(Container container, GridBag bag) {
+                }
+
+                @Override
+                public boolean canClosePopup() {
+                    return false;
+                }
+
+                @Override
+                public void onClosePopup() {
+                }
+
+                @Override
+                public void openProblemsView() {
+                }
+            }
+        ));
+
+    public static boolean equals(@Nullable AnalyzerStatus a, @Nullable AnalyzerStatus b) {
+        if (a == null && b == null) {
+            return true;
+        }
+
+        if (a == null || b == null) {
+            return false;
+        }
+
+        return Objects.equals(a.getIcon(), b.getIcon())
+            && Objects.equals(a.expandedStatus, b.expandedStatus)
+            && a.getTitle().equals(b.getTitle())
+            && a.getDetails().equals(b.getDetails())
+            && a.isShowNavigation() == b.isShowNavigation()
+            && Objects.equals(a.passes, b.passes);
     }
 
-    
-    @Override
-    public List<AnAction> getActions() {
-      return Collections.emptyList();
+    private final Image myIcon;
+    private final LocalizeValue myTitle;
+    private final LocalizeValue myDetails;
+
+    private List<StatusItem> expandedStatus = Collections.emptyList();
+    private List<PassWrapper> passes = Collections.emptyList();
+
+    private boolean textStatus;
+
+    private AnalyzingType analyzingType = AnalyzingType.COMPLETE;
+
+    private boolean myShowNavigation;
+
+    private NotNullLazyValue<UIController> myControllerValue;
+
+    public AnalyzerStatus(Image icon, LocalizeValue title, LocalizeValue details, Supplier<UIController> controllerCreator) {
+        myIcon = icon;
+        myTitle = title;
+        myDetails = details;
+
+        myControllerValue = NotNullLazyValue.createValue(controllerCreator);
     }
 
-    
-    @Override
-    public List<InspectionsLevel> getAvailableLevels() {
-      return Collections.emptyList();
+    public UIController getController() {
+        return myControllerValue.getValue();
     }
 
-    
-    @Override
-    public List<LanguageHighlightLevel> getHighlightLevels() {
-      return Collections.emptyList();
+    public List<StatusItem> getExpandedStatus() {
+        return expandedStatus;
     }
 
-    @Override
-    public void setHighLightLevel(LanguageHighlightLevel newLevels) {
-
+    public List<PassWrapper> getPasses() {
+        return passes;
     }
 
-    @Override
-    public void fillHectorPanels(Container container, GridBag bag) {
-
+    public boolean isTextStatus() {
+        return textStatus;
     }
 
-    @Override
-    public boolean canClosePopup() {
-      return false;
+    public AnalyzingType getAnalyzingType() {
+        return analyzingType;
     }
 
-    @Override
-    public void onClosePopup() {
-
+    public boolean isShowNavigation() {
+        return myShowNavigation;
     }
 
-    @Override
-    public void openProblemsView() {
-
-    }
-  }));
-
-  public static boolean equals(@Nullable AnalyzerStatus a, @Nullable AnalyzerStatus b) {
-    if (a == null && b == null) {
-      return true;
+    public AnalyzerStatus withNavigation() {
+        myShowNavigation = true;
+        return this;
     }
 
-    if (a == null || b == null) {
-      return false;
+    public AnalyzerStatus withExpandedStatus(List<StatusItem> status) {
+        expandedStatus = status;
+        return this;
     }
 
-    return Objects.equals(a.getIcon(), b.getIcon()) &&
-           Objects.equals(a.expandedStatus, b.expandedStatus) &&
-           Objects.equals(a.getTitle(), b.getTitle()) &&
-           Objects.equals(a.getDetails(), b.getDetails()) &&
-           a.isShowNavigation() == b.isShowNavigation() &&
-           Objects.equals(a.passes, b.passes);
-  }
+    public AnalyzerStatus withPasses(List<PassWrapper> passes) {
+        this.passes = passes;
+        return this;
+    }
 
-  private final consulo.ui.image.Image myIcon;
-  private final String myTitle;
-  private final String myDetails;
+    public AnalyzerStatus withAnalyzingType(AnalyzingType type) {
+        analyzingType = type;
+        return this;
+    }
 
-  private List<StatusItem> expandedStatus = Collections.emptyList();
-  private List<PassWrapper> passes = Collections.emptyList();
+    public AnalyzerStatus withTextStatus(LocalizeValue status) {
+        expandedStatus = Collections.singletonList(new StatusItem(status));
+        textStatus = true;
+        return this;
+    }
 
-  private boolean textStatus;
+    public Image getIcon() {
+        return myIcon;
+    }
 
-  private AnalyzingType analyzingType = AnalyzingType.COMPLETE;
+    public LocalizeValue getTitle() {
+        return myTitle;
+    }
 
-  private boolean myShowNavigation;
-
-  private NotNullLazyValue<UIController> myControllerValue;
-
-  public AnalyzerStatus(consulo.ui.image.Image icon, String title, String details, Supplier<UIController> controllerCreator) {
-    myIcon = icon;
-    myTitle = title;
-    myDetails = details;
-
-    myControllerValue = NotNullLazyValue.createValue(controllerCreator);
-  }
-
-  
-  public UIController getController() {
-    return myControllerValue.getValue();
-  }
-
-  public List<StatusItem> getExpandedStatus() {
-    return expandedStatus;
-  }
-
-  public List<PassWrapper> getPasses() {
-    return passes;
-  }
-
-  public boolean isTextStatus() {
-    return textStatus;
-  }
-
-  public AnalyzingType getAnalyzingType() {
-    return analyzingType;
-  }
-
-  public boolean isShowNavigation() {
-    return myShowNavigation;
-  }
-
-  public AnalyzerStatus withNavigation() {
-    myShowNavigation = true;
-    return this;
-  }
-
-  public AnalyzerStatus withExpandedStatus(List<StatusItem> status) {
-    expandedStatus = status;
-    return this;
-  }
-
-  public AnalyzerStatus withPasses(List<PassWrapper> passes) {
-    this.passes = passes;
-    return this;
-  }
-
-  public AnalyzerStatus withAnalyzingType(AnalyzingType type) {
-    analyzingType = type;
-    return this;
-  }
-
-  public AnalyzerStatus withTextStatus(String status) {
-    expandedStatus = Collections.singletonList(new StatusItem(status));
-    textStatus = true;
-    return this;
-  }
-
-  public Image getIcon() {
-    return myIcon;
-  }
-
-  public String getTitle() {
-    return myTitle;
-  }
-
-  public String getDetails() {
-    return myDetails;
-  }
+    public LocalizeValue getDetails() {
+        return myDetails;
+    }
 }

@@ -49,7 +49,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
 
   private final List<FocusRequestInfo> myRequests = new LinkedList<>();
 
-  
   private final IdeEventQueue myQueue;
 
   private final Map<IdeFrame, Component> myLastFocused = Maps.newWeakValueHashMap();
@@ -71,8 +70,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     application.getMessageBus().connect().subscribe(ApplicationActivationListener.class, listener);
 
     IdeEventQueue.getInstance().addDispatcher(e -> {
-      if (e instanceof FocusEvent) {
-        FocusEvent fe = (FocusEvent)e;
+      if (e instanceof FocusEvent fe) {
         Component c = fe.getComponent();
         if (c instanceof Window || c == null) return false;
 
@@ -87,8 +85,8 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
           }
         }
       }
-      else if (e instanceof WindowEvent) {
-        Window wnd = ((WindowEvent)e).getWindow();
+      else if (e instanceof WindowEvent we) {
+        Window wnd = we.getWindow();
         if (e.getID() == WindowEvent.WINDOW_CLOSED) {
           consulo.ui.Window uiWindow = TargetAWT.from(wnd);
 
@@ -133,20 +131,17 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
-  
   public AsyncResult<Void> requestFocus(Component c, boolean forced) {
     c.requestFocus();
     return AsyncResult.resolved();
   }
 
-  
   @Override
   public AsyncResult<Void> requestFocus(consulo.ui.Component c, boolean forced) {
     requestFocus(TargetAWT.to(c), forced);
     return AsyncResult.resolved();
   }
 
-  
   public List<FocusRequestInfo> getRequests() {
     return myRequests;
   }
@@ -182,6 +177,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
+  @RequiredUIAccess
   public Component getFocusOwner() {
     UIAccess.assertIsUIThread();
 
@@ -260,7 +256,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   private class AppListener implements ApplicationActivationListener {
-
     @Override
     public void delayedApplicationDeactivated(IdeFrame ideFrame) {
       Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -278,6 +273,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
   }
 
   @Override
+  @RequiredUIAccess
   public Component getFocusedDescendantFor(Component comp) {
     Component focused = getFocusOwner();
     if (focused == null) return null;
@@ -292,7 +288,6 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return null;
   }
 
-  
   @Override
   public AsyncResult<Void> requestDefaultFocus(boolean forced) {
     Component toFocus = null;
@@ -303,12 +298,12 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
       }
     }
     else {
-      Optional<Component> toFocusOptional = Arrays.stream(Window.getWindows()).
-                                                  filter(window -> window instanceof RootPaneContainer).
-                                                  filter(window -> ((RootPaneContainer)window).getRootPane() != null).
-                                                  filter(window -> window.isActive()).
-                                                  findFirst().
-                                                  map(w -> getFocusTargetFor(((RootPaneContainer)w).getRootPane()));
+      Optional<Component> toFocusOptional = Arrays.stream(Window.getWindows())
+          .filter(window -> window instanceof RootPaneContainer)
+          .filter(window -> ((RootPaneContainer)window).getRootPane() != null)
+          .filter(Window::isActive)
+          .findFirst()
+          .map(w -> getFocusTargetFor(((RootPaneContainer)w).getRootPane()));
 
       if (toFocusOptional.isPresent()) {
         toFocus = toFocusOptional.get();
@@ -376,13 +371,12 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     return instance;
   }
 
-  
   @Override
   public IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager) {
-    if (!(componentManager instanceof Project)) {
+    if (!(componentManager instanceof Project project)) {
       return this;
     }
-    IdeFocusManager ideFocusManager = getInstanceSafe((Project)componentManager);
+    IdeFocusManager ideFocusManager = getInstanceSafe(project);
     if (ideFocusManager != null) {
       return ideFocusManager;
     }

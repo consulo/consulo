@@ -54,6 +54,7 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
     private boolean myConfirmExit = true;
     private int myConfirmOpenNewProject = OPEN_PROJECT_ASK;
     private boolean myReuseWelcomeFrame = false;
+    private @Nullable Boolean myShowWelcomeOnLastProjectClose;
     private ProcessCloseConfirmation myProcessCloseConfirmation = ProcessCloseConfirmation.ASK;
 
     public static GeneralSettings getInstance() {
@@ -218,6 +219,14 @@ public class GeneralSettings implements PersistentStateComponent<GeneralSettings
 
     public void setReuseWelcomeFrame(boolean reuseWelcomeFrame) {
         myReuseWelcomeFrame = reuseWelcomeFrame;
+    }
+
+    public @Nullable Boolean getShowWelcomeOnLastProjectClose() {
+        return myShowWelcomeOnLastProjectClose;
+    }
+
+    public void setShowWelcomeOnLastProjectClose(@Nullable Boolean showWelcomeOnLastProjectClose) {
+        myShowWelcomeOnLastProjectClose = showWelcomeOnLastProjectClose;
     }
 
     @Deprecated

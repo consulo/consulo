@@ -132,6 +132,13 @@ public class StructureViewComposite implements StructureView {
         }
     }
 
+    @Override
+    public void disableStoreState() {
+        for (StructureViewDescriptor descriptor : myStructureViews) {
+            descriptor.structureView.disableStoreState();
+        }
+    }
+
     public StructureViewDescriptor[] getStructureViews() {
         return myStructureViews;
     }

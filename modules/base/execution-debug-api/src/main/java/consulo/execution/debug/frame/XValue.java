@@ -22,9 +22,12 @@ import consulo.execution.debug.evaluation.EvaluationMode;
 import consulo.execution.debug.evaluation.XInstanceEvaluator;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
 
 import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * Represents a value in debugger tree.
@@ -33,6 +36,11 @@ import org.jspecify.annotations.Nullable;
  * @author nik
  */
 public abstract class XValue extends XValueContainer {
+  /**
+   * The values selected in a tree of values, for the actions of the values.
+   */
+  public static final Key<List<XValue>> SELECTED_VALUES = Key.create("XValue.SelectedValues");
+
   /**
    * Start computing presentation of the value in the debugger tree and call {@link XValueNode#setPresentation(Image, String, String, boolean)}
    * when computation is finished.

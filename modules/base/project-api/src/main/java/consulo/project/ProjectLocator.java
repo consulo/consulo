@@ -18,10 +18,10 @@ package consulo.project;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
-
 import org.jspecify.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,44 +31,47 @@ import java.util.Map;
  */
 @ServiceAPI(ComponentScope.APPLICATION)
 public abstract class ProjectLocator {
-  public static ProjectLocator getInstance() {
-    return Application.get().getInstance(ProjectLocator.class);
-  }
-
-  /**
-   * Returns an open project which contains the given file.
-   * This is a guess-method, so if several projects contain the file, only one will be returned.
-   * Also a project may be returned though it doesn't contain the file for sure (see implementations).
-   *
-   * @param file file to be located in projects.
-   * @return project which probably contains the file, or null if couldn't guess (for example, there are no open projects).
-   */
-  public abstract @Nullable Project guessProjectForFile(@Nullable VirtualFile file);
-
-  /**
-   * Gets all open projects containing the given file.
-   * If none does, an empty list is returned.
-   *
-   * @param file file to be located in projects.
-   * @return list of open projects containing this file.
-   */
-  public abstract Collection<Project> getProjectsForFile(VirtualFile file);
-
-  public static <T, E extends Throwable> T computeWithPreferredProject(VirtualFile file, Project preferredProject, ThrowableComputable<T, E> action) throws E {
-    Map<VirtualFile, Project> local = ourPreferredProjects.get();
-    local.put(file, preferredProject);
-    try {
-      return action.compute();
+    public static ProjectLocator getInstance() {
+        return Application.get().getInstance(ProjectLocator.class);
     }
-    finally {
-      local.remove(file);
+
+    /**
+     * Returns an open project which contains the given file.
+     * This is a guess-method, so if several projects contain the file, only one will be returned.
+     * Also a project may be returned though it doesn't contain the file for sure (see implementations).
+     *
+     * @param file file to be located in projects.
+     * @return project which probably contains the file, or null if couldn't guess (for example, there are no open projects).
+     */
+    public abstract @Nullable Project guessProjectForFile(@Nullable VirtualFile file);
+
+    /**
+     * Gets all open projects containing the given file.
+     * If none does, an empty list is returned.
+     *
+     * @param file file to be located in projects.
+     * @return list of open projects containing this file.
+     */
+    public abstract Collection<Project> getProjectsForFile(VirtualFile file);
+
+    public static <T, E extends Throwable> T computeWithPreferredProject(
+        VirtualFile file,
+        Project preferredProject,
+        ThrowableSupplier<T, E> action
+    ) throws E {
+        Map<VirtualFile, Project> local = ourPreferredProjects.get();
+        local.put(file, preferredProject);
+        try {
+            return action.get();
+        }
+        finally {
+            local.remove(file);
+        }
     }
-  }
 
-  public static @Nullable Project getPreferredProject(VirtualFile file) {
-    return ourPreferredProjects.get().get(file);
-  }
+    public static @Nullable Project getPreferredProject(VirtualFile file) {
+        return ourPreferredProjects.get().get(file);
+    }
 
-  private static final ThreadLocal<Map<VirtualFile, Project>> ourPreferredProjects = ThreadLocal.withInitial(HashMap::new);
-
+    private static final ThreadLocal<Map<VirtualFile, Project>> ourPreferredProjects = ThreadLocal.withInitial(HashMap::new);
 }

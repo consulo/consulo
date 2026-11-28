@@ -3,7 +3,7 @@
   "project" : "consulo",
   "projectVersion" : "master",
   "sourceLocale" : "en-US",
-  "generatedAt" : "2026-11-15T14:43:58.599141881Z",
+  "generatedAt" : "2026-11-25T12:32:08.485333409Z",
   "documents" : {
     "consulo.accountManagement.AccountManagementLocalize" : {
       "source" : {
@@ -102,7 +102,7 @@
     },
     "consulo.execution.debug.XDebuggerLocalize" : {
       "source" : {
-        "sig" : "2b81c4578b2387b23fc343f7b9132098"
+        "sig" : "bd2a7e45bbb8dac394bd32e6bae842d6"
       }
     },
     "consulo.execution.test.ExecutionTestLocalize" : {
@@ -122,7 +122,7 @@
     },
     "consulo.externalService.ExternalServiceLocalize" : {
       "source" : {
-        "sig" : "169ac6734f92091ea176825efbc67e50"
+        "sig" : "5c7696ae7ed2d492a0a390a2baf00885"
       }
     },
     "consulo.externalService.FeatureStatisticsLocalize" : {
@@ -167,7 +167,7 @@
     },
     "consulo.ide.IdeLocalize" : {
       "source" : {
-        "sig" : "1253e2a009f8f7ebdb9c460125ff7c71"
+        "sig" : "a79e980444d0fd6091043fed7a15b1e5"
       }
     },
     "consulo.ide.tipOfDay.impl.TipOfDayLocalize" : {
@@ -182,7 +182,7 @@
     },
     "consulo.language.codeStyle.CodeStyleLocalize" : {
       "source" : {
-        "sig" : "c5427a2a297950a32bad81146f1d274c"
+        "sig" : "b4fc042ab36814b1577503289c149311"
       }
     },
     "consulo.language.copyright.LanguageCopyrightLocalize" : {
@@ -197,7 +197,7 @@
     },
     "consulo.language.editor.CodeInsightLocalize" : {
       "source" : {
-        "sig" : "ba4ba89626508dd2af15b655010aa4a7"
+        "sig" : "efc557f694a07bd1719e980c9c58baba"
       }
     },
     "consulo.language.editor.CommonQuickFixLocalize" : {

@@ -27,6 +27,7 @@ import consulo.undoRedo.internal.builder.BaseExecutableCommandBuilder;
 import consulo.undoRedo.internal.builder.WrappableRunnableCommandBuilder;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.localize.LocalizeValue;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jspecify.annotations.Nullable;
@@ -48,9 +49,18 @@ public class HeadlessCommandProcessor extends CommandProcessor {
     }
 
     private final ThreadLocal<Integer> myCommandDepth = ThreadLocal.withInitial(() -> 0);
+    private final ThreadLocal<LocalizeValue> myCommandName = ThreadLocal.withInitial(LocalizeValue::empty);
 
     private class HeadlessCommandBuilder<R, THIS extends HeadlessCommandBuilder<R, THIS>>
         extends BaseExecutableCommandBuilder<R, THIS> implements WrappableRunnableCommandBuilder<R, THIS> {
+        private LocalizeValue myName = LocalizeValue.empty();
+
+        @Override
+        public THIS name(LocalizeValue name) {
+            myName = name;
+            return super.name(name);
+        }
+
         @Override
         public CommandProcessor getCommandProcessor() {
             return HeadlessCommandProcessor.this;
@@ -63,11 +73,14 @@ public class HeadlessCommandProcessor extends CommandProcessor {
 
         @Override
         public ExecutionResult<R> execute(ThrowableSupplier<R, ? extends Throwable> executable) {
+            LocalizeValue outerName = myCommandName.get();
             myCommandDepth.set(myCommandDepth.get() + 1);
+            myCommandName.set(myName);
             try {
                 return super.execute(executable);
             }
             finally {
+                myCommandName.set(outerName);
                 myCommandDepth.set(myCommandDepth.get() - 1);
             }
         }
@@ -85,6 +98,11 @@ public class HeadlessCommandProcessor extends CommandProcessor {
     @Override
     public boolean hasCurrentCommand() {
         return myCommandDepth.get() > 0;
+    }
+
+    @Override
+    public LocalizeValue getCurrentCommandNameValue() {
+        return hasCurrentCommand() ? myCommandName.get() : LocalizeValue.empty();
     }
 
     @Override

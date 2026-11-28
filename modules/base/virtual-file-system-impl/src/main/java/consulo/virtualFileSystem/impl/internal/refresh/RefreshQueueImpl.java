@@ -13,6 +13,7 @@ import consulo.application.internal.FrequentEventDetector;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.util.collection.ContainerUtil;
@@ -113,7 +114,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
       try {
         HeavyProcessLatch.INSTANCE.performOperation(
           HeavyProcessLatch.Type.Syncing,
-          "Doing file refresh. " + session,
+          LocalizeValue.localizeTODO("Doing file refresh. " + session),
           () -> doScan(session)
         );
       }

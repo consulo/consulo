@@ -20,12 +20,11 @@ import consulo.codeEditor.Editor;
 import java.awt.*;
 
 public interface ErrorStripeRenderer {
-  void paint(Component c, Graphics g, Rectangle r);
+    void paint(Component c, Graphics g, Rectangle r);
 
-  int getSquareSize();
+    int getSquareSize();
 
-  
-  default AnalyzerStatus getStatus(Editor editor) {
-    return AnalyzerStatus.DEFAULT.getValue();
-  }
+    default AnalyzerStatus getStatus(Editor editor) {
+        return AnalyzerStatus.DEFAULT.get();
+    }
 }

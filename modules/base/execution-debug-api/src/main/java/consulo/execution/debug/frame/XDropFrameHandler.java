@@ -2,7 +2,7 @@
 package consulo.execution.debug.frame;
 
 /**
- * Implement this class and return its instance from {@link XDebugProcess#getDropFrameHandler()} to support
+ * Implement this class and return its instance from {@link HasDropFrame#getDropFrameHandler()} to support
  * Drop Frame action
  */
 public interface XDropFrameHandler {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 consulo.io
+ * Copyright 2013-2026 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi;
+package consulo.fileEditor.structureView.event;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.ServiceAPI;
-import consulo.project.Project;
+import consulo.annotation.component.TopicAPI;
 
 /**
+ * Publish {@link #structureChanged()} when the structure view builders of files changed (e.g. a provider became
+ * available or unavailable): the structure view drops its cached state and is rebuilt.
+ *
  * @author VISTALL
- * @since 17-Feb-22
+ * @since 2026-11-15
  */
-@ServiceAPI(ComponentScope.PROJECT)
-public interface FormattingService {
-  static FormattingService getInstance(Project project) {
-    return project.getInstance(FormattingService.class);
-  }
-
-  void performActionWithFormatterDisabled(Runnable runnable);
+@TopicAPI(ComponentScope.APPLICATION)
+public interface StructureViewChangedListener {
+    void structureChanged();
 }

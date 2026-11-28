@@ -7,7 +7,6 @@ import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.PerApplicationInstance;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.content.ContentIterator;
 import consulo.content.scope.SearchScope;

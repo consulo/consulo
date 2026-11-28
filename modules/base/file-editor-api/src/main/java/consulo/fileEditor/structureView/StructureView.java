@@ -74,6 +74,9 @@ public interface StructureView extends Disposable {
    */
   void storeState();
 
+  default void disableStoreState() {
+  }
+
   
   StructureViewModel getTreeModel();
 

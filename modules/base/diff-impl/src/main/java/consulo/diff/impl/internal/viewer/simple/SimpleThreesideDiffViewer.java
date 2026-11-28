@@ -17,7 +17,6 @@ package consulo.diff.impl.internal.viewer.simple;
 
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.diff.DiffContext;
@@ -126,11 +125,10 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
             List<DiffContent> contents = myRequest.getContents();
             List<Document> documents = ContainerUtil.map(contents, content -> ((DocumentContent) content).getDocument());
 
-            ThrowableComputable<List<CharSequence>, RuntimeException> action2 = () -> {
+            List<CharSequence> sequences = ReadAction.compute(() -> {
                 indicator.checkCanceled();
                 return ContainerUtil.map(documents, Document::getImmutableCharSequence);
-            };
-            List<CharSequence> sequences = ReadAction.compute(action2);
+            });
 
             ComparisonPolicy comparisonPolicy = getIgnorePolicy().getComparisonPolicy();
 
@@ -155,7 +153,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
                     MergeLineFragment fragment = lineFragments.get(i);
                     MergeConflictType conflictType = conflictTypes.get(i);
 
-                    ThrowableComputable<List<CharSequence>, RuntimeException> action = () -> {
+                    List<CharSequence> chunks = ReadAction.compute(() -> {
                         indicator.checkCanceled();
                         return ThreeSide.map(side -> {
                             if (!conflictType.isChange(side)) {
@@ -163,8 +161,7 @@ public class SimpleThreesideDiffViewer extends ThreesideTextDiffViewerEx {
                             }
                             return getChunkContent(fragment, documents, side);
                         });
-                    };
-                    List<CharSequence> chunks = ReadAction.compute(action);
+                    });
 
                     innerFragments.add(DiffImplUtil.compareThreesideInner(chunks, comparisonPolicy, indicator));
                 }

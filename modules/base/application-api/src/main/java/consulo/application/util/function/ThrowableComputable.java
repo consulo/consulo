@@ -20,10 +20,10 @@ import consulo.util.lang.function.ThrowableSupplier;
 @Deprecated
 @FunctionalInterface
 public interface ThrowableComputable<T, E extends Throwable> extends ThrowableSupplier<T, E> {
-  T compute() throws E;
+    T compute() throws E;
 
-  @Override
-  default T get() throws E {
-    return compute();
-  }
+    @Override
+    default T get() throws E {
+        return compute();
+    }
 }

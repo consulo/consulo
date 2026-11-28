@@ -15,7 +15,10 @@ import consulo.document.util.TextRangeUtil;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenType;
 import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.impl.internal.service.ExternalFormatProcessorAdapter;
+import consulo.language.codeStyle.impl.internal.service.FormattingServiceUtil;
 import consulo.language.codeStyle.internal.CoreCodeStyleUtil;
+import consulo.language.codeStyle.service.FormattingService;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.ast.*;
 import consulo.language.impl.file.AbstractFileViewProvider;
@@ -755,18 +758,6 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         return getContext().myDisabledCounter > 0;
     }
 
-    
-    private CodeFormatterFacade getFormatterFacade(FileViewProvider viewProvider) {
-        CodeStyleSettings styleSettings = CodeStyle.getSettings(viewProvider.getPsi(viewProvider.getBaseLanguage()));
-        PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myPsiManager.getProject());
-        Document document = viewProvider.getDocument();
-        assert document != null;
-        CodeFormatterFacade codeFormatter = new CodeFormatterFacade(styleSettings, viewProvider.getBaseLanguage());
-
-        documentManager.commitDocument(document);
-        return codeFormatter;
-    }
-
     private abstract static class PostprocessFormattingTask implements Comparable<PostprocessFormattingTask>, Segment, Disposable {
         
         private final RangeMarker myRange;
@@ -861,15 +852,25 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
         @RequiredUIAccess
         public void execute(FileViewProvider viewProvider) {
             PsiFile file = viewProvider.getPsi(viewProvider.getBaseLanguage());
+            FormattingService formattingService = FormattingServiceUtil.findService(file, false, false);
+            commitDocument(viewProvider);
+            formattingService.formatRanges(file, getRanges(formattingService), true, true);
+        }
+
+        private void commitDocument(FileViewProvider viewProvider) {
+            PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
+            Document document = viewProvider.getDocument();
+            assert document != null;
+            documentManager.commitDocument(document);
+        }
+
+        private FormatTextRanges getRanges(FormattingService formattingService) {
+            if (formattingService instanceof ExternalFormatProcessorAdapter) {
+                return myRanges;
+            }
             FormatTextRanges textRanges = myRanges.ensureNonEmpty();
             textRanges.setExtendToContext(true);
-            if (ExternalFormatProcessor.useExternalFormatter(file)) {
-                CodeStyleManagerImpl.formatRanges(file, myRanges, null);
-            }
-            else {
-                CodeFormatterFacade codeFormatter = getFormatterFacade(viewProvider);
-                codeFormatter.processText(file, textRanges, false);
-            }
+            return textRanges;
         }
 
         @Override

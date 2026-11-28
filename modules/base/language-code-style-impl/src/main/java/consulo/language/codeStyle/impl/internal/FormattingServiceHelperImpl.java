@@ -17,7 +17,7 @@ package consulo.language.codeStyle.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.impl.internal.psi.FormattingService;
+import consulo.language.impl.internal.psi.FormattingServiceHelper;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -27,11 +27,11 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @ServiceImpl
-public class FormattingServiceImpl implements FormattingService {
+public class FormattingServiceHelperImpl implements FormattingServiceHelper {
   private final CodeStyleManager myCodeStyleManager;
 
   @Inject
-  public FormattingServiceImpl(CodeStyleManager codeStyleManager) {
+  public FormattingServiceHelperImpl(CodeStyleManager codeStyleManager) {
     myCodeStyleManager = codeStyleManager;
   }
 

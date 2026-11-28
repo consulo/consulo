@@ -24,6 +24,9 @@ import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.codeStyle.impl.internal.service.CoreFormattingService;
+import consulo.language.codeStyle.impl.internal.service.FormattingServiceUtil;
+import consulo.language.codeStyle.service.FormattingService;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.localize.CodeInsightLocalize;
@@ -303,7 +306,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
                     return;
                 }
 
-                if (FormattingModelBuilder.forContext(file) != null) {
+                if (canFormat(file)) {
                     presentation.setEnabled(true);
                     return;
                 }
@@ -320,8 +323,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
                         presentation.setEnabled(false);
                         return;
                     }
-                    FormattingModelBuilder builder = FormattingModelBuilder.forContext(psiFile);
-                    if (builder != null) {
+                    if (canFormat(psiFile)) {
                         anyFormatters = true;
                     }
                 }
@@ -341,7 +343,7 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
                 }
                 if (!(element instanceof PsiDirectory)) {
                     PsiFile file = element.getContainingFile();
-                    if (file == null || FormattingModelBuilder.forContext(file) == null) {
+                    if (file == null || !canFormat(file)) {
                         presentation.setEnabled(false);
                         return;
                     }
@@ -349,6 +351,15 @@ public class ReformatCodeAction extends AnAction implements DumbAware, AnActionW
             }
             presentation.setEnabled(true);
         }).toCoroutine();
+    }
+
+    @RequiredReadAction
+    private static boolean canFormat(PsiFile psiFile) {
+        FormattingService service = FormattingServiceUtil.findService(psiFile, true, true);
+        if (service instanceof CoreFormattingService) {
+            return FormattingModelBuilder.forContext(psiFile) != null;
+        }
+        return true;
     }
 
     @RequiredUIAccess

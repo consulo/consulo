@@ -34,6 +34,7 @@ import consulo.language.plain.ast.PlainTextTokenTypes;
 import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.project.DumbService;
+import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.StringUtil;
 
 import java.util.Collections;
@@ -64,6 +65,10 @@ public class WordCompletionContributor extends CompletionContributor implements 
   }
 
   public static void addWordCompletionVariants(CompletionResultSet result, CompletionParameters parameters, Set<String> excludes) {
+    if (isForbiddenByProcess(parameters)) {
+      return;
+    }
+
     Set<String> realExcludes = new HashSet<>(excludes);
     for (String exclude : excludes) {
       String[] words = exclude.split("[ \\.-]");
@@ -130,6 +135,14 @@ public class WordCompletionContributor extends CompletionContributor implements 
 
   @RequiredReadAction
   private static boolean shouldPerformWordCompletion(CompletionParameters parameters) {
+    if (Boolean.TRUE.equals(parameters.getOriginalFile().getUserData(CompletionService.FORBID_WORD_COMPLETION))) {
+      return false;
+    }
+
+    if (isForbiddenByProcess(parameters)) {
+      return false;
+    }
+
     PsiElement insertedElement = parameters.getPosition();
     boolean dumb = DumbService.getInstance(insertedElement.getProject()).isDumb();
     if (dumb && WordCompletionElementFilter.isWordCompletionInDumbModeEnabled(insertedElement.getContainingFile().getLanguage())) {
@@ -170,6 +183,11 @@ public class WordCompletionContributor extends CompletionContributor implements 
       textContainer = textContainer.getTreeParent();
     }
     return false;
+  }
+
+  private static boolean isForbiddenByProcess(CompletionParameters parameters) {
+    return parameters.getProcess() instanceof UserDataHolder process
+      && Boolean.TRUE.equals(process.getUserData(CompletionService.FORBID_WORD_COMPLETION));
   }
 
   public static Set<String> getAllWords(PsiElement context, int offset) {

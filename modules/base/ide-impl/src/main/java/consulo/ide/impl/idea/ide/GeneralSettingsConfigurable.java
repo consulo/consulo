@@ -36,6 +36,7 @@ import consulo.ui.layout.LabeledLayout;
 import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -61,6 +62,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
     protected static class MyComponent implements Supplier<Component> {
         private CheckBox myChkReopenLastProject;
         private CheckBox myConfirmExit;
+        private TriStateCheckBox myShowWelcomeOnLastProjectClose;
 
         private RadioGroup<Integer> myOpenProject;
 
@@ -97,6 +99,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
             VerticalLayout startupOrShutdownLayout = VerticalLayout.create();
             startupOrShutdownLayout.add(myChkReopenLastProject = CheckBox.create(IdeLocalize.checkboxReopenLastProjectOnStartup()));
             startupOrShutdownLayout.add(myConfirmExit = CheckBox.create(IdeLocalize.checkboxConfirmApplicationExit()));
+            startupOrShutdownLayout.add(myShowWelcomeOnLastProjectClose = TriStateCheckBox.create(IdeLocalize.checkboxShowWelcomeOnLastProjectClose()));
             myRootLayout.add(LabeledLayout.create(LocalizeValue.localizeTODO("Startup/Shutdown"), startupOrShutdownLayout));
 
             VerticalLayout projectReopeningLayout = VerticalLayout.create();
@@ -248,6 +251,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         boolean isModified = false;
         isModified |= generalSettings.isReopenLastProject() != component.myChkReopenLastProject.getValue();
         isModified |= generalSettings.isConfirmExit() != component.myConfirmExit.getValue();
+        isModified |= !Objects.equals(generalSettings.getShowWelcomeOnLastProjectClose(), toBoolean(component.myShowWelcomeOnLastProjectClose.getValue()));
         isModified |= generalSettings.isSupportScreenReaders() != component.myChkSupportScreenReaders.getValue();
         isModified |= generalSettings.isSyncOnFrameActivation() != component.myChkSyncOnFrameActivation.getValue();
         isModified |= generalSettings.isBackgroundSync() != component.myChkSyncInBackground.getValue();
@@ -311,6 +315,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         generalSettings.setBackgroundSync(component.myChkSyncInBackground.getValue());
         generalSettings.setSaveOnFrameDeactivation(component.myChkSaveOnFrameDeactivation.getValue());
         generalSettings.setConfirmExit(component.myConfirmExit.getValue());
+        generalSettings.setShowWelcomeOnLastProjectClose(toBoolean(component.myShowWelcomeOnLastProjectClose.getValue()));
         generalSettings.setConfirmOpenNewProject(getConfirmOpenNewProject(component));
         generalSettings.setProcessCloseConfirmation(getProcessCloseConfirmation(component));
         recentProjectsManager.setRecentProjectsLimit(component.myRecentProjectsLimit.getValueOrError());
@@ -382,6 +387,7 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         component.myTfInactiveTimeout.setEnabled(settings.isAutoSaveIfInactive());
         component.myChkUseSafeWrite.setValue(settings.isUseSafeWrite());
         component.myConfirmExit.setValue(settings.isConfirmExit());
+        component.myShowWelcomeOnLastProjectClose.setValue(toThreeState(settings.getShowWelcomeOnLastProjectClose()));
         component.myRecentProjectsLimit.setValue(recentProjectsManager.getRecentProjectsLimit());
 
         component.myProcessClose.setValue(settings.getProcessCloseConfirmation());
@@ -407,6 +413,14 @@ public class GeneralSettingsConfigurable extends SimpleConfigurable<GeneralSetti
         String id = ObjectUtil.notNull(idGetter.get(), FileOperateDialogProvider.APPLICATION_ID);
 
         comboBox.setValueByCondition(it -> it.getId().equals(id));
+    }
+
+    private static ThreeState toThreeState(@Nullable Boolean value) {
+        return value == null ? ThreeState.UNSURE : ThreeState.fromBoolean(value);
+    }
+
+    private static @Nullable Boolean toBoolean(ThreeState state) {
+        return state == ThreeState.UNSURE ? null : state.toBoolean();
     }
 
     private static int getConfirmOpenNewProject(MyComponent component) {

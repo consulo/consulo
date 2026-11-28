@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @see SemVer
  */
-public class Version {
+public class Version implements Comparable<Version> {
   public final int major;
   public final int minor;
   public final int bugfix;
@@ -92,6 +92,7 @@ public class Version {
     return compareTo(major, minor, bugfix) < 0;
   }
 
+  @Override
   public int compareTo(Version version) {
     return compareTo(version.major, version.minor, version.bugfix);
   }

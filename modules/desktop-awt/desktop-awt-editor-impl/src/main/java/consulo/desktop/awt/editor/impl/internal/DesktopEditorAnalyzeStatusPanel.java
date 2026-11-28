@@ -208,7 +208,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             setVisible(!status.isEmpty());
 
             GridBag gc = new GridBag().nextLine();
-            if (status.size() == 1 && StringUtil.isEmpty(status.get(0).getText())) {
+            if (status.size() == 1 && status.get(0).getText().isEmpty()) {
                 myContainerPanel.add(createStyledLabel(null, status.get(0).getIcon(), SwingConstants.CENTER), gc.next().weightx(1).fillCellHorizontally());
             }
             else if (status.size() > 0) {
@@ -217,7 +217,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
                 int counter = 0;
                 for (StatusItem item : status) {
-                    myContainerPanel.add(createStyledLabel(item.getText(), item.getIcon(), SwingConstants.LEFT), gc.next().insetLeft(counter++ > 0 ? INTER_GROUP_OFFSET : 0));
+                    myContainerPanel.add(createStyledLabel(item.getText().get(), item.getIcon(), SwingConstants.LEFT), gc.next().insetLeft(counter++ > 0 ? INTER_GROUP_OFFSET : 0));
                 }
 
                 myContainerPanel.add(Box.createHorizontalStrut(leftRightOffset), gc.next());
@@ -390,7 +390,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
 
                 if (!hasAnalyzed || analyzerStatus.getAnalyzingType() != AnalyzingType.EMPTY) {
                     if (newStatus.isEmpty()) {
-                        newStatus = Collections.singletonList(new StatusItem("", newIcon));
+                        newStatus = Collections.singletonList(new StatusItem(LocalizeValue.empty(), newIcon));
                         presentation.putClientProperty(EXPANDED_STATUS, newStatus);
                     }
 
@@ -424,9 +424,9 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             myContent.setOpaque(true);
             myContent.setBackground(UIUtil.getToolTipBackground());
 
-            myPopupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(myContent, null).
-                setCancelOnClickOutside(true).
-                setCancelCallback(() -> analyzerStatus == null || analyzerStatus.getController().canClosePopup());
+            myPopupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(myContent, null)
+                .setCancelOnClickOutside(true)
+                .setCancelCallback(() -> analyzerStatus == null || analyzerStatus.getController().canClosePopup());
 
             myAncestorListener = new AncestorListenerAdapter() {
                 @Override
@@ -494,19 +494,19 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
             }
             myContent.removeAll();
 
-            GridBag gc = new GridBag().nextLine().next().
-                anchor(GridBagConstraints.LINE_START).
-                weightx(1).
-                fillCellHorizontally().
-                insets(10, 10, 10, 0);
+            GridBag gc = new GridBag().nextLine().next()
+                .anchor(GridBagConstraints.LINE_START)
+                .weightx(1)
+                .fillCellHorizontally()
+                .insets(10, 10, 10, 0);
 
-            boolean hasTitle = StringUtil.isNotEmpty(analyzerStatus.getTitle());
+            boolean hasTitle = analyzerStatus.getTitle().isNotEmpty();
 
             if (hasTitle) {
-                myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getTitle())), gc);
+                myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getTitle().get())), gc);
             }
-            else if (StringUtil.isNotEmpty(analyzerStatus.getDetails())) {
-                myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getDetails())), gc);
+            else if (analyzerStatus.getDetails().isNotEmpty()) {
+                myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getDetails().get())), gc);
             }
             else if (analyzerStatus.getExpandedStatus().size() > 0 && analyzerStatus.getAnalyzingType() != AnalyzingType.EMPTY) {
                 myContent.add(createDetailsPanel(), gc);
@@ -542,8 +542,8 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 int topIndent = !myProgressBarMap.isEmpty() ? 10 : 0;
                 gc.nextLine().next().anchor(GridBagConstraints.LINE_START).fillCellHorizontally().coverLine().weightx(1).insets(topIndent, 10, 10, 6);
 
-                if (StringUtil.isNotEmpty(analyzerStatus.getDetails())) {
-                    myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getDetails())), gc);
+                if (analyzerStatus.getDetails().isNotEmpty()) {
+                    myContent.add(new JLabel(XmlStringUtil.wrapInHtml(analyzerStatus.getDetails().get())), gc);
                 }
                 else if (analyzerStatus.getExpandedStatus().size() > 0 && analyzerStatus.getAnalyzingType() != AnalyzingType.EMPTY) {
                     myContent.add(createDetailsPanel(), gc);
@@ -586,7 +586,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
                 boolean last = i == analyzerStatus.getExpandedStatus().size() - 1;
                 StatusItem item = analyzerStatus.getExpandedStatus().get(i);
 
-                text.append(item.getText()).append(" ").append(item.getType());
+                text.append(item.getText().get()).append(" ").append(item.getType());
                 if (!last) {
                     text.append(", ");
                 }

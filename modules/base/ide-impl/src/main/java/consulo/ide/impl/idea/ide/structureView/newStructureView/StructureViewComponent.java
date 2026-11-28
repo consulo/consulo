@@ -112,6 +112,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
   private volatile AsyncPromise<TreePath> myCurrentFocusPromise;
 
   private boolean myAutoscrollFeedback;
+  private boolean myStoreStateDisabled;
   private boolean myDisposed;
 
   private final Alarm myAutoscrollAlarm = new Alarm(this);
@@ -307,7 +308,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
   @Override
   public void storeState() {
-    if (isDisposed() || !myProject.isOpen()) return;
+    if (isDisposed() || !myProject.isOpen() || myStoreStateDisabled) return;
     Object root = myTree.getModel().getRoot();
     if (root == null) return;
     TreeState state = TreeState.createOn(myTree, new TreePath(root));
@@ -315,6 +316,11 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       myFileEditor.putUserData(STRUCTURE_VIEW_STATE_KEY, state);
     }
     UIUtil.putClientProperty(myTree, STRUCTURE_VIEW_STATE_RESTORED_KEY, null);
+  }
+
+  @Override
+  public void disableStoreState() {
+    myStoreStateDisabled = true;
   }
 
   @Override
@@ -908,6 +914,12 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     @Override
     public void propertyChanged(PsiTreeChangeEvent event) {
       childrenChanged();
+    }
+  }
+
+  public static void clearStructureViewState(Project project) {
+    for (FileEditor editor : FileEditorManager.getInstance(project).getAllEditors()) {
+      editor.putUserData(STRUCTURE_VIEW_STATE_KEY, null);
     }
   }
 

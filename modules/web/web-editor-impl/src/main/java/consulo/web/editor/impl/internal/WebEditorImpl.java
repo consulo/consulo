@@ -49,6 +49,7 @@ import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.impl.internal.markup.*;
 import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -2593,7 +2594,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         // a clean file produces no counters at all, the awt panel then shows the main icon on its own - the green
         // check, the eye while analyzing, the crossed out light when highlighting is off
         if (items.isEmpty()) {
-            items = java.util.List.of(new StatusItem("", status.getIcon()));
+            items = java.util.List.of(new StatusItem(LocalizeValue.empty(), status.getIcon()));
         }
 
         StringBuilder json = new StringBuilder("{\"items\":[");
@@ -2605,7 +2606,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
             }
             first = false;
 
-            json.append("{\"text\":\"").append(escapeJson(item.getText())).append('"');
+            json.append("{\"text\":\"").append(escapeJson(item.getText().get())).append('"');
 
             String iconHtml = toIconHtml(item.getIcon());
             if (iconHtml != null) {
@@ -2628,8 +2629,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
      * the widget has no popup, so the same content is the tooltip of the panel.
      */
     private static String buildAnalyzeTooltip(AnalyzerStatus status) {
-        String title = toHtmlContent(status.getTitle());
-        String details = toHtmlContent(status.getDetails());
+        String title = toHtmlContent(status.getTitle().get());
+        String details = toHtmlContent(status.getDetails().get());
         String summary = status.getExpandedStatus().isEmpty() || status.getAnalyzingType() == AnalyzingType.EMPTY
             ? null
             : buildAnalyzeSummary(status);
@@ -3378,8 +3379,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         super.bulkUpdateFinished();
     }
 
-
     @Override
+    @RequiredUIAccess
     public Component getUIComponent() {
         DockLayout rootLayout = myRootLayout;
         if (rootLayout != null) {
@@ -3423,8 +3424,8 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
         WebEditorFloatingToolbar.install(this, project, myEditorComponent.toVaadinComponent(), myDisposable);
     }
 
-
     @Override
+    @RequiredUIAccess
     public Component getContentUIComponent() {
         return myEditorComponent;
     }
@@ -3474,6 +3475,7 @@ public class WebEditorImpl extends CodeEditorBase implements CaretPixelLocationP
     }
 
     @Override
+    @RequiredUIAccess
     protected DataContext getComponentContext() {
         return SimpleDataContext.builder()
             .setParent(DataManager.getInstance().getDataContext(getContentUIComponent()))

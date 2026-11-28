@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.annotation;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.editor.internal.LanguageEditorInternalHelper;
@@ -28,6 +29,7 @@ import java.util.List;
  * @author VISTALL
  * @since 02/01/2023
  */
+@UsedInPlugin
 public final class AnnotatorUtil {
     private AnnotatorUtil() {
     }
@@ -51,5 +53,14 @@ public final class AnnotatorUtil {
         }
 
         return result;
+    }
+
+    /**
+     * Runs the annotator for the context element of the file outside the highlighting passes (e.g. to convert problems
+     * reported by an external tool into annotations) and returns the annotations it created.
+     */
+    @RequiredReadAction
+    public static List<Annotation> runAnnotator(Annotator annotator, PsiFile psiFile, PsiElement contextElement) {
+        return LanguageEditorInternalHelper.getInstance().runAnnotator(psiFile.getLanguage(), annotator, psiFile, contextElement, false);
     }
 }

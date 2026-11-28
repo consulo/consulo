@@ -10,6 +10,7 @@ module consulo.language.code.style.api {
     requires transitive consulo.color.scheme.api;
     requires transitive consulo.language.api;
     requires transitive consulo.undo.redo.api;
+    requires transitive consulo.project.ui.api;
 
     requires static consulo.ui.ex.api;
     // todo drop this dependency
@@ -25,6 +26,7 @@ module consulo.language.code.style.api {
     exports consulo.language.codeStyle.fileSet;
     exports consulo.language.codeStyle.inject;
     exports consulo.language.codeStyle.lineIndent;
+    exports consulo.language.codeStyle.service;
     exports consulo.language.codeStyle.localize;
     exports consulo.language.codeStyle.setting;
     exports consulo.language.codeStyle.template;

@@ -1,0 +1,65 @@
+/*
+ * Copyright 2013-2026 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.execution.debug.impl.internal.action;
+
+import consulo.annotation.component.ActionImpl;
+import consulo.dataContext.DataContext;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerActions;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.impl.internal.action.handler.DebuggerActionHandler;
+import consulo.execution.debug.impl.internal.action.handler.XDebuggerSuspendedActionHandler;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.execution.debug.step.HasStepIntoMyCode;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+
+/**
+ * @author VISTALL
+ * @since 2026-11-17
+ */
+@ActionImpl(id = XDebuggerActions.STEP_INTO_MY_CODE)
+public class StepIntoMyCodeAction extends XDebuggerActionBase {
+    private final DebuggerActionHandler myHandler = new XDebuggerSuspendedActionHandler() {
+        @Override
+        protected boolean isEnabled(XDebugSession session, DataContext dataContext) {
+            return super.isEnabled(session, dataContext) && session.getDebugProcess() instanceof HasStepIntoMyCode;
+        }
+
+        @Override
+        protected void perform(XDebugSession session, DataContext dataContext) {
+            session.stepIntoMyCode();
+        }
+
+        @Override
+        public boolean isHidden(Project project, AnActionEvent event) {
+            return isHiddenWithout(HasStepIntoMyCode.class, project, event, true);
+        }
+    };
+
+    public StepIntoMyCodeAction() {
+        super(
+            XDebuggerLocalize.actionStepIntoMyCodeText(),
+            XDebuggerLocalize.actionStepIntoMyCodeDescription(),
+            ExecutionDebugIconGroup.actionStepintomycode()
+        );
+    }
+
+    @Override
+    protected DebuggerActionHandler getHandler() {
+        return myHandler;
+    }
+}

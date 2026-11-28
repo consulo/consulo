@@ -4,8 +4,10 @@ package consulo.language.editor.impl.internal.intention;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -22,6 +24,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
+import consulo.language.editor.localize.CodeInsightLocalize;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionDelegate;
 import consulo.language.editor.intention.PsiElementBaseIntentionAction;
@@ -38,6 +41,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.localize.LocalizeValue;
+import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -47,6 +51,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.undoRedo.CommandProcessor;
+import consulo.component.ProcessCanceledException;
 import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import org.jspecify.annotations.Nullable;
@@ -57,6 +62,43 @@ import java.util.function.BiPredicate;
  * @author mike
  */
 public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
+    /**
+     * Computes the intentions and quick fixes to show at the caret in a background thread under a cancellable modal progress,
+     * then adds the actions of the providers which must be queried in EDT.
+     *
+     * @throws ProcessCanceledException when the user canceled the progress
+     */
+    @RequiredUIAccess
+    public static CachedIntentions calcCachedIntentions(Project project, Editor editor, PsiFile file) {
+        UIAccess.assertIsUIThread();
+        if (project.getApplication().isWriteAccessAllowed()) {
+            throw new IllegalStateException("must not wait for intentions inside write action");
+        }
+        DumbService dumbService = DumbService.getInstance(project);
+        boolean alternativeResolve = dumbService.isAlternativeResolveEnabled();
+        // collected intentions hold the caret offset and PSI, so a write must restart the collection too
+        CachedIntentions cachedIntentions = ProgressManager.getInstance().runProcessWithProgressSynchronously(
+            () -> ReadAction.nonBlocking(() -> {
+                    if (alternativeResolve) {
+                        return dumbService.computeWithAlternativeResolveEnabled(
+                            () -> CachedIntentions.createAndUpdateActions(project, file, editor, ShowIntentionsPass.getActionsToShow(editor, file))
+                        );
+                    }
+                    return CachedIntentions.createAndUpdateActions(project, file, editor, ShowIntentionsPass.getActionsToShow(editor, file));
+                })
+                .expireWith(project)
+                .executeSynchronously(),
+            CodeInsightLocalize.progressTitleSearchingForContextActions(),
+            true,
+            project
+        );
+
+        IntentionsInfo syncInfo = new IntentionsInfo();
+        ShowIntentionsPass.getActionsToShowSync(editor, file, syncInfo, -1);
+        cachedIntentions.addActions(syncInfo);
+        return cachedIntentions;
+    }
+
     @Override
     @RequiredUIAccess
     public void invoke(Project project, Editor editor, PsiFile file) {
@@ -80,7 +122,6 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         DaemonCodeAnalyzerImpl codeAnalyzer = (DaemonCodeAnalyzerImpl) DaemonCodeAnalyzer.getInstance(project);
         letAutoImportComplete(editor, file, codeAnalyzer);
 
-        IntentionsInfo intentions = ShowIntentionsPass.getActionsToShow(editor, file, true);
         IntentionsUI.getInstance(project).hide();
 
         if (((HintManagerEx) HintManager.getInstance()).performCurrentQuestionAction()) {
@@ -95,9 +136,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         }
 
         editor.getScrollingModel().scrollToCaret(ScrollType.MAKE_VISIBLE);
-        Editor finalEditor = editor;
-        PsiFile finalFile = file;
-        showIntentionHint(project, finalEditor, finalFile, intentions, showFeedbackOnEmptyMenu);
+        showIntentionHint(project, editor, file, showFeedbackOnEmptyMenu);
     }
 
     @RequiredUIAccess
@@ -105,12 +144,21 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
         Project project,
         Editor editor,
         PsiFile file,
-        IntentionsInfo intentions,
         boolean showFeedbackOnEmptyMenu
     ) {
-        if (!intentions.isEmpty()) {
+        CachedIntentions cachedIntentions;
+        try {
+            cachedIntentions = calcCachedIntentions(project, editor, file);
+        }
+        catch (ProcessCanceledException e) {
+            return;
+        }
+
+        if (cachedIntentions.getAllActions().isEmpty()) {
+            showEmptyMenuFeedback(editor, showFeedbackOnEmptyMenu);
+        }
+        else {
             editor.getScrollingModel().runActionOnScrollingFinished(() -> {
-                CachedIntentions cachedIntentions = CachedIntentions.createAndUpdateActions(project, file, editor, intentions);
                 CodeFloatingToolbar toolbar = CodeFloatingToolbar.getToolbar(editor);
                 if (toolbar != null && editor.getSelectionModel().hasSelection()) {
                     showPopupFromToolbar(project, editor, file, cachedIntentions, toolbar);
@@ -120,7 +168,11 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
                 }
             });
         }
-        else if (showFeedbackOnEmptyMenu) {
+    }
+
+    @RequiredUIAccess
+    private static void showEmptyMenuFeedback(Editor editor, boolean showFeedbackOnEmptyMenu) {
+        if (showFeedbackOnEmptyMenu) {
             HintManager.getInstance().showInformationHint(editor, "No context actions available at this location");
         }
     }

@@ -15,8 +15,10 @@
  */
 package consulo.execution.debug.frame;
 
+import consulo.execution.debug.Obsolescent;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +46,33 @@ public abstract class XSuspendContext {
     container.addExecutionStack(Arrays.asList(getExecutionStacks()), true);
   }
 
-  public interface XExecutionStackContainer extends XValueCallback {
+  public interface XExecutionStackContainer extends XValueCallback, Obsolescent {
     void addExecutionStack(List<? extends XExecutionStack> executionStacks, boolean last);
+  }
+
+  /**
+   * A container which also shows the groups of the execution stacks, the thread groups for example - a debug process may add
+   * the groups when the container implements this interface, see {@link HasRunningExecutionStacks#computeRunningExecutionStacks}.
+   */
+  public interface XExecutionStackGroupContainer extends XExecutionStackContainer {
+    default void addExecutionStackGroups(List<? extends XExecutionStackGroup> executionStackGroups, boolean last) {
+      addExecutionStack(flattenGroups(executionStackGroups), last);
+    }
+
+    private static List<XExecutionStack> flattenGroups(List<? extends XExecutionStackGroup> groups) {
+      List<XExecutionStack> result = new ArrayList<>();
+      collectStacks(groups, result);
+      return result;
+    }
+
+    private static void collectStacks(List<? extends XExecutionStackGroup> groups, List<XExecutionStack> result) {
+      for (XExecutionStackGroup group : groups) {
+        result.addAll(group.getStacks());
+        List<XExecutionStackGroup> subGroups = group.getGroups();
+        if (!subGroups.isEmpty()) {
+          collectStacks(subGroups, result);
+        }
+      }
+    }
   }
 }

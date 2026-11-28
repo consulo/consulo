@@ -139,10 +139,10 @@ class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
                 forcedAttributes = TextAttributes.ERASE_MARKER;
             }
             else {
-                HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT).
-                    range(tr).
-                    textAttributes(TextAttributes.ERASE_MARKER).
-                    createUnconditionally();
+                HighlightInfo info = HighlightInfo.newHighlightInfo(HighlightInfoType.INJECTED_LANGUAGE_FRAGMENT)
+                    .range(tr)
+                    .textAttributes(TextAttributes.ERASE_MARKER)
+                    .createUnconditionally();
                 result.add(info);
 
                 forcedAttributes = new TextAttributes(

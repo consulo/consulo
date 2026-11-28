@@ -38,23 +38,23 @@ public class DropDownLink<T> extends LinkLabel<Object> {
 
   public DropDownLink(T initialItem, List<T> items, @Nullable Consumer<? super T> itemChosenAction, boolean updateLabel) {
     this(initialItem, linkLabel -> {
-      IPopupChooserBuilder<T> popupBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(items).
-              setRenderer(new ColoredListCellRenderer() {
-                  @Override
-                  protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-                      append(value == null ? "" : value.toString());
-                  }
-              }).
-              setItemChosenCallback(t -> {
-                if (updateLabel) {
-                  linkLabel.setText(t.toString());
-                }
+      IPopupChooserBuilder<T> popupBuilder = JBPopupFactory.getInstance().createPopupChooserBuilder(items)
+        .setRenderer(new ColoredListCellRenderer() {
+          @Override
+          protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
+            append(value == null ? "" : value.toString());
+          }
+        })
+        .setItemChosenCallback(t -> {
+          if (updateLabel) {
+            linkLabel.setText(t.toString());
+          }
 
-                if (itemChosenAction != null && !linkLabel.chosenItem.equals(t)) {
-                  itemChosenAction.accept(t);
-                }
-                linkLabel.chosenItem = t;
-              });
+          if (itemChosenAction != null && !linkLabel.chosenItem.equals(t)) {
+            itemChosenAction.accept(t);
+          }
+          linkLabel.chosenItem = t;
+        });
       return popupBuilder.createPopup();
     });
   }

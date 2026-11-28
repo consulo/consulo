@@ -29,6 +29,8 @@ module consulo.execution.debug.impl {
     exports consulo.execution.debug.impl.internal.breakpoint.ui to consulo.ide.impl;
 
     opens consulo.execution.debug.impl.internal.action to consulo.component.impl;
+    opens consulo.execution.debug.impl.internal.action.thread to consulo.component.impl;
+    opens consulo.execution.debug.impl.internal.memory.action to consulo.component.impl;
     opens consulo.execution.debug.impl.internal.frame.action to consulo.component.impl;
     opens consulo.execution.debug.impl.internal.ui.tree.action to consulo.component.impl;
     opens consulo.execution.debug.impl.internal.setting to consulo.util.xml.serializer;

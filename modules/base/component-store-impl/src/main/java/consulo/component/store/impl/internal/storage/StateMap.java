@@ -23,13 +23,13 @@ import consulo.util.io.UnsyncByteArrayInputStream;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.SystemProperties;
-import org.jspecify.annotations.Nullable;
 import net.jpountz.lz4.LZ4BlockInputStream;
 import net.jpountz.lz4.LZ4BlockOutputStream;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,27 +42,25 @@ import java.util.function.BiConsumer;
 final class StateMap {
   private static final Logger LOG = Logger.getInstance(StateMap.class);
 
-  private static final Format XML_FORMAT = Format.getRawFormat().
-          setTextMode(Format.TextMode.TRIM).
-          setOmitEncoding(true).
-          setOmitDeclaration(true);
+  private static final Format XML_FORMAT = Format.getRawFormat()
+      .setTextMode(Format.TextMode.TRIM)
+      .setOmitEncoding(true)
+      .setOmitDeclaration(true);
 
   private final Map<String, Object> states;
 
   public StateMap() {
-    states = new HashMap<String, Object>();
+    states = new HashMap<>();
   }
 
   public StateMap(StateMap stateMap) {
-    states = new HashMap<String, Object>((Map<String, Object>)stateMap.states);
+    states = new HashMap<>(stateMap.states);
   }
 
-  
   public Set<String> keys() {
     return states.keySet();
   }
 
-  
   public Collection<Object> values() {
     return states.values();
   }
@@ -71,16 +69,14 @@ final class StateMap {
     return states.get(key);
   }
 
-  
   public Element getElement(String key, Map<String, Element> newLiveStates) {
     Object state = states.get(key);
     return stateToElement(key, state, newLiveStates);
   }
 
-  
   static Element stateToElement(String key, @Nullable Object state, Map<String, Element> newLiveStates) {
-    if (state instanceof Element) {
-      return ((Element)state).clone();
+    if (state instanceof Element element) {
+      return element.clone();
     }
     else {
       Element element = newLiveStates.get(key);
@@ -138,8 +134,8 @@ final class StateMap {
     }
   }
 
-  public static @Nullable byte[] getNewByteIfDiffers(String key, Object newState, byte[] oldState) {
-    byte[] newBytes = newState instanceof Element ? archiveState((Element)newState) : (byte[])newState;
+  public static byte @Nullable [] getNewByteIfDiffers(String key, Object newState, byte[] oldState) {
+    byte[] newBytes = newState instanceof Element newElem ? archiveState(newElem) : (byte[])newState;
     if (Arrays.equals(newBytes, oldState)) {
       return null;
     }
@@ -182,7 +178,6 @@ final class StateMap {
     return (Element)state;
   }
 
-  
   public static Element unarchiveState(byte[] state) {
     InputStream in = null;
     try {
@@ -201,7 +196,6 @@ final class StateMap {
     }
   }
 
-  
   public static String stateToString(Object state) {
     Element element;
     if (state instanceof Element) {

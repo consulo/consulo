@@ -139,11 +139,11 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
     private String buildTooltip(AnalyzerStatus status) {
         List<String> lines = new ArrayList<>();
 
-        if (status.getTitle() != null && !status.getTitle().isEmpty()) {
-            lines.add(status.getTitle());
+        if (status.getTitle().isNotEmpty()) {
+            lines.add(status.getTitle().get());
         }
-        if (status.getDetails() != null && !status.getDetails().isEmpty()) {
-            lines.add(status.getDetails());
+        if (status.getDetails().isNotEmpty()) {
+            lines.add(status.getDetails().get());
         }
 
         for (PassWrapper pass : status.getPasses()) {
@@ -157,7 +157,7 @@ public class DesktopQtEditorErrorStripeWidget extends QWidget {
                     summary.append(", ");
                 }
 
-                summary.append(item.getText());
+                summary.append(item.getText().get());
 
                 if (item.getType() != null) {
                     summary.append(' ').append(item.getType());

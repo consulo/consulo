@@ -15,19 +15,16 @@
  */
 package consulo.diff.impl.internal.merge;
 
-import consulo.ui.Component;
-import consulo.ui.ex.action.util.ActionUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.Application;
+import consulo.application.ReadAction;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.LineTokenizer;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -44,15 +41,15 @@ import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.MergeLineFragment;
 import consulo.diff.impl.internal.action.ProxyUndoRedoAction;
 import consulo.diff.impl.internal.util.DividerPaintable;
+import consulo.diff.impl.internal.util.UnifiedDiffUtil;
 import consulo.diff.impl.internal.viewer.DiffNotifications;
 import consulo.diff.impl.internal.viewer.TextDiffViewerUtil;
 import consulo.diff.impl.internal.viewer.side.ThreesideDiffViewer;
 import consulo.diff.impl.internal.viewer.side.ThreesideTextDiffViewer;
 import consulo.diff.impl.internal.viewer.simple.ThreesideTextDiffViewerEx;
-import consulo.diff.impl.internal.util.UnifiedDiffUtil;
-import consulo.diff.internal.MergeInnerDifferences;
 import consulo.diff.internal.DiffImplUtil;
 import consulo.diff.internal.HighlightPolicy;
+import consulo.diff.internal.MergeInnerDifferences;
 import consulo.diff.localize.DiffLocalize;
 import consulo.diff.merge.MergeContext;
 import consulo.diff.merge.MergeResult;
@@ -67,13 +64,11 @@ import consulo.document.event.DocumentEvent;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.MessageBoxes;
-import consulo.ui.Toast;
-import consulo.ui.ToastStyle;
-import consulo.ui.UIAccess;
+import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.util.ActionUtil;
 import consulo.undoRedo.builder.RunnableCommandBuilder;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
@@ -81,7 +76,6 @@ import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.StringUtil;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
@@ -399,9 +393,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
 
                 List<DocumentContent> contents = myMergeRequest.getContents();
                 List<Document> documents = ContainerUtil.map(contents, DocumentContent::getDocument);
-                ThrowableComputable<List<CharSequence>, RuntimeException> action1 =
-                    () -> ContainerUtil.map(documents, Document::getImmutableCharSequence);
-                List<CharSequence> sequences = AccessRule.read(action1);
+                List<CharSequence> sequences = ReadAction.compute(() -> ContainerUtil.map(documents, Document::getImmutableCharSequence));
 
                 ComparisonManager manager = ComparisonManager.getInstance();
                 List<MergeLineFragment> lineFragments = manager.compareLines(
@@ -412,14 +404,13 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
                     indicator
                 );
 
-                ThrowableComputable<List<MergeConflictType>, RuntimeException> action = () -> {
+                List<MergeConflictType> conflictTypes = ReadAction.compute(() -> {
                     indicator.checkCanceled();
                     return ContainerUtil.map(
                         lineFragments,
                         (fragment -> DiffImplUtil.getLineMergeType(fragment, documents, ComparisonPolicy.DEFAULT))
                     );
-                };
-                List<MergeConflictType> conflictTypes = AccessRule.read(action);
+                });
 
                 return apply(lineFragments, conflictTypes);
             }

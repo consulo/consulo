@@ -27,6 +27,7 @@ import consulo.execution.debug.XDebuggerActions;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
+import consulo.execution.debug.frame.XValue;
 import consulo.execution.debug.frame.XValueMarkers;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
@@ -301,6 +302,13 @@ public class XDebuggerTree extends DnDAwareTree implements UiDataProvider, Dispo
     public void uiDataSnapshot(DataSink sink) {
         sink.set(XDEBUGGER_TREE_KEY, this);
         sink.set(XValueTree.KEY, this);
+        sink.lazy(XValue.SELECTED_VALUES, () -> {
+            List<XValue> values = new ArrayList<>();
+            for (XValueNodeImpl node : getSelectedNodes(XValueNodeImpl.class, null)) {
+                values.add(node.getValueContainer());
+            }
+            return values.isEmpty() ? null : values;
+        });
         sink.lazy(PlatformDataKeys.PREDEFINED_TEXT, () -> {
             XValueNodeImpl[] selectedNodes = getSelectedNodes(XValueNodeImpl.class, null);
             if (selectedNodes.length == 1 && selectedNodes[0].getFullValueEvaluator() == null) {

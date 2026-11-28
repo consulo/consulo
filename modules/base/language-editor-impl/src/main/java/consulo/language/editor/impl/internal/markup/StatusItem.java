@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.internal.markup;
 
+import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 
 import org.jspecify.annotations.Nullable;
@@ -27,33 +28,33 @@ import java.util.Objects;
  * from kotlin
  */
 public final class StatusItem {
-    private final String myText;
-    private final Image myIcon;
-    private final String myType;
+    private final LocalizeValue myText;
+    private final @Nullable Image myIcon;
+    private final @Nullable String myType;
 
-    public StatusItem(String text) {
+    public StatusItem(LocalizeValue text) {
         this(text, null, null);
     }
 
-    public StatusItem(String text, @Nullable Image icon) {
+    public StatusItem(LocalizeValue text, @Nullable Image icon) {
         this(text, icon, null);
     }
 
-    public StatusItem(String text, @Nullable Image icon, @Nullable String type) {
+    public StatusItem(LocalizeValue text, @Nullable Image icon, @Nullable String type) {
         myText = text;
         myIcon = icon;
         myType = type;
     }
 
-    public Image getIcon() {
+    public @Nullable Image getIcon() {
         return myIcon;
     }
 
-    public String getText() {
+    public LocalizeValue getText() {
         return myText;
     }
 
-    public String getType() {
+    public @Nullable String getType() {
         return myType;
     }
 

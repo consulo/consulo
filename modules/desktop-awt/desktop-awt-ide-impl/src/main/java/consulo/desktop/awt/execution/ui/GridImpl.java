@@ -24,6 +24,7 @@ import consulo.execution.impl.internal.ui.layout.TabImpl;
 import consulo.execution.impl.internal.ui.layout.ViewContextEx;
 import consulo.execution.internal.layout.*;
 import consulo.execution.ui.layout.PlaceInGrid;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.NullableComponent;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.ThreeComponentsSplitter;
@@ -54,6 +55,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
 
     private final ViewContextEx myViewContext;
 
+    @RequiredUIAccess
     public GridImpl(ViewContextEx viewContext, String sessionName) {
         myViewContext = viewContext;
         mySessionName = sessionName;
@@ -236,7 +238,7 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
             }
 
             if (getParent() instanceof JComponent) {
-                ((JComponent) getParent()).revalidate();
+                getParent().revalidate();
                 getParent().repaint();
             }
 
@@ -384,6 +386,6 @@ public class GridImpl extends Wrapper implements Grid, Disposable, UiDataProvide
         sink.set(ViewContext.CONTEXT_KEY, myViewContext);
 
         List<Content> contents = getContents();
-        sink.set(ViewContext.CONTENT_KEY, contents.toArray(new Content[contents.size()]));
+        sink.set(Content.KEY_OF_ARRAY, contents.toArray(new Content[contents.size()]));
     }
 }

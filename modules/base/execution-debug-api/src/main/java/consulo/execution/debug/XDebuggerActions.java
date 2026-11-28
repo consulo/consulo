@@ -28,6 +28,13 @@ public interface XDebuggerActions {
   String STEP_INTO = "StepInto";
   String SMART_STEP_INTO = "SmartStepInto";
   String FORCE_STEP_INTO = "ForceStepInto";
+  String STEP_INTO_MY_CODE = "StepIntoMyCode";
+  String SET_NEXT_STATEMENT = "SetNextStatement";
+
+  String THREADS_VIEW_POPUP = "XDebugger.Threads.View.Popup";
+  String FREEZE_THREAD = "Debugger.FreezeThread";
+  String RESUME_THREAD = "Debugger.ResumeThread";
+  String INTERRUPT_THREAD = "Debugger.InterruptThread";
   String STEP_OUT = "StepOut";
 
   String RUN_TO_CURSOR = "RunToCursor";

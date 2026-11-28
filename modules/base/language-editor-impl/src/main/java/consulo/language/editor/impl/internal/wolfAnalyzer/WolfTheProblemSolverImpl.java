@@ -1,4 +1,4 @@
-// Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+// Copyright 2000-2025 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 
 package consulo.language.editor.impl.internal.wolfAnalyzer;
 
@@ -47,8 +47,10 @@ import jakarta.inject.Singleton;
 
 import org.jspecify.annotations.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -58,6 +60,7 @@ import java.util.function.Predicate;
 @ServiceImpl
 public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private final Map<VirtualFile, ProblemFileInfo> myProblems = new HashMap<>(); // guarded by myProblems
+  private final Map<VirtualFile, Set<Object>> myProblemsFromExternalSources = new ConcurrentHashMap<>();
   private final Collection<VirtualFile> myCheckingQueue = new HashSet<>(10);
 
   private final Project myProject;
@@ -72,7 +75,12 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
     if (old != null) {
       // firing outside lock
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsDisappeared(problemFile);
+      if (hasProblemsFromExternalSources(problemFile)) {
+        fireProblemsChanged(problemFile);
+      }
+      else {
+        fireProblemsDisappeared(problemFile);
+      }
     }
   }
 
@@ -296,13 +304,18 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   public boolean hasProblemFilesBeneath(Predicate<VirtualFile> condition) {
     if (!myProject.isOpen()) return false;
     synchronized (myProblems) {
-      if (!myProblems.isEmpty()) {
-        for (VirtualFile problemFile : myProblems.keySet()) {
-          if (problemFile.isValid() && condition.test(problemFile)) return true;
-        }
-      }
-      return false;
+      if (checkProblemFilesInMap(condition, myProblems)) return true;
     }
+    return checkProblemFilesInMap(condition, myProblemsFromExternalSources);
+  }
+
+  private static boolean checkProblemFilesInMap(Predicate<VirtualFile> condition, Map<? extends VirtualFile, ?> map) {
+    if (!map.isEmpty()) {
+      for (VirtualFile problemFile : map.keySet()) {
+        if (problemFile.isValid() && condition.test(problemFile)) return true;
+      }
+    }
+    return false;
   }
 
   @Override
@@ -329,9 +342,17 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
 
   @Override
   public boolean isProblemFile(VirtualFile virtualFile) {
+    return hasRegularProblems(virtualFile) || hasProblemsFromExternalSources(virtualFile);
+  }
+
+  private boolean hasRegularProblems(VirtualFile virtualFile) {
     synchronized (myProblems) {
       return myProblems.containsKey(virtualFile);
     }
+  }
+
+  private boolean hasProblemsFromExternalSources(VirtualFile virtualFile) {
+    return myProblemsFromExternalSources.containsKey(virtualFile);
   }
 
   private boolean isToBeHighlighted(@Nullable VirtualFile virtualFile) {
@@ -370,8 +391,25 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
     doQueue(virtualFile);
     if (fireListener) {
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsAppeared(virtualFile);
+      if (hasProblemsFromExternalSources(virtualFile)) {
+        fireProblemsChanged(virtualFile);
+      }
+      else {
+        fireProblemsAppeared(virtualFile);
+      }
     }
+  }
+
+  private void fireProblemsAppeared(VirtualFile file) {
+    myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsAppeared(file);
+  }
+
+  private void fireProblemsChanged(VirtualFile virtualFile) {
+    myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsChanged(virtualFile);
+  }
+
+  private void fireProblemsDisappeared(VirtualFile problemFile) {
+    myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsDisappeared(problemFile);
   }
 
   @Override
@@ -412,12 +450,62 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
       fireChanged = hasProblemsBefore && !oldInfo.equals(newInfo);
     }
     doQueue(file);
-    if (!hasProblemsBefore) {
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsAppeared(file);
+    boolean hasExternal = hasProblemsFromExternalSources(file);
+    if (!hasProblemsBefore && !hasExternal) {
+      fireProblemsAppeared(file);
     }
-    else if (fireChanged) {
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsChanged(file);
+    else if (fireChanged || hasExternal) {
+      fireProblemsChanged(file);
     }
+  }
+
+  @Override
+  public void reportProblemsFromExternalSource(VirtualFile file, Object source) {
+    if (!isToBeHighlighted(file)) return;
+
+    Set<Object> problems = myProblemsFromExternalSources.computeIfAbsent(file, f -> ConcurrentHashMap.newKeySet());
+    boolean isNewFileForExternalSource = problems.isEmpty();
+    problems.add(source);
+
+    if (isNewFileForExternalSource && !hasRegularProblems(file)) {
+      fireProblemsAppeared(file);
+    }
+    else {
+      fireProblemsChanged(file);
+    }
+  }
+
+  @Override
+  public void clearProblemsFromExternalSource(VirtualFile file, Object source) {
+    AtomicBoolean isLastExternalSource = new AtomicBoolean();
+    myProblemsFromExternalSources.compute(file, (f, problems) -> {
+      if (problems == null) return null;
+      problems.remove(source);
+      boolean wasLastProblem = problems.isEmpty();
+      isLastExternalSource.set(wasLastProblem);
+      return wasLastProblem ? null : problems;
+    });
+
+    if (isLastExternalSource.get() && !hasRegularProblems(file)) {
+      fireProblemsDisappeared(file);
+    }
+    else {
+      fireProblemsChanged(file);
+    }
+  }
+
+  public void consumeProblemFiles(Consumer<? super VirtualFile> consumer) {
+    VirtualFile[] files;
+    synchronized (myProblems) {
+      files = VirtualFileUtil.toVirtualFileArray(myProblems.keySet());
+    }
+    for (VirtualFile file : files) {
+      consumer.accept(file);
+    }
+  }
+
+  public void consumeProblemFilesFromExternalSources(Consumer<? super VirtualFile> consumer) {
+    myProblemsFromExternalSources.keySet().forEach(consumer);
   }
 
   

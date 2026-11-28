@@ -247,6 +247,7 @@ public class MoveFilesOrDirectoriesProcessor extends BaseRefactoringProcessor {
     protected @Nullable RefactoringEventData getBeforeData() {
         RefactoringEventData data = new RefactoringEventData();
         data.addElements(myElementsToMove);
+        data.addTargetElement(myNewParent);
         return data;
     }
 

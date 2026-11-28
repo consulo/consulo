@@ -16,34 +16,24 @@
 package consulo.component.store.impl.internal.storage;
 
 import consulo.application.AccessRule;
-import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
-import consulo.component.store.internal.StorageNotificationService;
-import consulo.component.store.internal.ReadOnlyModificationException;
-import consulo.component.store.internal.StateStorageException;
-import consulo.component.store.internal.StateStorage;
-import consulo.component.store.internal.StreamProvider;
-import consulo.component.store.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.internal.*;
 import consulo.logging.Logger;
 import consulo.platform.LineSeparator;
 import consulo.platform.Platform;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.io.FileUtil;
 import consulo.util.io.UnsyncByteArrayOutputStream;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
-import org.jspecify.annotations.Nullable;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Parent;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

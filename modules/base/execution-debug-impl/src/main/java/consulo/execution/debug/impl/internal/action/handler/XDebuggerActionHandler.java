@@ -40,5 +40,20 @@ public abstract class XDebuggerActionHandler extends DebuggerActionHandler {
 
   protected abstract boolean isEnabled(XDebugSession session, DataContext dataContext);
 
+  /**
+   * True when the process of the session of the event does not implement {@code capability} - its action is hidden then.
+   * Without a session the action is hidden only when {@code hiddenWithoutSession} is set.
+   */
+  protected static boolean isHiddenWithout(Class<?> capability, Project project, AnActionEvent event, boolean hiddenWithoutSession) {
+    XDebugSession session = event.getData(XDebugSession.DATA_KEY);
+    if (session == null) {
+      session = XDebuggerManager.getInstance(project).getCurrentSession();
+    }
+    if (session == null) {
+      return hiddenWithoutSession;
+    }
+    return !capability.isInstance(session.getDebugProcess());
+  }
+
   protected abstract void perform(XDebugSession session, DataContext dataContext);
 }

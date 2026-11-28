@@ -37,6 +37,7 @@ import consulo.util.dataholder.Key;
 
 import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -172,6 +173,22 @@ public class HighlightingSessionImpl implements HighlightingSession {
     myProject.getUIAccess().give(() -> {
       if (!myProject.isDisposed()) {
         ((DaemonCodeAnalyzerInternal)DaemonCodeAnalyzer.getInstance(myProject)).removeFileLevelHighlight(myProject, fileLevelHighlightInfo, myPsiFile);
+      }
+    });
+  }
+
+  public void updateFileLevelHighlights(List<? extends HighlightInfo> fileLevelHighlights, int group, boolean cleanOldHighlights, PsiFile psiFile) {
+    Project project = psiFile.getProject();
+    DaemonCodeAnalyzerInternal codeAnalyzer = DaemonCodeAnalyzerInternal.getInstanceEx(project);
+    project.getUIAccess().give(() -> {
+      if (project.isDisposed() || myProgressIndicator.isCanceled()) {
+        return;
+      }
+      if (cleanOldHighlights) {
+        codeAnalyzer.cleanFileLevelHighlights(project, group, psiFile);
+      }
+      for (HighlightInfo fileLevelInfo : fileLevelHighlights) {
+        codeAnalyzer.addFileLevelHighlight(project, group, fileLevelInfo, psiFile);
       }
     });
   }

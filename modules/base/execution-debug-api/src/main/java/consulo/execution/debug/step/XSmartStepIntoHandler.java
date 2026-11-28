@@ -15,7 +15,6 @@
  */
 package consulo.execution.debug.step;
 
-import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XSuspendContext;
@@ -26,59 +25,54 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Implement this class and return its instance from {@link XDebugProcess#getSmartStepIntoHandler()} to support
+ * Implement this class and return its instance from {@link HasSmartStepInto#getSmartStepIntoHandler()} to support
  * Smart Step Into action
  *
  * @author nik
  */
-public abstract class XSmartStepIntoHandler<Variant extends XSmartStepIntoVariant> {
+public interface XSmartStepIntoHandler<Variant extends XSmartStepIntoVariant> {
+    /**
+     * @param position current position
+     * @return list of function/method calls containing in the current line
+     */
+    List<Variant> computeSmartStepVariants(XSourcePosition position);
 
-  /**
-   * @param position current position
-   * @return list of function/method calls containing in the current line
-   */
-  public abstract List<Variant> computeSmartStepVariants(XSourcePosition position);
+    /**
+     * @param position current position
+     * @return list of function/method calls containing in the current line
+     */
+    default CompletableFuture<List<Variant>> computeSmartStepVariantsAsync(XSourcePosition position) {
+        return CompletableFuture.completedFuture(computeSmartStepVariants(position));
+    }
 
-  /**
-   * @param position current position
-   * @return list of function/method calls containing in the current line
-   */
-  public CompletableFuture<List<Variant>> computeSmartStepVariantsAsync(XSourcePosition position) {
-    return CompletableFuture.completedFuture(computeSmartStepVariants(position));
-  }
+    /**
+     * List of variants for the regular step into, if supported
+     *
+     * @param position current position
+     * @return list of function/method calls containing in the current line, a failed future if the regular step into must be performed
+     */
+    default CompletableFuture<List<Variant>> computeStepIntoVariants(XSourcePosition position) {
+        return CompletableFuture.failedFuture(new UnsupportedOperationException());
+    }
 
-  /**
-   * List of variants for the regular step into, if supported
-   * @param position current position
-   * @return list of function/method calls containing in the current line, a failed future if the regular step into must be performed
-   */
-  public CompletableFuture<List<Variant>> computeStepIntoVariants(XSourcePosition position) {
-    return CompletableFuture.failedFuture(new UnsupportedOperationException());
-  }
+    /**
+     * Resume execution and call {@link XDebugSession#positionReached(XSuspendContext)}
+     * when {@code variant} function/method is reached
+     *
+     * @param variant selected variant
+     */
+    void startStepInto(Variant variant, @Nullable XSuspendContext context);
 
-  /**
-   * Resume execution and call {@link XDebugSession#positionReached(XSuspendContext)}
-   * when {@code variant} function/method is reached
-   * @param variant selected variant
-   */
-  public void startStepInto(Variant variant) {
-    throw new AbstractMethodError();
-  }
+    /**
+     * Action if no variants detected, defaults to step into
+     */
+    default void stepIntoEmpty(XDebugSession session) {
+        session.stepInto();
+    }
 
-  public void startStepInto(Variant variant, @Nullable XSuspendContext context) {
-    startStepInto(variant);
-  }
-
-  /**
-   * Action if no variants detected, defaults to step into
-   */
-  public void stepIntoEmpty(XDebugSession session) {
-    session.stepInto();
-  }
-
-  /**
-   * @return title for popup which will be shown to select method/function
-   * @param position current position
-   */
-  public abstract String getPopupTitle(XSourcePosition position);
+    /**
+     * @param position current position
+     * @return title for popup which will be shown to select method/function
+     */
+    String getPopupTitle(XSourcePosition position);
 }

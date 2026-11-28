@@ -15,24 +15,16 @@
  */
 package consulo.diff.impl.internal.fragment;
 
-import consulo.diff.EditorDiffViewer;
-import consulo.ui.Component;
 import com.uber.nullaway.annotations.Contract;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataSink;
-import consulo.diff.impl.internal.viewer.ListenerDiffViewerBase;
-import consulo.diff.impl.internal.viewer.side.TwosideTextDiffViewer;
-import consulo.diff.DiffContext;
-import consulo.diff.DiffDataKeys;
-import consulo.diff.DiffUserDataKeys;
-import consulo.diff.PrevNextDifferenceIterable;
+import consulo.diff.*;
 import consulo.diff.comparison.DiffTooBigException;
 import consulo.diff.content.DocumentContent;
 import consulo.diff.fragment.LineFragment;
@@ -41,13 +33,8 @@ import consulo.diff.impl.internal.action.AllLinesIterator;
 import consulo.diff.impl.internal.action.BufferedLineIterator;
 import consulo.diff.impl.internal.util.PrevNextDifferenceIterableBase;
 import consulo.diff.impl.internal.util.UnifiedDiffUtil;
-import consulo.diff.impl.internal.viewer.DiffNotifications;
-import consulo.diff.impl.internal.viewer.FoldingModelSupport;
-import consulo.diff.impl.internal.viewer.InitialScrollPositionSupport;
-import consulo.diff.impl.internal.viewer.OpenInEditorWithMouseAction;
-import consulo.diff.impl.internal.viewer.SetEditorSettingsAction;
-import consulo.diff.impl.internal.viewer.StatusPanel;
-import consulo.diff.impl.internal.viewer.TextDiffViewerUtil;
+import consulo.diff.impl.internal.viewer.*;
+import consulo.diff.impl.internal.viewer.side.TwosideTextDiffViewer;
 import consulo.diff.internal.*;
 import consulo.diff.internal.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.diff.localize.DiffLocalize;
@@ -70,12 +57,9 @@ import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.LegacyDumbAwareAction;
+import consulo.ui.ex.action.*;
 import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
@@ -294,9 +278,8 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase implements EditorD
             Document document1 = getContent1().getDocument();
             Document document2 = getContent2().getDocument();
 
-            ThrowableComputable<CharSequence[], RuntimeException> action1 =
-                () -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()};
-            CharSequence[] texts = ReadAction.compute(action1);
+            CharSequence[] texts =
+                ReadAction.compute(() -> new CharSequence[]{document1.getImmutableCharSequence(), document2.getImmutableCharSequence()});
 
             List<LineFragment> fragments = DiffImplUtil.compare(myRequest, texts[0], texts[1], getDiffConfig(), indicator);
 
@@ -304,7 +287,7 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase implements EditorD
             DocumentContent content2 = getContent2();
 
             indicator.checkCanceled();
-            ThrowableComputable<TwosideDocumentData, RuntimeException> action = () -> {
+            TwosideDocumentData data = ReadAction.compute(() -> {
                 indicator.checkCanceled();
                 UnifiedFragmentBuilder builder = new UnifiedFragmentBuilder(fragments, document1, document2, myMasterSide);
                 builder.exec();
@@ -316,13 +299,11 @@ public class UnifiedDiffViewer extends ListenerDiffViewerBase implements EditorD
                     builder.getText().length()
                 );
 
-                UnifiedEditorRangeHighlighter rangeHighlighter = new UnifiedEditorRangeHighlighter(myProject, document1, document2,
-                    builder.getRanges()
-                );
+                UnifiedEditorRangeHighlighter rangeHighlighter =
+                    new UnifiedEditorRangeHighlighter(myProject, document1, document2, builder.getRanges());
 
                 return new TwosideDocumentData(builder, highlighter, rangeHighlighter);
-            };
-            TwosideDocumentData data = ReadAction.compute(action);
+            });
             UnifiedFragmentBuilder builder = data.getBuilder();
 
             FileType fileType = content2.getContentType() == null ? content1.getContentType() : content2.getContentType();

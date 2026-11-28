@@ -18,9 +18,9 @@ package consulo.project.ui.view.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.application.Application;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import java.util.function.Supplier;
 
@@ -40,13 +40,13 @@ public interface ProjectViewInternalHelper {
     disallowTreeLoading(toComputable(runnable));
   }
 
-  default <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable) throws E {
+  default <T, E extends Throwable> T disallowTreeLoading(ThrowableSupplier<? extends T, E> computable) throws E {
     return disallowTreeLoading(computable, () -> null);
   }
 
-  <T, E extends Throwable> T disallowTreeLoading(ThrowableComputable<? extends T, E> computable, Supplier<String> debugInfo) throws E;
+  <T, E extends Throwable> T disallowTreeLoading(ThrowableSupplier<? extends T, E> computable, Supplier<String> debugInfo) throws E;
 
-  private static <E extends Throwable> ThrowableComputable<?, E> toComputable(ThrowableRunnable<? extends E> runnable) {
+  private static <E extends Throwable> ThrowableSupplier<?, E> toComputable(ThrowableRunnable<? extends E> runnable) {
     return () -> {
       runnable.run();
       return null;

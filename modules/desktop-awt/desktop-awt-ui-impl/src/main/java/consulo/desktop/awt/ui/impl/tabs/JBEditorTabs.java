@@ -16,6 +16,7 @@
 package consulo.desktop.awt.ui.impl.tabs;
 
 import consulo.application.ui.UISettings;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -25,43 +26,45 @@ import consulo.desktop.awt.ui.impl.tabs.singleRow.SingleRowLayout;
 import consulo.disposer.Disposable;
 
 import org.jspecify.annotations.Nullable;
+
 import java.awt.*;
 
 /**
  * @author pegov
  */
 public class JBEditorTabs extends JBTabsImpl {
-  public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nullable Disposable parent) {
-    super(project, actionManager, focusManager, parent, true);
-  }
-
-  @Override
-  protected SingleRowLayout createSingleRowLayout() {
-    if (!UISettings.getInstance().HIDE_TABS_IF_NEED && supportsCompression()) {
-      return new CompressibleSingleRowLayout(this);
+    public JBEditorTabs(@Nullable Project project, ActionManager actionManager, IdeFocusManager focusManager, @Nullable Disposable parent) {
+        super(project, actionManager, focusManager, parent, true);
     }
-    else {
-      return new ScrollableSingleRowLayout(this);
+
+    @Override
+    @RequiredUIAccess
+    protected SingleRowLayout createSingleRowLayout() {
+        if (!UISettings.getInstance().HIDE_TABS_IF_NEED && supportsCompression()) {
+            return new CompressibleSingleRowLayout(this);
+        }
+        else {
+            return new ScrollableSingleRowLayout(this);
+        }
     }
-  }
 
-  @Override
-  public boolean supportsCompression() {
-    return true;
-  }
+    @Override
+    public boolean supportsCompression() {
+        return true;
+    }
 
-  public @Nullable Rectangle getSelectedBounds() {
-    TabLabel label = getSelectedLabel();
-    return label != null ? label.getBounds() : null;
-  }
+    public @Nullable Rectangle getSelectedBounds() {
+        TabLabel label = getSelectedLabel();
+        return label != null ? label.getBounds() : null;
+    }
 
-  @Override
-  public boolean useSmallLabels() {
-    return UISettings.getInstance().USE_SMALL_LABELS_ON_TABS;
-  }
+    @Override
+    public boolean useSmallLabels() {
+        return UISettings.getInstance().USE_SMALL_LABELS_ON_TABS;
+    }
 
-  @Override
-  public boolean isAlphabeticalMode() {
-    return UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT;
-  }
+    @Override
+    public boolean isAlphabeticalMode() {
+        return UISettings.getInstance().EDITOR_TABS_ALPHABETICAL_SORT;
+    }
 }
