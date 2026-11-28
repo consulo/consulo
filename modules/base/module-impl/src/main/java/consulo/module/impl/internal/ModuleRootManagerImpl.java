@@ -172,6 +172,13 @@ public class ModuleRootManagerImpl implements ModuleRootManagerInternal, Disposa
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     LOG.assertTrue(rootModel.myModuleRootManager == this);
 
+    // committing an unchanged model through the module model would be a roots change without changed modules, which
+    // means a total rescan of the project - external system imports commit every module on each project open
+    if (!rootModel.isChanged()) {
+      rootModel.dispose();
+      return;
+    }
+
     Project project = myModule.getProject();
     ModifiableModuleModel moduleModel = ModuleManager.getInstance(project).getModifiableModel();
     ModifiableModelCommitter.getInstance(getProject()).multiCommit(new ModifiableRootModel[]{rootModel}, moduleModel);
