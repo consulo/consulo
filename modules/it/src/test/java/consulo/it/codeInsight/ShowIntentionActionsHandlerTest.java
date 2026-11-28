@@ -18,6 +18,8 @@ package consulo.it.codeInsight;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.it.CodeInsightTestFixture;
 import consulo.it.HeadlessProjectExtension;
@@ -25,6 +27,7 @@ import consulo.it.HeadlessProjects;
 import consulo.it.HeadlessUIThread;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.util.TextRange;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.impl.internal.highlight.UpdateHighlightersUtilImpl;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.language.editor.impl.internal.intention.ShowIntentionActionsHandler;
@@ -64,6 +67,10 @@ public class ShowIntentionActionsHandlerTest {
         Document document = fixture.getDocument();
         RecordingFix fix = new RecordingFix();
 
+        // a daemon pass started by the new editor would replace the highlighter of the fix before the intentions are
+        // collected - on a loaded machine it does
+        Disposable daemonDisabled = Disposable.newDisposable();
+        HeadlessUIThread.run(() -> DaemonCodeAnalyzer.getInstance(project).disableUpdateByTimer(daemonDisabled));
         Editor editor = HeadlessUIThread.compute(() -> EditorFactory.getInstance().createEditor(document, project));
         try {
             HeadlessUIThread.run(() -> {
@@ -89,6 +96,7 @@ public class ShowIntentionActionsHandlerTest {
             HeadlessUIThread.run(() -> {
                 setHighlighters(project, document, List.of());
                 EditorFactory.getInstance().releaseEditor(editor);
+                Disposer.dispose(daemonDisabled);
             });
         }
     }
