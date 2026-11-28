@@ -21,6 +21,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.document.Document;
 import consulo.it.CodeInsightTestFixture;
 import consulo.it.HeadlessProjectExtension;
+import consulo.it.HeadlessProjects;
 import consulo.it.HeadlessUIThread;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.util.TextRange;
@@ -58,6 +59,8 @@ public class ShowIntentionActionsHandlerTest {
     public void quickFixAvailabilityIsCheckedOffTheUIThread(CodeInsightTestFixture fixture) throws Exception {
         PsiFile file = fixture.configureByText("some.sand", "class Item { \"body\" }\n");
         Project project = fixture.getProject();
+        // in dumb mode the cached intentions drop every action which is not dumb aware - the recording fix too
+        HeadlessProjects.awaitIdle(project);
         Document document = fixture.getDocument();
         RecordingFix fix = new RecordingFix();
 
